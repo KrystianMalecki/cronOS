@@ -262,13 +262,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeBasement: {fileID: 11400000, guid: 7a37911f5d19d5440b88d37868c4b259, type: 2}
-  tag: new screen writer
-  code: "random randomSystem = new random(1);\nscreen_buffer buffer = screen.MakeScreenBuffer();\nfor
-    (int x = 0; x < 4; x++)\r\n        {\r\n            for (int y = 0; y < 4; y++)\r\n           
-    {\r\ncolor currentColor = new color(\nrandomSystem.NextByte(),\nrandomSystem.NextByte(),
-    \nrandomSystem.NextByte(), \n1); \n                buffer.SetPixel(x, y, currentColor);\r\nconsole.WriteLine(\"setting
-    at x:\"+x+\" y:\"+y+\" color:\"+currentColor);\nscreen.SetScreenBuffer(buffer);\n           
-    }\r\n        }"
+  tag: new screen writer2
+  code: "random randomSystem = new random();\nscreen_buffer buffer = screen.MakeScreenBuffer();\nbuffer=new
+    screen_buffer(100,100);\nint orbX=0;\nint orbY=0;\nwhile(true){\nfor (int x =
+    0; x < buffer.width; x++)\r\n        {\r\n            for (int y = 0; y < buffer.height;
+    y++)\r\n            {\r\ncolor currentColor = new color(0,0,0); \nif(x==orbX&&y==orbY){\ncurrentColor
+    = new color(255,255,255); \n}\n                buffer.SetPixel(x, y, currentColor);\r\n//console.WriteLine(\"setting
+    at x:\"+x+\" y:\"+y+\" color:\"+currentColor);\n            }\r\n        }\norbX++;\nif(orbX>buffer.width-1){\norbY++;\norbX=0;\n}\nif(orbY>buffer.height-1){\norbX=0;\norbY=0;\n}\n//console.WriteLine(\"orb
+    is at x:\"+orbX+\" y:\"+orbY);\nscreen.SetScreenBuffer(buffer);\nruntime.Wait(1);\n\n}"
   codeTasks: []
 --- !u!1 &358341496
 GameObject:
@@ -789,7 +790,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 256, y: 256}
+  m_SizeDelta: {x: 768, y: 768}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1446994157
 MonoBehaviour:

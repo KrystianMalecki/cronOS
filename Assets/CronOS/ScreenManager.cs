@@ -1,11 +1,12 @@
 using libraries.system.graphics;
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Linq;
 public class ScreenManager : MonoBehaviour
 {
     public static ScreenManager instance;
@@ -61,17 +62,37 @@ public class ScreenManager : MonoBehaviour
     public void SetScreenBuffer(screen_buffer screen_buffer)
     {
         Texture2D texture;
-        texture = new Texture2D(4, 4);
+        texture = new Texture2D(screen_buffer.width, screen_buffer.height);
         texture.filterMode = FilterMode.Point;
-        for (int x = 0; x < screen_buffer.width; x++)
+        /*  for (int x = 0; x < screen_buffer.width; x++)
+          {
+              for (int y = 0; y < screen_buffer.height; y++)
+              {
+                  texture.SetPixel(x, y, screen_buffer.GetPixel(x, y).ToUnityColor());
+              }
+          }*/
+        int size = screen_buffer.width * screen_buffer.height;
+        Color32[] result = new Color32[size];
+        unsafe
         {
-            for (int y = 0; y < screen_buffer.height; y++)
+            fixed (color* row = &(screen_buffer.texture[0, 0]))
             {
-                texture.SetPixel(x, y, screen_buffer.GetPixel(x, y).ToUnityColor());
+                color* rowP = row;
+                for (int i = 0; i < size; i++)
+                {
+                    result[i] = rowP->ToUnityColor();
+                    rowP += 1;
+                }
             }
         }
+        //    System.Buffer.BlockCopy(screen_buffer.texture, 0, result, 0, screen_buffer.width * screen_buffer.height);
+        texture.SetPixels32(
+          result
+            );
         texture.Apply();
-        rawImage.texture = texture;
+
+        //  screen_buffer.buffer.Apply();
+        rawImage.texture = texture;// screen_buffer.buffer;
         rawImage.SetAllDirty();
         //  rawImage.SetMaterialDirty();
     }

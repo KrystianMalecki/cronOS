@@ -21,28 +21,14 @@ public class CodeTask
     [ResizableTextArea] public string rawCode;
 
 
-    public static object RunMainFunction(Func<object> action)
-    {
-        MainThreadFunction mtf = new MainThreadFunction(action);
 
-        CodeRunner.AddToStack(mtf);
-        return mtf.WaitForAction();
-    }
-
-    public static object RunMainFunction(Action action)
-    {
-        return RunMainFunction(() =>
-        {
-            action.Invoke();
-            return null;
-        });
-    }
     public void RunCode(string rawCode)
     {
         this.rawCode = rawCode;
 
         // task = Task.Run(RunAsync);
         thread = new Thread(RunAsync);
+        thread.IsBackground = true;
         thread.Start();
     }
     private void RunAsync()
@@ -99,11 +85,14 @@ public class CodeTask
         //  Debug.Log("CodeRunner.instance.ctoken" + CodeRunner.instance.ctoken.IsCancellationRequested);
         //  Debug.Log("task.IsCanceled " + task.IsCanceled);
         //    Debug.Log("codeTask.IsCanceled " + codeTask.IsCanceled);
+        Debug.LogWarning("Destroying CodeTask");
 
         CodeRunner.instance.codeTasks.Remove(this);
         //  task.Dispose();
         if (thread != null)
         {
+            thread.Interrupt();
+
             thread.Abort();
         }
         else

@@ -35,10 +35,12 @@ namespace libraries.system.graphics
         }
         public static void SetScreenBuffer(screen_buffer screen_buffer)
         {
-            CodeTask.RunMainFunction(() =>
+
+            CodeRunner.AddFunctionToStack(() =>
             {
                 ScreenManager.instance.SetScreenBuffer(screen_buffer);
-            });
+            }, false);
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace libraries.system
         public static void Write(string text)
         {
 #if !DLL
-            CodeTask.RunMainFunction(() => { ScreenManager.AddToScreen(text); });
+            CodeRunner.AddFunctionToStack(() => { ScreenManager.AddToScreen(text); }, false);
 #else
             System.Console.WriteLine("write: " + text);
 #endif

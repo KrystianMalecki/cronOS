@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [Serializable]
-public class MainThreadFunction
+public class MainThreadFunction : IDisposable
 {
     public static readonly int WaitRefreshRate = 100;
     public object returnValue = null;
@@ -13,7 +13,6 @@ public class MainThreadFunction
     public bool done = false;
 
     public void Run()
-
     {
         returnValue = function.Invoke();
         done = true;
@@ -27,11 +26,17 @@ public class MainThreadFunction
             /* Debug.Log("'" +
                        "wait'"
              );*/
-          //  Task.Delay(WaitRefreshRate).Wait();
+            //  Task.Delay(WaitRefreshRate).Wait();
             Thread.Sleep(WaitRefreshRate);
         }
 
         return returnValue;
+    }
+
+    public void Dispose()
+    {
+        returnValue = null;
+        function = null;
     }
 
     public MainThreadFunction(Func<object> a)

@@ -21,6 +21,10 @@ namespace libraries.system
             this.seed = seed;
             this.systemRandom = new System.Random(seed);
         }
+        public random()
+        {
+            this.systemRandom = new System.Random();
+        }
         public int NextInt(int min = int.MinValue, int max = int.MaxValue)
         {
             return systemRandom.Next(min, max);

@@ -9,6 +9,8 @@ using Microsoft.CodeAnalysis.Scripting;
 using NaughtyAttributes;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
+
 [SaveDuringPlay]
 public class CodeRunner : MonoBehaviour
 {
@@ -42,8 +44,12 @@ public class CodeRunner : MonoBehaviour
     }
 
 
-    public void InitScriptOptions()
+    public void TryToInitScriptOptions()
     {
+        if (scriptOptions != null)
+        {
+            return;
+        }
         // flag: task
         // ctoken = tokenSource.Token;
         scriptOptions = ScriptOptions.Default;
@@ -86,16 +92,25 @@ public class CodeRunner : MonoBehaviour
         {
             Destroy(this);
         }
-        InitScriptOptions();
-
+        TryToInitScriptOptions();
+        //  StartCoroutine(e());
     }
-
+    /*  IEnumerator e()
+      {
+          while (true)
+          {
+              ExecuteFromStack();
+              //  yield return new WaitForSecondsRealtime(0.01f);
+              yield return;
+          }
+      }*/
 
 
 
     [Button("Run code")]
     void RunCode()
     {
+        TryToInitScriptOptions();
         CodeTask codeTask = new CodeTask();
         codeTasks.Add(codeTask);
         codeTask.RunCode(CodeParser(code));
@@ -128,6 +143,8 @@ public class CodeRunner : MonoBehaviour
 
     public void Update()
     {
+
+
         ExecuteFromStack();
         // flag: task
         //  Debug.Log("token source" + tokenSource.IsCancellationRequested);
@@ -135,7 +152,7 @@ public class CodeRunner : MonoBehaviour
     }
     public void LateUpdate()
     {
-        ExecuteFromStack();
+        //     ExecuteFromStack();
     }
     private void ExecuteFromStack(int count = -1)
     {
@@ -144,7 +161,11 @@ public class CodeRunner : MonoBehaviour
         {
             if (actionStack.Count > 0)
             {
-                actionStack.Dequeue().Run();
+
+                MainThreadFunction mtf = actionStack.Dequeue();
+                mtf?.Run();
+                mtf.Dispose();
+                mtf = null;
             }
             else
             {
@@ -153,7 +174,7 @@ public class CodeRunner : MonoBehaviour
         }
     }
 
-    public static void AddToStack(MainThreadFunction function)
+    private static void AddToStack(MainThreadFunction function)
     {
         instance.actionStack.Enqueue(function);
     }
@@ -172,13 +193,11 @@ public class CodeRunner : MonoBehaviour
             CodeTask ct = codeTasks[i];
             if (ct != null)
             {
-
                 ct.Destroy();
             }
             else
             {
                 codeTasks.Remove(ct);
-
             }
             i--;
         }
@@ -198,5 +217,25 @@ public class CodeRunner : MonoBehaviour
     {
         Wipe();
     }
+    public static object AddFunctionToStack(Func<object> action, bool wait = true)
+    {
+        MainThreadFunction mtf = new MainThreadFunction(action);
 
+        AddToStack(mtf);
+        if (wait)
+        {
+            return mtf.WaitForAction();
+        }
+        return null;
+
+    }
+
+    public static object AddFunctionToStack(Action action, bool wait = true)
+    {
+        return AddFunctionToStack(() =>
+        {
+            action.Invoke();
+            return null;
+        }, wait);
+    }
 }

@@ -24,11 +24,20 @@ namespace libraries.system.graphics
             this.b = b;
             this.a = a > 0;
         }
+
         public color(byte r, byte g, byte b)
         {
             this.r = r;
             this.g = g;
             this.b = b;
+            this.a = true;
+        }
+        public color(int r, int g, int b)
+        {
+            //todo throw error if r, g or b is not byte
+            this.r =(byte) r;
+            this.g = (byte)g;
+            this.b = (byte)b;
             this.a = true;
         }
         public override string ToString()

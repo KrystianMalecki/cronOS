@@ -1,3 +1,5 @@
+using libraries.system;
+using libraries.system.graphics;
 using NaughtyAttributes;
 using System;
 using System.Collections;
@@ -17,6 +19,7 @@ public class test : MonoBehaviour
         // flag: tests
         //  TaskVersion();
         // ThreadVersion();
+        // Task.Run(ScreenTest);
     }
     void TaskVersion()
     {
@@ -107,5 +110,45 @@ public class test : MonoBehaviour
     private void OnApplicationQuit()
     {
         Cancel();
+    }
+    private void ScreenTest()
+    {
+        random randomSystem = new random();
+        screen_buffer buffer = screen.MakeScreenBuffer();
+        buffer = new screen_buffer(100, 100);
+        int orbX = 0;
+        int orbY = 0;
+        while (true)
+        {
+            for (int y = 0; y < buffer.height; y++)
+            {
+                for (int x = 0; x < buffer.width; x++)
+                {
+
+                    color currentColor = new color(0, 0, 0);
+                    if (x == orbX && y == orbY)
+                    {
+                        currentColor = new color(255, 255, 255);
+                    }
+                    buffer.SetPixel(x, y, currentColor);
+                    //console.WriteLine("setting at x:"+x+" y:"+y+" color:"+currentColor);
+                }
+            }
+            orbX++;
+            if (orbX > buffer.width - 1)
+            {
+                orbY++;
+                orbX = 0;
+            }
+            if (orbY > buffer.height - 1)
+            {
+                orbX = 0;
+                orbY = 0;
+            }
+            //console.WriteLine("orb is at x:"+orbX+" y:"+orbY);
+            screen.SetScreenBuffer(buffer);
+            runtime.Wait(1);
+
+        }
     }
 }
