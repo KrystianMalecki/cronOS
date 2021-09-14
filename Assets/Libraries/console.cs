@@ -7,9 +7,9 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
-namespace libraries.system
+namespace Libraries.system
 {
-    public static class console
+    public static class Console
     {
         public static void Write(string text)
         {

@@ -1,21 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace libraries.system.graphics
+namespace Libraries.system.graphics
 {
-    public class screen_buffer
+    public class ScreenBuffer
     {
         public int width;
         public int height;
-        public color[,] texture;
+        public Color[] texture;
         //  public Texture2D buffer;
-        public screen_buffer(int width, int height)
+        public ScreenBuffer(int width, int height)
         {
             this.width = width;
             this.height = height;
-            texture = new color[width, height];
+            texture = new Color[width * height];
             /* Debug.Log("before");
              try
              {
@@ -37,9 +36,9 @@ namespace libraries.system.graphics
 
         }
 
-        public void SetPixel(int x, int y, graphics.color color)
+        public void SetPixel(int x, int y, Color color)
         {
-            texture[y, x] = color;
+            texture[y * width + x] = color;
 
             /*  CodeTask.RunMainFunction(() =>
               {
@@ -48,9 +47,9 @@ namespace libraries.system.graphics
 
 
         }
-        public graphics.color GetPixel(int x, int y)
+        public Color GetPixel(int x, int y)
         {
-            return texture[y, x];
+            return texture[y * width + x];
         }
     }
 }

@@ -7,14 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace libraries.system
+namespace Libraries.system
 {
-    public static class runtime
+    public static class Runtime
     {
         public static void Wait(int time)
         {
            // Task.Delay(time).Wait();
             Thread.Sleep(time);
         }
+
     }
 }

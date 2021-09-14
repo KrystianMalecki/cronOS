@@ -1,53 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
+
+using System;
+using System.Globalization;
 using UnityEngine;
-namespace libraries.system.graphics
+
+namespace Libraries.system.graphics
 {
-    public struct color
+    public struct Color
     {
-        public byte r;
-        public byte g;
-        public byte b;
-        public System.Boolean a;
-        public color(byte r, byte g, byte b, bool a)
+        private Color32 color;
+        internal Color32 GetColor32()
         {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
+            return color;
         }
 
-        public color(byte r, byte g, byte b, int a)
+        public byte r
         {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a > 0;
+            get { return color.r; }
+            set { color.r = value; }
         }
+        public byte g
+        {
+            get { return color.g; }
+            set { color.g = value; }
+        }
+        public byte b
+        {
+            get { return color.b; }
+            set { color.b = value; }
+        }
+        public byte a
+        {
+            get { return color.a; }
+            set { color.a = value; }
+        }
+        public Color(byte r, byte g, byte b, byte a)
+        {
+            color = new Color32(r, g, b, a);
+        }
+        public Color(Color32 color32)
+        {
+            color = color32;
+        }
+        public static Color Lerp(Color a, Color b, float t)
+        {
+            t = Mathf.Clamp01(t);
+            return new Color(Color32.Lerp(a.color, b.color, t));
+        }
+        public static Color LerpUnclamped(Color a, Color b, float t)
+        {
+            return new Color(Color32.Lerp(a.color, b.color, t));
+        }
+        public byte this[int index]
+        {
+            get
+            {
+                return this[index];
+            }
 
-        public color(byte r, byte g, byte b)
-        {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = true;
-        }
-        public color(int r, int g, int b)
-        {
-            //todo throw error if r, g or b is not byte
-            this.r =(byte) r;
-            this.g = (byte)g;
-            this.b = (byte)b;
-            this.a = true;
+            set
+            {
+                this[index] = value;
+            }
         }
         public override string ToString()
         {
-            return "[" + r + "," + g + "," + b + "," + a + "," + "]";
+            return ToString(null, CultureInfo.InvariantCulture.NumberFormat);
         }
-        public Color32 ToUnityColor()
-        {
 
-            return new Color32(r, g, b, (byte)(a ? 255 : 0));
+        public string ToString(string format)
+        {
+            return ToString(format, CultureInfo.InvariantCulture.NumberFormat);
         }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            return String.Format("RGBA({0}, {1}, {2}, {3})", color.r.ToString(format, formatProvider), color.g.ToString(format, formatProvider), color.b.ToString(format, formatProvider), color.a.ToString(format, formatProvider));
+        }
+
     }
 }
+
+
+

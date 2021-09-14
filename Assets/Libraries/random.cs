@@ -8,20 +8,20 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace libraries.system
+namespace Libraries.system
 {
-    public class random
+    public class Random
     {
 
         public int seed;
         private System.Random systemRandom;
 
-        public random(int seed)
+        public Random(int seed)
         {
             this.seed = seed;
             this.systemRandom = new System.Random(seed);
         }
-        public random()
+        public Random()
         {
             this.systemRandom = new System.Random();
         }

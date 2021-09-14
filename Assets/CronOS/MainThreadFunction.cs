@@ -28,11 +28,15 @@ public class MainThreadFunction : IDisposable
              );*/
             //  Task.Delay(WaitRefreshRate).Wait();
             Thread.Sleep(WaitRefreshRate);
+
         }
 
         return returnValue;
     }
-
+    ~MainThreadFunction()
+    {
+        Dispose();
+    }
     public void Dispose()
     {
         returnValue = null;

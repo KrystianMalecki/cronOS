@@ -20,7 +20,7 @@ public class CodeRunner : MonoBehaviour
     //   public CancellationToken ctoken;
 
 
-    public static readonly Type[] allLibraries = new Type[] { typeof(libraries.system.console), typeof(libraries.system.graphics.color) };
+    public static readonly Type[] allLibraries = new Type[] { typeof(libraries.system.Console), typeof(libraries.system.graphics.Color) };
     public Type[] enabledLibraries = allLibraries;
 
     public static CodeRunner instance;
@@ -32,7 +32,7 @@ public class CodeRunner : MonoBehaviour
 
 
     [ResizableTextArea] public string code;
-    public List<CodeTask> codeTasks = new List<CodeTask>();
+    private List<CodeTask> codeTasks = new List<CodeTask>();
     [SerializeField]
     public Queue<MainThreadFunction> actionStack = new Queue<MainThreadFunction>();
 
@@ -50,10 +50,8 @@ public class CodeRunner : MonoBehaviour
         {
             return;
         }
-        // flag: task
-        // ctoken = tokenSource.Token;
-        scriptOptions = ScriptOptions.Default;
 
+        scriptOptions = ScriptOptions.Default;
 
         Type[] enabledLibraries = allLibraries;
 
@@ -72,15 +70,12 @@ public class CodeRunner : MonoBehaviour
         scriptOptions = scriptOptions.AddImports(
             "UnityEngine"
        );
-        /*    int a = 1;
-            int b = 2;
-            int c = 3;
 
-            float Δ = b ^ 2 - 4 * a * c;
-            Debug.Log(Δ);*/
-        Debug.Log("Debug done");
     }
-
+    public void RemoveCodeTask(CodeTask codeTask)
+    {
+        codeTasks.Remove(codeTask);
+    }
 
     private void Awake()
     {
@@ -93,17 +88,8 @@ public class CodeRunner : MonoBehaviour
             Destroy(this);
         }
         TryToInitScriptOptions();
-        //  StartCoroutine(e());
     }
-    /*  IEnumerator e()
-      {
-          while (true)
-          {
-              ExecuteFromStack();
-              //  yield return new WaitForSecondsRealtime(0.01f);
-              yield return;
-          }
-      }*/
+
 
 
 
@@ -164,8 +150,7 @@ public class CodeRunner : MonoBehaviour
 
                 MainThreadFunction mtf = actionStack.Dequeue();
                 mtf?.Run();
-                mtf.Dispose();
-                mtf = null;
+                mtf?.Dispose();
             }
             else
             {

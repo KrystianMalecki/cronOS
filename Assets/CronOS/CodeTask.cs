@@ -13,13 +13,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 
 [Serializable]
-public class CodeTask
+public class CodeTask : IDisposable
 {
     // public Task task = null;
     // public Task codeTask = null;
     public Thread thread;
     [ResizableTextArea] public string rawCode;
-
+    public bool active;
 
 
     public void RunCode(string rawCode)
@@ -28,72 +28,56 @@ public class CodeTask
 
         // task = Task.Run(RunAsync);
         thread = new Thread(RunAsync);
-        thread.IsBackground = true;
+        thread.IsBackground = false;
         thread.Start();
     }
-    private void RunAsync()
+    private async void RunAsync()
     {
-        /*  using (task)
-          {*/
+
         try
         {
-            /* CancellationTokenSource cts = new CancellationTokenSource();
-             CancellationToken ct = cts.Token;
-             var v = CSharpScript.Create(this.rawCode, CodeRunner.instance.scriptOptions
-              /* globals: new Globals() { }, cancellationToken: CodeRunner.instance.ctoken*/
-            /* );
-            var origTree = CSharpSyntaxTree.ParseText(this.rawCode);
-            //  origTree.GetRoot().DescendantNodes().ToList()[0].Kind==SyntaxKind
-            var root = origTree.GetRoot();
-            int position = 0;
-            Microsoft.CodeAnalysis.Text.TextSpan spaner = root.FullSpan;
-            SyntaxNode sn = null;
-            do
-            {
-                sn = root.FindNode(span: spaner);
-            } while (sn != null);
-            //    trees[0].GetRoot().GetText;
-            Debug.Log(trees[0].GetText().Lines.Count);
-            trees.ForEach(x => Debug.Log(x.GetRoot().GetText()));*
-            //            codeTask = v.RunAsync(/*globals: new Globals() { },*//* cancellationToken: ct);*/
-            //  cts.Cancel();
-            //  await codeTask;
-            CSharpScript.EvaluateAsync(this.rawCode, CodeRunner.instance.scriptOptions
-              /* globals: new Globals() { }, cancellationToken: CodeRunner.instance.ctoken*/);
+            // Process process = new Process();
+            //   process.Start();
+            //  new System.Diagnostics.ProcessThread().sta
+            await CSharpScript.EvaluateAsync(this.rawCode, CodeRunner.instance.scriptOptions);
 
         }
         catch (ThreadAbortException tae)
         {
             //todo add better logging
             Debug.LogWarning("Aborted thread running code.\nData: " + tae.Message);
-
         }
         catch (Exception e)
         {
             Debug.LogError(e);
 
         }
+        finally
+        {
+            Destroy();
+        }
 
-        // }
-        // flag: task
-        //   CodeRunner.instance.tokenSource.Cancel();
+        Destroy();
+
+
+    }
+    ~CodeTask()
+    {
         Destroy();
     }
     public void Destroy()
     {
-        // flag: task
-        //  Debug.Log("CodeRunner.instance.ctoken" + CodeRunner.instance.ctoken.IsCancellationRequested);
-        //  Debug.Log("task.IsCanceled " + task.IsCanceled);
-        //    Debug.Log("codeTask.IsCanceled " + codeTask.IsCanceled);
+
         Debug.LogWarning("Destroying CodeTask");
 
-        CodeRunner.instance.codeTasks.Remove(this);
-        //  task.Dispose();
+        CodeRunner.instance.RemoveCodeTask(this);
         if (thread != null)
         {
-            thread.Interrupt();
+            //  thread.Interrupt();
 
             thread.Abort();
+            thread = null;
+            
         }
         else
         {
@@ -104,4 +88,10 @@ public class CodeTask
     }
 
 
+
+
+    public void Dispose()
+    {
+        Destroy();
+    }
 }

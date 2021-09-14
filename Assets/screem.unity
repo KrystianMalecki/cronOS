@@ -263,14 +263,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   codeBasement: {fileID: 11400000, guid: 7a37911f5d19d5440b88d37868c4b259, type: 2}
   tag: new screen writer2
-  code: "random randomSystem = new random();\nscreen_buffer buffer = screen.MakeScreenBuffer();\nbuffer=new
-    screen_buffer(100,100);\nint orbX=0;\nint orbY=0;\nwhile(true){\nfor (int x =
-    0; x < buffer.width; x++)\r\n        {\r\n            for (int y = 0; y < buffer.height;
-    y++)\r\n            {\r\ncolor currentColor = new color(0,0,0); \nif(x==orbX&&y==orbY){\ncurrentColor
-    = new color(255,255,255); \n}\n                buffer.SetPixel(x, y, currentColor);\r\n//console.WriteLine(\"setting
-    at x:\"+x+\" y:\"+y+\" color:\"+currentColor);\n            }\r\n        }\norbX++;\nif(orbX>buffer.width-1){\norbY++;\norbX=0;\n}\nif(orbY>buffer.height-1){\norbX=0;\norbY=0;\n}\n//console.WriteLine(\"orb
-    is at x:\"+orbX+\" y:\"+orbY);\nscreen.SetScreenBuffer(buffer);\nruntime.Wait(1);\n\n}"
-  codeTasks: []
+  code: "random randomSystem = new random();\r\n        ScreenBuffer buffer = screen.MakeScreenBuffer();\r\n       
+    buffer = new ScreenBuffer(640, 320);\r\n        int orbX = 0;\r\n        int
+    orbY = 0;\r\n        while (true)\r\n        {\r\n\n            for (int y =
+    0; y < buffer.height; y++)\r\n            {\r\n                for (int x = 0;
+    x < buffer.width; x++)\r\n                {\r\n\r\n                    InternalColor
+    currentColor = new InternalColor(0, 0, 0, 255);\r\n                    if (x
+    == orbX && y == orbY)\r\n                    {\r\n                        currentColor
+    = new InternalColor(255, 255, 255, 255);\r\n                    }\r\n                   
+    buffer.SetPixel(x, y, currentColor);\r\n                    //console.WriteLine(\"setting
+    at x:\"+x+\" y:\"+y+\" color:\"+currentColor);\r\n                }\r\n           
+    }\r\n            orbX++;\r\n            if (orbX > buffer.width - 1)\r\n           
+    {\r\n                orbY++;\r\n                orbX = 0;\r\n            }\r\n           
+    if (orbY > buffer.height - 1)\r\n            {\r\n                orbX = 0;\r\n               
+    orbY = 0;\r\n            }\r\n            //console.WriteLine(\"orb is at x:\"+orbX+\"
+    y:\"+orbY);\r\n            screen.SetScreenBuffer(buffer);\r\n            runtime.Wait(1);\r\n\r\n       
+    }"
 --- !u!1 &358341496
 GameObject:
   m_ObjectHideFlags: 0
