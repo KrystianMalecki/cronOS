@@ -9,12 +9,13 @@ using UnityEditor;
 
 namespace Libraries.system
 {
-    public static class Console
+    public class Console : BaseLibrary
     {
+
         public static void Write(string text)
         {
 #if !DLL
-            CodeRunner.AddFunctionToStack(() => { ScreenManager.AddToScreen(text); }, false);
+            CodeRunner.AddFunctionToStack(() => { ScreenManager.AddToScreen(text); }, sync);
 #else
             System.Console.WriteLine("write: " + text);
 #endif
@@ -34,5 +35,9 @@ namespace Libraries.system
         }
 
 
+    }
+    public class AsyncConsole : Console
+    {
+        public static bool sync => no;
     }
 }

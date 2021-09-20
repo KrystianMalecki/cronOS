@@ -1,55 +1,63 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Libraries.system.graphics.color32;
+using Libraries.system.graphics.texture32;
+
 
 namespace Libraries.system.graphics
 {
-    public class ScreenBuffer
+    namespace screen_buffer32
     {
-        public int width;
-        public int height;
-        public Color[] texture;
-        //  public Texture2D buffer;
-        public ScreenBuffer(int width, int height)
+        public class ScreenBuffer32 : Texture32
         {
-            this.width = width;
-            this.height = height;
-            texture = new Color[width * height];
-            /* Debug.Log("before");
-             try
-             {
-                 buffer = (Texture2D)CodeTask.RunMainFunction(() => { return new Texture2D(width, height); });
-                 CodeTask.RunMainFunction(() =>
-                 {
-                     buffer.filterMode = FilterMode.Point;
-                 });
+            public ScreenBuffer32(int width, int height) : base(width, height)
+            {
 
+            }
+            public void FillAll(Color32 color)
+            {
+                Fill(0, 0, width, height, color);
+            }
+            public void SetTexture(int x, int y, Texture32 texture)
+            {
+                for (int iterY = 0; iterY < texture.height; iterY++)
+                {
+                    for (int iterX = 0; iterX < texture.width; iterX++)
+                    {
+                        //todo add check
+                        SetPixel(iterX + x, iterY + y, texture.GetPixel(x, y));
+                    }
+                }
+            }
 
-             }
-             catch (Exception e)
-             {
-                 Debug.Log(e);
-             }
-             Debug.Log("before1");
+        }
+    }
+    namespace system_screen_buffer
+    {
+        using system_texture;
+        using system_color;
 
-             Debug.Log("after");*/
+        public class SystemScreenBuffer : SystemTexture
+        {
+            public SystemScreenBuffer(int width, int height) : base(width, height)
+            {
+
+            }
+            public void FillAll(SystemColor color)
+            {
+                Fill(0, 0, width, height, color);
+            }
+            public void SetTexture(int x, int y, SystemTexture texture)
+            {
+                for (int iterY = 0; iterY < texture.height; iterY++)
+                {
+                    for (int iterX = 0; iterX < texture.width; iterX++)
+                    {
+                        //todo add check
+                        SetPixel(iterX + x, iterY + y, texture.GetPixel(x, y));
+                    }
+                }
+            }
 
         }
 
-        public void SetPixel(int x, int y, Color color)
-        {
-            texture[y * width + x] = color;
-
-            /*  CodeTask.RunMainFunction(() =>
-              {
-                  buffer.SetPixel(x, y, color.ToUnityColor());
-              }, false);*/
-
-
-        }
-        public Color GetPixel(int x, int y)
-        {
-            return texture[y * width + x];
-        }
     }
 }

@@ -1,9 +1,19 @@
 using Libraries.system;
 using Libraries.system.graphics;
+
+using Libraries.system.graphics.color32;
+using Libraries.system.graphics.system_color;
+
+using Libraries.system.graphics.screen_buffer32;
+using Libraries.system.graphics.system_screen_buffer;
+
+using Libraries.system.graphics.texture32;
+using Libraries.system.graphics.system_texture;
+
 using native_system = System;
 
 using native_ue = UnityEngine;
-
+using native_input = UnityEngine.InputSystem;
 public class test : native_ue.MonoBehaviour
 {
     /*  public CancellationTokenSource source = new CancellationTokenSource();
@@ -107,27 +117,24 @@ public class test : native_ue.MonoBehaviour
       {
           Cancel();
       }*/
+    
     private void MainCodeTest()
     {
+        /*
+          using native_system = System;
+          using native_ue = UnityEngine;
+        */
         Random randomSystem = new Random();
-        ScreenBuffer buffer = Screen.MakeScreenBuffer();
+        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
+        Screen.InitSystemScreenBuffer(buffer);
         int orbX = 0;
         int orbY = 0;
         while (true)
         {
-            for (int y = 0; y < buffer.height; y++)
-            {
-                for (int x = 0; x < buffer.width; x++)
-                {
-                    Color currentColor = new Color(0, 0, 0, 255);
-                    if (x == orbX && y == orbY)
-                    {
-                        currentColor = new Color(255, 255, 255, 255);
-                    }
-                    buffer.SetPixel(x, y, currentColor);
-                    //console.WriteLine("setting at x:"+x+" y:"+y+" color:"+currentColor);
-                }
-            }
+
+            buffer.FillAll(SystemColor.black);
+            buffer.SetPixel(orbX, orbY, SystemColor.white);
+
             orbX++;
             if (orbX > buffer.width - 1)
             {
@@ -140,9 +147,23 @@ public class test : native_ue.MonoBehaviour
                 orbY = 0;
             }
             //console.WriteLine("orb is at x:"+orbX+" y:"+orbY);
-            Screen.SetScreenBuffer(buffer);
-            Runtime.Wait(1);
+            AsyncScreen.SetScreenBuffer(buffer);
+            //  Runtime.Wait(1);
+            Console.Debug(Input.WaitForAny().ToString());
 
         }
     }
+    private void c()
+    {
+        int a = 0;
+        while (true)
+        {
+            Console.WriteLine(a.ToString());
+            a++;
+            Runtime.Wait(1);
+        }
+    }
+
+   
+
 }

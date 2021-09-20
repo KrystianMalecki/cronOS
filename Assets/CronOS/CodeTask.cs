@@ -13,34 +13,37 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 
 [Serializable]
-public class CodeTask : IDisposable
+public class CodeTask
 {
+    public static readonly string ThreadCodeTaskID = "codeTask";
+    public static readonly string ThreadID = "threadID";
+
     // public Task task = null;
     // public Task codeTask = null;
     public Thread thread;
     [ResizableTextArea] public string rawCode;
     public bool active;
-
+    [SerializeField]
+    public Queue<MainThreadFunction> actionStack = new Queue<MainThreadFunction>();
 
     public void RunCode(string rawCode)
     {
         this.rawCode = rawCode;
-
         // task = Task.Run(RunAsync);
         thread = new Thread(RunAsync);
+
+
+
         thread.IsBackground = false;
         thread.Start();
     }
     private async void RunAsync()
     {
-
+       // Thread.SetData(Thread.GetNamedDataSlot(ThreadCodeTaskID), this);
+       // Thread.SetData(Thread.GetNamedDataSlot(ThreadID), thread.ManagedThreadId);
         try
         {
-            // Process process = new Process();
-            //   process.Start();
-            //  new System.Diagnostics.ProcessThread().sta
             await CSharpScript.EvaluateAsync(this.rawCode, CodeRunner.instance.scriptOptions);
-
         }
         catch (ThreadAbortException tae)
         {
@@ -50,16 +53,13 @@ public class CodeTask : IDisposable
         catch (Exception e)
         {
             Debug.LogError(e);
-
         }
         finally
         {
             Destroy();
         }
-
         Destroy();
-
-
+        
     }
     ~CodeTask()
     {
@@ -67,17 +67,14 @@ public class CodeTask : IDisposable
     }
     public void Destroy()
     {
-
         Debug.LogWarning("Destroying CodeTask");
-
         CodeRunner.instance.RemoveCodeTask(this);
         if (thread != null)
         {
             //  thread.Interrupt();
-
             thread.Abort();
             thread = null;
-            
+
         }
         else
         {
@@ -86,12 +83,5 @@ public class CodeTask : IDisposable
 
         }
     }
-
-
-
-
-    public void Dispose()
-    {
-        Destroy();
-    }
+   
 }

@@ -1,29 +1,55 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Libraries.system.graphics.system_screen_buffer;
+using Libraries.system.graphics.screen_buffer32;
+
 namespace Libraries.system.graphics
 {
-    public static class Screen
+    public class Screen : BaseLibrary
     {
-        public static readonly int screenWidth = 4;
-        public static readonly int screenHeight = 4;
-        public static ScreenBuffer MakeScreenBuffer()
+        public static readonly int screenWidth = 128;
+        public static readonly int screenHeight = 128;
+
+
+        public static ScreenBuffer32 MakeScreenBuffer32()
+        {
+            return new ScreenBuffer32(screenWidth, screenHeight);
+        }
+        public static SystemScreenBuffer MakeSystemScreenBuffer()
+        {
+            return new SystemScreenBuffer(screenWidth, screenHeight);
+        }
+        public static void InitScreenBuffer32(ScreenBuffer32 screenBuffer)
+        {
+            CodeRunner.AddFunctionToStack(() =>
+            {
+                ScreenManager.instance.InitScreenBuffer(screenBuffer);
+            });
+        }
+        public static void InitSystemScreenBuffer(SystemScreenBuffer screenBuffer)
+        {
+            CodeRunner.AddFunctionToStack(() =>
+            {
+                ScreenManager.instance.InitScreenBuffer(screenBuffer);
+            });
+        }
+        public static void SetScreenBuffer(ScreenBuffer32 screenBuffer)
         {
             CodeRunner.AddFunctionToStack(() =>
             {
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            });
-            return new ScreenBuffer(screenWidth, screenHeight);
-        }
-        public static void SetScreenBuffer(ScreenBuffer screenBuffer)
-        {
+            }, sync);
 
+        }
+        public static void SetScreenBuffer(SystemScreenBuffer screenBuffer)
+        {
             CodeRunner.AddFunctionToStack(() =>
             {
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            });
+            }, sync);
 
         }
+    }
+    public class AsyncScreen : Screen
+    {
+        public static bool sync => no;
     }
 }

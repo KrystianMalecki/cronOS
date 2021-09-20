@@ -31,46 +31,38 @@ public class ScreenManager : MonoBehaviour
         instance.screen.text += text;
     }
 
-    public void InitScreenBuffer(libs.ScreenBuffer screenBuffer)
+    public void InitScreenBuffer(libs.screen_buffer32.ScreenBuffer32 screenBuffer)
     {
         bufferTexture = new Texture2D(screenBuffer.width, screenBuffer.height);
         bufferTexture.filterMode = FilterMode.Point;
         rawImage.texture = bufferTexture;
     }
-    public void SetScreenBuffer(libs.ScreenBuffer screenBuffer)
+    public void InitScreenBuffer(libs.system_screen_buffer.SystemScreenBuffer screenBuffer)
+    {
+        bufferTexture = new Texture2D(screenBuffer.width, screenBuffer.height);
+        bufferTexture.filterMode = FilterMode.Point;
+        rawImage.texture = bufferTexture;
+    }
+    public void SetScreenBuffer(libs.screen_buffer32.ScreenBuffer32 screenBuffer)
     {
 
-        /*  for (int x = 0; x < screen_buffer.width; x++)
-          {
-              for (int y = 0; y < screen_buffer.height; y++)
-              {
-                  texture.SetPixel(x, y, screen_buffer.GetPixel(x, y).ToUnityColor());
-              }
-          }*/
-        /* int size = screen_buffer.width * screen_buffer.height;
-         Color32[] result = new Color32[size];
-         unsafe
-         {
-             fixed (color* row = &(screen_buffer.texture[0, 0]))
-             {
-                 color* rowP = row;
-                 for (int i = 0; i < size; i++)
-                 {
-                     result[i] = rowP->ToUnityColor();
-                     rowP += 1;
-                 }
-             }
-         }*/
 
-        //    System.Buffer.BlockCopy(screen_buffer.texture, 0, result, 0, screen_buffer.width * screen_buffer.height);
         bufferTexture.SetPixels32(
           Array.ConvertAll(screenBuffer.texture, x => x.GetColor32())
      );
         bufferTexture.Apply();
 
-        //  screen_buffer.buffer.Apply();
-        // screen_buffer.buffer;
+
         rawImage.SetAllDirty();
-        //  rawImage.SetMaterialDirty();
+    }
+    public void SetScreenBuffer(libs.system_screen_buffer.SystemScreenBuffer screenBuffer)
+    {
+        bufferTexture.SetPixels32(
+          Array.ConvertAll(screenBuffer.texture, x => libs.system_color.ColorConstants.ToColor32(x).GetColor32())
+     );
+        bufferTexture.Apply();
+
+
+        rawImage.SetAllDirty();
     }
 }

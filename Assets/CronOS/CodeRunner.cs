@@ -20,7 +20,13 @@ public class CodeRunner : MonoBehaviour
     //   public CancellationToken ctoken;
 
 
-    public static readonly Type[] allLibraries = new Type[] { typeof(libraries.system.Console), typeof(libraries.system.graphics.Color) };
+    public static readonly Type[] allLibraries = new Type[] { typeof(Libraries.system.Console),
+    typeof(Libraries.system.graphics.Screen),
+    typeof(Libraries.system.graphics.texture32.Texture32),  typeof(Libraries.system.graphics.system_texture.SystemTexture),
+        typeof(Libraries.system.graphics.color32.Color32),  typeof(Libraries.system.graphics.system_color.SystemColor),
+                typeof(Libraries.system.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.graphics.system_screen_buffer.SystemScreenBuffer),
+
+    };
     public Type[] enabledLibraries = allLibraries;
 
     public static CodeRunner instance;
@@ -28,13 +34,15 @@ public class CodeRunner : MonoBehaviour
     [AllowNesting]
     public CodeBasement codeBasement;
 
+    [SerializeField]
+    public Queue<MainThreadFunction> actionStack = new Queue<MainThreadFunction>();
+
     public string tag;
 
 
     [ResizableTextArea] public string code;
-    private List<CodeTask> codeTasks = new List<CodeTask>();
-    [SerializeField]
-    public Queue<MainThreadFunction> actionStack = new Queue<MainThreadFunction>();
+    public List<CodeTask> codeTasks = new List<CodeTask>();
+
 
 
     [Button("Add to basement")]
@@ -67,9 +75,10 @@ public class CodeRunner : MonoBehaviour
              typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly
             );
 
-        scriptOptions = scriptOptions.AddImports(
-            "UnityEngine"
-       );
+        /*   scriptOptions = scriptOptions.AddImports(
+               "UnityEngine"
+          );*/
+
 
     }
     public void RemoveCodeTask(CodeTask codeTask)
@@ -140,29 +149,9 @@ public class CodeRunner : MonoBehaviour
     {
         //     ExecuteFromStack();
     }
-    private void ExecuteFromStack(int count = -1)
-    {
-        count = count == -1 ? actionStack.Count : count;
-        for (int i = 0; i < count; i++)
-        {
-            if (actionStack.Count > 0)
-            {
 
-                MainThreadFunction mtf = actionStack.Dequeue();
-                mtf?.Run();
-                mtf?.Dispose();
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
 
-    private static void AddToStack(MainThreadFunction function)
-    {
-        instance.actionStack.Enqueue(function);
-    }
+
     [Button("Wipe")]
 
     public void Wipe()
@@ -202,15 +191,46 @@ public class CodeRunner : MonoBehaviour
     {
         Wipe();
     }
-    public static object AddFunctionToStack(Func<object> action, bool wait = true)
+    private void ExecuteFromStack(int count = -1)
+    {
+        count = count == -1 ? actionStack.Count : count;
+        for (int i = 0; i < count; i++)
+        {
+            if (actionStack.Count > 0)
+            {
+
+                MainThreadFunction mtf = actionStack.Dequeue();
+                mtf?.Run();
+
+
+              //  mtf?.Dispose();
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
+    public void AddToStack(MainThreadFunction function)
+    {
+        actionStack.Enqueue(function);
+    }
+    private MainThreadFunction AddFunctionToStackInternal(Func<object> action)
     {
         MainThreadFunction mtf = new MainThreadFunction(action);
-
         AddToStack(mtf);
+        return mtf;
+    }
+    public static object AddFunctionToStack(Func<object> action, bool wait = true)
+    {
+
+        MainThreadFunction mtf = instance.AddFunctionToStackInternal(action);
         if (wait)
         {
+            Debug.Log("not async");
             return mtf.WaitForAction();
         }
+        Debug.Log("uh oh");
         return null;
 
     }
@@ -223,4 +243,10 @@ public class CodeRunner : MonoBehaviour
             return null;
         }, wait);
     }
+
+}
+[Serializable]
+public class clas
+{
+    public int a = 1;
 }
