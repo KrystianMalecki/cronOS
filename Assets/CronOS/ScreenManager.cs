@@ -13,7 +13,6 @@ public class ScreenManager : MonoBehaviour
     public TextMeshProUGUI screen;
     public Texture2D bufferTexture;
     public RawImage rawImage;
-
     public void Awake()
     {
         if (instance == null)
@@ -45,10 +44,9 @@ public class ScreenManager : MonoBehaviour
     }
     public void SetScreenBuffer(libs.screen_buffer32.ScreenBuffer32 screenBuffer)
     {
-
-
+     
         bufferTexture.SetPixels32(
-          Array.ConvertAll(screenBuffer.texture, x => x.GetColor32())
+          Array.ConvertAll(screenBuffer.GetArray(), x => x.GetColor32())
      );
         bufferTexture.Apply();
 
@@ -57,8 +55,9 @@ public class ScreenManager : MonoBehaviour
     }
     public void SetScreenBuffer(libs.system_screen_buffer.SystemScreenBuffer screenBuffer)
     {
+      
         bufferTexture.SetPixels32(
-          Array.ConvertAll(screenBuffer.texture, x => libs.system_color.ColorConstants.ToColor32(x).GetColor32())
+          Array.ConvertAll(screenBuffer.GetArray(), x => x.ToColor32().GetColor32())
      );
         bufferTexture.Apply();
 

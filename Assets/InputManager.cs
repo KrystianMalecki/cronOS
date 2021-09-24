@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+using Libraries.system;
+using InternalLogger;
+
 public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
+    public HashSet<KeyboardKey> pressedDownKeys = new HashSet<KeyboardKey>();
+    public HashSet<KeyboardKey> cooldownKeys = new HashSet<KeyboardKey>();
     private void Awake()
     {
         if (instance == null)
@@ -15,19 +21,38 @@ public class InputManager : MonoBehaviour
         {
             Destroy(this);
         }
-     //   StartCoroutine(ie());
     }
-    public IEnumerator ie()
+    public void RecalculatePressedKeys()
     {
-        while (true)
+        try
         {
-            currentlyPressed = KeyboardInputHelper.GetCurrentKeyss();
-            Debug.Log(string.Join(" ", currentlyPressed));
 
-            yield return new WaitForSeconds(1f);
+            IEnumerable<KeyboardKey> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
+
+
+            pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys)); //ass
+
+            //remove cooldowned
+
+
+
+            cooldownKeys.IntersectWith(pressedNow); //remove not pressed
+
+
+            // Debug.Log(pressedDownKeys.ToArrayString() + cooldownKeys.ToArrayString());
+            //  FlagLogger.Log(LogFlags.DebugInfo, pressedDownKeys.ToArrayString());
+        }
+        catch (Exception e)
+        {
+            //todo add error catch
+            FlagLogger.Log(LogFlags.SystemError, " error", e);
+
+
         }
     }
-    public List<KeyCode> currentlyPressed = new List<KeyCode>();
-     
-   
+    public void Update()
+    {
+        RecalculatePressedKeys();
+    }
+    
 }

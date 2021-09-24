@@ -33,18 +33,23 @@ namespace Libraries.system.graphics
         }
         public static void SetScreenBuffer(ScreenBuffer32 screenBuffer)
         {
+          //  test.instance.count2++;
             CodeRunner.AddFunctionToStack(() =>
             {
+              //  test.instance.count3++;
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            }, sync);
+            }, false
+            );
 
         }
         public static void SetScreenBuffer(SystemScreenBuffer screenBuffer)
         {
+          //  test.instance.count2++;
             CodeRunner.AddFunctionToStack(() =>
             {
+               // test.instance.count3++;
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            }, sync);
+            }, false);
 
         }
     }

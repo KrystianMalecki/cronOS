@@ -1,71 +1,111 @@
+using InternalLogger;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-
+/*
 [Serializable]
 public class MainThreadFunction
 {
-    public static readonly int WaitRefreshRate = 100;
-   // [SerializeField]
+    // [SerializeField]
     public object returnValue = null;
-    public Func<object> function;
+    //  public Func<object> function;
     public bool done = false;
-
-    public/* unsafe*/ void Run()
+    public FunctionDelegate function;
+    public bool TryToRun()
     {
-       /* Debug.Log("r- started running");*/
-
-        returnValue = function.Invoke();
-       /* TypedReference tr = __makeref(returnValue);
-        IntPtr ptr = **(IntPtr**)(&tr);
-       
-        Debug.Log("r- pointer" + ptr);
-
-        Debug.Log("r- finished running");
-        Debug.Log("r- is return null? " + (returnValue == null ? "is null" : "not null"));
-        Debug.Log("r- return '" + returnValue + "'");*/
-
-        done = true;
+        if (done)
+        {
+            return done;
+        }
+        bool buffer = true;
+        function.Invoke(ref buffer, ref returnValue);
+        done = buffer;
+        return done;
     }
 
 
-    public /*unsafe*/ object WaitForAction()
+    public object WaitForAction()
     {
-     //   Debug.Log("t- started waiting");
         while (!done)
         {
-             Thread.Sleep(WaitRefreshRate);
-        //    Debug.Log("t- loop is return null? " + (returnValue == null ? "is null" : "not null"));
-         //   Debug.Log("t- loop return '" + returnValue + "'");
-
-         //   TypedReference tr = __makeref(returnValue);
-         //   IntPtr ptr = **(IntPtr**)(&tr);
-         //   Debug.Log("t- loop pointer" + ptr);
+            Thread.Sleep(CodeRunner.instance.WaitRefreshRate);
         }
-       // Debug.Log("t- finished ");
-       // Debug.Log("t- is return null? " + (returnValue == null ? "is null" : "not null"));
-     //   Debug.Log("t- return '" + returnValue + "'");
-
         return returnValue;
     }
     ~MainThreadFunction()
     {
-        Dispose();
+        // FlagLogger.Log(LogFlags.DebugInfo, "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+
     }
-    public void Dispose()
+    public void Speak()
     {
-        returnValue = null;
-        function = null;
-       //ii Debug.Log("d- started running");
+        FlagLogger.Log(LogFlags.DebugInfo, "i'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+
     }
 
-    public MainThreadFunction(Func<object> a)
+
+    public MainThreadFunction(FunctionDelegate fd)
     {
-        function = a;
-        done = false;
+        function = fd;
+        // FlagLogger.Log(LogFlags.DebugInfo, "Made from" + fd.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+
+    }
+
+}
+public delegate void FunctionDelegate(ref bool done, ref object returnValue);
+*/
+[Serializable]
+public class MainThreadDelegate<T> : ITryToRun
+{
+    public T returnValue;
+    public volatile bool done = false;
+    public MTDFunction function;
+    public T WaitForReturn()
+    {
+        while (!done)
+        {
+            Thread.Sleep(CodeRunner.instance.WaitRefreshRate);
+        }
+        return returnValue;
+    }
+    ~MainThreadDelegate()
+    {
+         FlagLogger.Log(LogFlags.DebugInfo, "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+
+    }
+    public void Speak()
+    {
+        FlagLogger.Log(LogFlags.DebugInfo, "i'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+
+    }
+
+    public bool TryToRun()
+    {
+        if (done)
+        {
+            Debug.Log("it is now done");
+            Speak();
+            return done;
+        }
+        bool buffer = true;
+        function.Invoke(ref buffer, ref returnValue);
+        done = buffer;
+        return done;
     }
 
 
+    public MainThreadDelegate(MTDFunction fd)
+    {
+        function = fd;
+        // FlagLogger.Log(LogFlags.DebugInfo, "Made from" + fd.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+
+    }
+    public delegate void MTDFunction(ref bool done, ref T returnValue);
+}
+public interface ITryToRun
+{
+    bool TryToRun();
+    void Speak();
 }

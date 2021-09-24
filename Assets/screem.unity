@@ -246,7 +246,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a91b12a3d10fb4f438794989ddb9431e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentlyPressed: 
 --- !u!4 &199194235
 Transform:
   m_ObjectHideFlags: 0
@@ -306,18 +305,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1415a76d0f1aa48b353897d2cc976b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WaitRefreshRate: 1
+  TasksPerCPULoop: -1
   codeBasement: {fileID: 11400000, guid: 7a37911f5d19d5440b88d37868c4b259, type: 2}
   tag: new screen writer2
-  code: "using native_system = System;\r\n          using native_ue = UnityEngine;\r\n\n       
-    /*SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n        Screen.InitSystemScreenBuffer(buffer);\r\n       
-    int orbX = 0;\r\n        int orbY = 0;*/\n        while (true)\r\n        {\r\n\r\n          
-    /* buffer.FillAll(SystemColor.black);\r\n            buffer.SetPixel(orbX, orbY,
-    SystemColor.white);\r\n\r\n            orbX++;\r\n            if (orbX > buffer.width
-    - 1)\r\n            {\r\n                orbY++;\r\n                orbX = 0;\r\n           
+  code: "using native_system = System;\r\n          using native_ue = UnityEngine;\r\nSystemScreenBuffer
+    buffer = Screen.MakeSystemScreenBuffer();\r\n        Screen.InitSystemScreenBuffer(buffer);\r\n       
+    KeyboardHandler kh = new KeyboardHandler();\r\nkh.StartRecordingInput();\n       
+    int orbX = buffer.width / 2;\r\n        int orbY = buffer.height / 2; ;\r\n       
+    SystemColor b = 0;\r\n       // test.instance.counts0++;\r\n        while (true)\r\n       
+    {\r\n\r\n            buffer.FillAll(SystemColor.black);\r\n          //  test.instance.counts1++;\r\n           
+    buffer.SetAt(orbX, orbY, b);\r\n           // test.instance.counts2++;\r\n           
+    // orbX++;\r\n            b++;\r\n\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n          
+    // test.instance.counts3++;\r\n            if (kh.GetKeyDown(KeyboardKey.W))\r\n           
+    {\r\n                orbY++;\r\n            }\r\n           // test.instance.counts4++;\r\n           
+    if (kh.GetKeyDown(KeyboardKey.S))\r\n            {\r\n                orbY--;\r\n           
+    }\r\n           // test.instance.counts5++;\r\n            if (kh.GetKeyDown(KeyboardKey.A))\r\n           
+    {\r\n                orbX--;\r\n            }\r\n          //  test.instance.counts6++;\r\n           
+    if (kh.GetKeyDown(KeyboardKey.D))\r\n            {\r\n                orbX++;\r\n           
+    }\r\n          //  test.instance.counts7++;\r\n            if (orbX > buffer.width
+    - 1)\r\n            {\r\n                orbX = 0;\r\n            }\r\n\r\n           
+    if (orbX < 0)\r\n            {\r\n                orbX = buffer.width - 1;\r\n           
     }\r\n            if (orbY > buffer.height - 1)\r\n            {\r\n               
-    orbX = 0;\r\n                orbY = 0;\r\n            }\r\n            //console.WriteLine(\"orb
-    is at x:\"+orbX+\" y:\"+orbY);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r*/\n           
-    Runtime.Wait(1);\r\n            Input.WaitForAny();\n\n        }"
+    orbY = 0;\r\n            }\r\n            if (orbY < 0)\r\n            {\r\n               
+    orbY = buffer.height - 1;\r\n            }\r\n         //   test.instance.counts8++;\r\n           
+    Console.Debug(\"frame\"+(kh==null?\"null\":\"not\"));\r\n          //  test.instance.counts9++;\r\n           
+    Runtime.Wait(1);\r\n\n           // test.instance.counts10++;\r\n        }"
   codeTasks: []
 --- !u!1 &358341496
 GameObject:
@@ -794,6 +807,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a72455a37a87c48a6fd23b33bc997b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  count1: 0
+  count2: 0
+  count3: 0
+  count4: 0
+  count5: 0
+  counts0: 0
+  counts1: 0
+  counts2: 0
+  counts3: 0
+  counts4: 0
+  counts5: 0
+  counts6: 0
+  counts7: 0
+  counts8: 0
+  counts9: 0
+  counts10: 0
 --- !u!4 &774406599
 Transform:
   m_ObjectHideFlags: 0

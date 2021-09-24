@@ -12,10 +12,7 @@ namespace Libraries.system.graphics
             {
 
             }
-            public void FillAll(Color32 color)
-            {
-                Fill(0, 0, width, height, color);
-            }
+
             public void SetTexture(int x, int y, Texture32 texture)
             {
                 for (int iterY = 0; iterY < texture.height; iterY++)
@@ -23,7 +20,7 @@ namespace Libraries.system.graphics
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
                         //todo add check
-                        SetPixel(iterX + x, iterY + y, texture.GetPixel(x, y));
+                        SetAt(iterX + x, iterY + y, texture.GetAt(x, y));
                     }
                 }
             }
@@ -41,10 +38,6 @@ namespace Libraries.system.graphics
             {
 
             }
-            public void FillAll(SystemColor color)
-            {
-                Fill(0, 0, width, height, color);
-            }
             public void SetTexture(int x, int y, SystemTexture texture)
             {
                 for (int iterY = 0; iterY < texture.height; iterY++)
@@ -52,7 +45,7 @@ namespace Libraries.system.graphics
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
                         //todo add check
-                        SetPixel(iterX + x, iterY + y, texture.GetPixel(x, y));
+                        SetAt(iterX + x, iterY + y, texture.GetAt(x, y));
                     }
                 }
             }

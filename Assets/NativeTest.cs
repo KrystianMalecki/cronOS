@@ -14,22 +14,15 @@ public class NativeTest : MonoBehaviour
 
     }
 
-    public void Update()
+   /* public void Update()
     {
         //  Debug.Log(String.Join(" , ", KeyboardInputHelper.GetCurrentKeys()));
         //  keysPressed.Add(KeyboardInputHelper.GetCurrentKeys());
-    }
+    }*/
     public void OnDestroy()
     {
-
+     
 
     }
-    public IEnumerator ie()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f);
-            Libraries.system.Input.cl();
-        }
-    }
+   
 }

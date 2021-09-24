@@ -14,6 +14,7 @@ using native_system = System;
 
 using native_ue = UnityEngine;
 using native_input = UnityEngine.InputSystem;
+using static UnityEngine.KeyCode;
 public class test : native_ue.MonoBehaviour
 {
     /*  public CancellationTokenSource source = new CancellationTokenSource();
@@ -39,7 +40,7 @@ public class test : native_ue.MonoBehaviour
                    {
                        if (token.IsCancellationRequested)
                        {
-                           Debug.Log("canceled");
+                           FlagLogger.Log("canceled");
                            token.ThrowIfCancellationRequested();
                        }
                        Task.Delay(500).Wait();
@@ -49,11 +50,11 @@ public class test : native_ue.MonoBehaviour
                 {
                     while (true)
                     {
-                        Debug.Log("waiting" + token.IsCancellationRequested);
+                        FlagLogger.Log("waiting" + token.IsCancellationRequested);
                         Task.Delay(1000).Wait();
                     }
                 }, token);
-                Debug.Log("after setup");
+                FlagLogger.Log("after setup");
 
                 tasks.Add(killer);
                 tasks.Add(unusableLoop);
@@ -75,7 +76,7 @@ public class test : native_ue.MonoBehaviour
                 }
                 catch (OperationCanceledException oce)
                 {
-                    Debug.Log("main canceled");
+                    FlagLogger.Log("main canceled");
                     // Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
                     token.ThrowIfCancellationRequested();
                 }
@@ -83,7 +84,7 @@ public class test : native_ue.MonoBehaviour
                 {
                     source.Dispose();
                 }
-                Debug.Log("after all");
+                FlagLogger.Log("after all");
             }, token);
       }
       void ThreadVersion()
@@ -92,7 +93,7 @@ public class test : native_ue.MonoBehaviour
           {
               while (true)
               {
-                  Debug.Log("yes");
+                  FlagLogger.Log("yes");
                   Thread.Sleep(100);
               }
           });
@@ -110,47 +111,105 @@ public class test : native_ue.MonoBehaviour
           else
           {
               //todo add better loging
-              Debug.LogWarning("thread was null");
+              FlagLogger.LogWarning("thread was null");
           }
       }
       private void OnApplicationQuit()
       {
           Cancel();
       }*/
-    
+    public static test instance;
+    public int count1 = 0;
+    public int count2 = 0;
+    public int count3 = 0;
+    public int count4 = 0;
+    public int count5 = 0;
+
+    public int counts0 = 0;
+    public int counts1 = 0;
+    public int counts2 = 0;
+    public int counts3 = 0;
+    public int counts4 = 0;
+    public int counts5 = 0;
+    public int counts6 = 0;
+    public int counts7 = 0;
+    public int counts8 = 0;
+    public int counts9 = 0;
+    public int counts10 = 0;
+
+
+    public void Awake()
+    {
+        instance = this;
+    }
     private void MainCodeTest()
     {
         /*
           using native_system = System;
           using native_ue = UnityEngine;
         */
-        Random randomSystem = new Random();
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
         Screen.InitSystemScreenBuffer(buffer);
-        int orbX = 0;
-        int orbY = 0;
+        KeyboardHandler kh = KeyboardHandler.Init();
+        int orbX = buffer.width / 2;
+        int orbY = buffer.height / 2; ;
+        SystemColor b = 0;
+       // test.instance.counts0++;
         while (true)
         {
 
             buffer.FillAll(SystemColor.black);
-            buffer.SetPixel(orbX, orbY, SystemColor.white);
+          //  test.instance.counts1++;
+            buffer.SetAt(orbX, orbY, b);
+           // test.instance.counts2++;
+            // orbX++;
+            b++;
 
-            orbX++;
-            if (orbX > buffer.width - 1)
+
+            AsyncScreen.SetScreenBuffer(buffer);
+           // test.instance.counts3++;
+            if (kh.GetKeyDown(KeyboardKey.W))
             {
                 orbY++;
+            }
+           // test.instance.counts4++;
+            if (kh.GetKeyDown(KeyboardKey.S))
+            {
+                orbY--;
+            }
+           // test.instance.counts5++;
+            if (kh.GetKeyDown(KeyboardKey.A))
+            {
+                orbX--;
+            }
+          //  test.instance.counts6++;
+            if (kh.GetKeyDown(KeyboardKey.D))
+            {
+                orbX++;
+            }
+          //  test.instance.counts7++;
+            if (orbX > buffer.width - 1)
+            {
                 orbX = 0;
+            }
+
+            if (orbX < 0)
+            {
+                orbX = buffer.width - 1;
             }
             if (orbY > buffer.height - 1)
             {
-                orbX = 0;
                 orbY = 0;
             }
-            //console.WriteLine("orb is at x:"+orbX+" y:"+orbY);
-            AsyncScreen.SetScreenBuffer(buffer);
-            //  Runtime.Wait(1);
-            Console.Debug(Input.WaitForAny().ToString());
-
+            if (orbY < 0)
+            {
+                orbY = buffer.height - 1;
+            }
+         //   test.instance.counts8++;
+            Console.Debug("frame"+kh);
+          //  test.instance.counts9++;
+            Runtime.Wait(1);
+           // test.instance.counts10++;
         }
     }
     private void c()
@@ -164,6 +223,6 @@ public class test : native_ue.MonoBehaviour
         }
     }
 
-   
-
 }
+
+

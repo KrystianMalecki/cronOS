@@ -11,7 +11,7 @@ using UnityEngine;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-
+using InternalLogger;
 [Serializable]
 public class CodeTask
 {
@@ -21,67 +21,76 @@ public class CodeTask
     // public Task task = null;
     // public Task codeTask = null;
     public Thread thread;
+    public string uuid;
     [ResizableTextArea] public string rawCode;
-    public bool active;
-    [SerializeField]
-    public Queue<MainThreadFunction> actionStack = new Queue<MainThreadFunction>();
 
+    public CodeTask()
+    {
+        uuid = Guid.NewGuid().ToString();
+        // InputManager.instance.AddNewBlock(uuid);
+    }
     public void RunCode(string rawCode)
     {
         this.rawCode = rawCode;
-        // task = Task.Run(RunAsync);
         thread = new Thread(RunAsync);
 
 
 
-        thread.IsBackground = false;
+        thread.IsBackground = true;
+        //  thread.Priority = System.Threading.ThreadPriority.Highest;
+        // thread.SetApartmentState(ApartmentState.MTA);
+
+
+
         thread.Start();
+        Debug.LogError(thread + "null?" + (thread == null ? "yes" : "no"));
     }
     private async void RunAsync()
     {
-       // Thread.SetData(Thread.GetNamedDataSlot(ThreadCodeTaskID), this);
-       // Thread.SetData(Thread.GetNamedDataSlot(ThreadID), thread.ManagedThreadId);
         try
         {
-            await CSharpScript.EvaluateAsync(this.rawCode, CodeRunner.instance.scriptOptions);
+            var s = CSharpScript.Create(this.rawCode, CodeRunner.instance.scriptOptions);
+            var s2 = s.CreateDelegate();
+            await s2.Invoke();
         }
         catch (ThreadAbortException tae)
         {
             //todo add better logging
-            Debug.LogWarning("Aborted thread running code.\nData: " + tae.Message);
+            FlagLogger.LogWarning(LogFlags.SystemWarning, "Aborted thread running code.\nData: " + tae.Message);
         }
         catch (Exception e)
         {
-            Debug.LogError(e);
+            FlagLogger.LogError(LogFlags.SystemError, "error:", e);
         }
-        finally
-        {
-            Destroy();
-        }
-        Destroy();
-        
+        Debug.Log("end");
+        //  Destroy();
+
+
     }
     ~CodeTask()
     {
+        // InputManager.instance.RemoveBlock(uuid);
+        Debug.Log("Co dop chuja ct");
+
         Destroy();
     }
     public void Destroy()
     {
-        Debug.LogWarning("Destroying CodeTask");
+        FlagLogger.LogWarning(LogFlags.SystemWarning, "Destroying CodeTask");
         CodeRunner.instance.RemoveCodeTask(this);
         if (thread != null)
         {
             //  thread.Interrupt();
             thread.Abort();
+            thread.Join();
             thread = null;
-
         }
         else
         {
             //todo add better loging
-            Debug.LogWarning("thread was null");
+            FlagLogger.LogWarning(LogFlags.SystemWarning, "thread was null");
 
         }
     }
-   
+
 }

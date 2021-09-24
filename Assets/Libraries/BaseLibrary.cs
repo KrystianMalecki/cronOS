@@ -8,7 +8,7 @@ public class BaseLibrary
     // private CodeTask _currentCodeTask;
 
     public static bool no => false;
-    public static bool yes => false;
+    public static bool yes => true;
     public static bool sync => yes;
 
     protected static CodeTask currentCodeTask
