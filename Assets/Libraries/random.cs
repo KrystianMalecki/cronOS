@@ -31,7 +31,19 @@ namespace Libraries.system
         }
         public byte NextByte(byte min = byte.MinValue, byte max = byte.MaxValue)
         {
-            return (byte)systemRandom.Next(min, max);
+            return (byte)NextInt(min, max);
+        }
+        public float NextFloat(float min = float.MinValue, float max = float.MaxValue)
+        {
+            return (float)NextDouble(min, max);
+        }
+        public double NextDouble(double min = double.MinValue, double max = double.MaxValue)
+        {
+            return (systemRandom.NextDouble() * max) - min;
+        }
+        public float NextFloat01()
+        {
+            return (float)NextDouble(0, 1);
         }
     }
 }

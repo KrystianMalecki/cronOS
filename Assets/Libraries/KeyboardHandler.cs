@@ -6,6 +6,8 @@ using UnityEngine;
 using static test;
 using InternalLogger;
 using System.Linq;
+
+
 namespace Libraries.system
 {
 
@@ -22,74 +24,28 @@ namespace Libraries.system
             kh.StartRecordingInput();
             return kh;
         }
-        public void StartRecordingInput()
-
+        KeyboardHandler()
         {
-            mtf = new MainThreadDelegate<Exception>((ref bool done, ref Exception returnVal) =>
+            _waitForInputAction = new MainThreadDelegate<KeyboardSequence>.MTDFunction((ref bool done, ref KeyboardSequence returnVal) =>
+             {
+                 RecalculatePressedKeys();
+                 if (pressedDownKeys.Count > 0)
+                 {
+
+                     returnVal = new KeyboardSequence(pressedDownKeys.ToList());
+                     done = true;
+                 }
+                 else
+                 {
+                     done = false;
+                 }
+             });
+            _waitForInputDownAction = new MainThreadDelegate<KeyboardSequence>.MTDFunction((ref bool done, ref KeyboardSequence returnVal) =>
             {
-                //  test.instance.count4++;
-                done = false;
-                //  Debug.Log("fuck you");
                 RecalculatePressedKeys();
-                done = false;
-            });
-            mtf.Speak();
-
-            CodeRunner.AddFunctionToStack(mtf, false);
-        }
-        public void RecalculatePressedKeys()
-        {
-            try
-            {
-
-                IEnumerable<KeyboardKey> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
-
-
-                pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys)); //ass
-
-                //remove cooldowned
-
-
-
-                cooldownKeys.IntersectWith(pressedNow); //remove not pressed
-
-
-                // Debug.Log(pressedDownKeys.ToArrayString() + cooldownKeys.ToArrayString());
-                //  FlagLogger.Log(LogFlags.DebugInfo, pressedDownKeys.ToArrayString());
-            }
-            catch (Exception e)
-            {
-                //todo add error catch
-                FlagLogger.Log(LogFlags.SystemError, " error", e);
-
-
-            }
-        }
-        public bool GetKeyDown(KeyboardKey key)
-        {
-            //test.instance.count5++;
-            if (pressedDownKeys.Contains(key))
-            {
-
-                pressedDownKeys.Remove(key);
-                cooldownKeys.Add(key);
-                CodeRunner.AddFunctionToStack(RecalculatePressedKeys, true);
-                return true;
-            }
-
-            return false;
-        }
-        ~KeyboardHandler()
-        {
-            InternalLogger.FlagLogger.Log(LogFlags.DebugInfo, "died");
-            Debug.Log("Co dop chuja kh");
-        }
-        public KeyboardSequence WaitForInputDown()
-        {
-            MainThreadDelegate<KeyboardSequence> mtd = new MainThreadDelegate<KeyboardSequence>((ref bool done, ref KeyboardSequence returnVal) =>
-            {
                 if (pressedDownKeys.Count > 0)
                 {
+                    cooldownKeys.UnionWith(pressedDownKeys);
                     returnVal = new KeyboardSequence(pressedDownKeys.ToList());
                     done = true;
                 }
@@ -98,23 +54,81 @@ namespace Libraries.system
                     done = false;
                 }
             });
-            return CodeRunner.AddFunctionToStack(mtd, true);
-
         }
-        public class KeyboardSequence
+        public void StartRecordingInput()
+
         {
-            //todo maybe change
-            public List<KeyboardKey> keys = new List<KeyboardKey>();
-            public bool HasKey(KeyboardKey key)
+            mtf = new MainThreadDelegate<Exception>((ref bool done, ref Exception returnVal) =>
             {
-                return keys.Contains(key);
-            }
+                done = false;
+                RecalculatePressedKeys();
+                done = false;
+            });
+            mtf.Speak();
 
-            public KeyboardSequence(List<KeyboardKey> keys)
+            ScriptManager.AddDelegateToStack(mtf, false);
+        }
+        public void RecalculatePressedKeys()
+        {
+            try
             {
-                this.keys = keys;
+                IEnumerable<KeyboardKey> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
+                pressedDownKeys.Clear();
+                pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys)); //ass
+
+                //remove cooldowned
+                cooldownKeys.IntersectWith(pressedNow); //remove not pressed
+            }
+            catch (Exception e)
+            {
+                FlagLogger.Log(LogFlags.SystemError, " error", e);
             }
         }
 
+        public bool GetKeyDown(KeyboardKey key)
+        {
+            //test.instance.count5++;
+            if (pressedDownKeys.Contains(key))
+            {
+
+                pressedDownKeys.Remove(key);
+                cooldownKeys.Add(key);
+                ScriptManager.AddDelegateToStack(RecalculatePressedKeys, true);
+                return true;
+            }
+
+            return false;
+        }
+        ~KeyboardHandler()
+        {
+            InternalLogger.FlagLogger.Log(LogFlags.DebugInfo, "KeyboardHandler died.");
+        }
+        private MainThreadDelegate<KeyboardSequence>.MTDFunction _waitForInputAction;
+        public KeyboardSequence WaitForInput()
+        {
+            return ScriptManager.AddDelegateToStack(_waitForInputAction, true);
+        }
+        private MainThreadDelegate<KeyboardSequence>.MTDFunction _waitForInputDownAction;
+
+        public KeyboardSequence WaitForInputDown()
+        {
+            return ScriptManager.AddDelegateToStack(_waitForInputDownAction, true);
+        }
+
+    }
+    public class KeyboardSequence
+    {
+        public List<KeyboardKey> keys = new List<KeyboardKey>();
+        public bool HasKey(KeyboardKey key)
+        {
+            bool b = keys.Contains(key);
+            keys.Remove(key);
+            return b;
+        }
+
+        public KeyboardSequence(List<KeyboardKey> keys)
+        {
+            this.keys = keys;
+        }
     }
 }

@@ -10,8 +10,8 @@ public class BaseLibrary
     public static bool no => false;
     public static bool yes => true;
     public static bool sync => yes;
-
-    protected static CodeTask currentCodeTask
+    //todo 9 remove
+  /*  protected static CodeTask currentCodeTask
     {
         get
         {
@@ -21,5 +21,5 @@ public class BaseLibrary
             }
          //   return _currentCodeTask;
         }
-    }
+    }*/
 }

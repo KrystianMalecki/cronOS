@@ -13,13 +13,13 @@ namespace Libraries.system
         public static void Wait(int time)
         {
             // Task.Delay(time).Wait();
-            Thread.Sleep(Math.Max(time, CodeRunner.instance.WaitRefreshRate));
+            Thread.Sleep(Math.Max(time, ProcessorManager.instance.WaitRefreshRate));
             // test.instance.count1++;
         }
         public static void Wait()
         {
             // Task.Delay(time).Wait();
-            Thread.Sleep(CodeRunner.instance.WaitRefreshRate);
+            Thread.Sleep(ProcessorManager.instance.WaitRefreshRate);
             // test.instance.count1++;
         }
     }

@@ -19,8 +19,9 @@ namespace Libraries.system.graphics
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
-                        //todo add check
-                        SetAt(iterX + x, iterY + y, texture.GetAt(x, y));
+                        //
+                        //todo 6 add check
+                        SetAt(iterX + x, iterY + y, texture.GetAt(iterX, iterY));
                     }
                 }
             }
@@ -31,6 +32,7 @@ namespace Libraries.system.graphics
     {
         using system_texture;
         using system_color;
+        using UnityEngine;
 
         public class SystemScreenBuffer : SystemTexture
         {
@@ -44,8 +46,9 @@ namespace Libraries.system.graphics
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
-                        //todo add check
-                        SetAt(iterX + x, iterY + y, texture.GetAt(x, y));
+                        //todo 6 add check
+                        //Debug.Log($"{iterX} + {x}, {iterY} + {y}, {texture.GetAt(iterX, iterY)}");
+                        SetAt(x + iterX, y + iterY, texture.GetAt(iterX, iterY));
                     }
                 }
             }

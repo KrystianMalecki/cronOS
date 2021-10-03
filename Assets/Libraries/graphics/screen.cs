@@ -19,37 +19,33 @@ namespace Libraries.system.graphics
         }
         public static void InitScreenBuffer32(ScreenBuffer32 screenBuffer)
         {
-            CodeRunner.AddFunctionToStack(() =>
+            ScriptManager.AddDelegateToStack(() =>
             {
                 ScreenManager.instance.InitScreenBuffer(screenBuffer);
             });
         }
         public static void InitSystemScreenBuffer(SystemScreenBuffer screenBuffer)
         {
-            CodeRunner.AddFunctionToStack(() =>
+            ScriptManager.AddDelegateToStack(() =>
             {
                 ScreenManager.instance.InitScreenBuffer(screenBuffer);
             });
         }
         public static void SetScreenBuffer(ScreenBuffer32 screenBuffer)
         {
-          //  test.instance.count2++;
-            CodeRunner.AddFunctionToStack(() =>
+            ScriptManager.AddDelegateToStack(() =>
             {
-              //  test.instance.count3++;
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            }, false
+            }, sync
             );
 
         }
         public static void SetScreenBuffer(SystemScreenBuffer screenBuffer)
         {
-          //  test.instance.count2++;
-            CodeRunner.AddFunctionToStack(() =>
+            ScriptManager.AddDelegateToStack(() =>
             {
-               // test.instance.count3++;
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            }, false);
+            }, sync);
 
         }
     }

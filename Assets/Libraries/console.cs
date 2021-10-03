@@ -15,7 +15,7 @@ namespace Libraries.system
         public static void Write(string text)
         {
 #if !DLL
-            CodeRunner.AddFunctionToStack(() => { ScreenManager.AddToScreen(text); }, sync);
+            ScriptManager.AddDelegateToStack(() => { ScreenManager.AddToScreen(text); }, sync);
 #else
             System.Console.WriteLine("write: " + text);
 #endif
@@ -24,10 +24,10 @@ namespace Libraries.system
         {
             Write(text + "\n");
         }
-        public static void Debug(string text)
+        public static void Debug(object obj)
         {
 #if !DLL
-            UnityEngine.Debug.Log(text);
+            UnityEngine.Debug.Log(obj);
 #else
             System.Console.WriteLine("debug: " + text);
 

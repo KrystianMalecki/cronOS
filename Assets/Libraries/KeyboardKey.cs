@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Libraries.system
 {
-    public static class KeyCodeExtender
+    public static class KeyboardKeyExtension
     {
         public static KeyboardKey ToWrapper(this KeyCode keyCode)
         {

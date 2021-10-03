@@ -1,3 +1,4 @@
+//#define LogOptimize
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,31 +18,37 @@ namespace InternalLogger
     }
     public static class FlagLogger
     {
-       // public static LogFlags enabledFlags = LogFlags.DebugInfo | LogFlags.SystemWarning|LogFlags.SystemError;
-          public static LogFlags enabledFlags = LogFlags.All;
+        public static LogFlags enabledFlags = LogFlags.SystemWarning | LogFlags.SystemError;
+        // public static LogFlags enabledFlags = LogFlags.All;
         //   public static LogFlags enabledFlags = LogFlags.None;
 
 
         public static void Log(LogFlags flag, params object[] objs)
         {
+#if !LogOptimize
             if ((enabledFlags & flag) == flag)
             {
                 Debug.Log(objs.ToArrayString());
             }
+#endif
         }
         public static void LogWarning(LogFlags flag, params object[] objs)
         {
+#if !LogOptimize
             if ((enabledFlags & flag) == flag)
             {
                 Debug.LogWarning(objs.ToArrayString());
             }
+#endif
         }
         public static void LogError(LogFlags flag, params object[] objs)
         {
+#if !LogOptimize
             if ((enabledFlags & flag) == flag)
             {
                 Debug.LogError(objs.ToArrayString());
             }
+#endif
         }
         private static string ToArrayString<T>(this IEnumerable<T> ie)
         {

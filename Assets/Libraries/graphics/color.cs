@@ -15,6 +15,7 @@ namespace Libraries.system.graphics
             {
                 return color;
             }
+            public static readonly short sizeOf = sizeof(int);
 
             public byte r
             {
@@ -149,9 +150,10 @@ namespace Libraries.system.graphics
               public static byte yellow = 14;
               public static byte white = 15;*/
         }
-
+        [Serializable]
         public struct SystemColor
         {
+            [SerializeField]
             private byte _value;
             public byte value
             {
@@ -206,6 +208,32 @@ namespace Libraries.system.graphics
             {
                 return !(sc == sc2);
             }
+            public override string ToString()
+            {
+                switch (value)
+                {
+                    case 0: return "black";
+                    case 1: return "blue";
+                    case 2: return "green";
+                    case 3: return "cyan";
+                    case 4: return "red";
+                    case 5: return "magenta";
+                    case 6: return "brown";
+                    case 7: return "light_gray";
+                    case 8: return "dark_gray";
+                    case 9: return "light_blue";
+                    case 10: return "light_green";
+                    case 11: return "light_cyan";
+                    case 12: return "light_red";
+                    case 13: return "light_magenta";
+                    case 14: return "yellow";
+                    case 15: return "white";
+
+                }
+                return "unknown";
+            }
+
+            public static readonly short sizeOf = sizeof(byte);
 
             public static readonly SystemColor black = new SystemColor(0);
             public static readonly SystemColor blue = new SystemColor(1);
