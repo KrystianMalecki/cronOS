@@ -26,7 +26,7 @@ public class FileSystemInternal : MonoBehaviour
 
     public File GetFileByPath(string path)
     {
-        string[] parts = path.Split("/");
+        string[] parts = path.Split('/');
         Drive d = drives.Find(x => x.driveFile.name + ":" == parts[0]);
         //todo 8 check d
         File currentFile = d.driveFile;
