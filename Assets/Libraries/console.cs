@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEditor;
+using System.Runtime.CompilerServices;
 
 namespace Libraries.system
 {
@@ -33,7 +34,10 @@ namespace Libraries.system
 
 #endif
         }
-
+        public static void Line([System.Runtime.CompilerServices.CallerLineNumber] int line = 0)
+        {
+            UnityEngine.Debug.Log(line);
+        }
 
     }
     public class AsyncConsole : Console

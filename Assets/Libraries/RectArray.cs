@@ -90,7 +90,6 @@ namespace Libraries.system
         protected static RectArray<T> FromData(byte[] data, short sizeOfT, Func<byte[], T> converter)
         {
             int __counter = 0;
-            Debug.Log(data.ToArrayString());
             int width = BitConverter.ToInt32(data, __counter); __counter += (sizeof(Int32));
             int height = BitConverter.ToInt32(data, __counter); __counter += (sizeof(Int32));
             RectArray<T> __structure = new RectArray<T>(width, height);
@@ -108,7 +107,6 @@ namespace Libraries.system
               {
                   __structure.array[i] = converter.Invoke(data);
               }*/
-
             return __structure;
         }
         public bool IsPointInRange(int x, int y)

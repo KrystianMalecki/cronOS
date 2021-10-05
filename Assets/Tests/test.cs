@@ -43,6 +43,7 @@ public class test : native_ue.MonoBehaviour
     public void Awake()
     {
         instance = this;
+
     }
     private void MainCodeTest()
     {

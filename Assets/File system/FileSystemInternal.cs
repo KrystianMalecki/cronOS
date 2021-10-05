@@ -32,7 +32,6 @@ public class FileSystemInternal : MonoBehaviour
         File currentFile = d.driveFile;
         for (int i = 1; i < parts.Length; i++)
         {
-
             if (string.IsNullOrEmpty(parts[i]))
             {
                 return currentFile;
@@ -44,6 +43,7 @@ public class FileSystemInternal : MonoBehaviour
             }
         }
         return currentFile;
+
     }
     public string path;
     [SerializeReference]

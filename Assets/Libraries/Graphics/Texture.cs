@@ -29,8 +29,8 @@ namespace Libraries.system.graphics
     }
     namespace system_texture
     {
-        using System;
         using system_color;
+
         [Serializable]
         public class SystemTexture : RectArray<SystemColor>
         {
@@ -49,6 +49,7 @@ namespace Libraries.system.graphics
 
             public static SystemTexture FromData(byte[] data)
             {
+                Console.Debug("1");
                 return new SystemTexture(RectArray<SystemColor>.FromData(data, SystemColor.sizeOf, x => x[0]));
             }
 

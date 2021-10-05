@@ -16,13 +16,14 @@ namespace Libraries.system.filesystem
     [System.Serializable]
     public class File
     {
+        public string name;
         [NaughtyAttributes.OnValueChanged("_setByte")]
         [AllowNesting]
         public string textData;
         [AllowNesting]
         [NaughtyAttributes.OnValueChanged("_setText")]
         public byte[] data;
-        public string name;
+
         public string extension;
         [AllowNesting]
         [SerializeField]
@@ -69,7 +70,7 @@ namespace Libraries.system.filesystem
         }
         public string GetFullName()
         {
-            return name + (string.IsNullOrEmpty(extension) ? "" : ("." + extension));
+            return name + ((!string.IsNullOrEmpty(extension)) && (extension != "DIR") ? ("." + extension) : "");
         }
         public string GetFullPath()
         {
@@ -114,10 +115,14 @@ namespace Libraries.system.filesystem
             return null;
         }
 
-        public System.IO.MemoryStream Open()
-        {
+        /*   public System.IO.MemoryStream Open()
+           {
 
-            return new System.IO.MemoryStream(data);
+               return new System.IO.MemoryStream(data);
+           }*/
+        public override string ToString()
+        {
+            return GetFullName();
         }
     }
 }
