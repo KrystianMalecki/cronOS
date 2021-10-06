@@ -166,27 +166,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runOnStart: 1
   code: "SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
     File playerTextureFile = FileSystem.GetFileByPath(\"C:/System/dupa.dll\");\r\n       
     SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);\r\n       
-    Screen.InitSystemScreenBuffer(buffer);\r\n        KeyboardHandler kh = KeyboardHandler.Init();\r\n       
-    KeyboardSequence ks = null;\r\n        int orbX = buffer.width / 2;\r\n       
-    int orbY = buffer.height / 2; ;\r\n        SystemColor b = 0;\r\n        while
-    (true)\r\n        {\r\n\r\n           buffer.FillAll(SystemColor.black);\r\n           
-    buffer.SetTexture(orbX, orbY, playerTexture);\r\n\r buffer.SetAt(0,0,SystemColor.white);\r\n           
-    // b++;\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n\r\n           
-    ks = kh.WaitForInput();\r\n            if (ks.HasKey(KeyboardKey.W))\r\n           
-    {\r\n                orbY--;\r\n            }\r\n            if (ks.HasKey(KeyboardKey.S))\r\n           
-    {\r\n                orbY++;\r\n            }\r\n            if (ks.HasKey(KeyboardKey.A))\r\n           
-    {\r\n                orbX--;\r\n            }\r\n            if (ks.HasKey(KeyboardKey.D))\r\n           
-    {\r\n                orbX++;\r\n            }\r\n            if (orbX > buffer.width
-    - playerTexture.width)\r\n            {\r\n                orbX = buffer.width
-    - playerTexture.width;\r\n            }\r\n            if (orbX < 0)\r\n           
-    {\r\n                orbX = 0;\r\n            }\r\n            //Console.Debug($\"{orbY}
-    is > than {buffer.height - playerTexture.height} or {buffer.height} - {playerTexture.height}\");\r\n           
-    if (orbY > buffer.height - playerTexture.height)\r\n            {\r\n               
-    orbY = buffer.height - playerTexture.height;\r\n            }\r\n           
-    if (orbY < 0)\r\n            {\r\n                orbY = 0;\r\n            }\nRuntime.Wait(1);\r\n       
+    Screen.InitSystemScreenBuffer(buffer);\r\n        KeyHandler kh = KeyHandler.Init();\r\n       
+    KeySequence ks = null;\r\n        int orbX = buffer.width / 2;\r\n        int
+    orbY = buffer.height / 2; ;\r\n        SystemColor b = 0;\r\n        while (true)\r\n       
+    {\r\n\r\n        //    buffer.FillAll(SystemColor.black);\r\n           // buffer.SetTexture(orbX,
+    orbY, playerTexture);\r\n\r\n            // b++;\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n           
+    Vector2Int v2 = MouseHander.GetScreenPosition();\r\n            orbX = v2.x;\r\n           
+    orbY = v2.y;\r\n            ks = kh.WaitForInput();\r\nif (ks.HasKey(Key.Mouse0))\r\n           
+    {\r\n               buffer.SetTexture(orbX, orbY, playerTexture);\r\n           
+    }\r\n          /*  if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))\r\n           
+    {\r\n                orbY--;\r\n            }\r\n            if (ks.HasKey(Key.DownArrow)
+    || ks.HasKey(Key.S))\r\n            {\r\n                orbY++;\r\n           
+    }\r\n            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))\r\n           
+    {\r\n                orbX--;\r\n            }\r\n            if (ks.HasKey(Key.RightArrow)
+    || ks.HasKey(Key.D))\r\n            {\r\n                orbX++;\r\n           
+    }*/\r\n            if (orbX > buffer.width - playerTexture.width)\r\n           
+    {\r\n                orbX = buffer.width - playerTexture.width;\r\n           
+    }\r\n            if (orbX < 0)\r\n            {\r\n                orbX = 0;\r\n           
+    }\r\n           // Console.Debug($\"{orbY} is > than {buffer.height - playerTexture.height}
+    or {buffer.height} - {playerTexture.height}\");\r\n            if (orbY > buffer.height
+    - playerTexture.height)\r\n            {\r\n                orbY = buffer.height
+    - playerTexture.height;\r\n            }\r\n            if (orbY < 0)\r\n           
+    {\r\n                orbY = 0;\r\n            }\r\n\r\n            Runtime.Wait(1);\r\n       
     }"
 --- !u!1 &358341496
 GameObject:
@@ -516,7 +521,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &632187780
 RectTransform:
   m_ObjectHideFlags: 0
@@ -971,6 +976,7 @@ GameObject:
   - component: {fileID: 1446994156}
   - component: {fileID: 1446994158}
   - component: {fileID: 1446994157}
+  - component: {fileID: 1446994159}
   m_Layer: 5
   m_Name: Screen
   m_TagString: Untagged
@@ -992,10 +998,10 @@ RectTransform:
   m_Father: {fileID: 448482745}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 768, y: 768}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1446994157
 MonoBehaviour:
@@ -1032,6 +1038,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446994155}
   m_CullTransparentMesh: 1
+--- !u!114 &1446994159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1446994155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 2
+  m_AspectRatio: 1
 --- !u!1 &1879574975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,7 +1081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823ecdaec4ee68c4990b558d7e7bb8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaitRefreshRate: 1
+  WaitRefreshRate: 33
   TasksPerCPULoop: -1
   canRun: 0
 --- !u!4 &1879574977

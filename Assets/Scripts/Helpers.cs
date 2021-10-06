@@ -31,9 +31,26 @@ public static class StaticHelper
     }
     public static char ToChar(this byte onebyte)
     {
-        //  char c = '\u0009';
         return ((char)onebyte);
     }
+    public static Vector2 ToVector2(this Vector3 v3)
+    {
+        return new Vector2(v3.x, v3.y);
+    }
+    public static Vector2Int ToVectorInt2(this Vector3Int v3)
+    {
+        return new Vector2Int(v3.x, v3.y);
+    }
+    public static Vector3 ToVector3(this Vector2 v2)
+    {
+        return new Vector3(v2.x, v2.y);
+    }
+    public static Vector3Int ToVectorInt3(this Vector2Int v2)
+    {
+        return new Vector3Int(v2.x, v2.y, 0);
+    }
+
+
     /*  public static unsafe byte[] ConvertToBytes<T>(T value) where T : unmanaged
       {
           byte* pointer = (byte*)&value;

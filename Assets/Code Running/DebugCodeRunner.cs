@@ -17,7 +17,9 @@ using InternalLogger;
 public class DebugCodeRunner : MonoBehaviour
 {
 
-
+    public bool runOnStart;
+    [Foldout("Code")]
+    [ResizableTextArea] public string code;
     private void Awake()
     {
         if (instance == null)
@@ -31,7 +33,14 @@ public class DebugCodeRunner : MonoBehaviour
     }
     public static DebugCodeRunner instance;
 
-
+    public void Start()
+    {
+        if (runOnStart)
+        {
+            RunCode();
+           
+        }
+    }
 
     [Button("Run code")]
     void RunCode()
@@ -46,6 +55,6 @@ public class DebugCodeRunner : MonoBehaviour
     {
         ScriptManager.instance.KillAll();
     }
-    [ResizableTextArea] public string code;
+
 
 }

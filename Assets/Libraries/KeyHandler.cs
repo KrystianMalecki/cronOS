@@ -11,28 +11,28 @@ using System.Linq;
 namespace Libraries.system
 {
 
-    public class KeyboardHandler
+    public class KeyHandler
     {
-        public HashSet<KeyboardKey> pressedDownKeys = new HashSet<KeyboardKey>();
-        public HashSet<KeyboardKey> cooldownKeys = new HashSet<KeyboardKey>();
+        public HashSet<Key> pressedDownKeys = new HashSet<Key>();
+        public HashSet<Key> cooldownKeys = new HashSet<Key>();
         //todo 1 fix or move it
         MainThreadDelegate<Exception> mtf;
         //maybe move to somewhere else
-        public static KeyboardHandler Init()
+        public static KeyHandler Init()
         {
-            KeyboardHandler kh = new KeyboardHandler();
+            KeyHandler kh = new KeyHandler();
             kh.StartRecordingInput();
             return kh;
         }
-        KeyboardHandler()
+        KeyHandler()
         {
-            _waitForInputAction = new MainThreadDelegate<KeyboardSequence>.MTDFunction((ref bool done, ref KeyboardSequence returnVal) =>
+            _waitForInputAction = new MainThreadDelegate<KeySequence>.MTDFunction((ref bool done, ref KeySequence returnVal) =>
              {
                  RecalculatePressedKeys();
                  if (pressedDownKeys.Count > 0)
                  {
 
-                     returnVal = new KeyboardSequence(pressedDownKeys.ToList());
+                     returnVal = new KeySequence(pressedDownKeys.ToList());
                      done = true;
                  }
                  else
@@ -40,13 +40,13 @@ namespace Libraries.system
                      done = false;
                  }
              });
-            _waitForInputDownAction = new MainThreadDelegate<KeyboardSequence>.MTDFunction((ref bool done, ref KeyboardSequence returnVal) =>
+            _waitForInputDownAction = new MainThreadDelegate<KeySequence>.MTDFunction((ref bool done, ref KeySequence returnVal) =>
             {
                 RecalculatePressedKeys();
                 if (pressedDownKeys.Count > 0)
                 {
                     cooldownKeys.UnionWith(pressedDownKeys);
-                    returnVal = new KeyboardSequence(pressedDownKeys.ToList());
+                    returnVal = new KeySequence(pressedDownKeys.ToList());
                     done = true;
                 }
                 else
@@ -72,7 +72,7 @@ namespace Libraries.system
         {
             try
             {
-                IEnumerable<KeyboardKey> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
+                IEnumerable<Key> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
                 pressedDownKeys.Clear();
                 pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys)); //ass
 
@@ -85,7 +85,7 @@ namespace Libraries.system
             }
         }
 
-        public bool GetKeyDown(KeyboardKey key)
+        public bool GetKeyDown(Key key)
         {
             //test.instance.count5++;
             if (pressedDownKeys.Contains(key))
@@ -99,34 +99,34 @@ namespace Libraries.system
 
             return false;
         }
-        ~KeyboardHandler()
+        ~KeyHandler()
         {
             InternalLogger.FlagLogger.Log(LogFlags.DebugInfo, "KeyboardHandler died.");
         }
-        private MainThreadDelegate<KeyboardSequence>.MTDFunction _waitForInputAction;
-        public KeyboardSequence WaitForInput()
+        private MainThreadDelegate<KeySequence>.MTDFunction _waitForInputAction;
+        public KeySequence WaitForInput()
         {
             return ScriptManager.AddDelegateToStack(_waitForInputAction, true);
         }
-        private MainThreadDelegate<KeyboardSequence>.MTDFunction _waitForInputDownAction;
+        private MainThreadDelegate<KeySequence>.MTDFunction _waitForInputDownAction;
 
-        public KeyboardSequence WaitForInputDown()
+        public KeySequence WaitForInputDown()
         {
             return ScriptManager.AddDelegateToStack(_waitForInputDownAction, true);
         }
 
     }
-    public class KeyboardSequence
+    public class KeySequence
     {
-        public List<KeyboardKey> keys = new List<KeyboardKey>();
-        public bool HasKey(KeyboardKey key)
+        public List<Key> keys = new List<Key>();
+        public bool HasKey(Key key)
         {
             bool b = keys.Contains(key);
             keys.Remove(key);
             return b;
         }
 
-        public KeyboardSequence(List<KeyboardKey> keys)
+        public KeySequence(List<Key> keys)
         {
             this.keys = keys;
         }

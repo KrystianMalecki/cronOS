@@ -4,25 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Libraries.system
 {
-    public static class KeyboardKeyExtension
+    public static class KeyExtension
     {
-        public static KeyboardKey ToWrapper(this KeyCode keyCode)
+        public static Key ToWrapper(this KeyCode keyCode)
         {
             try
             {
-                return (KeyboardKey)keyCode;
+                return (Key)keyCode;
             }
             catch (Exception)
             {
-                return KeyboardKey.None;
+                return Key.None;
             }
         }
-        public static KeyCode ToBase(this KeyboardKey wrapper)
+        public static KeyCode ToBase(this Key wrapper)
         {
             return (KeyCode)wrapper;
         }
     }
-    public enum KeyboardKey
+    public enum Key
     {
 
         None = 0,

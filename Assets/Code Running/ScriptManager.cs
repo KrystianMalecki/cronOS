@@ -31,7 +31,7 @@ public class ScriptManager : MonoBehaviour
     typeof(Libraries.system.graphics.texture32.Texture32),  typeof(Libraries.system.graphics.system_texture.SystemTexture),
     typeof(Libraries.system.graphics.color32.Color32),  typeof(Libraries.system.graphics.system_color.ColorConstants),
     typeof(Libraries.system.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.graphics.system_screen_buffer.SystemScreenBuffer),
-    typeof(Libraries.system.filesystem.File)
+    typeof(Libraries.system.filesystem.File), typeof(Libraries.system.math.Vector2)
     };
 
 
@@ -180,7 +180,7 @@ public class ScriptManager : MonoBehaviour
     }
     public static string CodeParser(string code)
     {
-        //todo 3 add special usings
+        //todo future add special usings
         //using native_system = System;
         //using native_ue = UnityEngine;
         //not needed??

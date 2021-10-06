@@ -11,7 +11,7 @@ public static class KeyboardInputHelper
     static readonly KeyCode[] _keyCodes =
         System.Enum.GetValues(typeof(KeyCode))
             .Cast<KeyCode>()
-            .Where(k => k < KeyCode.Mouse0)
+            .Where(k => k <= KeyCode.Mouse6)
             .ToArray();
 
     /// <summary>
@@ -48,22 +48,22 @@ public static class KeyboardInputHelper
                     yield return _keyCodes[i];
         }
     }
-    public static IEnumerable<Libraries.system.KeyboardKey> GetCurrentKeysWrapped()
+    public static IEnumerable<Libraries.system.Key> GetCurrentKeysWrapped()
     {
         if (Input.anyKey)
         {
             for (int i = 0; i < _keyCodes.Length; i++)
                 if (Input.GetKey(_keyCodes[i]))
-                    yield return Libraries.system.KeyboardKeyExtension.ToWrapper(_keyCodes[i]);
+                    yield return Libraries.system.KeyExtension.ToWrapper(_keyCodes[i]);
         }
 
     }
-    public static IEnumerable<Libraries.system.KeyboardKey> GetCurrentKeysUpWrapped()
+    public static IEnumerable<Libraries.system.Key> GetCurrentKeysUpWrapped()
     {
 
         for (int i = 0; i < _keyCodes.Length; i++)
             if (Input.GetKeyUp(_keyCodes[i]))
-                yield return Libraries.system.KeyboardKeyExtension.ToWrapper(_keyCodes[i]);
+                yield return Libraries.system.KeyExtension.ToWrapper(_keyCodes[i]);
 
     }
     public static List<KeyCode> GetCurrentKeyss()

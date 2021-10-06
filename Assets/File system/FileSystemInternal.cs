@@ -48,7 +48,7 @@ public class FileSystemInternal : MonoBehaviour
     public string path;
     [SerializeReference]
     public File file;
-    [Button]
+   
     public void getfile()
     {
         file = GetFileByPath(path);

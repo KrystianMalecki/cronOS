@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    internal static class StreamHelper
+    internal static class        StreamHelper                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     {
         public static int ReadBigEndianInt32(Stream stream)
         {

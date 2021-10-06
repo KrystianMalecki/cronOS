@@ -26,12 +26,13 @@ public class NativeTest : MonoBehaviour
     }
     public string datas2;
 
-    public void Start()
+    public void Update()
     {
         // StartCoroutine(ie());
 
 
     }
+ 
     [Button]
     public void toArr()
     {
@@ -61,7 +62,7 @@ public class NativeTest : MonoBehaviour
         {
             builder.Save(memory);
 
-          //  return memory.ToArray();
+            //  return memory.ToArray();
         }
     }
     [Button]

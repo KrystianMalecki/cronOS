@@ -16,6 +16,7 @@ using native_ue = UnityEngine;
 using native_input = UnityEngine.InputSystem;
 using static UnityEngine.KeyCode;
 using Libraries.system.filesystem;
+using Libraries.system.math;
 
 public class test : native_ue.MonoBehaviour
 {
@@ -55,8 +56,8 @@ public class test : native_ue.MonoBehaviour
         File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa.dll");
         SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
         Screen.InitSystemScreenBuffer(buffer);
-        KeyboardHandler kh = KeyboardHandler.Init();
-        KeyboardSequence ks = null;
+        KeyHandler kh = KeyHandler.Init();
+        KeySequence ks = null;
         int orbX = buffer.width / 2;
         int orbY = buffer.height / 2; ;
         SystemColor b = 0;
@@ -68,9 +69,11 @@ public class test : native_ue.MonoBehaviour
 
             // b++;
             AsyncScreen.SetScreenBuffer(buffer);
-
-            ks = kh.WaitForInput();
-            if (ks.HasKey(KeyboardKey.UpArrow)|| ks.HasKey(KeyboardKey.W))
+            Vector2Int v2 = MouseHander.GetScreenPosition();
+            orbX = v2.x;
+            orbY = v2.y;
+           /* ks = kh.WaitForInput();
+            if (ks.HasKey(KeyboardKey.UpArrow) || ks.HasKey(KeyboardKey.W))
             {
                 orbY--;
             }
@@ -85,7 +88,7 @@ public class test : native_ue.MonoBehaviour
             if (ks.HasKey(KeyboardKey.RightArrow) || ks.HasKey(KeyboardKey.D))
             {
                 orbX++;
-            }
+            }*/
             if (orbX > buffer.width - playerTexture.width)
             {
                 orbX = buffer.width - playerTexture.width;
@@ -119,12 +122,12 @@ public class test : native_ue.MonoBehaviour
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
         Screen.InitSystemScreenBuffer(buffer);
 
-        KeyboardHandler kh = KeyboardHandler.Init();
+        KeyHandler kh = KeyHandler.Init();
         int orbX = buffer.width / 2;
         int orbY = buffer.height / 2; ;
 
         SystemColor b = 0;
-        KeyboardSequence ks = null;
+        KeySequence ks = null;
 
         while (true)
         {
@@ -138,19 +141,19 @@ public class test : native_ue.MonoBehaviour
 
             ks = kh.WaitForInput();
 
-            if (ks.HasKey(KeyboardKey.W))
+            if (ks.HasKey(Key.W))
             {
                 orbY++;
             }
-            if (ks.HasKey(KeyboardKey.S))
+            if (ks.HasKey(Key.S))
             {
                 orbY--;
             }
-            if (ks.HasKey(KeyboardKey.A))
+            if (ks.HasKey(Key.A))
             {
                 orbX--;
             }
-            if (ks.HasKey(KeyboardKey.D))
+            if (ks.HasKey(Key.D))
             {
                 orbX++;
             }
