@@ -15,7 +15,7 @@ namespace Libraries.system
     {
         public HashSet<KeyboardKey> pressedDownKeys = new HashSet<KeyboardKey>();
         public HashSet<KeyboardKey> cooldownKeys = new HashSet<KeyboardKey>();
-
+        //todo 1 fix or move it
         MainThreadDelegate<Exception> mtf;
         //maybe move to somewhere else
         public static KeyboardHandler Init()

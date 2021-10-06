@@ -70,19 +70,19 @@ public class test : native_ue.MonoBehaviour
             AsyncScreen.SetScreenBuffer(buffer);
 
             ks = kh.WaitForInput();
-            if (ks.HasKey(KeyboardKey.W))
-            {
-                orbY++;
-            }
-            if (ks.HasKey(KeyboardKey.S))
+            if (ks.HasKey(KeyboardKey.UpArrow)|| ks.HasKey(KeyboardKey.W))
             {
                 orbY--;
             }
-            if (ks.HasKey(KeyboardKey.A))
+            if (ks.HasKey(KeyboardKey.DownArrow) || ks.HasKey(KeyboardKey.S))
+            {
+                orbY++;
+            }
+            if (ks.HasKey(KeyboardKey.LeftArrow) || ks.HasKey(KeyboardKey.A))
             {
                 orbX--;
             }
-            if (ks.HasKey(KeyboardKey.D))
+            if (ks.HasKey(KeyboardKey.RightArrow) || ks.HasKey(KeyboardKey.D))
             {
                 orbX++;
             }
