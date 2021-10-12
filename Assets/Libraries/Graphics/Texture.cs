@@ -52,7 +52,7 @@ namespace Libraries.system.graphics
                 Console.Debug("1");
                 return new SystemTexture(RectArray<SystemColor>.FromData(data, SystemColor.sizeOf, x => x[0]));
             }
-
+        
         }
     }
 }

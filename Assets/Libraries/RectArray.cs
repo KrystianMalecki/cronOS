@@ -95,7 +95,7 @@ namespace Libraries.system
 
                 for (int j = 0; j < output.Length; j++, __counter += 1)
                 {
-                   // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
+                    // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
                     __bytes[__counter] = output[j];
                 }
 
@@ -132,6 +132,18 @@ namespace Libraries.system
         public bool IsBoxInRange(int x, int y, int width, int height)
         {
             return x >= 0 && x + width <= this.width && y >= 0 && y + height <= this.height;
+        }
+        public RectArray<T> GetPart(int x, int y, int width, int height)
+        {
+            RectArray<T> newArray = new RectArray<T>(width, height);
+            for (int currentY = 0; currentY < height; currentY++)
+            {
+                for (int currentX = 0; currentX < width; currentX++)
+                {
+                    newArray.SetAt(currentX, currentY, this.GetAt(x + currentX, y + currentY));
+                }
+            }
+            return newArray;
         }
     }
 

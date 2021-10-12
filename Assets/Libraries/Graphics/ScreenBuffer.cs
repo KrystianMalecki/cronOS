@@ -46,7 +46,7 @@ namespace Libraries.system.graphics
             {
 
             }
-            public void SetTexture(int x, int y, SystemTexture texture, bool drawPartialy = true)
+            public void SetTexture(int x, int y, RectArray<SystemColor> texture, bool drawPartialy = true)
             {
                 if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
                 {

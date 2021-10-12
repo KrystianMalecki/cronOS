@@ -17,16 +17,16 @@ namespace Libraries.system.filesystem
     public class File
     {
         public string name;
-        [NaughtyAttributes.OnValueChanged("_setByte")]
+
+
         [AllowNesting]
-        public string textData;
-        [AllowNesting]
-        [NaughtyAttributes.OnValueChanged("_setText")]
+        [HideInInspector]
+        // [NaughtyAttributes.OnValueChanged("_setText")]
         public byte[] data;
 
         public string extension;
-        [AllowNesting]
         [SerializeField]
+
         public ThreadSafeList<File> files;
         [System.NonSerialized]
         public File parent;
@@ -35,37 +35,18 @@ namespace Libraries.system.filesystem
         [AllowNesting]
         [System.NonSerialized]
         public bool changing = false;
-        [Button]
-        private void _setText()
-        {
-            if (changing)
-            {
-                return;
-            }
-            changing = true;
-            textData = ReturnDataAsString();
-            changing = false;
-        }
-        [Button]
-        private void _setByte()
-        {
-            if (changing)
-            {
-                return;
-            }
-            changing = true;
-            data = Encoding.ASCII.GetBytes(textData);
-            changing = false;
-        }
+
+
+
 
         public void AddFile(File file)
         {
-            //  files.Add(file);
+            files.Add(file);
             file.parent = this;
         }
         public void RemoveFile(File file)
         {
-            // files.Remove(file);
+            files.Remove(file);
             file.parent = null;
         }
         public string GetFullName()

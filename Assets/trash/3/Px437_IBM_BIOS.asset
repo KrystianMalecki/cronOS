@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Px437_IBM_BIOS
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -971742903
   material: {fileID: 5724298741834726267}
-  materialHashCode: 0
+  materialHashCode: 958241225
   m_Version: 1.1.0
   m_SourceFontFileGUID: 45f97b0e694e56e42b0d406e8455857c
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 45f97b0e694e56e42b0d406e8455857c, type: 3}

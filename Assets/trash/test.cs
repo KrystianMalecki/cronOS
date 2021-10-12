@@ -56,7 +56,7 @@ public class test : native_ue.MonoBehaviour
         File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa.dll");
         SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
         Screen.InitSystemScreenBuffer(buffer);
-        KeyHandler kh = KeyHandler.Init();
+        KeyHandler kh = new KeyHandler();
         KeySequence ks = null;
         int orbX = buffer.width / 2;
         int orbY = buffer.height / 2; ;
@@ -72,23 +72,23 @@ public class test : native_ue.MonoBehaviour
             Vector2Int v2 = MouseHander.GetScreenPosition();
             orbX = v2.v2.x;
             orbY = v2.v2.y;
-           /* ks = kh.WaitForInput();
-            if (ks.HasKey(KeyboardKey.UpArrow) || ks.HasKey(KeyboardKey.W))
-            {
-                orbY--;
-            }
-            if (ks.HasKey(KeyboardKey.DownArrow) || ks.HasKey(KeyboardKey.S))
-            {
-                orbY++;
-            }
-            if (ks.HasKey(KeyboardKey.LeftArrow) || ks.HasKey(KeyboardKey.A))
-            {
-                orbX--;
-            }
-            if (ks.HasKey(KeyboardKey.RightArrow) || ks.HasKey(KeyboardKey.D))
-            {
-                orbX++;
-            }*/
+            /* ks = kh.WaitForInput();
+             if (ks.HasKey(KeyboardKey.UpArrow) || ks.HasKey(KeyboardKey.W))
+             {
+                 orbY--;
+             }
+             if (ks.HasKey(KeyboardKey.DownArrow) || ks.HasKey(KeyboardKey.S))
+             {
+                 orbY++;
+             }
+             if (ks.HasKey(KeyboardKey.LeftArrow) || ks.HasKey(KeyboardKey.A))
+             {
+                 orbX--;
+             }
+             if (ks.HasKey(KeyboardKey.RightArrow) || ks.HasKey(KeyboardKey.D))
+             {
+                 orbX++;
+             }*/
             if (orbX > buffer.width - playerTexture.width)
             {
                 orbX = buffer.width - playerTexture.width;
@@ -110,6 +110,28 @@ public class test : native_ue.MonoBehaviour
             Runtime.Wait(1);
         }
     }
+    private void drawTextOnScreen()
+    {
+
+        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
+        Screen.InitSystemScreenBuffer(buffer);
+        string str = "Hello, world!";
+        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
+        void DrawCharAt(int x, int y, char character)
+        {
+            int index = Screen.GetCharacterIndex(character);
+            int posx = index % 16;
+            int posy = index / 16;
+            buffer.SetTexture(x, y, fontTexture.GetPart(posx * 8, (posy) * 8, 8, 8));
+        }
+        buffer.FillAll(SystemColor.black);
+        for (int i = 0; i < str.Length; i++)
+        {
+            DrawCharAt(i * 8, 0, str.ToCharArray()[i]);
+        }
+        Screen.SetScreenBuffer(buffer);
+    }
     private void MainCodeTest2()
     {
         /*
@@ -122,7 +144,7 @@ public class test : native_ue.MonoBehaviour
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
         Screen.InitSystemScreenBuffer(buffer);
 
-        KeyHandler kh = KeyHandler.Init();
+        KeyHandler kh = new KeyHandler();
         int orbX = buffer.width / 2;
         int orbY = buffer.height / 2; ;
 

@@ -11,7 +11,7 @@ using System.Linq;
 namespace Libraries.system
 {
 
-    public class KeyHandler
+ /*   public class KeyHandler
     {
         public HashSet<Key> pressedDownKeys = new HashSet<Key>();
         public HashSet<Key> cooldownKeys = new HashSet<Key>();
@@ -149,7 +149,7 @@ namespace Libraries.system
                   return true;
               }
 
-              return false;*/
+              return false;*//*
             ScriptManager.AddDelegateToStack(CheckKeys, true);
             if (pressedDownKeys.Contains(key))
             {
@@ -186,8 +186,8 @@ namespace Libraries.system
             return new KeySequence(pressedDownKeys);
         }
 
-    }
-    public class StaticKeyHandler2
+    }*/
+    public class KeyHandler
     {
         public HashSet<Key> pressedDownKeys = new HashSet<Key>();
         public HashSet<Key> cooldownKeys = new HashSet<Key>();

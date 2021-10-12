@@ -42,7 +42,7 @@ public class DebugCodeRunner : MonoBehaviour
         }
     }
 
-    [Button("Run code")]
+    [Button("Run code",EButtonEnableMode.Playmode)]
     void RunCode()
     {
 
@@ -50,7 +50,7 @@ public class DebugCodeRunner : MonoBehaviour
 
     }
 
-    [Button("Kill All")]
+    [Button("Kill All", EButtonEnableMode.Playmode)]
     void KillAll()
     {
         ScriptManager.instance.KillAll();

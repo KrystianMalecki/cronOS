@@ -1,5 +1,7 @@
 using Libraries.system.graphics.system_screen_buffer;
 using Libraries.system.graphics.screen_buffer32;
+using Libraries.system.math;
+using System.Linq;
 
 namespace Libraries.system.graphics
 {
@@ -46,6 +48,11 @@ namespace Libraries.system.graphics
             {
                 ScreenManager.instance.SetScreenBuffer(screenBuffer);
             }, sync);
+
+        }
+        public static int GetCharacterIndex(char character)
+        {
+            return ScreenManager.asciiMap.ToList().FindIndex(x => x == character);
 
         }
     }
