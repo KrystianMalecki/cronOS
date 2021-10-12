@@ -11,10 +11,7 @@ namespace Libraries.system.graphics
         public struct Color32
         {
             private UnityEngine.Color32 color;
-            internal UnityEngine.Color32 GetColor32()
-            {
-                return color;
-            }
+
             public static readonly short sizeOf = sizeof(int);
 
             public byte r
@@ -50,9 +47,17 @@ namespace Libraries.system.graphics
             {
                 color = new UnityEngine.Color32(r, g, b, 255);
             }
-            public Color32(UnityEngine.Color32 color32)
+            public Color32(UnityEngine.Color32 unityColor)
             {
-                color = color32;
+                color = unityColor;
+            }
+            public static implicit operator Color32(UnityEngine.Color32 col)
+            {
+                return new Color32(col);
+            }
+            public static implicit operator UnityEngine.Color32(Color32 col)
+            {
+                return col.color;
             }
             public static Color32 Lerp(Color32 a, Color32 b, float t)
             {
@@ -86,9 +91,21 @@ namespace Libraries.system.graphics
 
             public string ToString(string format, IFormatProvider formatProvider)
             {
-                return String.Format("RGBA({0}, {1}, {2}, {3})", color.r.ToString(format, formatProvider), color.g.ToString(format, formatProvider), color.b.ToString(format, formatProvider), color.a.ToString(format, formatProvider));
+                return string.Format("RGBA({0}, {1}, {2}, {3})", color.r.ToString(format, formatProvider), color.g.ToString(format, formatProvider), color.b.ToString(format, formatProvider), color.a.ToString(format, formatProvider));
             }
 
+            public int GetDistance(Color32 color)
+            {
+                int redDifference;
+                int greenDifference;
+                int blueDifference;
+
+                redDifference = r - color.r;
+                greenDifference = g - color.g;
+                blueDifference = b - color.b;
+
+                return redDifference * redDifference + greenDifference * greenDifference + blueDifference * blueDifference;
+            }
         }
     }
     namespace system_color
@@ -96,6 +113,40 @@ namespace Libraries.system.graphics
         using color32;
         public static class ColorConstants
         {
+            //todo 1 move
+            public static Color32 FindNearest(Color32[] colors, Color32 input)
+            {
+                int id = FindNearestID(colors, input);
+                if (id == -1 && ProcessorManager.instance.ignoreSomeErrors)
+                {
+                    return default(Color32);//todo future add error
+                }
+                return colors[id];
+            }
+            public static int FindNearestID(Color32[] colors, Color32 input)
+            {
+                //  SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32,
+                //  LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
+
+                int nearestID = -1;
+                int nearestDistance = int.MaxValue;
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    Color32 currentColor = colors[i];
+                    int distance = currentColor.GetDistance(input);
+                    if (nearestDistance > distance)
+                    {
+                        nearestDistance = distance;
+                        nearestID = i;
+                    }
+                    // Debug.Log(currentColor + " " + input + " " + distance);
+                }
+                return nearestID;
+            }
+            public static Color32 ToCronosColor(this UnityEngine.Color32 color)
+            {
+                return new Color32(color.r, color.g, color.b, color.a);
+            }
             /* public static Color32 ToColor32(this SystemColor systemColor) => systemColor switch
              {
                  0 => Black,
@@ -116,7 +167,6 @@ namespace Libraries.system.graphics
                  15 => White,
                  _ => throw new NotImplementedException(),
              };*/
-
             public static readonly Color32 Black32 = new Color32(0, 0, 0);
             public static readonly Color32 Blue32 = new Color32(0, 0, 170);
             public static readonly Color32 Green32 = new Color32(0, 170, 0);
@@ -133,6 +183,8 @@ namespace Libraries.system.graphics
             public static readonly Color32 LightMagenta32 = new Color32(255, 85, 255);
             public static readonly Color32 Yellow32 = new Color32(255, 255, 85);
             public static readonly Color32 White32 = new Color32(255, 255, 255);
+            public static Color32[] SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32, LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
+
             /*  public static byte black = 0;
               public static byte blue = 1;
               public static byte green = 2;
@@ -251,28 +303,10 @@ namespace Libraries.system.graphics
             public static readonly SystemColor light_magenta = new SystemColor(13);
             public static readonly SystemColor yellow = new SystemColor(14);
             public static readonly SystemColor white = new SystemColor(15);
-            public Color32 ToColor32() => value switch
-            {
-                0 => ColorConstants.Black32,
-                1 => ColorConstants.Blue32,
-                2 => ColorConstants.Green32,
-                3 => ColorConstants.Cyan32,
-                4 => ColorConstants.Red32,
-                5 => ColorConstants.Magenta32,
-                6 => ColorConstants.Brown32,
-                7 => ColorConstants.LightGray32,
-                8 => ColorConstants.DarkGray32,
-                9 => ColorConstants.LightBlue32,
-                10 => ColorConstants.LightGreen32,
-                11 => ColorConstants.LightCyan32,
-                12 => ColorConstants.LightRed32,
-                13 => ColorConstants.LightMagenta32,
-                14 => ColorConstants.Yellow32,
-                15 => ColorConstants.White32,
-                _ => ColorConstants.LightMagenta32,
-            };
+            public Color32 ToColor32() => ColorConstants.SystemColors[value];
         }
     }
+
 }
 
 

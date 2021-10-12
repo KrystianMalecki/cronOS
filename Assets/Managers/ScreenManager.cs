@@ -1,4 +1,4 @@
-using libs = Libraries.system.graphics;
+
 using NaughtyAttributes;
 using System;
 using System.Collections;
@@ -7,6 +7,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using libs = Libraries.system;
+
 public class ScreenManager : MonoBehaviour
 {
     public static ScreenManager instance;
@@ -33,7 +35,7 @@ public class ScreenManager : MonoBehaviour
         instance.screen.text += text;
     }
 
-    public void InitScreenBuffer(libs.screen_buffer32.ScreenBuffer32 screenBuffer)
+    public void InitScreenBuffer(libs.graphics.screen_buffer32.ScreenBuffer32 screenBuffer)
     {
         bufferTexture = new Texture2D(screenBuffer.width, screenBuffer.height);
         pixelWidth = screenBuffer.width;
@@ -42,7 +44,7 @@ public class ScreenManager : MonoBehaviour
         bufferTexture.filterMode = FilterMode.Point;
         rawImage.texture = bufferTexture;
     }
-    public void InitScreenBuffer(libs.system_screen_buffer.SystemScreenBuffer screenBuffer)
+    public void InitScreenBuffer(libs.graphics.system_screen_buffer.SystemScreenBuffer screenBuffer)
     {
         bufferTexture = new Texture2D(screenBuffer.width, screenBuffer.height);
         pixelWidth = screenBuffer.width;
@@ -50,38 +52,52 @@ public class ScreenManager : MonoBehaviour
         bufferTexture.filterMode = FilterMode.Point;
         rawImage.texture = bufferTexture;
     }
-    public void SetScreenBuffer(libs.screen_buffer32.ScreenBuffer32 screenBuffer)
+    public void SetScreenBuffer(libs.graphics.screen_buffer32.ScreenBuffer32 screenBuffer)
     {
-
-        bufferTexture.SetPixels32(
-          Array.ConvertAll(screenBuffer.GetArray(), x => x.GetColor32())
-     );
+        libs.RectArray<Color32> array = new libs.RectArray<Color32>(screenBuffer.width, screenBuffer.height);
+        for (int y = 0; y < screenBuffer.height; y++)
+        {
+            for (int x = 0; x < screenBuffer.width; x++)
+            {
+                array.SetAt(x, screenBuffer.height - y - 1, screenBuffer.GetAt(x, y));
+            }
+        }
+        bufferTexture.SetPixels32(array.array);
         bufferTexture.Apply();
 
 
         rawImage.SetAllDirty();
     }
-    public void SetScreenBuffer(libs.system_screen_buffer.SystemScreenBuffer screenBuffer)
+    public void SetScreenBuffer(libs.graphics.system_screen_buffer.SystemScreenBuffer screenBuffer)
     {
 
-        bufferTexture.SetPixels32(
-          Array.ConvertAll(screenBuffer.GetArray(), x => x.ToColor32().GetColor32())
-     );
+        libs.RectArray<Color32> array = new libs.RectArray<Color32>(screenBuffer.width, screenBuffer.height);
+        for (int y = 0; y < screenBuffer.height; y++)
+        {
+            for (int x = 0; x < screenBuffer.width; x++)
+            {
+                array.SetAt(x, screenBuffer.height - y - 1, screenBuffer.GetAt(x, y).ToColor32());
+            }
+        }
+        bufferTexture.SetPixels32(array.array);
         bufferTexture.Apply();
 
 
         rawImage.SetAllDirty();
     }
 
-    public (int x, int y) GetMousePos()
+    public Vector2 GetMousePos()
     {
-
         Vector2 v2out;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition.ToVector2(), Camera.main, out v2out);
 
-        var v2outRange = new Vector2(v2out.x / rawImage.rectTransform.rect.width, v2out.y / rawImage.rectTransform.rect.height);
-        v2outRange.x += 0.5f;
-        v2outRange.y += 0.5f;
-        return ((int)(v2outRange.x * pixelWidth), (int)(v2outRange.y * pixelHeight));
+        v2out.x /= rawImage.rectTransform.rect.width;
+        v2out.y /= rawImage.rectTransform.rect.height;
+        v2out.x += 0.5f;
+        v2out.y += 0.5f;
+        v2out.y = 1 - v2out.y;
+        v2out.x *= pixelWidth;
+        v2out.y *= pixelHeight;
+        return v2out;
     }
 }

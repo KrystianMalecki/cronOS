@@ -1,4 +1,6 @@
 //#define DLL
+
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,9 +17,12 @@ namespace Libraries.system
         [SerializeField]
         public T[] array;
         [SerializeField]
-        public readonly int width;
+        [AllowNesting, ReadOnly]
+        public int width;
         [SerializeField]
-        public readonly int height;
+        [AllowNesting, ReadOnly]
+
+        public int height;
         public int size
         {
             get
@@ -45,10 +50,18 @@ namespace Libraries.system
         }
         public void SetAt(int x, int y, T value)
         {
+            if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+            {
+                return;
+            }
             array[y * width + x] = value;
         }
         public void Fill(int x, int y, int width, int height, T value)
         {
+            if (!IsBoxInRange(x, y, width, height) && ProcessorManager.instance.ignoreSomeErrors)
+            {
+                return;
+            }
             for (int iterY = y; iterY < height; iterY++)
             {
                 for (int iterX = x; iterX < width; iterX++)
@@ -60,7 +73,10 @@ namespace Libraries.system
         }
         public T GetAt(int x, int y)
         {
-            //todo 6 add check
+            if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+            {
+                return default(T);
+            }
             return array[y * width + x];
         }
         public void FillAll(T value)
@@ -79,7 +95,7 @@ namespace Libraries.system
 
                 for (int j = 0; j < output.Length; j++, __counter += 1)
                 {
-                    Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
+                   // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
                     __bytes[__counter] = output[j];
                 }
 
@@ -113,7 +129,7 @@ namespace Libraries.system
         {
             return x >= 0 && x <= width && y >= 0 && y <= height;
         }
-        public bool IsBoxInRange(int x, int y, int height, int width)
+        public bool IsBoxInRange(int x, int y, int width, int height)
         {
             return x >= 0 && x + width <= this.width && y >= 0 && y + height <= this.height;
         }

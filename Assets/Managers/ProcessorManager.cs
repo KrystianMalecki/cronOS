@@ -22,6 +22,7 @@ public class ProcessorManager : MonoBehaviour
     public int TasksPerCPULoop = -1;
 
     public bool canRun;
+    public bool ignoreSomeErrors;
 
     public static bool checkIfCanRun()
     {

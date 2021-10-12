@@ -16,7 +16,11 @@ public class Helpers
 public static class StaticHelper
 {
 
-
+    public static IEnumerable<T> Iterate<T>(this IEnumerator<T> iterator)
+    {
+        while (iterator.MoveNext())
+            yield return iterator.Current;
+    }
     public static string ToArrayString<T>(this IEnumerable<T> ie)
     {
         return string.Join(",", ie);

@@ -170,24 +170,25 @@ MonoBehaviour:
   code: "SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
     File playerTextureFile = FileSystem.GetFileByPath(\"C:/System/dupa.dll\");\r\n       
     SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);\r\n       
-    Screen.InitSystemScreenBuffer(buffer);\r\n        KeyHandler kh = KeyHandler.Init();\r\n       
-    KeySequence ks = null;\r\n        int orbX = buffer.width / 2;\r\n        int
-    orbY = buffer.height / 2; ;\r\n        SystemColor b = 0;\r\n        while (true)\r\n       
-    {\r\n\r\n        //    buffer.FillAll(SystemColor.black);\r\n           // buffer.SetTexture(orbX,
-    orbY, playerTexture);\r\n\r\n            // b++;\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n           
-    Vector2Int v2 = MouseHander.GetScreenPosition();\r\n            orbX = v2.x;\r\n           
-    orbY = v2.y;\r\n            ks = kh.WaitForInput();\r\nif (ks.HasKey(Key.Mouse0))\r\n           
+    Screen.InitSystemScreenBuffer(buffer);\r\n        StaticKeyHandler2 kh = new
+    StaticKeyHandler2();\r\n        KeySequence ks = null;\r\n        int orbX =
+    buffer.width / 2;\r\n        int orbY = buffer.height / 2; ;\r\n        SystemColor
+    b = 0;\r\n        while (true)\r\n        {\r\n\r\n           buffer.FillAll(SystemColor.black);\r\n           
+    buffer.SetTexture(orbX, orbY, playerTexture);\r\n\r  buffer.SetAt(0, 0, SystemColor.white);\r\n           
+    // b++;\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n             Vector2Int
+    v2 = MouseHander.GetScreenPosition();\r\n            orbX = v2.x;\r\n           
+    orbY = v2.y;\n          //  ks = kh.WaitForInput();\r\n/*if (ks.HasKey(Key.Mouse0))\r\n           
     {\r\n               buffer.SetTexture(orbX, orbY, playerTexture);\r\n           
-    }\r\n          /*  if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))\r\n           
+    }\r*/\n          /*  if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))\r\n           
     {\r\n                orbY--;\r\n            }\r\n            if (ks.HasKey(Key.DownArrow)
     || ks.HasKey(Key.S))\r\n            {\r\n                orbY++;\r\n           
     }\r\n            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))\r\n           
     {\r\n                orbX--;\r\n            }\r\n            if (ks.HasKey(Key.RightArrow)
     || ks.HasKey(Key.D))\r\n            {\r\n                orbX++;\r\n           
-    }*/\r\n            if (orbX > buffer.width - playerTexture.width)\r\n           
+    }*/\n            if (orbX > buffer.width - playerTexture.width)\r\n           
     {\r\n                orbX = buffer.width - playerTexture.width;\r\n           
     }\r\n            if (orbX < 0)\r\n            {\r\n                orbX = 0;\r\n           
-    }\r\n           // Console.Debug($\"{orbY} is > than {buffer.height - playerTexture.height}
+    }\r\n           //Console.Debug($\"{orbY} is > than {buffer.height - playerTexture.height}
     or {buffer.height} - {playerTexture.height}\");\r\n            if (orbY > buffer.height
     - playerTexture.height)\r\n            {\r\n                orbY = buffer.height
     - playerTexture.height;\r\n            }\r\n            if (orbY < 0)\r\n           
@@ -448,6 +449,7 @@ RectTransform:
   m_Children:
   - {fileID: 632187780}
   - {fileID: 1446994156}
+  - {fileID: 512668658}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -456,6 +458,155 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &512668657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 512668658}
+  - component: {fileID: 512668660}
+  - component: {fileID: 512668659}
+  m_Layer: 5
+  m_Name: Console (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &512668658
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512668657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1.2, z: 1}
+  m_Children: []
+  m_Father: {fileID: 448482745}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0.000091552734}
+  m_SizeDelta: {x: 0, y: -88.833}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &512668659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512668657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "<mlspace=1em>\nA quick brown fox jumps over the lazy dog.\r\n0123456789
+    \xBF?\xA1!`'\"., <>()[]{} &@%*^#$\\/\r\n\r\n* Wienil\xE4inen sioux'ta puhuva
+    \xF6kyzombie diggaa \xC5san roquefort-tacoja.\r\n* \xC7a me fait peur de f\xEAter
+    no\xEBl l\xE0, sur cette \xEEle bizarro\xEFde o\xF9 une m\xE8re et sa m\xF4me
+    essaient de me tuer avec un g\xE2teau \xE0 la cig\xFCe br\xFBl\xE9.\r\n* Zw\xF6lf
+    Boxk\xE4mpfer jagten Eva quer \xFCber den Sylter Deich.\r\n* El ping\xFCino Wenceslao
+    hizo kil\xF3metros bajo exhaustiva lluvia y fr\xEDo, a\xF1oraba a su querido
+    cachorro.\r\n\r\n\u250C\u2500\u252C\u2500\u2510 \u2554\u2550\u2566\u2550\u2557
+    \u2552\u2550\u2564\u2550\u2555 \u2553\u2500\u2565\u2500\u2556\r\n\u2502 \u2502
+    \u2502 \u2551 \u2551 \u2551 \u2502 \u2502 \u2502 \u2551 \u2551 \u2551\r\n\u251C\u2500\u253C\u2500\u2524
+    \u2560\u2550\u256C\u2550\u2563 \u255E\u2550\u256A\u2550\u2561 \u255F\u2500\u256B\u2500\u2562\r\n\u2514\u2500\u2534\u2500\u2518
+    \u255A\u2550\u2569\u2550\u255D \u2558\u2550\u2567\u2550\u255B \u2559\u2500\u2568\u2500\u255C\r\n\r\n\u2591\u2591\u2591\u2591\u2591
+    \u2590\u2580\u2588\u2580\u258C .\xB7\u2219\u2022\u25CB\xB0\u25CB\u2022\u2219\xB7.\r\n\u2592\u2592\u2592\u2592\u2592
+    \u2590 \u2588 \u258C \u263A\u263B \u2665\u2666\u2663\u2660 \u266A\u266B\u263C\r\n\u2593\u2593\u2593\u2593\u2593
+    \u2590\u2580\u2588\u2580\u258C  $ \xA2 \xA3 \xA5 \u20A7\r\n\u2588\u2588\u2588\u2588\u2588
+    \u2590\u2584\u2588\u2584\u258C \u25C4\u25BA\u25B2\u25BC \u2190\u2192\u2191\u2193\u2195\u21A8\r\n"
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
+  m_sharedMaterial: {fileID: -8698091202956628803, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 8
+  m_fontSizeBase: 8
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 1024
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: -8
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 1
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 0
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 0
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &512668660
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512668657}
+  m_CullTransparentMesh: 1
 --- !u!1 &605339139
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +877,7 @@ GameObject:
   - component: {fileID: 774406598}
   - component: {fileID: 774406600}
   - component: {fileID: 774406601}
+  - component: {fileID: 774406602}
   m_Layer: 0
   m_Name: Testers
   m_TagString: Untagged
@@ -793,7 +945,10 @@ MonoBehaviour:
     - _value: 2
     - _value: 3
     - _value: 4
+    width: 0
+    height: 0
   arr: 020000000200000000000000
+  t: {fileID: 512668659}
   datas2: 
   textureFile:
     name: 
@@ -850,6 +1005,127 @@ MonoBehaviour:
       type: SystemColor
       size: 
   outputCode: 
+--- !u!114 &774406602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774406597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614c5f3f642a5574c9a89e710b1ac320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  texture: {fileID: 2800000, guid: 645b2801e9250854a9b7e6c11a37622b, type: 3}
+  systemTexture:
+    array:
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    - _value: 15
+    - _value: 15
+    - _value: 15
+    - _value: 15
+    - _value: 0
+    width: 6
+    height: 8
+  data: 0600000008000000000000000f0f000000000000000000000f0f000000000f0f000000000f0f0f0f00000f0f0f0f00000f0f000f0f0f0f00
+  color:
+    serializedVersion: 2
+    rgba: 3487286
+  asset: {fileID: 11400000, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
+  character: {fileID: 2800000, guid: d5068838758087144ab4bad4d1e5b6dc, type: 3}
+  colors:
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  l: j
 --- !u!1 &831048307
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,7 +1172,7 @@ MonoBehaviour:
               items:
               - name: dupa
                 textData: "\b"
-                data: 08000000080000000f0000000000000000000b0b0b0b0000000b0b0b0b0f0b00000b0b0b0b0b0b0000030b0b0b0b0b000003030b0b0b0b0000000303030b0000000000000000000f
+                data: 0600000008000000000000000f0f000000000000000000000f0f000000000f0f000000000f0f0f0f00000f0f0f0f00000f0f000f0f0f0f00
                 extension: dll
                 files:
                   items: []
@@ -993,7 +1269,7 @@ RectTransform:
   m_GameObject: {fileID: 1446994155}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: -1, z: 1}
+  m_LocalScale: {x: 1, y: 0.8333333, z: 1}
   m_Children: []
   m_Father: {fileID: 448482745}
   m_RootOrder: 1
@@ -1084,6 +1360,7 @@ MonoBehaviour:
   WaitRefreshRate: 33
   TasksPerCPULoop: -1
   canRun: 0
+  ignoreSomeErrors: 0
 --- !u!4 &1879574977
 Transform:
   m_ObjectHideFlags: 0

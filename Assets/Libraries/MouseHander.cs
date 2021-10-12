@@ -10,9 +10,9 @@ namespace Libraries.system
         {
             return ScriptManager.AddDelegateToStack((ref bool done, ref Vector2Int outer) =>
             {
-                outer = new Vector2Int(ScreenManager.instance.GetMousePos());
+                outer = ((Vector2)ScreenManager.instance.GetMousePos()).ToIntLike();
             });
-            
+
         }
     }
 }

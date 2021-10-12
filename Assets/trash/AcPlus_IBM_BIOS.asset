@@ -56,9 +56,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: AcPlus_IBM_BIOS
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 1737221801
   material: {fileID: -6361141803300392334}
-  materialHashCode: 0
+  materialHashCode: -326746903
   m_Version: 1.1.0
   m_SourceFontFileGUID: a52416d577932054b85a83c87bca2d71
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: a52416d577932054b85a83c87bca2d71, type: 3}

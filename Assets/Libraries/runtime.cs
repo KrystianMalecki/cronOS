@@ -14,7 +14,15 @@ namespace Libraries.system
         {
             // Task.Delay(time).Wait();
             Thread.Sleep(System.Math.Max(time, ProcessorManager.instance.WaitRefreshRate));
+
             // test.instance.count1++;
+        }
+        public static void WaitUnitl(Func<bool> action)
+        {
+            while (action.Invoke())
+            {
+                Wait();
+            }
         }
         public static void Wait()
         {

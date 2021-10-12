@@ -97,6 +97,19 @@ public class ThreadSafeList<T> : IList<T>, IList
             this.InsertItem(index, item);
         }
     }
+    public void Add(IEnumerable<T> items)
+    {
+        lock (this.sync)
+        {
+            int index = this.items.Count;
+            foreach (var item in items)
+            {
+                this.InsertItem(index, item);
+            }
+
+        }
+    }
+
 
     public void Clear()
     {
@@ -175,7 +188,24 @@ public class ThreadSafeList<T> : IList<T>, IList
             return true;
         }
     }
+    public bool Remove(IEnumerable<T> items)
+    {
+        lock (this.sync)
+        {
+            foreach (var item in items)
+            {
 
+
+                int index = this.InternalIndexOf(item);
+                if (index < 0)
+                    return false;
+
+                this.RemoveItem(index);
+
+            }
+            return true;
+        }
+    }
     public void RemoveAt(int index)
     {
         lock (this.sync)
@@ -321,5 +351,10 @@ public class ThreadSafeList<T> : IList<T>, IList
             }
         }
         return default(T);
+    }
+
+    public static implicit operator List<T>(ThreadSafeList<T> tsl)
+    {
+        return new List<T>(tsl.GetEnumerator().Iterate());
     }
 }

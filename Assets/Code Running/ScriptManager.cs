@@ -51,6 +51,7 @@ public class ScriptManager : MonoBehaviour
 
         scriptOptionsBuffer = scriptOptionsBuffer.AddReferences(
              typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly
+
             );
 
         /*   scriptOptions = scriptOptions.AddImports(

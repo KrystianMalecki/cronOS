@@ -85,6 +85,7 @@ namespace Libraries.system
             }
         }
 
+
         public bool GetKeyDown(Key key)
         {
             //test.instance.count5++;
@@ -98,6 +99,7 @@ namespace Libraries.system
             }
 
             return false;
+
         }
         ~KeyHandler()
         {
@@ -116,9 +118,146 @@ namespace Libraries.system
         }
 
     }
+    public class StaticKeyHandler
+    {
+        public static List<Key> pressedDownKeys = new List<Key>();
+        public static HashSet<Key> cooldownKeys = new HashSet<Key>();
+        private static void CheckKeys()
+        {
+            try
+            {
+                IEnumerable<Key> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
+                cooldownKeys.IntersectWith(pressedNow);
+                pressedDownKeys.Clear();
+                pressedDownKeys.AddRange(pressedNow.Except(cooldownKeys));
+
+            }
+            catch (Exception e)
+            {
+                FlagLogger.Log(LogFlags.SystemError, " error", e);
+            }
+        }
+        public static bool GetKeyDown(Key key)
+        {
+            //test.instance.count5++;
+            /*  if (pressedDownKeys.Contains(key))
+              {
+
+                  pressedDownKeys.Remove(key);
+                  cooldownKeys.Add(key);
+                  ScriptManager.AddDelegateToStack(RecalculatePressedKeys, true);
+                  return true;
+              }
+
+              return false;*/
+            ScriptManager.AddDelegateToStack(CheckKeys, true);
+            if (pressedDownKeys.Contains(key))
+            {
+                pressedDownKeys.Remove(key);
+                cooldownKeys.Add(key);
+                ScriptManager.AddDelegateToStack(CheckKeys, true);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static KeySequence WaitForInput()
+        {
+            ScriptManager.AddDelegateToStack(CheckKeys, true);
+
+            while (pressedDownKeys.Count <= 0)
+            {
+                Runtime.Wait();
+                ScriptManager.AddDelegateToStack(CheckKeys, true);
+            }
+            return new KeySequence(pressedDownKeys);
+        }
+        public static KeySequence WaitForInputDown()
+        {
+            ScriptManager.AddDelegateToStack(CheckKeys, true);
+
+            while (pressedDownKeys.Count <= 0)
+            {
+                Runtime.Wait();
+                ScriptManager.AddDelegateToStack(CheckKeys, true);
+            }
+            cooldownKeys.UnionWith(pressedDownKeys);
+            return new KeySequence(pressedDownKeys);
+        }
+
+    }
+    public class StaticKeyHandler2
+    {
+        public HashSet<Key> pressedDownKeys = new HashSet<Key>();
+        public HashSet<Key> cooldownKeys = new HashSet<Key>();
+        private void CheckKeys()
+        {
+            try
+            {
+                IEnumerable<Key> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
+                cooldownKeys.IntersectWith(pressedNow);
+                pressedDownKeys.Clear();
+                pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys));
+
+            }
+            catch (Exception e)
+            {
+                FlagLogger.Log(LogFlags.SystemError, " error", e);
+            }
+        }
+        public bool GetKeyDown(Key key)
+        {
+            //test.instance.count5++;
+            /*  if (pressedDownKeys.Contains(key))
+              {
+
+                  pressedDownKeys.Remove(key);
+                  cooldownKeys.Add(key);
+                  ScriptManager.AddDelegateToStack(RecalculatePressedKeys, true);
+                  return true;
+              }
+
+              return false;*/
+            ScriptManager.AddDelegateToStack(CheckKeys, true);
+            if (pressedDownKeys.Contains(key))
+            {
+                pressedDownKeys.Remove(key);
+                cooldownKeys.Add(key);
+                ScriptManager.AddDelegateToStack(CheckKeys, true);
+                return true;
+            }
+
+            return false;
+        }
+
+        public KeySequence WaitForInput()
+        {
+            ScriptManager.AddDelegateToStack(CheckKeys, true);
+            while (pressedDownKeys.Count <= 0)
+            {
+                Runtime.Wait();
+                ScriptManager.AddDelegateToStack(CheckKeys, true);
+            }
+            return new KeySequence(pressedDownKeys);
+        }
+        public KeySequence WaitForInputDown()
+        {
+            ScriptManager.AddDelegateToStack(CheckKeys, true);
+
+            while (pressedDownKeys.Count <= 0)
+            {
+                Runtime.Wait();
+                ScriptManager.AddDelegateToStack(CheckKeys, true);
+            }
+            cooldownKeys.UnionWith(pressedDownKeys);
+            return new KeySequence(pressedDownKeys);
+        }
+
+    }
     public class KeySequence
     {
-        public List<Key> keys = new List<Key>();
+        public List<Key> keys;
         public bool HasKey(Key key)
         {
             bool b = keys.Contains(key);
@@ -128,7 +267,15 @@ namespace Libraries.system
 
         public KeySequence(List<Key> keys)
         {
-            this.keys = keys;
+            this.keys = new List<Key>(keys);
+        }
+        public KeySequence(IEnumerable<Key> keys)
+        {
+            this.keys = new List<Key>(keys);
+        }
+        public KeySequence(ThreadSafeList<Key> keys)
+        {
+            this.keys = new List<Key>(keys);
         }
     }
 }

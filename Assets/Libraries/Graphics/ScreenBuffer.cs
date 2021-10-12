@@ -13,14 +13,20 @@ namespace Libraries.system.graphics
 
             }
 
-            public void SetTexture(int x, int y, Texture32 texture)
+            public void SetTexture(int x, int y, Texture32 texture, bool drawPartialy = true)
             {
+                if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
+                {
+                    return;//todo future add error
+                }
                 for (int iterY = 0; iterY < texture.height; iterY++)
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
-                        //
-                        //todo 6 add check
+                        if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                        {
+                            return;//todo future add error
+                        }
                         SetAt(iterX + x, iterY + y, texture.GetAt(iterX, iterY));
                     }
                 }
@@ -40,14 +46,20 @@ namespace Libraries.system.graphics
             {
 
             }
-            public void SetTexture(int x, int y, SystemTexture texture)
+            public void SetTexture(int x, int y, SystemTexture texture, bool drawPartialy = true)
             {
+                if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
+                {
+                    return;//todo future add error
+                }
                 for (int iterY = 0; iterY < texture.height; iterY++)
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
-                        //todo 6 add check
-                        //Debug.Log($"{iterX} + {x}, {iterY} + {y}, {texture.GetAt(iterX, iterY)}");
+                        if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                        {
+                            return;//todo future add error
+                        }
                         SetAt(x + iterX, y + iterY, texture.GetAt(iterX, iterY));
                     }
                 }

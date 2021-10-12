@@ -70,8 +70,8 @@ public class test : native_ue.MonoBehaviour
             // b++;
             AsyncScreen.SetScreenBuffer(buffer);
             Vector2Int v2 = MouseHander.GetScreenPosition();
-            orbX = v2.x;
-            orbY = v2.y;
+            orbX = v2.v2.x;
+            orbY = v2.v2.y;
            /* ks = kh.WaitForInput();
             if (ks.HasKey(KeyboardKey.UpArrow) || ks.HasKey(KeyboardKey.W))
             {
