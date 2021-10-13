@@ -39,7 +39,7 @@ namespace Libraries.system.graphics
             {
                 if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
                 {
-                    return;//todo future add error
+                    return;//todo-future add error
                 }
                 for (int iterY = 0; iterY < texture.height; iterY++)
                 {
@@ -47,7 +47,7 @@ namespace Libraries.system.graphics
                     {
                         if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
                         {
-                            return;//todo future add error
+                            return;//todo-future add error
                         }
                         SetAt(iterX + x, iterY + y, texture.GetAt(iterX, iterY));
                     }
@@ -86,7 +86,7 @@ namespace Libraries.system.graphics
             {
                 if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
                 {
-                    return;//todo future add error
+                    return;//todo-future add error
                 }
                 for (int iterY = 0; iterY < texture.height; iterY++)
                 {
@@ -94,7 +94,7 @@ namespace Libraries.system.graphics
                     {
                         if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
                         {
-                            return;//todo future add error
+                            return;//todo-future add error
                         }
                         SetAt(x + iterX, y + iterY, texture.GetAt(iterX, iterY));
                     }

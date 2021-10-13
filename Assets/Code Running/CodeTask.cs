@@ -22,14 +22,8 @@ public class CodeTask
 
 
     public Thread thread;
-    //todo 9 maybe remove
-    public string uuid;
     public CodeObject codeObject;
 
-    public CodeTask()
-    {
-        uuid = Guid.NewGuid().ToString();
-    }
     public void RunCode(CodeObject codeObject)
     {
         this.codeObject = codeObject;
@@ -46,7 +40,7 @@ public class CodeTask
     {
         try
         {
-            //todo 9 maybe change back
+            //todo-maybe change back
             /* var s = CSharpScript.Create(codeObject.code, ScriptManager.instance.scriptOptionsBuffer
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
@@ -85,7 +79,7 @@ public class CodeTask
         if (thread != null)
         {
             thread.Abort();
-            thread.Join();//todo 9 maybe fix
+            thread.Join();//todo-maybe fix
             thread = null;
           
         }

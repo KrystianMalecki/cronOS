@@ -19,39 +19,7 @@ public class ScreenManager : MonoBehaviour
     private int pixelWidth;
     private int pixelHeight;
     public static readonly string asciiMap = " ☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀ɑϐᴦᴨ∑ơµᴛɸϴΩẟ∞∅∈∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
-    //todo 9 remove
-    /*public Texture2D map;
-    public char c;
 
-     [Button]
-      public void Draw()
-      {
-          int texHeight = map.height;
-          int index = asciiMap.ToList().FindIndex(x => x == c);
-          int posx = index % 16;
-          int posy = index / 16;
-          Debug.Log($"index {index} with x {posx} and y {posy}");
-          bufferTexture = new Texture2D(8, 8);
-          pixelWidth = 8;
-          pixelHeight = 8;
-
-          bufferTexture.filterMode = FilterMode.Point;
-          rawImage.texture = bufferTexture;
-          libs.RectArray<Color32> array = new libs.RectArray<Color32>(8, 8);
-          for (int y = 0; y < 8; y++)
-          {
-              for (int x = 0; x < 8; x++)
-              {
-                  array.SetAt(x, y, (Color32)map.GetPixel(posx * 8 + x, ((texHeight - (posy + 1) * 8) + y)));
-              }
-          }
-          bufferTexture.SetPixels32(array.array);
-          bufferTexture.Apply();
-
-
-          rawImage.SetAllDirty();
-      }
-      */
     public void Awake()
     {
         if (instance == null)

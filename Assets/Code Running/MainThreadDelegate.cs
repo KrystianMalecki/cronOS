@@ -28,7 +28,7 @@ public class MainThreadDelegate<T> : ITryToRun
     }
     public void Speak()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "i'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+        FlagLogger.Log(LogFlags.DebugInfo, "I'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
     }
 
     public bool TryToRun()

@@ -51,7 +51,7 @@ namespace Libraries.system.graphics
             {
                 color = unityColor;
             }
-            //todo 8 move Unity Dependant stuff
+            //todo-cleanup move Unity Dependant stuff
             public static implicit operator Color32(UnityEngine.Color32 col)
             {
                 return new Color32(col);
@@ -120,7 +120,7 @@ namespace Libraries.system.graphics
                 int id = FindNearestID(colors, input);
                 if (id == -1 && ProcessorManager.instance.ignoreSomeErrors)
                 {
-                    return default(Color32);//todo future add error
+                    return default(Color32);//todo-future add error
                 }
                 return colors[id];
             }
@@ -144,7 +144,7 @@ namespace Libraries.system.graphics
                 }
                 return nearestID;
             }
-            //todo 1 move ToCronosColor
+            //todo-cleanup move ToCronosColor
             internal static Color32 ToCronosColor(this UnityEngine.Color32 color)
             {
                 return new Color32(color.r, color.g, color.b, color.a);

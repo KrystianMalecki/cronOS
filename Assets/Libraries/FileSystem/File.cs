@@ -62,7 +62,7 @@ namespace Libraries.system.filesystem
             parent.RemoveFile(this);
             desitination.AddFile(this);
         }
-        //todo 9 fix 0
+        //todo 9 find better method
         public string ReturnDataAsString()
         {
             return new string(Array.ConvertAll(data, x => (char)x));

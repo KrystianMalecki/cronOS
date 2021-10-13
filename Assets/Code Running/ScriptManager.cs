@@ -183,7 +183,7 @@ public class ScriptManager : MonoBehaviour
     }
     public static string CodeParser(string code)
     {
-        //todo future add special usings
+        //todo-maybe add special usings
         //using native_system = System;
         //using native_ue = UnityEngine;
         //not needed??
