@@ -5,6 +5,7 @@ namespace Libraries.system.graphics
 {
     namespace texture32
     {
+        using Libraries.system.math;
         [Serializable]
         public class Texture32 : RectArray<Color32>
         {
@@ -30,7 +31,7 @@ namespace Libraries.system.graphics
     namespace system_texture
     {
         using system_color;
-
+        using Libraries.system.math;
         [Serializable]
         public class SystemTexture : RectArray<SystemColor>
         {
@@ -49,7 +50,6 @@ namespace Libraries.system.graphics
 
             public static SystemTexture FromData(byte[] data)
             {
-                Console.Debug("1");
                 return new SystemTexture(RectArray<SystemColor>.FromData(data, SystemColor.sizeOf, x => x[0]));
             }
         

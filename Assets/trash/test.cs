@@ -13,10 +13,10 @@ using Libraries.system.graphics.system_texture;
 using native_system = System;
 
 using native_ue = UnityEngine;
-using native_input = UnityEngine.InputSystem;
 using static UnityEngine.KeyCode;
 using Libraries.system.filesystem;
 using Libraries.system.math;
+using Libraries.system.input;
 
 public class test : native_ue.MonoBehaviour
 {
@@ -55,7 +55,7 @@ public class test : native_ue.MonoBehaviour
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
         File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa.dll");
         SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
-        Screen.InitSystemScreenBuffer(buffer);
+        Screen.InitScreenBuffer(buffer);
         KeyHandler kh = new KeyHandler();
         KeySequence ks = null;
         int orbX = buffer.width / 2;
@@ -114,7 +114,7 @@ public class test : native_ue.MonoBehaviour
     {
 
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
-        Screen.InitSystemScreenBuffer(buffer);
+        Screen.InitScreenBuffer(buffer);
         string str = "Hello, world!";
         File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
@@ -142,7 +142,7 @@ public class test : native_ue.MonoBehaviour
         r.NextInt();
 
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
-        Screen.InitSystemScreenBuffer(buffer);
+        Screen.InitScreenBuffer(buffer);
 
         KeyHandler kh = new KeyHandler();
         int orbX = buffer.width / 2;
@@ -162,7 +162,7 @@ public class test : native_ue.MonoBehaviour
             AsyncScreen.SetScreenBuffer(buffer);
 
             ks = kh.WaitForInput();
-
+            //  ks.keys
             if (ks.HasKey(Key.W))
             {
                 orbY++;
@@ -210,7 +210,122 @@ public class test : native_ue.MonoBehaviour
             Runtime.Wait(1);
         }
     }
+    private void d()
+    {
+        const string help = "Press mouse to move to mouse\nWSAD/Arrows to move\nKeypad +/- to change speed";
+        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
+        Screen.InitScreenBuffer(buffer);
 
+
+        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
+
+        void DrawCharAt(int x, int y, char character)
+        {
+            int index = Screen.GetCharacterIndex(character);
+            int posx = index % 16;
+            int posy = index / 16;
+            buffer.SetTexture(x, y, fontTexture.GetPart(posx * 8, (posy) * 8, 8, 8));
+        }
+        void DrawStringAt(int x, int y, string text)
+        {
+            int posX = x;
+            int posY = y;
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text.ToCharArray()[i];
+                if (c == '\n')
+                {
+                    posX = x;
+                    posY += 8;
+                    continue;
+                }
+                DrawCharAt(posX, posY, c);
+                posX += 8;
+            }
+        }
+        File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa");
+        SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
+
+        Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);
+        string position = "";
+        int speed = 1;
+        KeyHandler kh = new KeyHandler();
+        KeySequence ks = null;
+
+        void CheckMovement(KeySequence ks)
+        {
+            if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))
+            {
+                orbPos.y -= speed;
+            }
+            if (ks.HasKey(Key.DownArrow) || ks.HasKey(Key.S))
+            {
+                orbPos.y += speed;
+            }
+            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))
+            {
+                orbPos.x -= speed;
+            }
+            if (ks.HasKey(Key.RightArrow) || ks.HasKey(Key.D))
+            {
+                orbPos.x += speed;
+            }
+        }
+        void ClampFrame()
+        {
+            if (orbPos.x > buffer.width - playerTexture.width)
+            {
+                orbPos.x = buffer.width - playerTexture.width;
+            }
+            if (orbPos.x < 0)
+            {
+                orbPos.x = 0;
+            }
+            if (orbPos.y > buffer.height - playerTexture.height)
+            {
+                orbPos.y = buffer.height - playerTexture.height;
+            }
+            if (orbPos.y < 0)
+            {
+                orbPos.y = 0;
+            }
+        }
+
+
+        while (true)
+        {
+            position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
+            buffer.FillAll(SystemColor.black);
+            DrawStringAt(0, 0, help);
+
+            DrawStringAt(0, 3 * 8, position);
+
+            buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
+
+            AsyncScreen.SetScreenBuffer(buffer);
+
+            ks = kh.WaitForInput();
+            CheckMovement(ks);
+            if (ks.HasKey(Key.KeypadPlus))
+            {
+                speed++;
+            }
+            if (ks.HasKey(Key.KeypadMinus))
+            {
+                speed--;
+            }
+            if (ks.HasKey(Key.Mouse0))
+            {
+                orbPos = MouseHander.GetScreenPosition();
+            }
+            ClampFrame();
+
+
+
+            Runtime.Wait(1);
+        }
+    }
 }
 
 

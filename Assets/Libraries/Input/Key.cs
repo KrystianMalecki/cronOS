@@ -21,6 +21,10 @@ namespace Libraries.system
         {
             return (KeyCode)wrapper;
         }
+        public static char ToChar(this Key wrapper)
+        {
+            return ((char)wrapper);
+        }
     }
     public enum Key
     {

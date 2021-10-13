@@ -51,6 +51,7 @@ namespace Libraries.system.graphics
             {
                 color = unityColor;
             }
+            //todo 8 move Unity Dependant stuff
             public static implicit operator Color32(UnityEngine.Color32 col)
             {
                 return new Color32(col);
@@ -113,7 +114,7 @@ namespace Libraries.system.graphics
         using color32;
         public static class ColorConstants
         {
-            //todo 1 move
+           
             public static Color32 FindNearest(Color32[] colors, Color32 input)
             {
                 int id = FindNearestID(colors, input);
@@ -143,30 +144,12 @@ namespace Libraries.system.graphics
                 }
                 return nearestID;
             }
-            public static Color32 ToCronosColor(this UnityEngine.Color32 color)
+            //todo 1 move ToCronosColor
+            internal static Color32 ToCronosColor(this UnityEngine.Color32 color)
             {
                 return new Color32(color.r, color.g, color.b, color.a);
             }
-            /* public static Color32 ToColor32(this SystemColor systemColor) => systemColor switch
-             {
-                 0 => Black,
-                 1 => Blue,
-                 2 => Green,
-                 3 => Cyan,
-                 4 => Red,
-                 5 => Magenta,
-                 6 => Brown,
-                 7 => LightGray,
-                 8 => DarkGray,
-                 9 => LightBlue,
-                 10 => LightGreen,
-                 11 => LightCyan,
-                 12 => LightRed,
-                 13 => LightMagenta,
-                 14 => Yellow,
-                 15 => White,
-                 _ => throw new NotImplementedException(),
-             };*/
+
             public static readonly Color32 Black32 = new Color32(0, 0, 0);
             public static readonly Color32 Blue32 = new Color32(0, 0, 170);
             public static readonly Color32 Green32 = new Color32(0, 170, 0);
@@ -183,24 +166,10 @@ namespace Libraries.system.graphics
             public static readonly Color32 LightMagenta32 = new Color32(255, 85, 255);
             public static readonly Color32 Yellow32 = new Color32(255, 255, 85);
             public static readonly Color32 White32 = new Color32(255, 255, 255);
+
             public static Color32[] SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32, LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
 
-            /*  public static byte black = 0;
-              public static byte blue = 1;
-              public static byte green = 2;
-              public static byte cyan = 3;
-              public static byte red = 4;
-              public static byte magenta = 5;
-              public static byte brown = 6;
-              public static byte light_gray = 7;
-              public static byte dark_gray = 8;
-              public static byte light_blue = 9;
-              public static byte light_green = 10;
-              public static byte light_cyan = 11;
-              public static byte light_red = 12;
-              public static byte light_magenta = 13;
-              public static byte yellow = 14;
-              public static byte white = 15;*/
+           
         }
         [Serializable]
         public struct SystemColor

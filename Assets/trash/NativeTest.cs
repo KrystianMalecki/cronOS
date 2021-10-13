@@ -7,14 +7,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.InputSystem;
 using sio = System.IO;
 using TMPro;
 using System.Text;
 
 public class NativeTest : MonoBehaviour
 {
-    Keyboard keyboard;
+    //Keyboard keyboard;
     HashSet<KeyCode> keysPressed;
     public SystemTexture st;
     public byte[] arr;
@@ -45,11 +44,16 @@ public class NativeTest : MonoBehaviour
     }
     public string datas2;
 
+    public void Start()
+    {
+        Debug.Log("1=" + Char.ToUpper('1')+ "a=" + Char.ToUpper('a') + "[=" + Char.ToUpper('['));
+        
+    }
     public void Update()
     {
         // StartCoroutine(ie());
 
-
+      //  Keyboard.current.onTextInput
     }
 
     [Button]

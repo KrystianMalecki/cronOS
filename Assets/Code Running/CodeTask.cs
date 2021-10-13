@@ -12,6 +12,8 @@ using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using InternalLogger;
+
+
 [Serializable]
 public class CodeTask
 {
@@ -85,6 +87,7 @@ public class CodeTask
             thread.Abort();
             thread.Join();//todo 9 maybe fix
             thread = null;
+          
         }
         else
         {

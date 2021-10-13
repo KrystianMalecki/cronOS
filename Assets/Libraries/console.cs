@@ -25,10 +25,11 @@ namespace Libraries.system
         {
             Write(text + "\n");
         }
-        public static void Debug(object obj)
+
+        public static void Debug(params object[] obj)
         {
 #if !DLL
-            UnityEngine.Debug.Log(obj);
+            UnityEngine.Debug.Log(obj.ToArrayString());
 #else
             System.Console.WriteLine("debug: " + text);
 

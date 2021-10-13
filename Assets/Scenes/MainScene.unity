@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 349532160}
   - component: {fileID: 349532161}
   m_Layer: 0
-  m_Name: Debug Code runner
+  m_Name: Debug Code Runner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,8 +151,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &349532161
 MonoBehaviour:
@@ -166,18 +166,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 0
-  code: "SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
-    Screen.InitSystemScreenBuffer(buffer);\r\n        string str = \"not so nice
-    cock\";\r\n        File fontAtlas = FileSystem.GetFileByPath(\"C:/System/fontAtlas\");\r\n       
-    SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n       
+  runOnStart: 1
+  code: "const string help = \"Press mouse to move to mouse\\nWSAD/Arrows to move\\nKeypad
+    +/- to change speed\";\r\n        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
+    Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"C:/System/fontAtlas\");\r\n       
+    SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n\r\n       
     void DrawCharAt(int x, int y, char character)\r\n        {\r\n            int
     index = Screen.GetCharacterIndex(character);\r\n            int posx = index
     % 16;\r\n            int posy = index / 16;\r\n            buffer.SetTexture(x,
     y, fontTexture.GetPart(posx * 8, (posy) * 8, 8, 8));\r\n        }\r\n       
-    buffer.FillAll(SystemColor.black);\r\n        for (int i = 0; i < str.Length;
-    i++)\r\n        {\r\n            DrawCharAt(i * 8, 0, str.ToCharArray()[i]);\r\n       
-    }\r\n        Screen.SetScreenBuffer(buffer);"
+    void DrawStringAt(int x, int y, string text)\r\n        {\r\n            int
+    posX = x;\r\n            int posY = y;\r\n            for (int i = 0; i < text.Length;
+    i++)\r\n            {\r\n                char c = text.ToCharArray()[i];\r\n               
+    if (c == '\\n')\r\n                {\r\n                    posX = x;\r\n                   
+    posY += 8;\r\n                    continue;\r\n                }\r\n               
+    DrawCharAt(posX, posY, c);\r\n                posX += 8;\r\n            }\r\n       
+    }\r\n        File playerTextureFile = FileSystem.GetFileByPath(\"C:/System/dupa\");\r\n       
+    SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);\r\n\r\n       
+    Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);\r\n       
+    string position = \"\";\r\n        int speed = 1;\r\n        KeyHandler kh =
+    new KeyHandler();\r\n        KeySequence ks = null;\r\n\r\n        void CheckMovement(KeySequence
+    ks)\r\n        {\r\n            if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))\r\n           
+    {\r\n                orbPos.y -= speed;\r\n            }\r\n            if (ks.HasKey(Key.DownArrow)
+    || ks.HasKey(Key.S))\r\n            {\r\n                orbPos.y += speed;\r\n           
+    }\r\n            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))\r\n           
+    {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (ks.HasKey(Key.RightArrow)
+    || ks.HasKey(Key.D))\r\n            {\r\n                orbPos.x += speed;\r\n           
+    }\r\n        }\r\n        void ClampFrame()\r\n        {\r\n            if (orbPos.x
+    > buffer.width - playerTexture.width)\r\n            {\r\n                orbPos.x
+    = buffer.width - playerTexture.width;\r\n            }\r\n            if (orbPos.x
+    < 0)\r\n            {\r\n                orbPos.x = 0;\r\n            }\r\n           
+    if (orbPos.y > buffer.height - playerTexture.height)\r\n            {\r\n               
+    orbPos.y = buffer.height - playerTexture.height;\r\n            }\r\n           
+    if (orbPos.y < 0)\r\n            {\r\n                orbPos.y = 0;\r\n           
+    }\r\n        }\r\n\r\n\r\n        while (true)\r\n        {\r\n            position
+    = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n            buffer.FillAll(SystemColor.black);\r\n           
+    DrawStringAt(0, 0, help);\r\n\r\n            DrawStringAt(0, 3 * 8, position);\r\n\r\n           
+    buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);\r\n\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n\r\n           
+    ks = kh.WaitForInput();\r\n            CheckMovement(ks);\r\n            if (ks.HasKey(Key.KeypadPlus))\r\n           
+    {\r\n                speed++;\r\n            }\r\n            if (ks.HasKey(Key.KeypadMinus))\r\n           
+    {\r\n                speed--;\r\n            }\r\n            if (ks.HasKey(Key.Mouse0))\r\n           
+    {\r\n                orbPos = MouseHander.GetScreenPosition();\r\n           
+    }\r\n            ClampFrame();\r\n\r\n\r\n\r\n            Runtime.Wait(1);\r\n       
+    }"
 --- !u!1 &358341496
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,8 +241,6 @@ MonoBehaviour:
   screen: {fileID: 632187781}
   bufferTexture: {fileID: 0}
   rawImage: {fileID: 1446994157}
-  map: {fileID: 2800000, guid: 10ad778da966d4d4bb932cdf579db391, type: 3}
-  c: 99
 --- !u!4 &358341498
 Transform:
   m_ObjectHideFlags: 0
@@ -223,8 +252,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_Father: {fileID: 1501359164}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &434435441
 GameObject:
@@ -461,7 +490,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &512668658
 RectTransform:
   m_ObjectHideFlags: 0
@@ -639,7 +668,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &632187779
 GameObject:
@@ -835,9 +864,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EventSystem: {fileID: 0}
+  m_InputOverride: {fileID: 0}
+  m_DefaultInput: {fileID: 0}
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
+  m_TrackedDeviceDragThresholdMultiplier: 2
   m_XRTrackingOrigin: {fileID: 0}
+  m_IgnoreFocus: 0
   m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
@@ -851,6 +885,11 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_ActionsHooked: 0
+  m_NeedToPurgeStalePointers: 0
+  m_CurrentPointerId: -1
+  m_CurrentPointerIndex: -1
+  m_CurrentPointerType: 0
 --- !u!1 &774406597
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,8 +949,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &774406600
 MonoBehaviour:
@@ -17489,7 +17528,7 @@ MonoBehaviour:
             extension: 
             files:
               items:
-              - name: j
+              - name: dupa
                 data: 0600000008000000000000000f0f000000000000000000000f0f000000000f0f000000000f0f0f0f00000f0f0f0f00000f0f000f0f0f0f00
                 extension: 
                 files:
@@ -17517,8 +17556,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 1501359164}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1255072399
 GameObject:
@@ -17561,8 +17600,40 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
+  m_Father: {fileID: 1501359164}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1296099127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1296099128}
+  m_Layer: 0
+  m_Name: Debugging
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1296099128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296099127}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 774406599}
+  - {fileID: 349532160}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1446994155
 GameObject:
@@ -17597,10 +17668,10 @@ RectTransform:
   m_Father: {fileID: 448482745}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 640, y: 480}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1446994157
 MonoBehaviour:
@@ -17644,13 +17715,47 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1446994155}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 2
   m_AspectRatio: 1
+--- !u!1 &1501359163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1501359164}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1501359164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501359163}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 358341498}
+  - {fileID: 831048309}
+  - {fileID: 1255072401}
+  - {fileID: 1879574977}
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1879574975
 GameObject:
   m_ObjectHideFlags: 0
@@ -17695,6 +17800,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1501359164}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
