@@ -79,7 +79,26 @@ namespace Libraries.system
                 cooldownKeys.UnionWith(pressedDownKeys);
                 return new KeySequence(pressedDownKeys);
             }
-
+            public static string GetInputAsString()
+            {
+                return ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
+            }
+            public static string WaitForStringInput()
+            {
+                return ScriptManager.AddDelegateToStack((ref bool done, ref string ret) =>
+                {
+                    done = false;
+                    if (Input.anyKey)
+                    {
+                        ret = Input.inputString;
+                        if (!String.IsNullOrEmpty(ret))
+                        {
+                            done = true;
+                        }
+                    }
+                 
+                }, true);
+            }
         }
         public class KeySequence
         {

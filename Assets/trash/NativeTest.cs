@@ -46,14 +46,13 @@ public class NativeTest : MonoBehaviour
 
     public void Start()
     {
-        Debug.Log("1=" + Char.ToUpper('1')+ "a=" + Char.ToUpper('a') + "[=" + Char.ToUpper('['));
-        
+        Debug.Log("1=" + Char.ToUpper('1') + "a=" + Char.ToUpper('a') + "[=" + Char.ToUpper('['));
+
     }
     public void Update()
     {
         // StartCoroutine(ie());
-
-      //  Keyboard.current.onTextInput
+        //  Keyboard.current.onTextInput
     }
 
     [Button]

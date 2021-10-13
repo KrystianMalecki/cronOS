@@ -40,7 +40,7 @@ public class test : native_ue.MonoBehaviour
     public int counts9 = 0;
     public int counts10 = 0;
 
-
+    //string inp=KeyHandler.WaitForStringInput();
     public void Awake()
     {
         instance = this;
@@ -52,6 +52,8 @@ public class test : native_ue.MonoBehaviour
           using native_system = System;
           using native_ue = UnityEngine;
         */
+
+        string s = native_ue.Input.inputString;
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
         File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa.dll");
         SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
@@ -271,7 +273,43 @@ public class test : native_ue.MonoBehaviour
             {
                 orbPos.x += speed;
             }
+            if (ks.HasKey(Key.KeypadPlus))
+            {
+                speed++;
+            }
+            if (ks.HasKey(Key.KeypadMinus))
+            {
+                speed--;
+            }
         }
+        void CheckMovementString(string s)
+        {
+            if (s.ToLower().Contains("w"))
+            {
+                orbPos.y -= speed;
+            }
+            if (s.ToLower().Contains("s"))
+            {
+                orbPos.y += speed;
+            }
+            if (s.ToLower().Contains("a"))
+            {
+                orbPos.x -= speed;
+            }
+            if (s.ToLower().Contains("d"))
+            {
+                orbPos.x += speed;
+            }
+            if (s.ToLower().Contains("+"))
+            {
+                speed++;
+            }
+            if (s.ToLower().Contains("-"))
+            {
+                speed--;
+            }
+        }
+
         void ClampFrame()
         {
             if (orbPos.x > buffer.width - playerTexture.width)
@@ -305,20 +343,14 @@ public class test : native_ue.MonoBehaviour
 
             AsyncScreen.SetScreenBuffer(buffer);
 
-            ks = kh.WaitForInput();
-            CheckMovement(ks);
-            if (ks.HasKey(Key.KeypadPlus))
-            {
-                speed++;
-            }
-            if (ks.HasKey(Key.KeypadMinus))
-            {
-                speed--;
-            }
-            if (ks.HasKey(Key.Mouse0))
+          //  ks = kh.WaitForInput();
+         //   CheckMovement(ks);
+            CheckMovementString(KeyHandler.WaitForStringInput());
+        
+           /* if (ks.HasKey(Key.Mouse0))
             {
                 orbPos = MouseHander.GetScreenPosition();
-            }
+            }*/
             ClampFrame();
 
 

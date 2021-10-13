@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 1
+  runOnStart: 0
   code: "const string help = \"Press mouse to move to mouse\\nWSAD/Arrows to move\\nKeypad
     +/- to change speed\";\r\n        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
     Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"C:/System/fontAtlas\");\r\n       
@@ -192,22 +192,31 @@ MonoBehaviour:
     }\r\n            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))\r\n           
     {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (ks.HasKey(Key.RightArrow)
     || ks.HasKey(Key.D))\r\n            {\r\n                orbPos.x += speed;\r\n           
-    }\r\n        }\r\n        void ClampFrame()\r\n        {\r\n            if (orbPos.x
-    > buffer.width - playerTexture.width)\r\n            {\r\n                orbPos.x
-    = buffer.width - playerTexture.width;\r\n            }\r\n            if (orbPos.x
-    < 0)\r\n            {\r\n                orbPos.x = 0;\r\n            }\r\n           
-    if (orbPos.y > buffer.height - playerTexture.height)\r\n            {\r\n               
-    orbPos.y = buffer.height - playerTexture.height;\r\n            }\r\n           
-    if (orbPos.y < 0)\r\n            {\r\n                orbPos.y = 0;\r\n           
-    }\r\n        }\r\n\r\n\r\n        while (true)\r\n        {\r\n            position
-    = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n            buffer.FillAll(SystemColor.black);\r\n           
-    DrawStringAt(0, 0, help);\r\n\r\n            DrawStringAt(0, 3 * 8, position);\r\n\r\n           
-    buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);\r\n\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n\r\n           
-    ks = kh.WaitForInput();\r\n            CheckMovement(ks);\r\n            if (ks.HasKey(Key.KeypadPlus))\r\n           
-    {\r\n                speed++;\r\n            }\r\n            if (ks.HasKey(Key.KeypadMinus))\r\n           
-    {\r\n                speed--;\r\n            }\r\n            if (ks.HasKey(Key.Mouse0))\r\n           
-    {\r\n                orbPos = MouseHander.GetScreenPosition();\r\n           
-    }\r\n            ClampFrame();\r\n\r\n\r\n\r\n            Runtime.Wait(1);\r\n       
+    }\r\n            if (ks.HasKey(Key.KeypadPlus))\r\n            {\r\n               
+    speed++;\r\n            }\r\n            if (ks.HasKey(Key.KeypadMinus))\r\n           
+    {\r\n                speed--;\r\n            }\r\n        }\r\n        void CheckMovementString(string
+    s)\r\n        {\r\n            if (s.ToLower().Contains(\"w\"))\r\n           
+    {\r\n                orbPos.y -= speed;\r\n            }\r\n            if (s.ToLower().Contains(\"s\"))\r\n           
+    {\r\n                orbPos.y += speed;\r\n            }\r\n            if (s.ToLower().Contains(\"a\"))\r\n           
+    {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (s.ToLower().Contains(\"d\"))\r\n           
+    {\r\n                orbPos.x += speed;\r\n            }\r\n            if (s.ToLower().Contains(\"+\"))\r\n           
+    {\r\n                speed++;\r\n            }\r\n            if (s.ToLower().Contains(\"-\"))\r\n           
+    {\r\n                speed--;\r\n            }\r\n        }\r\n\r\n        void
+    ClampFrame()\r\n        {\r\n            if (orbPos.x > buffer.width - playerTexture.width)\r\n           
+    {\r\n                orbPos.x = buffer.width - playerTexture.width;\r\n           
+    }\r\n            if (orbPos.x < 0)\r\n            {\r\n                orbPos.x
+    = 0;\r\n            }\r\n            if (orbPos.y > buffer.height - playerTexture.height)\r\n           
+    {\r\n                orbPos.y = buffer.height - playerTexture.height;\r\n           
+    }\r\n            if (orbPos.y < 0)\r\n            {\r\n                orbPos.y
+    = 0;\r\n            }\r\n        }\r\n\r\n\r\n        while (true)\r\n       
+    {\r\n            position = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n           
+    buffer.FillAll(SystemColor.black);\r\n            DrawStringAt(0, 0, help);\r\n\r\n           
+    DrawStringAt(0, 3 * 8, position);\r\n\r\n            buffer.SetTexture(orbPos.x,
+    orbPos.y, playerTexture);\r\n\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n\r\n         
+    //  ks = kh.WaitForInput();\r\n         //   CheckMovement(ks);\r\n           
+    CheckMovementString(KeyHandler.WaitForStringInput());\r\n        \r\n          
+    /* if (ks.HasKey(Key.Mouse0))\r\n            {\r\n                orbPos = MouseHander.GetScreenPosition();\r\n           
+    }*/\r\n            ClampFrame();\r\n\r\n\r\n\r\n            Runtime.Wait(1);\r\n       
     }"
 --- !u!1 &358341496
 GameObject:
