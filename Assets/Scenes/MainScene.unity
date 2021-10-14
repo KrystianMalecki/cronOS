@@ -166,9 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 0
-  code: "const string help = \"Press mouse to move to mouse\\nWSAD/Arrows to move\\nKeypad
-    +/- to change speed\";\r\n        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
+  runOnStart: 1
+  code: "const string help = \"Press mouse to move to mouse\\n\"\r\n            +
+    \"Arrows to move\\n\"\r\n            + \"Keypad +/- to change speed\\n\"\r\n           
+    + \"Type to type\u263B\";\r\n        SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();\r\n       
     Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"C:/System/fontAtlas\");\r\n       
     SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n\r\n       
     void DrawCharAt(int x, int y, char character)\r\n        {\r\n            int
@@ -178,45 +179,40 @@ MonoBehaviour:
     void DrawStringAt(int x, int y, string text)\r\n        {\r\n            int
     posX = x;\r\n            int posY = y;\r\n            for (int i = 0; i < text.Length;
     i++)\r\n            {\r\n                char c = text.ToCharArray()[i];\r\n               
-    if (c == '\\n')\r\n                {\r\n                    posX = x;\r\n                   
+    //Console.Debug(c,(int)c,(int)'\\n');\r\n                if (c == '\\n' || c
+    == '\\r')\r\n                {\r\n                    posX = x;\r\n                   
     posY += 8;\r\n                    continue;\r\n                }\r\n               
     DrawCharAt(posX, posY, c);\r\n                posX += 8;\r\n            }\r\n       
-    }\r\n        File playerTextureFile = FileSystem.GetFileByPath(\"C:/System/dupa\");\r\n       
+    }\r\n\r\n        File playerTextureFile = FileSystem.GetFileByPath(\"C:/System/dupa\");\r\n       
     SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);\r\n\r\n       
     Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);\r\n       
-    string position = \"\";\r\n        int speed = 1;\r\n        KeyHandler kh =
-    new KeyHandler();\r\n        KeySequence ks = null;\r\n\r\n        void CheckMovement(KeySequence
-    ks)\r\n        {\r\n            if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))\r\n           
-    {\r\n                orbPos.y -= speed;\r\n            }\r\n            if (ks.HasKey(Key.DownArrow)
-    || ks.HasKey(Key.S))\r\n            {\r\n                orbPos.y += speed;\r\n           
-    }\r\n            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))\r\n           
-    {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (ks.HasKey(Key.RightArrow)
-    || ks.HasKey(Key.D))\r\n            {\r\n                orbPos.x += speed;\r\n           
-    }\r\n            if (ks.HasKey(Key.KeypadPlus))\r\n            {\r\n               
-    speed++;\r\n            }\r\n            if (ks.HasKey(Key.KeypadMinus))\r\n           
-    {\r\n                speed--;\r\n            }\r\n        }\r\n        void CheckMovementString(string
-    s)\r\n        {\r\n            if (s.ToLower().Contains(\"w\"))\r\n           
-    {\r\n                orbPos.y -= speed;\r\n            }\r\n            if (s.ToLower().Contains(\"s\"))\r\n           
-    {\r\n                orbPos.y += speed;\r\n            }\r\n            if (s.ToLower().Contains(\"a\"))\r\n           
-    {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (s.ToLower().Contains(\"d\"))\r\n           
-    {\r\n                orbPos.x += speed;\r\n            }\r\n            if (s.ToLower().Contains(\"+\"))\r\n           
-    {\r\n                speed++;\r\n            }\r\n            if (s.ToLower().Contains(\"-\"))\r\n           
-    {\r\n                speed--;\r\n            }\r\n        }\r\n\r\n        void
-    ClampFrame()\r\n        {\r\n            if (orbPos.x > buffer.width - playerTexture.width)\r\n           
-    {\r\n                orbPos.x = buffer.width - playerTexture.width;\r\n           
-    }\r\n            if (orbPos.x < 0)\r\n            {\r\n                orbPos.x
-    = 0;\r\n            }\r\n            if (orbPos.y > buffer.height - playerTexture.height)\r\n           
-    {\r\n                orbPos.y = buffer.height - playerTexture.height;\r\n           
-    }\r\n            if (orbPos.y < 0)\r\n            {\r\n                orbPos.y
-    = 0;\r\n            }\r\n        }\r\n\r\n\r\n        while (true)\r\n       
-    {\r\n            position = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n           
-    buffer.FillAll(SystemColor.black);\r\n            DrawStringAt(0, 0, help);\r\n\r\n           
-    DrawStringAt(0, 3 * 8, position);\r\n\r\n            buffer.SetTexture(orbPos.x,
-    orbPos.y, playerTexture);\r\n\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n\r\n         
-    //  ks = kh.WaitForInput();\r\n         //   CheckMovement(ks);\r\n           
-    CheckMovementString(KeyHandler.WaitForStringInput());\r\n        \r\n          
-    /* if (ks.HasKey(Key.Mouse0))\r\n            {\r\n                orbPos = MouseHander.GetScreenPosition();\r\n           
-    }*/\r\n            ClampFrame();\r\n\r\n\r\n\r\n            Runtime.Wait(1);\r\n       
+    string position = \"\";\r\n        string text = \"\";\r\n        int speed =
+    1;\r\n        KeyHandler kh = new KeyHandler();\r\n        KeySequence ks = null;\r\n\r\n       
+    void CheckMovement(KeySequence ks)\r\n        {\r\n            if (ks.HasKey(Key.UpArrow))\r\n           
+    {\r\n                orbPos.y -= speed;\r\n            }\r\n            if (ks.HasKey(Key.DownArrow))\r\n           
+    {\r\n                orbPos.y += speed;\r\n            }\r\n            if (ks.HasKey(Key.LeftArrow))\r\n           
+    {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (ks.HasKey(Key.RightArrow))\r\n           
+    {\r\n                orbPos.x += speed;\r\n            }\r\n            if (ks.HasKey(Key.KeypadPlus))\r\n           
+    {\r\n                speed++;\r\n            }\r\n            if (ks.HasKey(Key.KeypadMinus))\r\n           
+    {\r\n                speed--;\r\n            }\r\n        }\r\n\r\n\r\n       
+    void ClampPositionToFrame()\r\n        {\r\n            if (orbPos.x > buffer.width
+    - playerTexture.width)\r\n            {\r\n                orbPos.x = buffer.width
+    - playerTexture.width;\r\n            }\r\n            if (orbPos.x < 0)\r\n           
+    {\r\n                orbPos.x = 0;\r\n            }\r\n            if (orbPos.y
+    > buffer.height - playerTexture.height)\r\n            {\r\n                orbPos.y
+    = buffer.height - playerTexture.height;\r\n            }\r\n            if (orbPos.y
+    < 0)\r\n            {\r\n                orbPos.y = 0;\r\n            }\r\n       
+    }\r\n\r\n        void Draw()\r\n        {\r\n            DrawStringAt(0, 0, help);\r\n           
+    position = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n\r\n            DrawStringAt(0,
+    4 * 8, position);\r\n            buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);\r\n           
+    DrawStringAt(0, 5 * 8, text);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
+    }\r\n        void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
+    string input = KeyHandler.GetInputAsString();\r\n            if (input != \"\")\r\n           
+    {\r\n                text = text.AddInput(input);\r\n            }\r\n           
+    CheckMovement(ks);\r\n            if (ks.HasKey(Key.Mouse0))\r\n            {\r\n               
+    orbPos = MouseHander.GetScreenPosition();\r\n            }\r\n            ClampPositionToFrame();\r\n       
+    }\r\n        while (true)\r\n        {\r\n            buffer.FillAll(SystemColor.black);\r\n       
+    \r\n            Draw();\r\n            ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n       
     }"
 --- !u!1 &358341496
 GameObject:
@@ -873,32 +869,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EventSystem: {fileID: 0}
-  m_InputOverride: {fileID: 0}
-  m_DefaultInput: {fileID: 0}
-  m_MoveRepeatDelay: 0.5
-  m_MoveRepeatRate: 0.1
-  m_TrackedDeviceDragThresholdMultiplier: 2
-  m_XRTrackingOrigin: {fileID: 0}
-  m_IgnoreFocus: 0
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
-  m_ActionsHooked: 0
-  m_NeedToPurgeStalePointers: 0
-  m_CurrentPointerId: -1
-  m_CurrentPointerIndex: -1
-  m_CurrentPointerType: 0
 --- !u!1 &774406597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,32 +981,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pta:
-    structureName: test
-    fields:
-    - name: width
-      type: Int16
-      size: 
-    - name: size
-      type: Int32
-      size: 
-    - name: str
-      type: byte
-      size: 20
-    - name: bytes
-      type: Byte
-      size: size
-    - name: ch
-      type: Char
-      size: 
-    - name: b
-      type: Boolean
-      size: 
-    - name: byt
-      type: Byte
-      size: 
-    - name: sc
-      type: SystemColor
-      size: 
+    structureName: 
+    fields: []
   outputCode: 
 --- !u!114 &774406602
 MonoBehaviour:
@@ -17568,6 +17514,49 @@ Transform:
   m_Father: {fileID: 1501359164}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1081877136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1081877137}
+  - component: {fileID: 1081877138}
+  m_Layer: 0
+  m_Name: InputManager2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1081877137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081877136}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1501359164}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1081877138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081877136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f3402e135161e547bc1c87fd0058cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1255072399
 GameObject:
   m_ObjectHideFlags: 0
@@ -17762,6 +17751,7 @@ Transform:
   - {fileID: 831048309}
   - {fileID: 1255072401}
   - {fileID: 1879574977}
+  - {fileID: 1081877137}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

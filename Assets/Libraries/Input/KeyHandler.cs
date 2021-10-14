@@ -6,7 +6,7 @@ using UnityEngine;
 using static test;
 using InternalLogger;
 using System.Linq;
-
+using System.Text;
 
 namespace Libraries.system
 {
@@ -16,7 +16,6 @@ namespace Libraries.system
         {
             public HashSet<Key> pressedDownKeys = new HashSet<Key>();
             public HashSet<Key> cooldownKeys = new HashSet<Key>();
-
             private void CheckKeys()
             {
                 try
@@ -81,23 +80,31 @@ namespace Libraries.system
             }
             public static string GetInputAsString()
             {
-                return ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
+                return InputManager2.GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
             }
             public static string WaitForStringInput()
             {
-                return ScriptManager.AddDelegateToStack((ref bool done, ref string ret) =>
+                string buffer = "";
+                while (String.IsNullOrEmpty(buffer))
                 {
-                    done = false;
-                    if (Input.anyKey)
-                    {
-                        ret = Input.inputString;
-                        if (!String.IsNullOrEmpty(ret))
-                        {
-                            done = true;
-                        }
-                    }
-                 
-                }, true);
+                    buffer = InputManager2.GetInput();
+                    Runtime.Wait();
+                }
+                return buffer;
+
+                /*  return ScriptManager.AddDelegateToStack((ref bool done, ref string ret) =>
+                  {
+                      done = false;
+                      if (Input.anyKey)
+                      {
+                          ret = Input.inputString;
+                          if (!String.IsNullOrEmpty(ret))
+                          {
+                              done = true;
+                          }
+                      }
+
+                  }, true);*/
             }
         }
         public class KeySequence
@@ -130,6 +137,31 @@ namespace Libraries.system
                  Char.
                  Key k = keys.Find(x => Key.A >= x && x <= Key.Z);
              }*/
+        }
+        public static class InputHelpers
+        {
+            public static string AddInput(this string current, string input)
+            {
+                foreach (char c in input)
+                {
+                    if (c == '\b') // has backspace/delete been pressed?
+                    {
+                        if (current.Length != 0)
+                        {
+                            current = current.Substring(0, current.Length - 1);
+                        }
+                    }
+                    else if ((c == '\n') || (c == '\r')) // enter/return
+                    {
+                        current += '\n';
+                    }
+                    else
+                    {
+                        current += c;
+                    }
+                }
+                return current;
+            }
         }
     }
 }

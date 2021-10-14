@@ -29,6 +29,7 @@ namespace Libraries.system
         public static void Debug(params object[] obj)
         {
 #if !DLL
+            
             UnityEngine.Debug.Log(obj.ToArrayString());
 #else
             System.Console.WriteLine("debug: " + text);

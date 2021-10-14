@@ -1,4 +1,4 @@
-using Libraries.system;
+﻿using Libraries.system;
 using Libraries.system.graphics;
 
 using Libraries.system.graphics.color32;
@@ -214,7 +214,11 @@ public class test : native_ue.MonoBehaviour
     }
     private void d()
     {
-        const string help = "Press mouse to move to mouse\nWSAD/Arrows to move\nKeypad +/- to change speed";
+
+        const string help = "Press mouse to move to mouse\n"
+            + "Arrows to move\n"
+            + "Keypad +/- to change speed\n"
+            + "Type to type☻";
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
 
@@ -236,7 +240,8 @@ public class test : native_ue.MonoBehaviour
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text.ToCharArray()[i];
-                if (c == '\n')
+                //Console.Debug(c,(int)c,(int)'\n');
+                if (c == '\n' || c == '\r')
                 {
                     posX = x;
                     posY += 8;
@@ -246,30 +251,32 @@ public class test : native_ue.MonoBehaviour
                 posX += 8;
             }
         }
+
         File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa");
         SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
 
         Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);
         string position = "";
+        string text = "";
         int speed = 1;
         KeyHandler kh = new KeyHandler();
         KeySequence ks = null;
 
         void CheckMovement(KeySequence ks)
         {
-            if (ks.HasKey(Key.UpArrow) || ks.HasKey(Key.W))
+            if (ks.HasKey(Key.UpArrow))
             {
                 orbPos.y -= speed;
             }
-            if (ks.HasKey(Key.DownArrow) || ks.HasKey(Key.S))
+            if (ks.HasKey(Key.DownArrow))
             {
                 orbPos.y += speed;
             }
-            if (ks.HasKey(Key.LeftArrow) || ks.HasKey(Key.A))
+            if (ks.HasKey(Key.LeftArrow))
             {
                 orbPos.x -= speed;
             }
-            if (ks.HasKey(Key.RightArrow) || ks.HasKey(Key.D))
+            if (ks.HasKey(Key.RightArrow))
             {
                 orbPos.x += speed;
             }
@@ -282,35 +289,9 @@ public class test : native_ue.MonoBehaviour
                 speed--;
             }
         }
-        void CheckMovementString(string s)
-        {
-            if (s.ToLower().Contains("w"))
-            {
-                orbPos.y -= speed;
-            }
-            if (s.ToLower().Contains("s"))
-            {
-                orbPos.y += speed;
-            }
-            if (s.ToLower().Contains("a"))
-            {
-                orbPos.x -= speed;
-            }
-            if (s.ToLower().Contains("d"))
-            {
-                orbPos.x += speed;
-            }
-            if (s.ToLower().Contains("+"))
-            {
-                speed++;
-            }
-            if (s.ToLower().Contains("-"))
-            {
-                speed--;
-            }
-        }
 
-        void ClampFrame()
+
+        void ClampPositionToFrame()
         {
             if (orbPos.x > buffer.width - playerTexture.width)
             {
@@ -330,30 +311,37 @@ public class test : native_ue.MonoBehaviour
             }
         }
 
-
-        while (true)
+        void Draw()
         {
-            position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
-            buffer.FillAll(SystemColor.black);
             DrawStringAt(0, 0, help);
+            position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
 
-            DrawStringAt(0, 3 * 8, position);
-
+            DrawStringAt(0, 4 * 8, position);
             buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
-
+            DrawStringAt(0, 5 * 8, text);
             AsyncScreen.SetScreenBuffer(buffer);
-
-          //  ks = kh.WaitForInput();
-         //   CheckMovement(ks);
-            CheckMovementString(KeyHandler.WaitForStringInput());
-        
-           /* if (ks.HasKey(Key.Mouse0))
+        }
+        void ProcessInput()
+        {
+            ks = kh.WaitForInput();
+            string input = KeyHandler.GetInputAsString();
+            if (input != "")
+            {
+                text = text.AddInput(input);
+            }
+            CheckMovement(ks);
+            if (ks.HasKey(Key.Mouse0))
             {
                 orbPos = MouseHander.GetScreenPosition();
-            }*/
-            ClampFrame();
-
-
+            }
+            ClampPositionToFrame();
+        }
+        while (true)
+        {
+            buffer.FillAll(SystemColor.black);
+        
+            Draw();
+            ProcessInput();
 
             Runtime.Wait(1);
         }

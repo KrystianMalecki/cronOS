@@ -53,7 +53,8 @@ namespace Libraries.system.graphics
         }
         public static int GetCharacterIndex(char character)
         {
-            return ScreenManager.asciiMap.ToList().FindIndex(x => x == character);
+            int index = ScreenManager.asciiMap.ToList().FindIndex(x => x == character);
+            return index == -1 ? 0 : index;
         }
     }
     public class AsyncScreen : Screen

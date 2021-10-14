@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using libs = Libraries.system;
+using System.Text;
 
 public class ScreenManager : MonoBehaviour
 {
@@ -61,6 +62,8 @@ public class ScreenManager : MonoBehaviour
 
 
         rawImage.SetAllDirty();
+     
+
     }
  
 
