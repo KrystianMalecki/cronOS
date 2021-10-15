@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
-//todo 5 add checks is files are folders
-//todo 7 add checks for names and data
 namespace Libraries.system.filesystem
 {
 
@@ -17,29 +15,20 @@ namespace Libraries.system.filesystem
     public class File
     {
         public string name;
-
+        [SerializeField]
+        public FilePermissions permissions = new FilePermissions(0b0111);
 
         [AllowNesting]
         [HideInInspector]
-        // [NaughtyAttributes.OnValueChanged("_setText")]
         public byte[] data;
 
-        public string extension;
         [SerializeField]
-
         public ThreadSafeList<File> files;
+
         [System.NonSerialized]
         public File parent;
 
-
-        [AllowNesting]
-        [System.NonSerialized]
-        public bool changing = false;
-
-
-
-
-        public void AddFile(File file)
+        public void AddChild(File file)
         {
             files.Add(file);
             file.parent = this;
@@ -49,25 +38,23 @@ namespace Libraries.system.filesystem
             files.Remove(file);
             file.parent = null;
         }
-        public string GetFullName()
-        {
-            return name + ((!string.IsNullOrEmpty(extension)) && (extension != "DIR") ? ("." + extension) : "");
-        }
+
         public string GetFullPath()
         {
-            return string.Concat(parent.GetFullPath(), "/", GetFullName());
+            return string.Concat(parent.GetFullPath(), "/", name);
         }
         public void MoveFileTo(File desitination)
         {
             parent.RemoveFile(this);
-            desitination.AddFile(this);
+            desitination.AddChild(this);
         }
         //todo 9 find better method
         public string ReturnDataAsString()
         {
-            return new string(Array.ConvertAll(data, x => (char)x));
+
+            return ProcessorManager.mainEncoding.GetString(data);
         }
-        public File GetFileByName(string name)
+        public File GetChildByName(string name)
         {
             lock (files)
             {
@@ -81,29 +68,34 @@ namespace Libraries.system.filesystem
             }
             return null;
         }
-        public File GetFileByFullName(string fullName)
-        {
-            lock (files)
-            {
-                for (int i = 0; i < files.Count; i++)
-                {
-                    if (files[i].GetFullName() == fullName)
-                    {
-                        return files[i];
-                    }
-                }
-            }
-            return null;
-        }
 
-        /*   public System.IO.MemoryStream Open()
-           {
-
-               return new System.IO.MemoryStream(data);
-           }*/
         public override string ToString()
         {
-            return GetFullName();
+            return GetFullPath();
         }
+
+
+        public bool isFolder()
+        {
+            return permissions.isFolder;
+        }
+    }
+
+}
+[Serializable]
+public struct FilePermissions
+{
+    public bool isFolder;
+    public bool read;
+    public bool wrtite;
+    public bool execute;
+
+    public FilePermissions(byte halfByte)
+    {
+        execute = halfByte % 2 == 1;
+        wrtite = halfByte % 4 == 1;
+        read = halfByte % 8 == 1;
+        isFolder = halfByte % 16 == 1;
+
     }
 }

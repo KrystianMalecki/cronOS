@@ -235,6 +235,7 @@ public class test : native_ue.MonoBehaviour
         }
         void DrawStringAt(int x, int y, string text)
         {
+            Console.Debug(x + " " + y);
             int posX = x;
             int posY = y;
             for (int i = 0; i < text.Length; i++)
@@ -261,6 +262,7 @@ public class test : native_ue.MonoBehaviour
         int speed = 1;
         KeyHandler kh = new KeyHandler();
         KeySequence ks = null;
+        bool flasher = false;
 
         void CheckMovement(KeySequence ks)
         {
@@ -310,15 +312,16 @@ public class test : native_ue.MonoBehaviour
                 orbPos.y = 0;
             }
         }
-
         void Draw()
         {
-            DrawStringAt(0, 0, help);
+            DrawStringAt(8, 0, help);
             position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
-
+           
             DrawStringAt(0, 4 * 8, position);
             buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
             DrawStringAt(0, 5 * 8, text);
+            buffer.Fill(0, 0,8,8, flasher ? SystemColor.red : SystemColor.blue);
+            flasher = !flasher;
             AsyncScreen.SetScreenBuffer(buffer);
         }
         void ProcessInput()
@@ -339,7 +342,7 @@ public class test : native_ue.MonoBehaviour
         while (true)
         {
             buffer.FillAll(SystemColor.black);
-        
+
             Draw();
             ProcessInput();
 

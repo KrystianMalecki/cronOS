@@ -53,6 +53,30 @@ namespace Libraries.system.graphics
                     }
                 }
             }
+            public void DrawLine(int startX, int startY, int endX, int endY, Color32 color)
+            {
+                int dx, dy, p, x, y;
+                dx = endX - startX;
+                dy = endY - startY;
+                x = startX;
+                y = startY;
+                p = 2 * dy - dx;
+                while (x < endX)
+                {
+                    if (p >= 0)
+                    {
+                        SetAt(x, y, color);
+                        y = y + 1;
+                        p = p + 2 * dy - 2 * dx;
+                    }
+                    else
+                    {
+                        SetAt(x, y, color);
+                        p = p + 2 * dy;
+                    }
+                    x = x + 1;
+                }
+            }
 
         }
     }
@@ -100,7 +124,41 @@ namespace Libraries.system.graphics
                     }
                 }
             }
+            public void DrawLine(int startX, int startY, int endX, int endY, SystemColor color)
+            {
+                int dx = endX - startX;
+                int dy = endY - startY;
+                for (int i = startX; i < endX; i++)
+                {
+                    int y = startY + dy * (i - startX) / dx;
+                    SetAt(i, y, color);
 
+                }
+
+
+
+                /*  int dx, dy, p, x, y;
+                  dx = endX - startX;
+                  dy = endY - startY;
+                  x = startX;
+                  y = startY;
+                  p = 2 * dy - dx;
+                  while (x < endX)
+                  {
+                      if (p >= 0)
+                      {
+                          SetAt(x, y, color);
+                          y = y + 1;
+                          p = p + 2 * dy - 2 * dx;
+                      }
+                      else
+                      {
+                          SetAt(x, y, color);
+                          p = p + 2 * dy;
+                      }
+                      x = x + 1;
+                  }*/
+            }
         }
 
     }

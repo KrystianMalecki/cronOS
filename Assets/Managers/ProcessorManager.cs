@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class ProcessorManager : MonoBehaviour
@@ -23,10 +24,9 @@ public class ProcessorManager : MonoBehaviour
 
     public bool canRun;
     public bool ignoreSomeErrors;
-
+    public static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
     public static bool checkIfCanRun()
     {
         return instance.canRun;
-
     }
 }

@@ -43,7 +43,8 @@ public class NativeTest : MonoBehaviour
         }
     }
     public string datas2;
-
+    [HorizontalLine]
+    public File f;
     public void Start()
     {
 

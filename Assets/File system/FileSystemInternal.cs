@@ -23,11 +23,18 @@ public class FileSystemInternal : MonoBehaviour
     }
     #endregion
     public ThreadSafeList<Drive> drives = new ThreadSafeList<Drive>();
-
-    public File GetFileByPath(string path)
+    public static readonly string folderExtension = "DIR";
+    public static readonly char catalogSymbol = '/';
+    public Drive GetDrive(string name)
     {
-        string[] parts = path.Split('/');
-        Drive d = drives.Find(x => x.driveFile.name + ":" == parts[0]);
+        Debug.Log(name);
+        return drives.Find(x => x.driveFile.name + ":" == name);
+
+    }
+    public File GetFileByPath(string rawPath)
+    {
+        string[] parts = rawPath.Split(catalogSymbol);
+        Drive d = GetDrive(parts[0]);
         //todo 8 check d
         File currentFile = d.driveFile;
         for (int i = 1; i < parts.Length; i++)
@@ -36,7 +43,7 @@ public class FileSystemInternal : MonoBehaviour
             {
                 return currentFile;
             }
-            currentFile = currentFile.GetFileByFullName(parts[i]);
+            currentFile = currentFile.GetChildByName(parts[i]);
             if (currentFile == null)
             {
                 return null;
@@ -45,13 +52,36 @@ public class FileSystemInternal : MonoBehaviour
         return currentFile;
 
     }
-    public string path;
-    [SerializeReference]
-    public File file;
-   
-    public void getfile()
+ /*   public Path GetPath(string rawPath)
     {
-        file = GetFileByPath(path);
-        Debug.Log(file);
+        return new Path(rawPath);
+    }*/
+    public bool RemoveFile(string path)
+    {
+        //todo-future add errors
+        File file = GetFileByPath(path);
+        file.parent.RemoveFile(file);
+        return true;
+    }
+    public File MakeFolder(string name)
+    {
+        File newFile = new File();
+        newFile.name = name;
+        newFile.permissions = new FilePermissions(0b1111);
+        newFile.files = new ThreadSafeList<File>();
+        return newFile;
+    }
+    public File MakeFile(string name, byte[] data = null)
+    {
+        File newFile = new File();
+        newFile.name = name;
+        newFile.permissions = new FilePermissions(0b0111);
+
+        newFile.files = null;
+        if (data != null)
+        {
+            newFile.data = data;
+        }
+        return newFile;
     }
 }
