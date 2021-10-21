@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using UnityEngine;
 namespace Libraries.system.filesystem
@@ -16,7 +17,8 @@ namespace Libraries.system.filesystem
     {
         public string name;
         [SerializeField]
-        public FilePermissions permissions = new FilePermissions(0b0111);
+        [EnumMask]
+        public FilePermission permissions = (FilePermission)7;
 
         [AllowNesting]
         [HideInInspector]
@@ -25,7 +27,7 @@ namespace Libraries.system.filesystem
         [SerializeField]
         public ThreadSafeList<File> files;
 
-        [System.NonSerialized]
+        //  [System.NonSerialized]
         public File parent;
 
         public void AddChild(File file)
@@ -41,6 +43,10 @@ namespace Libraries.system.filesystem
 
         public string GetFullPath()
         {
+            if (parent == null)
+            {
+                return name;
+            }
             return string.Concat(parent.GetFullPath(), "/", name);
         }
         public void MoveFileTo(File desitination)
@@ -77,25 +83,53 @@ namespace Libraries.system.filesystem
 
         public bool isFolder()
         {
-            return permissions.isFolder;
+            return (permissions & FilePermission.isFolder) == FilePermission.isFolder;
+        }
+
+        public void OnValidate()
+        {
+            Validate(false);
+        }
+        public void Validate(bool recursive)
+        {
+            foreach (var child in files)
+            {
+                child.parent = this;
+                // Debug.Log("Validating " + child);
+                if (recursive)
+                {
+                    child.Validate(recursive);
+                }
+            }
         }
     }
 
 }
-[Serializable]
+/*[Serializable]
 public struct FilePermissions
 {
     public bool isFolder;
     public bool read;
-    public bool wrtite;
+    public bool write;
     public bool execute;
 
     public FilePermissions(byte halfByte)
     {
         execute = halfByte % 2 == 1;
-        wrtite = halfByte % 4 == 1;
+        write = halfByte % 4 == 1;
         read = halfByte % 8 == 1;
         isFolder = halfByte % 16 == 1;
 
     }
+}*/
+[Serializable]
+[Flags]
+public enum FilePermission 
+{
+    isFolder = 0b1000,
+    read = 0b0100,
+    write = 0b0010,
+    execute = 0b0001
+
+
 }

@@ -23,12 +23,31 @@ public class FileSystemInternal : MonoBehaviour
     }
     #endregion
     public ThreadSafeList<Drive> drives = new ThreadSafeList<Drive>();
+    public string s;
     public static readonly string folderExtension = "DIR";
     public static readonly char catalogSymbol = '/';
     public Drive GetDrive(string name)
     {
-        Debug.Log(name);
-        return drives.Find(x => x.driveFile.name + ":" == name);
+        return drives.Find(x => x.driveFile.name == name);
+    }
+    public File GetFileByPath(File father, string rawPath)
+    {
+        string[] parts = rawPath.Split(catalogSymbol);
+        //todo 8 check d
+        File currentFile = father;
+        for (int i = 1; i < parts.Length; i++)
+        {
+            if (string.IsNullOrEmpty(parts[i]))
+            {
+                return currentFile;
+            }
+            currentFile = currentFile.GetChildByName(parts[i]);
+            if (currentFile == null)
+            {
+                return null;
+            }
+        }
+        return currentFile;
 
     }
     public File GetFileByPath(string rawPath)
@@ -52,10 +71,10 @@ public class FileSystemInternal : MonoBehaviour
         return currentFile;
 
     }
- /*   public Path GetPath(string rawPath)
-    {
-        return new Path(rawPath);
-    }*/
+    /*   public Path GetPath(string rawPath)
+       {
+           return new Path(rawPath);
+       }*/
     public bool RemoveFile(string path)
     {
         //todo-future add errors
@@ -67,7 +86,7 @@ public class FileSystemInternal : MonoBehaviour
     {
         File newFile = new File();
         newFile.name = name;
-        newFile.permissions = new FilePermissions(0b1111);
+        newFile.permissions = (FilePermission)0b1111;
         newFile.files = new ThreadSafeList<File>();
         return newFile;
     }
@@ -75,7 +94,7 @@ public class FileSystemInternal : MonoBehaviour
     {
         File newFile = new File();
         newFile.name = name;
-        newFile.permissions = new FilePermissions(0b0111);
+        newFile.permissions = (FilePermission)0b0111;
 
         newFile.files = null;
         if (data != null)

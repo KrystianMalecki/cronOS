@@ -1,5 +1,5 @@
 
-using Libraries.system.math;
+using Libraries.system.mathematics;
 using ue = UnityEngine;
 namespace Libraries.system
 {

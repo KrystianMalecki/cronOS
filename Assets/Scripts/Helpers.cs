@@ -53,8 +53,19 @@ public static class StaticHelper
     {
         return new Vector3Int(v2.x, v2.y, 0);
     }
+   /* public static bool HasFlag<T>(this T fp, T fp2) where T : Enum
+    {
+        dynamic d_fp = fp;
+        dynamic d_fp2 = fp2;
 
+        return (d_fp & d_fp2) == d_fp;
+    }
+    public static bool HasFlag<T>(this T fp, int fp2) where T : Enum
+    {
+        dynamic d_fp = fp;
 
+        return (d_fp & fp2) == d_fp;
+    }*/
     /*  public static unsafe byte[] ConvertToBytes<T>(T value) where T : unmanaged
       {
           byte* pointer = (byte*)&value;

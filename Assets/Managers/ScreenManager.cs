@@ -49,7 +49,7 @@ public class ScreenManager : MonoBehaviour
     }
     public void SetScreenBuffer(libs.graphics.IGenericScreenBuffer screenBuffer)
     {
-        libs.math.RectArray<Color32> array = new libs.math.RectArray<Color32>(screenBuffer.GetWidth(), screenBuffer.GetHeight());
+        libs.mathematics.RectArray<Color32> array = new libs.mathematics.RectArray<Color32>(screenBuffer.GetWidth(), screenBuffer.GetHeight());
         for (int y = 0; y < screenBuffer.GetHeight(); y++)
         {
             for (int x = 0; x < screenBuffer.GetWidth(); x++)

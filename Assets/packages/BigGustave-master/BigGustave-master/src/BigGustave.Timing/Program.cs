@@ -59,7 +59,6 @@ namespace BigGustave.Timing
                 var pngAverage = pngTimings.Average();
                 var referenceAverage = referenceTimings.Average();
                 var average = Math.Round(pngAverage / referenceAverage, 2);
-
                 Console.WriteLine($"PNG average: {pngAverage} ticks");
                 Console.WriteLine($"Ref average: {referenceAverage} ticks");
                 Console.WriteLine($"Multiple: {average}");

@@ -10,7 +10,6 @@ using UnityEngine;
 using sio = System.IO;
 using TMPro;
 using System.Text;
-
 public class NativeTest : MonoBehaviour
 {
     //Keyboard keyboard;
@@ -45,6 +44,8 @@ public class NativeTest : MonoBehaviour
     public string datas2;
     [HorizontalLine]
     public File f;
+    [HorizontalLine]
+    public FilePermission permission;
     public void Start()
     {
 

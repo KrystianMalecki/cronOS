@@ -1,7 +1,7 @@
 
 namespace Libraries.system
 {
-    namespace math
+    namespace mathematics
     {
         /* public struct Vector2
          {

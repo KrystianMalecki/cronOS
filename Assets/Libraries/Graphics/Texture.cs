@@ -5,7 +5,7 @@ namespace Libraries.system.graphics
 {
     namespace texture32
     {
-        using Libraries.system.math;
+        using Libraries.system.mathematics;
         [Serializable]
         public class Texture32 : RectArray<Color32>
         {
@@ -31,7 +31,7 @@ namespace Libraries.system.graphics
     namespace system_texture
     {
         using system_color;
-        using Libraries.system.math;
+        using Libraries.system.mathematics;
         [Serializable]
         public class SystemTexture : RectArray<SystemColor>
         {

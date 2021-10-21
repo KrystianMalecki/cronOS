@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Libraries.system
 {
-    namespace math
+    namespace mathematics
     {
         [Serializable]
         public class RectArray<T>

@@ -15,7 +15,7 @@ using native_system = System;
 using native_ue = UnityEngine;
 using static UnityEngine.KeyCode;
 using Libraries.system.filesystem;
-using Libraries.system.math;
+using Libraries.system.mathematics;
 using Libraries.system.input;
 
 public class test : native_ue.MonoBehaviour
@@ -48,66 +48,140 @@ public class test : native_ue.MonoBehaviour
     }
     private void MainCodeTest()
     {
-        /*
-          using native_system = System;
-          using native_ue = UnityEngine;
-        */
-
-        string s = native_ue.Input.inputString;
+        const string help = "Press mouse to move to mouse\n"
+            + "Arrows to move\n"
+            + "Keypad +/- to change speed\n"
+            + "Type to type☻";
         SystemScreenBuffer buffer = Screen.MakeSystemScreenBuffer();
-        File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa.dll");
-        SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
         Screen.InitScreenBuffer(buffer);
+
+
+        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
+
+        void DrawCharAt(int x, int y, char character)
+        {
+            int index = Screen.GetCharacterIndex(character);
+            int posx = index % 16;
+            int posy = index / 16;
+            buffer.SetTexture(x, y, fontTexture.GetPart(posx * 8, (posy) * 8, 8, 8));
+        }
+        void DrawStringAt(int x, int y, string text)
+        {
+            //  Console.Debug(x + " " + y);
+            int posX = x;
+            int posY = y;
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text.ToCharArray()[i];
+                //Console.Debug(c,(int)c,(int)'\n');
+                if (c == '\n' || c == '\r')
+                {
+                    posX = x;
+                    posY += 8;
+                    continue;
+                }
+                DrawCharAt(posX, posY, c);
+                posX += 8;
+            }
+        }
+
+        File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa");
+        SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
+
+        Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);
+        Vector2Int mousePos = new Vector2Int(0, 0);
+
+        string position = "";
+        string text = "";
+        int speed = 1;
         KeyHandler kh = new KeyHandler();
         KeySequence ks = null;
-        int orbX = buffer.width / 2;
-        int orbY = buffer.height / 2; ;
-        SystemColor b = 0;
+        bool flasher = false;
+
+        void CheckMovement(KeySequence ks)
+        {
+            if (ks.HasKey(Key.UpArrow))
+            {
+                orbPos.y -= speed;
+            }
+            if (ks.HasKey(Key.DownArrow))
+            {
+                orbPos.y += speed;
+            }
+            if (ks.HasKey(Key.LeftArrow))
+            {
+                orbPos.x -= speed;
+            }
+            if (ks.HasKey(Key.RightArrow))
+            {
+                orbPos.x += speed;
+            }
+            if (ks.HasKey(Key.KeypadPlus))
+            {
+                speed++;
+            }
+            if (ks.HasKey(Key.KeypadMinus))
+            {
+                speed--;
+            }
+        }
+
+
+        void ClampPositionToFrame()
+        {
+            if (orbPos.x > buffer.width - playerTexture.width)
+            {
+                orbPos.x = buffer.width - playerTexture.width;
+            }
+            if (orbPos.x < 0)
+            {
+                orbPos.x = 0;
+            }
+            if (orbPos.y > buffer.height - playerTexture.height)
+            {
+                orbPos.y = buffer.height - playerTexture.height;
+            }
+            if (orbPos.y < 0)
+            {
+                orbPos.y = 0;
+            }
+        }
+        void Draw()
+        {
+            DrawStringAt(8, 0, help);
+
+            position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
+
+            DrawStringAt(0, 4 * 8, position);
+            buffer.DrawLine2(mousePos.x, mousePos.y, orbPos.x, orbPos.y, SystemColor.white);
+            buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
+            DrawStringAt(0, 5 * 8, text);
+            buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
+            flasher = !flasher;
+            AsyncScreen.SetScreenBuffer(buffer);
+        }
+        void ProcessInput()
+        {
+            ks = kh.WaitForInput();
+            string input = KeyHandler.GetInputAsString();
+            if (input != "")
+            {
+                text = text.AddInput(input);
+            }
+            CheckMovement(ks);
+            if (ks.HasKey(Key.Mouse0))
+            {
+                mousePos = MouseHander.GetScreenPosition();
+            }
+            ClampPositionToFrame();
+        }
         while (true)
         {
-
             buffer.FillAll(SystemColor.black);
-            buffer.SetTexture(orbX, orbY, playerTexture);
 
-            // b++;
-            AsyncScreen.SetScreenBuffer(buffer);
-            Vector2Int v2 = MouseHander.GetScreenPosition();
-            orbX = v2.v2.x;
-            orbY = v2.v2.y;
-            /* ks = kh.WaitForInput();
-             if (ks.HasKey(KeyboardKey.UpArrow) || ks.HasKey(KeyboardKey.W))
-             {
-                 orbY--;
-             }
-             if (ks.HasKey(KeyboardKey.DownArrow) || ks.HasKey(KeyboardKey.S))
-             {
-                 orbY++;
-             }
-             if (ks.HasKey(KeyboardKey.LeftArrow) || ks.HasKey(KeyboardKey.A))
-             {
-                 orbX--;
-             }
-             if (ks.HasKey(KeyboardKey.RightArrow) || ks.HasKey(KeyboardKey.D))
-             {
-                 orbX++;
-             }*/
-            if (orbX > buffer.width - playerTexture.width)
-            {
-                orbX = buffer.width - playerTexture.width;
-            }
-            if (orbX < 0)
-            {
-                orbX = 0;
-            }
-            Console.Debug($"{orbY} is > than {buffer.height - playerTexture.height} or {buffer.height} - {playerTexture.height}");
-            if (orbY > buffer.height - playerTexture.height)
-            {
-                orbY = buffer.height - playerTexture.height;
-            }
-            if (orbY < 0)
-            {
-                orbY = 0;
-            }
+            Draw();
+            ProcessInput();
 
             Runtime.Wait(1);
         }
@@ -316,11 +390,11 @@ public class test : native_ue.MonoBehaviour
         {
             DrawStringAt(8, 0, help);
             position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
-           
+
             DrawStringAt(0, 4 * 8, position);
             buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
             DrawStringAt(0, 5 * 8, text);
-            buffer.Fill(0, 0,8,8, flasher ? SystemColor.red : SystemColor.blue);
+            buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
             flasher = !flasher;
             AsyncScreen.SetScreenBuffer(buffer);
         }

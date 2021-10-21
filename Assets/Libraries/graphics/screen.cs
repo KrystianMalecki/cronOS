@@ -1,6 +1,6 @@
 using Libraries.system.graphics.system_screen_buffer;
 using Libraries.system.graphics.screen_buffer32;
-using Libraries.system.math;
+using Libraries.system.mathematics;
 using System.Linq;
 
 namespace Libraries.system.graphics

@@ -12,9 +12,10 @@ namespace Libraries.system.graphics
     }
     namespace screen_buffer32
     {
-
+        using mathematics;
         public class ScreenBuffer32 : Texture32, IGenericScreenBuffer
         {
+
             public ScreenBuffer32(int width, int height) : base(width, height)
             {
 
@@ -77,14 +78,39 @@ namespace Libraries.system.graphics
                     x = x + 1;
                 }
             }
+            public void DrawLine2(int startX, int startY, int endX, int endY, Color32 color)
+            {
+                int x;
+                int y;
+                float dx, dy, step;
+                int i;
 
+                dx = (endX - startX);
+                dy = (endY - startY);
+                if (Math.Abs(dx) >= Math.Abs(dy))
+                    step = Math.Abs(dx);
+                else
+                    step = Math.Abs(dy);
+                dx = dx / step;
+                dy = dy / step;
+                x = startX;
+                y = startY;
+                i = 1;
+                while (i <= step)
+                {
+                    SetAt(x, y, color);
+                    x = x + Math.Round(dx);
+                    y = y + Math.Round(dy);
+                    i = i + 1;
+                }
+            }
         }
     }
     namespace system_screen_buffer
     {
         using system_texture;
         using system_color;
-        using Libraries.system.math;
+        using Libraries.system.mathematics;
 
         public class SystemScreenBuffer : SystemTexture, IGenericScreenBuffer
         {
@@ -158,6 +184,32 @@ namespace Libraries.system.graphics
                       }
                       x = x + 1;
                   }*/
+            }
+            public void DrawLine2(int startX, int startY, int endX, int endY, SystemColor color)
+            {
+                float x;
+                float y;
+                float dx, dy, step;
+                int i;
+
+                dx = (endX - startX);
+                dy = (endY - startY);
+                if (Math.Abs(dx) >= Math.Abs(dy))
+                    step = Math.Abs(dx);
+                else
+                    step = Math.Abs(dy);
+                dx = dx / step;
+                dy = dy / step;
+                x = startX;
+                y = startY;
+                i = 1;
+                while (i <= step)
+                {
+                    SetAt(Math.Round(x), Math.Round(y), color);
+                    x = x + dx;
+                    y = y + dy;
+                    i = i + 1;
+                }
             }
         }
 

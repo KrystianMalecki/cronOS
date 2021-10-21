@@ -15,11 +15,9 @@ namespace Libraries.system
 
         public static void Write(string text)
         {
-#if !DLL
+
             ScriptManager.AddDelegateToStack(() => { ScreenManager.AddToScreen(text); }, sync);
-#else
-            System.Console.WriteLine("write: " + text);
-#endif
+
         }
         public static void WriteLine(string text)
         {
@@ -28,13 +26,19 @@ namespace Libraries.system
 
         public static void Debug(params object[] obj)
         {
-#if !DLL
-            
-            UnityEngine.Debug.Log(obj.ToArrayString());
-#else
-            System.Console.WriteLine("debug: " + text);
 
-#endif
+
+            UnityEngine.Debug.Log(obj.ToArrayString());
+
+        }
+        public static void Debug(object obj,
+            [CallerLineNumber] int lineNumber = 0,
+            [CallerMemberName] string caller = null)
+        {
+
+
+            UnityEngine.Debug.Log(caller + " at " + lineNumber + " logs: " + obj);
+
         }
         public static void Line([System.Runtime.CompilerServices.CallerLineNumber] int line = 0)
         {
