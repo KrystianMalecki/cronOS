@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -15,17 +16,30 @@ public class Helpers
 
 public static class StaticHelper
 {
+    public static void TestFunction(Action a, [CallerMemberName] string fromName = "unkown name", [CallerFilePath] string fromPath = @"\unkown path")
+    {
 
+        double time = Time.realtimeSinceStartupAsDouble;
+        for (int i = 0; i < 10000; i++)
+        {
+
+            a.Invoke();
+
+        }
+        double timeEnd = Time.realtimeSinceStartupAsDouble;
+        Debug.LogWarning("Time to run function from " + fromName + " in " + fromPath.Substring(fromPath.LastIndexOf('\\')+1) + " :" + (timeEnd - time));
+
+    }
     public static IEnumerable<T> Iterate<T>(this IEnumerator<T> iterator)
     {
         while (iterator.MoveNext())
             yield return iterator.Current;
     }
-    public static string ToArrayString<T>(this IEnumerable<T> ie)
+    public static string ToArrayInString<T>(this IEnumerable<T> ie)
     {
         return string.Join(",", ie);
     }
-    public static string ToArrayString<T>(this T[] ie)
+    public static string ToArrayInString<T>(this T[] ie)
     {
         return string.Join(",", ie);
     }
@@ -53,31 +67,6 @@ public static class StaticHelper
     {
         return new Vector3Int(v2.x, v2.y, 0);
     }
-   /* public static bool HasFlag<T>(this T fp, T fp2) where T : Enum
-    {
-        dynamic d_fp = fp;
-        dynamic d_fp2 = fp2;
-
-        return (d_fp & d_fp2) == d_fp;
-    }
-    public static bool HasFlag<T>(this T fp, int fp2) where T : Enum
-    {
-        dynamic d_fp = fp;
-
-        return (d_fp & fp2) == d_fp;
-    }*/
-    /*  public static unsafe byte[] ConvertToBytes<T>(T value) where T : unmanaged
-      {
-          byte* pointer = (byte*)&value;
-
-          byte[] bytes = new byte[sizeof(T)];
-          for (int i = 0; i < sizeof(T); i++)
-          {
-              bytes[i] = pointer[i];
-          }
-
-          return bytes;
-      }*/
     public static byte[] ToBytes(this int variable)
     {
         return BitConverter.GetBytes(variable);
@@ -90,10 +79,10 @@ public static class StaticHelper
     {
         return new byte[] { variable };
     }
-    public static byte[] GetRange(this byte[] variable, int start, int length)
+  /*  public static byte[] GetRange(this byte[] variable, int start, int length)
     {
         return variable;
-    }
+    }*/
     public static byte[] SetByteValue(this byte[] array, byte[] data, int index)
     {
         for (int i = 0; i < data.Length; i++)

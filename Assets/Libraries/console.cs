@@ -28,7 +28,7 @@ namespace Libraries.system
         {
 
 
-            UnityEngine.Debug.Log(obj.ToArrayString());
+            UnityEngine.Debug.Log(obj.ToArrayInString());
 
         }
         public static void Debug(object obj,

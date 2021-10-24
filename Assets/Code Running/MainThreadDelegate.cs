@@ -23,12 +23,12 @@ public class MainThreadDelegate<T> : ITryToRun
     }
     ~MainThreadDelegate()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+        FlagLogger.Log(LogFlags.DebugInfo, "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToArrayInString());
 
     }
     public void Speak()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "I'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
+        FlagLogger.Log(LogFlags.DebugInfo, "I'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToArrayInString());
     }
 
     public bool TryToRun()

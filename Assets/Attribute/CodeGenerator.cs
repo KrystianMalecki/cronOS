@@ -24,7 +24,7 @@ public class CodeGenerator : MonoBehaviour
         Attribute[] attrs = Attribute.GetCustomAttributes(t);    
         pta = new AttributeTreePack();
 
-        Debug.Log(attrs.ToArrayString());
+        Debug.Log(attrs.ToArrayInString());
         foreach (System.Attribute attr in attrs)
         {
             if (attr is StructureAttribute)
@@ -36,7 +36,7 @@ public class CodeGenerator : MonoBehaviour
                 foreach (FieldInfo pi in fis)
                 {
                     Attribute[] Piattrs = Attribute.GetCustomAttributes(pi);
-                    Debug.Log(Piattrs.ToArrayString());
+                    Debug.Log(Piattrs.ToArrayInString());
                     foreach (Attribute piattr in Piattrs)
                     {
                         if (piattr is FieldAttribute)
