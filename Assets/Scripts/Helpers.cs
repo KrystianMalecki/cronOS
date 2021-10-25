@@ -27,7 +27,7 @@ public static class StaticHelper
 
         }
         double timeEnd = Time.realtimeSinceStartupAsDouble;
-        Debug.LogWarning("Time to run function from " + fromName + " in " + fromPath.Substring(fromPath.LastIndexOf('\\')+1) + " :" + (timeEnd - time));
+        Debug.LogWarning("Time to run function from " + fromName + " in " + fromPath.Substring(fromPath.LastIndexOf('\\') + 1) + " :" + (timeEnd - time));
 
     }
     public static IEnumerable<T> Iterate<T>(this IEnumerator<T> iterator)
@@ -79,10 +79,18 @@ public static class StaticHelper
     {
         return new byte[] { variable };
     }
-  /*  public static byte[] GetRange(this byte[] variable, int start, int length)
+    public static byte[] ToBytes(this string variable)
     {
-        return variable;
-    }*/
+        return ProcessorManager.mainEncoding.GetBytes(variable);
+    }
+    public static string ToEncodedString(this byte[] variable)
+    {
+        return ProcessorManager.mainEncoding.GetString(variable);
+    }
+    /*  public static byte[] GetRange(this byte[] variable, int start, int length)
+      {
+          return variable;
+      }*/
     public static byte[] SetByteValue(this byte[] array, byte[] data, int index)
     {
         for (int i = 0; i < data.Length; i++)

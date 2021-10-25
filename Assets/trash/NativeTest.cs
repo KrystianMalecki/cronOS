@@ -10,6 +10,10 @@ using UnityEngine;
 using sio = System.IO;
 using TMPro;
 using System.Text;
+using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using System.Reflection;
+
 public class NativeTest : MonoBehaviour
 {
     //Keyboard keyboard;
@@ -46,8 +50,16 @@ public class NativeTest : MonoBehaviour
     public File f;
     [HorizontalLine]
     public FilePermission permission;
+    public string serIn;
+
+    public string serOut;
     public void Start()
     {
+        Debug.Log(new byte[] { 51, 52 }.ToEncodedString());
+      /*  serOut = JsonUtility.ToJson(CSharpScript.Create(serIn, ScriptManager.instance.scriptOptionsBuffer
+               .WithReferences(ScriptManager.allLibraryDatas.ConvertAll(x => Assembly.Load(x.assembly)))
+               .WithImports(ScriptManager.allLibraryDatas.ConvertAll(x => x.nameSpace))
+               ));*/
 
     }
     public void Update()

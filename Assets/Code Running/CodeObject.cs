@@ -26,7 +26,8 @@ public class CodeObject
         libraries.ForEach(x => { FlagLogger.Log(LogFlags.DebugInfo, x.assembly + "-" + x.nameSpace); });
     }
 }
-public struct LibraryData
+[SerializeField]
+public class LibraryData
 {
     public string assembly;
     public string nameSpace;

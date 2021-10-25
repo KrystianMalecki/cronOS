@@ -31,13 +31,13 @@ public class ScriptManager : MonoBehaviour
     typeof(Libraries.system.graphics.texture32.Texture32),  typeof(Libraries.system.graphics.system_texture.SystemTexture),
     typeof(Libraries.system.graphics.color32.Color32),  typeof(Libraries.system.graphics.system_color.ColorConstants),
     typeof(Libraries.system.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.graphics.system_screen_buffer.SystemScreenBuffer),
-    typeof(Libraries.system.filesystem.File),  
+    typeof(Libraries.system.filesystem.File),
         typeof(Libraries.system.mathematics.Vector2),
             typeof(Libraries.system.input.KeyHandler)
 
     };
+    public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => x.ToLibraryData());
 
-   
     [SerializeField]
     private ConcurrentQueue<ITryToRun> actionQueue = new ConcurrentQueue<ITryToRun>();
     [SerializeField]

@@ -7,6 +7,7 @@ using UnityEngine;
 public class SoundGenerationTest : MonoBehaviour
 {
     public AudioSource ass;
+    public GameObject prefab;
     public int position = 0;
     public int lsamplerate = 44100;
     //  public int samplerate = 44100;
@@ -38,37 +39,37 @@ public class SoundGenerationTest : MonoBehaviour
     {
         if (Input.GetKeyDown("a"))
         {
-            frequency = CalculateNote(0 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
+            frequency = CalculateNote(9 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
             Play();
         }
         if (Input.GetKeyDown("b"))
         {
-            frequency = CalculateNote(1, octave);
+            frequency = CalculateNote(11, octave);
             Play();
         }
         if (Input.GetKeyDown("c"))
         {
-            frequency = CalculateNote(3 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
+            frequency = CalculateNote(0 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
             Play();
         }
         if (Input.GetKeyDown("d"))
         {
-            frequency = CalculateNote(5 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
+            frequency = CalculateNote(2 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
             Play();
         }
         if (Input.GetKeyDown("e"))
         {
-            frequency = CalculateNote(7, octave);
+            frequency = CalculateNote(4, octave);
             Play();
         }
         if (Input.GetKeyDown("f"))
         {
-            frequency = CalculateNote(8 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
+            frequency = CalculateNote(5 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
             Play();
         }
         if (Input.GetKeyDown("g"))
         {
-            frequency = CalculateNote(10 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
+            frequency = CalculateNote(7 + (Input.GetKey(KeyCode.LeftShift) ? 1 : 0), octave);
             Play();
         }
         /*   if (Input.GetKeyDown("i"))
@@ -97,6 +98,19 @@ public class SoundGenerationTest : MonoBehaviour
                Play();
            }*/
     }
+    public void PlayClip(AudioClip ac)
+    {
+        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        go.transform.position = Camera.main.transform.position;
+        AudioSource ass = go.AddComponent<AudioSource>();
+        ass.loop = false;
+        ass.dopplerLevel = 0;
+        ass.reverbZoneMix = 0;
+        ass.spatialBlend = 0;
+        ass.clip = ac;
+        ass.Play();
+        Destroy(go, ac.length);
+    }
     [Button]
     void square()
     {
@@ -112,9 +126,10 @@ public class SoundGenerationTest : MonoBehaviour
         AudioClip ac = AudioClip.Create("Test", samples.Length, 1, lsamplerate, false);
         ac.SetData(samples, 0);
 
-     //   AudioSource.PlayClipAtPoint(ac, Camera.main.transform.position);
-        ass.clip = (ac);
-        ass.Play();
+        PlayClip(ac);
+
+        //  ass.clip = (ac);
+        //    ass.Play();
     }
     [Button]
     void sine()
@@ -131,7 +146,7 @@ public class SoundGenerationTest : MonoBehaviour
 
         AudioClip ac = AudioClip.Create("Test", samples.Length, 1, lsamplerate, false);
         ac.SetData(samples, 0);
-        AudioSource.PlayClipAtPoint(ac, Camera.main.transform.position);
+        PlayClip(ac);
 
     }
     public float PackIt(float val)
@@ -154,7 +169,7 @@ public class SoundGenerationTest : MonoBehaviour
 
         AudioClip ac = AudioClip.Create("Test", samples.Length, 1, lsamplerate, false);
         ac.SetData(samples, 0);
-        AudioSource.PlayClipAtPoint(ac, Camera.main.transform.position);
+        PlayClip(ac);
 
     }
     [Button]
@@ -172,7 +187,7 @@ public class SoundGenerationTest : MonoBehaviour
         }
         AudioClip ac = AudioClip.Create("Test", samples.Length, 1, lsamplerate, false);
         ac.SetData(samples, 0);
-        AudioSource.PlayClipAtPoint(ac, Camera.main.transform.position);
+        PlayClip(ac);
 
     }
     void OnAudioRead(float[] data)
@@ -195,18 +210,24 @@ public class SoundGenerationTest : MonoBehaviour
         position = newPosition;
     }
 
-
+    //todo 0 change this calculation to start at C
 
     public static float startNoteAValue = 27.5f;
 
     public float CalculateNote(int note, int octave)
     {
-        return startNoteAValue * Mathf.Pow(2, octave - (note + 11) / 12 + note / 12f);
+        return _CalculateNoteUnoptimizedCorrect(note, octave);
+        //  return startNoteAValue * Mathf.Pow(2, octave - (note + 11) / 12 + note / 12f);
         // return startNoteAValue * Mathf.Pow(2, (octave - 1) + note / 12f);
     }
     private float _CalculateNoteUnoptimized(int note, int octave)
     {
         return startNoteAValue * Mathf.Pow(2, (octave - 1) + note / 12f + (1 - 1 * ((11 + note) / 12)));
+
+    }
+    private float _CalculateNoteUnoptimizedCorrect(int note, int octave)
+    {
+        return startNoteAValue * Mathf.Pow(2, (octave - 1) + (note + 3) / 12f);
 
     }
     public int note = 3;
@@ -216,7 +237,7 @@ public class SoundGenerationTest : MonoBehaviour
     public void calc()
     {
 
-        outPut = CalculateNote(note, octave);
+        outPut = _CalculateNoteUnoptimizedCorrect(note, octave);
     }
     [Button]
     public void test()

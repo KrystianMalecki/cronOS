@@ -46,7 +46,7 @@ public class DebugCodeRunner : MonoBehaviour
     void RunCode()
     {
 
-        ScriptManager.instance.RunCode(new CodeObject(code, ScriptManager.allLibraries));
+        ScriptManager.instance.RunCode(new CodeObject(code, ScriptManager.allLibraryDatas));
 
     }
 

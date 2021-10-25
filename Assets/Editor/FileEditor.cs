@@ -85,6 +85,7 @@ public class FileEditor : EditorWindow
     int dataSize = 0;
     int dataPos = 0;
     int dataPosData = 0;
+    string stringData = "";
 
 
     float windowWidth = 0;
@@ -131,7 +132,7 @@ public class FileEditor : EditorWindow
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
         GUILayout.EndHorizontal();
 
-      //  GUILayout.Space(EditorGUIUtility.singleLineHeight);
+        //  GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         //clampting
 
@@ -221,7 +222,7 @@ public class FileEditor : EditorWindow
             ArrayUtility.Insert(ref currentFile.data, dataPos, (byte)dataPosData);
             currentFileSO.Update();
         }
-        GUILayout.Label(" ", GUILayout.ExpandWidth(true));
+
 
         GUILayout.Label("Length:", GUILayout.Width(50));
 
@@ -232,7 +233,19 @@ public class FileEditor : EditorWindow
             Array.Resize(ref currentFile.data, dataSize);
             currentFileSO.Update();
         }
+        GUILayout.Label(" ", GUILayout.ExpandWidth(true));
 
+        GUILayout.Label("As Text Input:", GUILayout.Width(90));
+        stringData = currentFile.data.ToEncodedString();
+        stringData = EditorGUILayout.TextField(stringData, GUILayout.Width(100), GUILayout.ExpandWidth(false));
+
+        if (GUILayout.Button("Replace Data", GUILayout.Width(90)))
+        {
+            Debug.Log(stringData);
+            currentFile.data = stringData.ToBytes();
+            Debug.Log(currentFile.data.ToEncodedString());
+            currentFileSO.Update();
+        }
         GUI.enabled = true;
         GUILayout.Space(80);
         GUILayout.EndHorizontal();
