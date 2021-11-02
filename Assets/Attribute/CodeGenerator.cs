@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Reflection;
 using NaughtyAttributes;
-using Libraries.system.graphics.system_color;
+using Libraries.system.output.graphics.system_colorspace;
 
 public class CodeGenerator : MonoBehaviour
 {

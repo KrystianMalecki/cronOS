@@ -38,7 +38,7 @@ public class ScreenManager : MonoBehaviour
         instance.screen.text += text;
     }
 
-    public void InitScreenBuffer(libs.graphics.IGenericScreenBuffer screenBuffer)
+    public void InitScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
         bufferTexture = new Texture2D(screenBuffer.GetWidth(), screenBuffer.GetHeight());
         pixelWidth = screenBuffer.GetWidth();
@@ -47,7 +47,7 @@ public class ScreenManager : MonoBehaviour
         bufferTexture.filterMode = FilterMode.Point;
         rawImage.texture = bufferTexture;
     }
-    public void SetScreenBuffer(libs.graphics.IGenericScreenBuffer screenBuffer)
+    public void SetScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
         libs.mathematics.RectArray<Color32> array = new libs.mathematics.RectArray<Color32>(screenBuffer.GetWidth(), screenBuffer.GetHeight());
         for (int y = 0; y < screenBuffer.GetHeight(); y++)
@@ -62,12 +62,12 @@ public class ScreenManager : MonoBehaviour
 
 
         rawImage.SetAllDirty();
-     
+
 
     }
- 
 
-    public Vector2 GetMousePos()
+
+    public Vector2Int GetMousePos()
     {
         Vector2 v2out;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition.ToVector2(), Camera.main, out v2out);
@@ -77,8 +77,10 @@ public class ScreenManager : MonoBehaviour
         v2out.x += 0.5f;
         v2out.y += 0.5f;
         v2out.y = 1 - v2out.y;
-        v2out.x *= pixelWidth;
-        v2out.y *= pixelHeight;
-        return v2out;
+        v2out.y = Mathf.Clamp(v2out.y, 0f, 1f);
+        v2out.x = Mathf.Clamp(v2out.x, 0f, 1f);
+        Vector2Int intOut = new Vector2Int((int)(v2out.x * pixelWidth), (int)(v2out.y * pixelHeight));
+
+        return intOut;
     }
 }

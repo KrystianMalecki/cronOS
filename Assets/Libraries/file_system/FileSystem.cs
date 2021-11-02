@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //todo 8 rethink if Makers should be sync or not
-namespace Libraries.system.filesystem
+namespace Libraries.system.file_system
 {
     public class FileSystem : BaseLibrary
     {

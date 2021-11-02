@@ -1,6 +1,5 @@
 using BigGustave;
-using Libraries.system.filesystem;
-using Libraries.system.graphics.system_texture;
+
 using NaughtyAttributes;
 using System;
 using System.Collections;
@@ -13,6 +12,8 @@ using System.Text;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System.Reflection;
+using Libraries.system.file_system;
+using Libraries.system.output.graphics.system_texture;
 
 public class NativeTest : MonoBehaviour
 {
@@ -55,11 +56,25 @@ public class NativeTest : MonoBehaviour
     public string serOut;
     public void Start()
     {
-        Debug.Log(new byte[] { 51, 52 }.ToEncodedString());
-      /*  serOut = JsonUtility.ToJson(CSharpScript.Create(serIn, ScriptManager.instance.scriptOptionsBuffer
-               .WithReferences(ScriptManager.allLibraryDatas.ConvertAll(x => Assembly.Load(x.assembly)))
-               .WithImports(ScriptManager.allLibraryDatas.ConvertAll(x => x.nameSpace))
-               ));*/
+        string code = @"0
+balls
+balls line 2
+line 3
+test
+";
+        Debug.Log(code);
+        Debug.Log(ScriptManager.ParseIncludes(code));
+       /* var s = CSharpScript.Create("begin", ScriptManager.instance.scriptOptionsBuffer
+           );
+
+        Debug.Log(s.Code);
+        s.ContinueWith("end");
+        Debug.Log(s.Code);
+        Debug.Log(s.ContinueWith("end").Code);*/
+        /*  serOut = JsonUtility.ToJson(CSharpScript.Create(serIn, ScriptManager.instance.scriptOptionsBuffer
+                 .WithReferences(ScriptManager.allLibraryDatas.ConvertAll(x => Assembly.Load(x.assembly)))
+                 .WithImports(ScriptManager.allLibraryDatas.ConvertAll(x => x.nameSpace))
+                 ));*/
 
     }
     public void Update()

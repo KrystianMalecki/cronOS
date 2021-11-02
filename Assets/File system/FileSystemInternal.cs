@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections.Concurrent;
-using Libraries.system.filesystem;
+using Libraries.system.file_system;
 using System.Linq;
 using NaughtyAttributes;
 
@@ -28,6 +28,7 @@ public class FileSystemInternal : MonoBehaviour
     public static readonly char catalogSymbol = '/';
     public Drive GetDrive(string name)
     {
+       // Debug.Log($"equals?{drives[0].driveFile.name} == C:? {drives[0].driveFile.name == "C:"}");
         return drives.Find(x => x.driveFile.name == name);
     }
     public File GetFileByPath(File father, string rawPath)
@@ -54,6 +55,7 @@ public class FileSystemInternal : MonoBehaviour
     {
         string[] parts = rawPath.Split(catalogSymbol);
         Drive d = GetDrive(parts[0]);
+   //     Debug.Log(parts[0]);
         //todo 8 check d
         File currentFile = d.driveFile;
         for (int i = 1; i < parts.Length; i++)

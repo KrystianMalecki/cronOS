@@ -210,7 +210,6 @@ public class SoundGenerationTest : MonoBehaviour
         position = newPosition;
     }
 
-    //todo 0 change this calculation to start at C
 
     public static float startNoteAValue = 27.5f;
 

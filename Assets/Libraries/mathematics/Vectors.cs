@@ -63,7 +63,7 @@ namespace Libraries.system
                 v2.x = x;
                 v2.y = y;
             }
-            public Vector2Int ToIntLike()
+            public Vector2Int ToVector2Int()
             {
                 return new Vector2Int((int)v2.x, (int)v2.y);
             }
@@ -99,7 +99,7 @@ namespace Libraries.system
                 v2 = new UnityEngine.Vector2Int(x, y);
             }
 
-            public Vector2 ToFloatLike()
+            public Vector2 ToVector2()
             {
                 return new Vector2(v2.x, v2.y);
             }

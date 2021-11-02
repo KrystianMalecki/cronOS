@@ -1,5 +1,4 @@
-using Libraries.system.graphics.system_color;
-using Libraries.system.graphics.system_texture;
+
 using NaughtyAttributes;
 using System;
 using System.Collections;
@@ -8,6 +7,8 @@ using Unity.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.TextCore;
+using Libraries.system.output.graphics.system_texture;
+using Libraries.system.output.graphics.system_colorspace;
 
 public class TextureToByteData : MonoBehaviour
 {

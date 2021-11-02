@@ -1,4 +1,5 @@
-using Libraries.system.filesystem;
+using Libraries.system.file_system;
+using Libraries.system.file_system;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -236,14 +237,16 @@ public class FileEditor : EditorWindow
         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
 
         GUILayout.Label("As Text Input:", GUILayout.Width(90));
-        stringData = currentFile.data.ToEncodedString();
-        stringData = EditorGUILayout.TextField(stringData, GUILayout.Width(100), GUILayout.ExpandWidth(false));
+        if (string.IsNullOrEmpty(stringData))
+        {
+            stringData = currentFile.data.ToEncodedString();
+        }
+
+        stringData = EditorGUILayout.TextArea(stringData, GUILayout.Width(100), GUILayout.ExpandWidth(false));
 
         if (GUILayout.Button("Replace Data", GUILayout.Width(90)))
         {
-            Debug.Log(stringData);
             currentFile.data = stringData.ToBytes();
-            Debug.Log(currentFile.data.ToEncodedString());
             currentFileSO.Update();
         }
         GUI.enabled = true;

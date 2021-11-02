@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using System.Collections.Concurrent;
+using Libraries.system.file_system;
+
 public class ScriptManager : MonoBehaviour
 {
     #region singleton logic
@@ -26,12 +28,12 @@ public class ScriptManager : MonoBehaviour
     #endregion
     public ScriptOptions scriptOptionsBuffer = null;
 
-    public static readonly List<Type> allLibraries = new List<Type>() { typeof(Libraries.system.Console),
-    typeof(Libraries.system.graphics.Screen),
-    typeof(Libraries.system.graphics.texture32.Texture32),  typeof(Libraries.system.graphics.system_texture.SystemTexture),
-    typeof(Libraries.system.graphics.color32.Color32),  typeof(Libraries.system.graphics.system_color.ColorConstants),
-    typeof(Libraries.system.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.graphics.system_screen_buffer.SystemScreenBuffer),
-    typeof(Libraries.system.filesystem.File),
+    public static readonly List<Type> allLibraries = new List<Type>() { typeof(Libraries.system.output.Console),typeof(Libraries.system.Runtime),
+    typeof(Libraries.system.output.graphics.Screen),
+    typeof(Libraries.system.output.graphics.texture32.Texture32),  typeof(Libraries.system.output.graphics.system_texture.SystemTexture),
+    typeof(Libraries.system.output.graphics.color32.Color32),  typeof(Libraries.system.output.graphics.system_colorspace.ColorConstants),
+    typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
+    typeof(Libraries.system.file_system.File),
         typeof(Libraries.system.mathematics.Vector2),
             typeof(Libraries.system.input.KeyHandler)
 
@@ -183,15 +185,71 @@ public class ScriptManager : MonoBehaviour
 
 
     }
+    public static string ParseIncludes(string code)
+    {
+        List<string> lines = new List<string>(code.Split('\n'));
+
+        List<string> importedLibraries = new List<string>();
+        int positionToExpectNextInlcude = 0;
+        for (int i = 0; i < lines.Count; i++)
+        {
+            string buffer = lines[i];
+            if ((positionToExpectNextInlcude == i && !buffer.StartsWith("#include ")))
+            {
+                if(string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer)|| buffer.StartsWith("//")||buffer.StartsWith("/*"))
+                {
+                    positionToExpectNextInlcude++;
+                    continue;
+                }
+                break;
+            }
+
+            if (buffer.StartsWith("#include "))
+            {
+
+
+                string between = buffer.GetRangeBetween("\"");
+                Debug.Log(between);
+                if (string.IsNullOrEmpty(between))
+                {
+                    between = buffer.GetRangeBetween("\'");
+                }
+                if (!importedLibraries.Contains(between))
+                {
+                    importedLibraries.Add(between);
+                    File f = FileSystemInternal.instance.GetFileByPath(between);
+                    Debug.Log(f);
+                    List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
+                    Debug.Log(importedLines.ToArrayInString());
+                    lines.RemoveAt(i);
+                    Debug.Log(lines.ToArrayInString());
+
+                    for (int iL = 0; iL < importedLines.Count; iL++)
+                    {
+                        string importedLine = importedLines[iL];
+                        lines.Insert(i + iL, importedLine);
+                        Debug.Log(lines.ToArrayInString());
+
+                    }
+                    positionToExpectNextInlcude = i + importedLines.Count;
+                    i--;
+                }
+                else
+                {
+                    lines[i] = $"//There would be imported {between} but it was already imported!";
+
+                    //todo-future add compilation error
+                }
+
+
+            }
+        }
+        return string.Join("\n", lines);
+    }
     public static string CodeParser(string code)
     {
-        //todo-maybe add special usings
-        //using native_system = System;
-        //using native_ue = UnityEngine;
-        //not needed??
-        return
-            //  "console console = new console();console.init(currentCodeTask);\n" +
-            code;
+        return ParseIncludes(code);
+
     }
     public static T AddDelegateToStack<T>(MainThreadDelegate<T>.MTDFunction action, bool sync = true)
     {

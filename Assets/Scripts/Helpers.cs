@@ -1,4 +1,4 @@
-using Libraries.system.graphics.system_color;
+using Libraries.system.output.graphics.system_colorspace;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -91,6 +91,12 @@ public static class StaticHelper
       {
           return variable;
       }*/
+    public static string GetRangeBetween(this string input, string key)
+    {
+        int startPos = input.IndexOf(key) + 1;
+        int endPos = input.LastIndexOf(key) - startPos ;
+        return input.Substring(startPos, endPos);
+    }
     public static byte[] SetByteValue(this byte[] array, byte[] data, int index)
     {
         for (int i = 0; i < data.Length; i++)

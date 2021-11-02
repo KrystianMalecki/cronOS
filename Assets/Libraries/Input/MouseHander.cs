@@ -3,16 +3,19 @@ using Libraries.system.mathematics;
 using ue = UnityEngine;
 namespace Libraries.system
 {
-    public class MouseHander : BaseLibrary
+    namespace input
     {
-
-        public static Vector2Int GetScreenPosition()
+        public class MouseHander : BaseLibrary
         {
-            return ScriptManager.AddDelegateToStack((ref bool done, ref Vector2Int outer) =>
-            {
-                outer = ((Vector2)ScreenManager.instance.GetMousePos()).ToIntLike();
-            });
 
+            public static Vector2Int GetScreenPosition()
+            {
+                return ScriptManager.AddDelegateToStack((ref bool done, ref Vector2Int outer) =>
+                {
+                    outer = ScreenManager.instance.GetMousePos();
+                });
+
+            }
         }
     }
 }

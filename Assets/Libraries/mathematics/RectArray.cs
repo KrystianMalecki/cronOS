@@ -129,13 +129,13 @@ namespace Libraries.system
             }
             public bool IsPointInRange(int x, int y)
             {
-                return x >= 0 && x <= width && y >= 0 && y <= height;
+                return x >= 0 && x < width && y >= 0 && y < height;
             }
             public bool IsBoxInRange(int x, int y, int width, int height)
             {
                 return x >= 0 && x + width <= this.width && y >= 0 && y + height <= this.height;
             }
-            public RectArray<T> GetPart(int x, int y, int width, int height)
+            public RectArray<T> GetRect(int x, int y, int width, int height)
             {
                 RectArray<T> newArray = new RectArray<T>(width, height);
                 for (int currentY = 0; currentY < height; currentY++)

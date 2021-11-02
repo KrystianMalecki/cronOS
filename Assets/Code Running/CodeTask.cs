@@ -41,16 +41,18 @@ public class CodeTask
         try
         {
             //todo-maybe change back
-            /* var s = CSharpScript.Create(codeObject.code, ScriptManager.instance.scriptOptionsBuffer
+             var s = CSharpScript.Create(codeObject.code, ScriptManager.instance.scriptOptionsBuffer
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
                 );
              var s2 = s.CreateDelegate();
              await s2.Invoke();
-             */
+
+             
+          //  CSharpScript.Create()
             await CSharpScript.EvaluateAsync(codeObject.code, ScriptManager.instance.scriptOptionsBuffer
                .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
-               .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
+               .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace)).WithEmitDebugInformation(true)
                );
           
         }
