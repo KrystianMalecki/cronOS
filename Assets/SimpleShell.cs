@@ -109,6 +109,11 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                 else if ((c == '\n') || (c == '\r')) // enter/return
                 {
                     console += '\n' + prefix + text;
+                    string output = PraseCommand(text);
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        console += '\n' + output;
+                    }
                     text = "";
                 }
                 else
@@ -117,7 +122,25 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                 }
             }
         }
-
+        string PraseCommand(string input)
+        {
+            string[] parts = input.Split(' ');
+            switch (parts[0])
+            {
+                case "cd":
+                    {
+                        File f = FileSystem.GetFileByPath(parts[1]);
+                        if (f == null)
+                        {
+                            return $"Couldn't find file {parts[1]}!";
+                        }
+                        currentFile = f;
+                        UpdatePrefix();
+                        return "";
+                    }
+            }
+            return $"Couldn't find command `{parts[0]}`.";
+        }
         UpdatePrefix();
         while (true)
         {

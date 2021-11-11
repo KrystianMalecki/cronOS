@@ -28,7 +28,7 @@ namespace Libraries.system
             [SerializeField]
             public ThreadSafeList<File> files;
 
-            //  [System.NonSerialized]
+            [SerializeReference]
             public File parent;
 
             public void AddChild(File file)

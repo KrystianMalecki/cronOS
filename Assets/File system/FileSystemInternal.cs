@@ -20,6 +20,8 @@ public class FileSystemInternal : MonoBehaviour
         {
             Destroy(this);
         }
+        ValidateRoot();
+
     }
     #endregion
    // public ThreadSafeList<Drive> drives = new ThreadSafeList<Drive>();
