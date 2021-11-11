@@ -16,7 +16,7 @@ namespace Libraries.system
             public Path(string rawPath)
             {
                 parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
-                drive = FileSystemInternal.instance.GetDrive(parts[0]);
+                drive = null;//FileSystemInternal.instance.GetDrive(parts[0]);/todo 0 fix
                 //todo 8 check d
                 File currentFile = drive.driveFile;
                 fileparts.Add(currentFile);
@@ -29,7 +29,7 @@ namespace Libraries.system
                     currentFile = currentFile.GetChildByName(parts[i]);
                     if (currentFile == null)
                     {
-                        //todo 9 throw error
+                        //todo-future throw error
                         break;
                     }
                     else

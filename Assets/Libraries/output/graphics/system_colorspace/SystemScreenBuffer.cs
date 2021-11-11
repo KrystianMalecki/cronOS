@@ -2,14 +2,7 @@
 
 namespace Libraries.system.output.graphics
 {
-    //todo 0 move
-    public interface IGenericScreenBuffer
-    {
-        public UnityEngine.Color32 GetColorAt(int x, int y);
-        public int GetWidth();
-        public int GetHeight();
 
-    }
     namespace system_screen_buffer
     {
         using Libraries.system.mathematics;
@@ -22,6 +15,10 @@ namespace Libraries.system.output.graphics
             {
 
             }
+            public SystemScreenBuffer() : base(Screen.screenWidth, Screen.screenHeight)
+            {
+
+            }
             public int GetHeight()
             {
                 return height;
@@ -31,7 +28,7 @@ namespace Libraries.system.output.graphics
             {
                 return width;
             }
-            public UnityEngine.Color32 GetColorAt(int x, int y)
+            public UnityEngine.Color32 GetUnityColorAt(int x, int y)
             {
                 return GetAt(x, y).ToColor32();
             }

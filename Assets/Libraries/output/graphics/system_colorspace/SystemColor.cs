@@ -8,40 +8,8 @@ namespace Libraries.system.output.graphics
     namespace system_colorspace
     {
         using color32;
-        //todo 0 move this
         public static class ColorConstants
         {
-
-            public static Color32 FindNearest(Color32[] colors, Color32 input)
-            {
-                int id = FindNearestID(colors, input);
-                if (id == -1 && ProcessorManager.instance.ignoreSomeErrors)
-                {
-                    return default(Color32);//todo-future add error
-                }
-                return colors[id];
-            }
-            public static int FindNearestID(Color32[] colors, Color32 input)
-            {
-                //  SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32,
-                //  LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
-
-                int nearestID = -1;
-                int nearestDistance = int.MaxValue;
-                for (int i = 0; i < colors.Length; i++)
-                {
-                    Color32 currentColor = colors[i];
-                    int distance = currentColor.GetDistance(input);
-                    if (nearestDistance > distance)
-                    {
-                        nearestDistance = distance;
-                        nearestID = i;
-                    }
-                    // Debug.Log(currentColor + " " + input + " " + distance);
-                }
-                return nearestID;
-            }
-            //todo-cleanup move ToCronosColor
             internal static Color32 ToCronosColor(this UnityEngine.Color32 color)
             {
                 return new Color32(color.r, color.g, color.b, color.a);
@@ -63,7 +31,6 @@ namespace Libraries.system.output.graphics
             public static readonly Color32 LightMagenta32 = new Color32(255, 85, 255);
             public static readonly Color32 Yellow32 = new Color32(255, 255, 85);
             public static readonly Color32 White32 = new Color32(255, 255, 255);
-
             public static Color32[] SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32, LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
 
 

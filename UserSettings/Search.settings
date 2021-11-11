@@ -13,7 +13,7 @@ scopes = {
 	"last_search.DD2EEDCB" = ""
 	"OpenInspectorPreview.DD2EEDCB" = "0"
 	"currentGroup.DD2EEDCB" = "all"
-	"last_search.83F126EB" = "helpers"
+	"last_search.83F126EB" = "color"
 	"InspectorPreview.83F126EB" = "0"
 	"currentGroup.83F126EB" = "asset"
 }
@@ -70,6 +70,8 @@ providers = {
 	}
 }
 recentSearches = [
+	"color"
+	"screen"
 	"helpers"
 ]
 searchItemFavorites = [

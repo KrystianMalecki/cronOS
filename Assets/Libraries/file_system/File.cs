@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 using UnityEngine;
-//todo 2 add getPathClass function
 namespace Libraries.system
 {
     namespace file_system
@@ -51,15 +50,26 @@ namespace Libraries.system
                 }
                 return string.Concat(parent.GetFullPath(), "/", name);
             }
+            public Path GetPathClass()
+            {
+                string rawPath = "";
+                if (parent == null)
+                {
+                    rawPath = name;
+                }
+                else
+                {
+                    rawPath = string.Concat(parent.GetFullPath(), "/", name);
+                }
+                return new Path(rawPath);
+            }
             public void MoveFileTo(File desitination)
             {
                 parent.RemoveFile(this);
                 desitination.AddChild(this);
             }
-            //todo 9 find better method
             public string ReturnDataAsString()
             {
-
                 return ProcessorManager.mainEncoding.GetString(data);
             }
             public File GetChildByName(string name)
@@ -110,7 +120,7 @@ namespace Libraries.system
 }
 [Serializable]
 [Flags]
-public enum FilePermission 
+public enum FilePermission
 {
     isFolder = 0b1000,
     read = 0b0100,

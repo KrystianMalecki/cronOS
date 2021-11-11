@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-//todo 1 remove 2 when unity fixes random null file bug
-public class InputManager2 : MonoBehaviour
+public class InputManager : MonoBehaviour
 {
-    public static InputManager2 instance;
+    public static InputManager instance;
     private object lockObj = new object();
     public void Awake()
     {
@@ -30,6 +29,7 @@ public class InputManager2 : MonoBehaviour
                 lock (instance.lockObj)
                 {
                     inputBuffer.Append(Input.inputString);
+
                 }
 
             }

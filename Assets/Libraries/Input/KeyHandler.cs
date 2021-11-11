@@ -77,14 +77,14 @@ namespace Libraries.system
             }
             public static string GetInputAsString()
             {
-                return InputManager2.GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
+                return InputManager.GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
             }
             public static string WaitForStringInput()
             {
                 string buffer = "";
                 while (String.IsNullOrEmpty(buffer))
                 {
-                    buffer = InputManager2.GetInput();
+                    buffer = InputManager.GetInput();
                     Runtime.Wait();
                 }
                 return buffer;

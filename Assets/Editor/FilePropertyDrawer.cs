@@ -35,6 +35,10 @@ public class FilePropertyDrawer : PropertyDrawer
     }
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        if (property == null)
+        {
+            return;
+        }
         Init(property);
         var main = new Rect(position.x, position.y, position.width, position.height);
         var nameRect = new Rect(main.x, main.y, main.width / 2, EditorGUIUtility.singleLineHeight);
@@ -47,7 +51,7 @@ public class FilePropertyDrawer : PropertyDrawer
 
         var line = new Rect(position.x + position.width * 0.05f, button.y + EditorGUIUtility.singleLineHeight + 2, position.width * 0.9f, 2);
         //EditorGUI.PropertyField(main, property, label, true);
-        EditorGUI.indentLevel--;
+       // EditorGUI.indentLevel--;
         EditorGUI.PropertyField(nameRect, nameSP, GUIContent.none);
         //  permissionsSP.intValue = ((int)((FilePermission)EditorGUI.EnumFlagsField(permissionsRect, (FilePermission)permissionsSP.intValue)));
         EditorGUI.PropertyField(permissionsRect, permissionsSP);
@@ -55,7 +59,7 @@ public class FilePropertyDrawer : PropertyDrawer
         GUI.color = new Color(1.1f, 1.1f, 1.1f);
         EditorGUI.PropertyField(filesRect, filesSP);
         GUI.color = Color.white;
-        EditorGUI.indentLevel++;
+       // EditorGUI.indentLevel++;
 
         if (GUI.Button(buttonRect, "Open in editor"))
         {

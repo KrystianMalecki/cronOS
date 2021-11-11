@@ -1,5 +1,4 @@
 using Libraries.system.file_system;
-using Libraries.system.file_system;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,17 +29,23 @@ public class FileEditor : EditorWindow
         file.OnValidate(); //toto warning! can be expensive
         currentWindow.currentFile = file;
 
+        currentWindow.SetValues();
+
         /*   currentWindow.currentFileSP = fileSP;
            currentWindow.currentFileSO = fileSO;*/
         currentWindow.currentFileSO = new SerializedObject(currentWindow);
         currentWindow.currentFileSP = currentWindow.currentFileSO.FindProperty("currentFile");
         //  currentWindow.dataProperities = new Dictionary<int, SerializedProperty>();
+        currentWindow.dataViewScrollPosition = Vector2.zero;
+
+
+    }
+    public void SetValues()
+    {
         currentWindow._dataSP = null;
         currentWindow._filesSP = null;
         currentWindow._dataSP = null;
-        currentWindow.dataSize = currentWindow.currentFile.data.Length;
-        currentWindow.scroll = Vector2.zero;
-
+        currentWindow.dataArraySize = currentWindow.currentFile.data.Length;
     }
     int size = 32;
     int page = 0;
@@ -81,26 +86,38 @@ public class FileEditor : EditorWindow
         }
     }
 
-    Vector2 scroll = Vector2.zero;
+    Vector2 dataViewScrollPosition = Vector2.zero;
 
-    int dataSize = 0;
-    int dataPos = 0;
-    int dataPosData = 0;
-    string stringData = "";
+    int dataArraySize = 0;
+    int dataSelectedPos = 0;
+    int dataSelectedValue = 0;
+
+    string dataAsString = "";
 
 
     float windowWidth = 0;
-    float boxWidth = 30;
-    bool fold = true;
+    float boxWidth = 28;
+
+    bool toggleTopFields = true;
+    bool toggleData = true;
+
+    bool toggleTextDataField = false;
     void OnGUI()
     {
+        if (currentFile == null || currentFileSO == null || currentFileSP == null || currentWindow == null)
+        {
+            this.Close();
+            return;
+        }
+
+
         windowWidth = position.width - 10;
-        boxWidth = Mathf.Min((windowWidth - 20) / (size + 1), 30);
+        //  boxWidth = Mathf.Min((windowWidth - 20) / (size + 1), 40);
 
         EditorGUI.BeginChangeCheck();
 
-        fold = (EditorGUILayout.BeginFoldoutHeaderGroup(fold, "Main Data"));
-        if (fold)
+        toggleTopFields = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleTopFields, "Main values"));
+        if (toggleTopFields)
         {
             DrawTopGoersBar();
 
@@ -123,10 +140,10 @@ public class FileEditor : EditorWindow
             //permissions
             GUILayout.Label("Permissions: ");
             EditorGUILayout.PropertyField(permissionsSP);
-            GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
+        GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         //files
         EditorGUILayout.PropertyField(filesSP);
@@ -136,23 +153,47 @@ public class FileEditor : EditorWindow
         //  GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         //clampting
-
-        //page navigation
-        DrawPagePickers();
-
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-        DrawSpecialControls();
-        // array
-        DrawDataArray();
+        toggleData = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleData, "Data"));
+        if (toggleData)
+        {
+
+
+            DrawPagePickers();
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
+
+            DrawSpecialControls();
+
+
+
+            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+            // array
+
+            DrawDataArray();
+            if (toggleTextDataField)
+            {
+                DrawTextData();
+            }
+            GUILayout.EndHorizontal();
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
+
         //save all
-        if (EditorGUI.EndChangeCheck())
+        /*if (EditorGUI.EndChangeCheck())
         {
             currentFileSO.ApplyModifiedProperties();
 
-        }
+        }*/
 
         //   currentFileSP.serializedObject.Update();
+    }
+    public void UpdateWindow()
+    {
+        currentFileSO.Update();
+        SetValues();
+        dataAsString = null;
     }
     void DrawButtonPath()
     {
@@ -210,48 +251,98 @@ public class FileEditor : EditorWindow
 
         GUILayout.Space(40);
 
-        GUILayout.Label("Pos:", GUILayout.Width(30));
+        GUILayout.Label("Pos:", GUILayout.Width(40));
 
-        dataPos = EditorGUILayout.IntField(GUIContent.none, dataPos, GUILayout.Width(30), GUILayout.ExpandWidth(false));
+        dataSelectedPos = EditorGUILayout.IntField(GUIContent.none, dataSelectedPos, GUILayout.Width(40), GUILayout.ExpandWidth(false));
 
-        GUILayout.Label("Item:", GUILayout.Width(30));
+        GUILayout.Label("Item:", GUILayout.Width(40));
 
-        dataPosData = EditorGUILayout.IntField(GUIContent.none, dataPosData, GUILayout.Width(30), GUILayout.ExpandWidth(false));
-
-        if (GUILayout.Button("Insert", GUILayout.Width(50)))
+        dataSelectedValue = EditorGUILayout.IntField(GUIContent.none, dataSelectedValue, GUILayout.Width(40), GUILayout.ExpandWidth(false));
+        GUI.enabled = (dataSelectedPos > -1 && dataSelectedPos < currentFile.data.Length + 1) && (dataSelectedValue > -1 && dataSelectedValue < 256);
+        if (GUILayout.Button("Insert", GUILayout.Width(60)))
         {
-            ArrayUtility.Insert(ref currentFile.data, dataPos, (byte)dataPosData);
-            currentFileSO.Update();
+            ArrayUtility.Insert(ref currentFile.data, dataSelectedPos, (byte)dataSelectedValue);
+            dataAsString = null;
+
+            UpdateWindow();
         }
 
+        var typeRect = GUILayoutUtility.GetLastRect();
+        GUI.Label(typeRect, new GUIContent("", "Insert before selected byte"));
 
-        GUILayout.Label("Length:", GUILayout.Width(50));
+        GUI.enabled = (dataSelectedPos > -1 && dataSelectedPos < currentFile.data.Length) && (dataSelectedValue > -1 && dataSelectedValue < 256);
 
-        dataSize = EditorGUILayout.IntField(GUIContent.none, dataSize, GUILayout.Width(40), GUILayout.ExpandWidth(false));
-
-        if (GUILayout.Button("Resize", GUILayout.Width(50)))
+        if (GUILayout.Button("Set", GUILayout.Width(60)))
         {
-            Array.Resize(ref currentFile.data, dataSize);
-            currentFileSO.Update();
+            currentFile.data[dataSelectedPos] = (byte)dataSelectedValue;
+            dataAsString = null;
+            UpdateWindow();
+        }
+        if (GUILayout.Button("Remove", GUILayout.Width(60)))
+        {
+            ArrayUtility.RemoveAt(ref currentFile.data, dataSelectedPos);
+            dataAsString = null;
+            UpdateWindow();
+        }
+        GUI.enabled = true;
+        GUILayout.Label("Length:", GUILayout.Width(70));
+
+        dataArraySize = EditorGUILayout.IntField(GUIContent.none, dataArraySize, GUILayout.Width(60), GUILayout.ExpandWidth(false));
+
+        if (GUILayout.Button("Resize", GUILayout.Width(70)))
+        {
+            Array.Resize(ref currentFile.data, dataArraySize);
+            UpdateWindow();
+        }
+        if (GUILayout.Button("Copy", GUILayout.Width(70)))
+        {
+            EditorGUIUtility.systemCopyBuffer = JsonUtility.ToJson(new ByteArray(currentFile.data));
+        }
+        if (GUILayout.Button("Paste", GUILayout.Width(70)))
+        {
+            try
+            {
+                ByteArray ba = JsonUtility.FromJson<ByteArray>(EditorGUIUtility.systemCopyBuffer);
+                currentFile.data = ba.array;
+                UpdateWindow();
+                EditorUtility.SetDirty(currentWindow);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Error when pasting byte array:" + e.Message);
+            }
+
+
         }
         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
 
-        GUILayout.Label("As Text Input:", GUILayout.Width(90));
-        if (string.IsNullOrEmpty(stringData))
+        if (GUILayout.Button("Toggle text data", GUILayout.Width(150)))
         {
-            stringData = currentFile.data.ToEncodedString();
+            toggleTextDataField = !toggleTextDataField;
         }
 
-        stringData = EditorGUILayout.TextArea(stringData, GUILayout.Width(100), GUILayout.ExpandWidth(false));
-
-        if (GUILayout.Button("Replace Data", GUILayout.Width(90)))
-        {
-            currentFile.data = stringData.ToBytes();
-            currentFileSO.Update();
-        }
-        GUI.enabled = true;
-        GUILayout.Space(80);
         GUILayout.EndHorizontal();
+    }
+    void DrawTextData()
+    {
+        GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
+
+        GUILayout.Label("As Text Input:", GUILayout.Width(90));
+        if (string.IsNullOrEmpty(dataAsString))
+        {
+            dataAsString = currentFile.data.ToEncodedString();
+        }
+
+        dataAsString = EditorGUILayout.TextArea(dataAsString, GUILayout.MinWidth(100), GUILayout.ExpandWidth(true));
+
+        if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
+        {
+            currentFile.data = dataAsString.ToBytes();
+            UpdateWindow();
+        }
+
+        GUILayout.EndVertical();
+
     }
     void DrawDataArray()
     {
@@ -261,8 +352,11 @@ public class FileEditor : EditorWindow
         {
             length = size * size;
         }
-        scroll = GUILayout.BeginScrollView(scroll);
-        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+        dataViewScrollPosition = GUILayout.BeginScrollView(dataViewScrollPosition);
+
+        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(false), GUILayout.Width(100));
+        int indexChanged = dataSelectedPos;
+        EditorGUI.BeginChangeCheck();
         for (int i = start; i < start + length; i++)
         {
             if (currentFile.data.Length <= i)
@@ -272,14 +366,38 @@ public class FileEditor : EditorWindow
             if (i % size == 0)
             {
                 GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+                GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true)/*, GUILayout.Width(windowWidth)*/);
 
             }
             //  EditorGUILayout.PropertyField(GetDataAt(i), GUIContent.none);
+            if (i == dataSelectedPos)
+            {
+                GUI.backgroundColor = Color.black;
+            }
+            int input = EditorGUILayout.IntField(GUIContent.none, currentFile.data[i], GUILayout.Width(boxWidth), GUILayout.MinWidth(boxWidth));
+            if (input != currentFile.data[i])
+            {
+                if (input > 255)
+                {
+                    input = 255;
+                }
+                if (input < 0)
+                {
+                    input = 0;
+                }
+                currentFile.data[i] = (byte)input;
 
-            currentFile.data[i] = (byte)EditorGUILayout.IntField(GUIContent.none, currentFile.data[i], GUILayout.Width(boxWidth), GUILayout.MinWidth(1));
+                indexChanged = i;
+            }
+            GUI.backgroundColor = Color.white;
+
             var typeRect = GUILayoutUtility.GetLastRect();
             GUI.Label(typeRect, new GUIContent("", "byte " + i));
+        }
+        if (EditorGUI.EndChangeCheck())
+        {
+            dataAsString = null;
+            dataSelectedPos = indexChanged;
         }
 
         GUILayout.EndHorizontal();
@@ -293,7 +411,7 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Previous Page"))
         {
             page--;
-            scroll = Vector2.zero;
+            dataViewScrollPosition = Vector2.zero;
         }
         GUI.enabled = true;
         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
@@ -306,7 +424,7 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Next Page"))
         {
             page++;
-            scroll = Vector2.zero;
+            dataViewScrollPosition = Vector2.zero;
         }
         GUI.enabled = true;
 
@@ -326,7 +444,20 @@ public class FileEditor : EditorWindow
         GUI.enabled = true;
         GUILayout.Label("/", GUILayout.MinWidth(1), GUILayout.ExpandWidth(false));
     }
+    [Serializable]
+    private class ByteArray
+    {
+        [SerializeField]
+        public byte[] array;
+        public ByteArray(byte[] array)
+        {
+            this.array = array;
+        }
+    }
 }
+
+
+//todo 0 remove
 [System.Serializable]
 public class FileSO : UnityEngine.Object
 {

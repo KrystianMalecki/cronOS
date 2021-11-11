@@ -16,7 +16,7 @@ public class Helpers
 
 public static class StaticHelper
 {
-    public static void TestFunction(Action a, [CallerMemberName] string fromName = "unkown name", [CallerFilePath] string fromPath = @"\unkown path")
+    public static void TestFunction(Action a, [CallerMemberName] string fromName = "unknown name", [CallerFilePath] string fromPath = @"\unknown path")
     {
 
         double time = Time.realtimeSinceStartupAsDouble;
@@ -35,13 +35,22 @@ public static class StaticHelper
         while (iterator.MoveNext())
             yield return iterator.Current;
     }
-    public static string ToArrayInString<T>(this IEnumerable<T> ie)
+    public static string GetValuesToString<T>(this IEnumerable<T> ie, string splitter = ", ")
     {
-        return string.Join(",", ie);
+        return string.Join(splitter, ie);
     }
-    public static string ToArrayInString<T>(this T[] ie)
+    public static string GetValuesToString(this IDictionary ie, string splitter = ", ")
     {
-        return string.Join(",", ie);
+        string s = "";
+        foreach (var v in ie.Keys)
+        {
+            s += v + " - " + ie[v] + ", ";
+        }
+        return s;
+    }
+    public static string GetValuesToString<T>(this T[] ie, string splitter = ", ")
+    {
+        return string.Join(splitter, ie);
     }
     public static LibraryData ToLibraryData(this Type type)
     {
@@ -91,10 +100,18 @@ public static class StaticHelper
       {
           return variable;
       }*/
-    public static string GetRangeBetween(this string input, string key)
+    public static string GetRangeBetweenFirstLast(this string input, string key, int offset = 0)
     {
-        int startPos = input.IndexOf(key) + 1;
-        int endPos = input.LastIndexOf(key) - startPos ;
+        int startPos = input.IndexOf(key, offset) + 1;
+        int endPos = input.LastIndexOf(key) - startPos;
+        return input.Substring(startPos, endPos);
+    }
+    public static string GetRangeBetweenFirstNext(this string input, string key, int offset = 0)
+    {
+        int startPos = input.IndexOf(key, offset) + 1;
+
+        int endPos = input.IndexOf(key, startPos) - startPos;
+        Debug.Log($"start pos:{startPos}.endPos{endPos}.calc of first{input.IndexOf(key, offset)}. calc of sendobnd{input.IndexOf(key, startPos)}");
         return input.Substring(startPos, endPos);
     }
     public static byte[] SetByteValue(this byte[] array, byte[] data, int index)

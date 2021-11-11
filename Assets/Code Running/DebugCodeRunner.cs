@@ -4,13 +4,10 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Cinemachine;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
+
 using NaughtyAttributes;
 using UnityEngine;
-using System.Linq;
-using System.Collections;
-using InternalLogger;
+
 
 
 [SaveDuringPlay]
@@ -38,11 +35,11 @@ public class DebugCodeRunner : MonoBehaviour
         if (runOnStart)
         {
             RunCode();
-           
+
         }
     }
 
-    [Button("Run code",EButtonEnableMode.Playmode)]
+    [Button("Run code", EButtonEnableMode.Playmode)]
     void RunCode()
     {
 
@@ -50,7 +47,6 @@ public class DebugCodeRunner : MonoBehaviour
 
     }
 
-    [Button("Kill All", EButtonEnableMode.Playmode)]
     void KillAll()
     {
         ScriptManager.instance.KillAll();

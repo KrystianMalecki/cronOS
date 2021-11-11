@@ -22,19 +22,29 @@ public class FileSystemInternal : MonoBehaviour
         }
     }
     #endregion
-    public ThreadSafeList<Drive> drives = new ThreadSafeList<Drive>();
-    public string s;
-    public static readonly string folderExtension = "DIR";
+   // public ThreadSafeList<Drive> drives = new ThreadSafeList<Drive>();
+    public File root;
+    // public static readonly string folderExtension = "DIR";//todo 0  remove
     public static readonly char catalogSymbol = '/';
-    public Drive GetDrive(string name)
+    /* public Drive GetDrive(string name)
+     {
+         // Debug.Log($"equals?{drives[0].driveFile.name} == C:? {drives[0].driveFile.name == "C:"}");
+         return drives.Find(x => x.driveFile.name == name);
+     }*/
+    [Button]
+    private void ValidateRoot()
     {
-       // Debug.Log($"equals?{drives[0].driveFile.name} == C:? {drives[0].driveFile.name == "C:"}");
-        return drives.Find(x => x.driveFile.name == name);
+        root.Validate(true);
     }
+    //todo 0 rethink
     public File GetFileByPath(File father, string rawPath)
     {
         string[] parts = rawPath.Split(catalogSymbol);
-        //todo 8 check d
+        //todo 0 rethink that
+        if (parts[0] != father.name)
+        {
+            return null;
+        }
         File currentFile = father;
         for (int i = 1; i < parts.Length; i++)
         {
@@ -53,24 +63,7 @@ public class FileSystemInternal : MonoBehaviour
     }
     public File GetFileByPath(string rawPath)
     {
-        string[] parts = rawPath.Split(catalogSymbol);
-        Drive d = GetDrive(parts[0]);
-   //     Debug.Log(parts[0]);
-        //todo 8 check d
-        File currentFile = d.driveFile;
-        for (int i = 1; i < parts.Length; i++)
-        {
-            if (string.IsNullOrEmpty(parts[i]))
-            {
-                return currentFile;
-            }
-            currentFile = currentFile.GetChildByName(parts[i]);
-            if (currentFile == null)
-            {
-                return null;
-            }
-        }
-        return currentFile;
+        return GetFileByPath(root, rawPath);
 
     }
     /*   public Path GetPath(string rawPath)

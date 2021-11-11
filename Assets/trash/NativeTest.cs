@@ -56,14 +56,7 @@ public class NativeTest : MonoBehaviour
     public string serOut;
     public void Start()
     {
-        string code = @"0
-balls
-balls line 2
-line 3
-test
-";
-        Debug.Log(code);
-        Debug.Log(ScriptManager.ParseIncludes(code));
+    
        /* var s = CSharpScript.Create("begin", ScriptManager.instance.scriptOptionsBuffer
            );
 

@@ -16,8 +16,11 @@ namespace Libraries.system.output.graphics
             {
 
             }
+            public ScreenBuffer32() : base(Screen.screenWidth, Screen.screenHeight)
+            {
 
-            public UnityEngine.Color32 GetColorAt(int x, int y)
+            }
+            public UnityEngine.Color32 GetUnityColorAt(int x, int y)
             {
                 return GetAt(x, y);
             }
@@ -79,8 +82,10 @@ namespace Libraries.system.output.graphics
                     i = i + 1;
                 }
             }
+
+
         }
-        
+
     }
-   
+
 }

@@ -8,7 +8,7 @@ using System.Reflection;
 using UnityEngine;
 using System.Collections.Concurrent;
 using Libraries.system.file_system;
-
+using System.Linq;
 public class ScriptManager : MonoBehaviour
 {
     #region singleton logic
@@ -52,16 +52,18 @@ public class ScriptManager : MonoBehaviour
         {
             return;
         }
-        scriptOptionsBuffer = ScriptOptions.Default.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Debug);
+        scriptOptionsBuffer = ScriptOptions.Default/*.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Release)*/;
 
         scriptOptionsBuffer = scriptOptionsBuffer.AddReferences(
-             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly
+             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly,
+                          typeof(System.Exception).GetTypeInfo().Assembly
+
 
             );
 
-        /* scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
-                "UnityEngine"
-           );*/
+        scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
+               "UnityEngine", "System"
+          );
 
 
     }
@@ -185,72 +187,105 @@ public class ScriptManager : MonoBehaviour
 
 
     }
-    public static string ParseIncludes(string code)
+    public static string CodeParser(string code)
     {
         List<string> lines = new List<string>(code.Split('\n'));
 
         List<string> importedLibraries = new List<string>();
         int positionToExpectNextInlcude = 0;
-        for (int i = 0; i < lines.Count; i++)
+        bool checkIncludes = true;
+        bool checkRedefines = true;
+
+        for (int index = 0; index < lines.Count; index++)
         {
-            string buffer = lines[i];
-            if ((positionToExpectNextInlcude == i && !buffer.StartsWith("#include ")))
+            string buffer = lines[index];
+            if ((positionToExpectNextInlcude == index && !buffer.StartsWith("#include ")))
             {
-                if(string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer)|| buffer.StartsWith("//")||buffer.StartsWith("/*"))
+                if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
                 {
                     positionToExpectNextInlcude++;
-                    continue;
                 }
-                break;
+                checkIncludes = false;
             }
-
-            if (buffer.StartsWith("#include "))
+            if (checkIncludes)
             {
-
-
-                string between = buffer.GetRangeBetween("\"");
-                Debug.Log(between);
-                if (string.IsNullOrEmpty(between))
+                if (buffer.StartsWith("#include "))
                 {
-                    between = buffer.GetRangeBetween("\'");
-                }
-                if (!importedLibraries.Contains(between))
-                {
-                    importedLibraries.Add(between);
-                    File f = FileSystemInternal.instance.GetFileByPath(between);
-                    Debug.Log(f);
-                    List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
-                    Debug.Log(importedLines.ToArrayInString());
-                    lines.RemoveAt(i);
-                    Debug.Log(lines.ToArrayInString());
 
-                    for (int iL = 0; iL < importedLines.Count; iL++)
+
+                    string between = buffer.GetRangeBetweenFirstLast("\"");
+                    Debug.Log(between);
+                    if (string.IsNullOrEmpty(between))
                     {
-                        string importedLine = importedLines[iL];
-                        lines.Insert(i + iL, importedLine);
-                        Debug.Log(lines.ToArrayInString());
+                        between = buffer.GetRangeBetweenFirstLast("\'");
+                    }
+                    if (!importedLibraries.Contains(between))
+                    {
+                        importedLibraries.Add(between);
+                        File f = FileSystemInternal.instance.GetFileByPath(between);
+                        if (f == null)
+                        {
+                            lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";
+                            continue;
+                        }
+                        List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
+                        lines[index] = "//" + buffer.Substring(1);
+                        for (int iL = 0; iL < importedLines.Count; iL++)
+                        {
+                            string importedLine = importedLines[iL];
+                            lines.Insert(index + iL, importedLine);
+
+                        }
+                        positionToExpectNextInlcude = index + importedLines.Count;
+                    }
+                    else
+                    {
+                        lines[index] = $"//There would be imported \"{between}\" but it was already imported!";
+
+                        //todo-future add compilation error
+                    }
+
+
+                }
+            }
+            if (checkRedefines)
+            {
+                //todo 0 add check for definition to be UPPER_CASE
+                if (buffer.StartsWith("#redefine "))
+                {
+
+
+                    //  string definition = buffer.GetRangeBetweenFirstNext(" ");
+                    string[] lineParts = buffer.Split(' ');
+                    string definition = lineParts[1];
+                    //  int indexOfFirst = buffer.IndexOf(" ") + 1;
+                    //  int indexOfSecond = buffer.IndexOf(" ", indexOfFirst) + 1;
+                    Debug.Log(lineParts.GetValuesToString());
+
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(2).Take(lineParts.Length - 2).ToArray());
+
+                    // string definitionReplacor = buffer.Substring(indexOfSecond + 1);
+                    Debug.Log(/*$"indexOfFirst{indexOfFirst}' indexOfSecond{indexOfSecond}'*/$"  definition'{definition}' definitionReplacor'{definitionReplacor}'");
+                    if (definition == null || definitionReplacor == null)
+                    {
 
                     }
-                    positionToExpectNextInlcude = i + importedLines.Count;
-                    i--;
+                    lines[index] = "//" + buffer.Substring(1);
+                    for (int i = index + 1; i < lines.Count; i++)
+                    {
+                        Debug.Log($"line:{lines[i]}. replace {definition} for {definitionReplacor} so now it looks: { lines[i].Replace(definition, definitionReplacor)}");
+
+                        lines[i] = lines[i].Replace(definition, definitionReplacor);
+                    }
                 }
-                else
-                {
-                    lines[i] = $"//There would be imported {between} but it was already imported!";
-
-                    //todo-future add compilation error
-                }
-
-
             }
         }
+        Debug.Log(lines.GetValuesToString("\n"));
         return string.Join("\n", lines);
     }
-    public static string CodeParser(string code)
-    {
-        return ParseIncludes(code);
 
-    }
+
+
     public static T AddDelegateToStack<T>(MainThreadDelegate<T>.MTDFunction action, bool sync = true)
     {
 

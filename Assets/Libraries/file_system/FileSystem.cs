@@ -13,7 +13,7 @@ namespace Libraries.system.file_system
                 returnValue = FileSystemInternal.instance.GetFileByPath(path);
             }, sync);//should be always sync
         }
-        public static File MakeFile(string path, string name, string extension = "", byte[] data = null)
+        public static File MakeFile(string path, string name, byte[] data = null)
         {
             return ScriptManager.AddDelegateToStack((ref bool done, ref File returnValue) =>
             {

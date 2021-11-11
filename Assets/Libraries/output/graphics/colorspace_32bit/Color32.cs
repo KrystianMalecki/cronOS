@@ -6,8 +6,8 @@ using UnityEngine;
 namespace Libraries.system.output.graphics
 {
     namespace color32
-    { 
-       public struct Color32
+    {
+        public struct Color32
         {
             private UnityEngine.Color32 color;
 
@@ -93,7 +93,6 @@ namespace Libraries.system.output.graphics
             {
                 return string.Format("RGBA({0}, {1}, {2}, {3})", color.r.ToString(format, formatProvider), color.g.ToString(format, formatProvider), color.b.ToString(format, formatProvider), color.a.ToString(format, formatProvider));
             }
-
             public int GetDistance(Color32 color)
             {
                 int redDifference;
@@ -105,6 +104,35 @@ namespace Libraries.system.output.graphics
                 blueDifference = b - color.b;
 
                 return redDifference * redDifference + greenDifference * greenDifference + blueDifference * blueDifference;
+            }
+            public static Color32 FindNearest(Color32[] colors, Color32 input)
+            {
+                int id = FindNearestID(colors, input);
+                if (id == -1 && ProcessorManager.instance.ignoreSomeErrors)
+                {
+                    return default(Color32);//todo-future add error
+                }
+                return colors[id];
+            }
+            public static int FindNearestID(Color32[] colors, Color32 input)
+            {
+                //  SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32,
+                //  LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
+
+                int nearestID = -1;
+                int nearestDistance = int.MaxValue;
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    Color32 currentColor = colors[i];
+                    int distance = currentColor.GetDistance(input);
+                    if (nearestDistance > distance)
+                    {
+                        nearestDistance = distance;
+                        nearestID = i;
+                    }
+                    // Debug.Log(currentColor + " " + input + " " + distance);
+                }
+                return nearestID;
             }
         }
     }

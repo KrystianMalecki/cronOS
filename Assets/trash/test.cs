@@ -26,7 +26,7 @@ public class test : native_ue.MonoBehaviour
             + "Arrows to move\n"
             + "Keypad +/- to change speed\n"
             + "Type to type☻";
-        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);//todo 0 fix!
+        SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
 
 
@@ -35,7 +35,7 @@ public class test : native_ue.MonoBehaviour
 
         void DrawCharAt(int x, int y, char character)
         {
-            int index = Screen.GetCharacterIndex(character);
+            int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
             buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
@@ -163,14 +163,14 @@ public class test : native_ue.MonoBehaviour
     private void drawTextOnScreen()
     {
 
-        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);//todo 0 fix!
+        SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
         string str = "Hello, world!";
         File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
         void DrawCharAt(int x, int y, char character)
         {
-            int index = Screen.GetCharacterIndex(character);
+            int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
             buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
@@ -191,7 +191,7 @@ public class test : native_ue.MonoBehaviour
         Random r = new Random();
         r.NextInt();
 
-        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);//todo 0 fix!
+        SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
 
         KeyHandler kh = new KeyHandler();
@@ -267,7 +267,7 @@ public class test : native_ue.MonoBehaviour
             + "Arrows to move\n"
             + "Keypad +/- to change speed\n"
             + "Type to type☻";
-        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);//todo 0 fix!
+        SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
 
 
@@ -276,7 +276,7 @@ public class test : native_ue.MonoBehaviour
 
         void DrawCharAt(int x, int y, char character)
         {
-            int index = Screen.GetCharacterIndex(character);
+            int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
             buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
@@ -413,7 +413,7 @@ public class test : native_ue.MonoBehaviour
         Console.Debug(1);
         void DrawCharAt(int x, int y, char character)
         {
-            int index = Screen.GetCharacterIndex(character);
+            int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
             buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));

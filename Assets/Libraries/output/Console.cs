@@ -30,7 +30,7 @@ namespace Libraries.system
             {
 
 
-                UnityEngine.Debug.Log(obj.ToArrayInString());
+                UnityEngine.Debug.Log(obj.GetValuesToString());
 
             }
             public static void Debug(object obj,
@@ -39,7 +39,7 @@ namespace Libraries.system
             {
 
 
-                UnityEngine.Debug.Log(caller + " at " + lineNumber + " logs: " + obj);
+                UnityEngine.Debug.Log($"{caller} at {lineNumber}. Logs: {obj}");
 
             }
             public static void Line([System.Runtime.CompilerServices.CallerLineNumber] int line = 0)

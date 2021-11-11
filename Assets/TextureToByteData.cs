@@ -41,7 +41,7 @@ public class TextureToByteData : MonoBehaviour
                 }
 
 
-                byte b = (byte)ColorConstants.FindNearestID(ColorConstants.SystemColors, ((Color32)c).ToCronosColor());
+                byte b = (byte)Libraries.system.output.graphics.color32.Color32.FindNearestID(ColorConstants.SystemColors, ((Color32)c).ToCronosColor());
                 systemTexture.SetAt(x, systemTexture.height - y - 1, b);
             }
         }
@@ -56,7 +56,7 @@ public class TextureToByteData : MonoBehaviour
     [Button]
     public void text()
     {
-        Debug.Log(ColorConstants.FindNearest(ColorConstants.SystemColors, color.ToCronosColor()));
+        Debug.Log(Libraries.system.output.graphics.color32.Color32.FindNearest(ColorConstants.SystemColors, color.ToCronosColor()));
     }
     [Button]
     public void ConvertToData()
@@ -73,7 +73,7 @@ public class TextureToByteData : MonoBehaviour
         {
             for (int x = 0; x < systemTexture.width; x++)
             {
-                byte b = (byte)ColorConstants.FindNearestID(ColorConstants.SystemColors, colors[y * systemTexture.width + x].ToCronosColor());
+                byte b = (byte)Libraries.system.output.graphics.color32.Color32.FindNearestID(ColorConstants.SystemColors, colors[y * systemTexture.width + x].ToCronosColor());
                 systemTexture.SetAt(x, systemTexture.height - y - 1, b);
             }
         }

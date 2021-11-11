@@ -68,7 +68,6 @@ namespace Libraries.system
                 {
                     for (int iterX = x; iterX < width; iterX++)
                     {
-                        //todo 6 add check
                         SetAt(iterX, iterY, value);
                     }
                 }
