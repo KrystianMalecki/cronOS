@@ -26,6 +26,8 @@ public class ScriptManager : MonoBehaviour
         TryToInitScriptOptions();
     }
     #endregion
+
+    private const bool ONLY_UPPERCASE_REDEFINE = false;
     public ScriptOptions scriptOptionsBuffer = null;
 
     public static readonly List<Type> allLibraries = new List<Type>() { typeof(Libraries.system.output.Console),typeof(Libraries.system.Runtime),
@@ -250,7 +252,6 @@ public class ScriptManager : MonoBehaviour
             }
             if (checkRedefines)
             {
-                //todo 0 add check for definition to be UPPER_CASE
                 if (buffer.StartsWith("#redefine "))
                 {
 
@@ -258,6 +259,14 @@ public class ScriptManager : MonoBehaviour
                     //  string definition = buffer.GetRangeBetweenFirstNext(" ");
                     string[] lineParts = buffer.Split(' ');
                     string definition = lineParts[1];
+                    if (ONLY_UPPERCASE_REDEFINE)
+                    {
+                        if (definition != definition.ToUpper())
+                        {
+                            //todo-future throw error
+                            continue;
+                        }
+                    }
                     //  int indexOfFirst = buffer.IndexOf(" ") + 1;
                     //  int indexOfSecond = buffer.IndexOf(" ", indexOfFirst) + 1;
                     Debug.Log(lineParts.GetValuesToString());

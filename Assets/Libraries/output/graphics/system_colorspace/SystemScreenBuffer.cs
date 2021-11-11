@@ -33,7 +33,7 @@ namespace Libraries.system.output.graphics
                 return GetAt(x, y).ToColor32();
             }
 
-            public void SetTexture(int x, int y, RectArray<SystemColor> texture, bool drawPartialy = true)
+            public void DrawTexture(int x, int y, RectArray<SystemColor> texture, byte transparencyFlag = 0xff, bool drawPartialy = true)
             {
                 if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
                 {
@@ -47,7 +47,14 @@ namespace Libraries.system.output.graphics
                         {
                             return;//todo-future add error
                         }
-                        SetAt(x + iterX, y + iterY, texture.GetAt(iterX, iterY));
+                        if (transparencyFlag != 0xff && transparencyFlag == texture.GetAt(iterX, iterY))
+                        {
+                            //  SetAt(x + iterX, y + iterY, SystemColor.red);
+                        }
+                        else
+                        {
+                            SetAt(x + iterX, y + iterY, texture.GetAt(iterX, iterY));
+                        }
                     }
                 }
             }

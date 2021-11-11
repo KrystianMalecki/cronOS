@@ -38,7 +38,7 @@ public class test : native_ue.MonoBehaviour
             int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
-            buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
         }
         void DrawStringAt(int x, int y, string text)
         {
@@ -129,7 +129,7 @@ public class test : native_ue.MonoBehaviour
 
             DrawStringAt(0, 4 * 8, position);
             buffer.DrawLine(mousePos.x, mousePos.y, orbPos.x, orbPos.y, SystemColor.white);
-            buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
+            buffer.DrawTexture(orbPos.x, orbPos.y, playerTexture);
             DrawStringAt(0, 5 * 8, text);
             buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
             flasher = !flasher;
@@ -173,7 +173,7 @@ public class test : native_ue.MonoBehaviour
             int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
-            buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
         }
         buffer.FillAll(SystemColor.black);
         for (int i = 0; i < str.Length; i++)
@@ -279,7 +279,7 @@ public class test : native_ue.MonoBehaviour
             int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
-            buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
         }
         void DrawStringAt(int x, int y, string text)
         {
@@ -366,7 +366,7 @@ public class test : native_ue.MonoBehaviour
             position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
 
             DrawStringAt(0, 4 * 8, position);
-            buffer.SetTexture(orbPos.x, orbPos.y, playerTexture);
+            buffer.DrawTexture(orbPos.x, orbPos.y, playerTexture);
             DrawStringAt(0, 5 * 8, text);
             buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
             flasher = !flasher;
@@ -416,7 +416,7 @@ public class test : native_ue.MonoBehaviour
             int index = 0;// Screen.GetCharacterIndex(character);
             int posx = index % 16;
             int posy = index / 16;
-            buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
         }
         void DrawStringAt(int x, int y, string text)
         {

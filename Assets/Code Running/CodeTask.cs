@@ -73,13 +73,11 @@ public class CodeTask
         }
         catch (Exception e)
         {
-            Debug.LogException(e);
-            //todo 0 make reflection to grab that
+            // Debug.Log(e);
             //e>base>base>captured_traces>[0]>frames>[0]>this
             try
             {
 
-                Exception current = e;
                 //   System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(e);
 
                 /*tring stackIndent = "";
@@ -107,7 +105,28 @@ public class CodeTask
 
                  FieldInfo[] fis = current.GetType().GetFields(bf);
                  Debug.Log(fis.GetValuesToString());*/
-                Debug.Log(((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0));
+                int line = 0;
+                int column = 0;
+
+                object field = fieldInfoOfStackTrace.GetValue(e);
+                string reason = "";
+                if (field != null)
+                {
+                    //  System.Diagnostics.StackTrace[] stack = (System.Diagnostics.StackTrace[])field;
+                    //  System.Diagnostics.StackTrace trace = stack[0];
+                    System.Diagnostics.StackFrame frame = ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
+
+                    //  Debug.Log(((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0));
+                    line = frame.GetFileLineNumber();
+                    column = frame.GetFileColumnNumber();
+
+                }
+                else
+                {
+                    (line, column) = GetColumnAndLineFromExceptionMessage(e.Message);
+                    reason = e.Message;
+                }
+                Debug.Log($"{e.GetType()} line:{line} column:{column}\n reason:{reason}");
                 /* System.Diagnostics.StackTrace[] stacktrace = fi.GetValue(current) as System.Diagnostics.StackTrace[];
                  for (int i = 0; i < stacktrace.Length; i++)
                  {
@@ -145,7 +164,30 @@ public class CodeTask
 
 
     }
+    (int line, int column) GetColumnAndLineFromExceptionMessage(string message)
+    {
+        int line = 0;
+        int column = 0;
+        int commaLocation = message.IndexOf(",");
 
+        /*Debug.Log(
+             message.Substring(message.IndexOf("(") + 1, commaLocation - message.IndexOf("(") - 1)
+             );
+         Debug.Log(
+             message.Substring(commaLocation + 1, message.IndexOf(")") - commaLocation - 1)
+             );
+        */
+
+        line = int.Parse(
+            message.Substring(message.IndexOf("(") + 1, commaLocation - message.IndexOf("(") - 1)
+            );
+        column = int.Parse(
+            message.Substring(commaLocation + 1, message.IndexOf(")") - commaLocation - 1)
+            );
+
+
+        return (line, column);
+    }
     ~CodeTask()
     {
 
@@ -170,146 +212,3 @@ public class CodeTask
     }
 
 }
-/*#include "/System/test_library"
-//commnet
-
-const string help = "Press mouse to move to mouse\n"
-           + "Arrows to move\n"
-           + "Keypad +/- to change speed\n"
-           + "Type to type☻";
-        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);
-        Screen.InitScreenBuffer(buffer);
-
-*/
-
-// File fontAtlas =null;// FileSystem.GetFileByPath("/System/fontAtlas");
-//Console.Debug(fontAtlas.data);
-//  SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
-
-/*   Console.Debug(1);
-   void DrawCharAt(int x, int y, char character)
-   {
-       int index = Runtime.CharToByte(character);
-       int posx = index % 16;
-       int posy = index / 16;
-       buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
-   }
-   void DrawStringAt(int x, int y, string text)
-   {
-       //  Console.Debug(x + " " + y);
-       int posX = x;
-       int posY = y;
-       for (int i = 0; i < text.Length; i++)
-       {
-           char c = text.ToCharArray()[i];
-           //Console.Debug(c,(int)c,(int)'\n');
-           if (c == '\n' || c == '\r')
-           {
-               posX = x;
-               posY += 8;
-               continue;
-           }
-           DrawCharAt(posX, posY, c);
-           posX += 8;
-       }
-   }
-
-
-
-
-   Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);
-   Vector2Int mousePos = new Vector2Int(0, 0);
-
-   string position = "";
-   string text = "";
-   int speed = 1;
-   KeyHandler kh = new KeyHandler();
-   KeySequence ks = null;
-   bool flasher = false;
-
-   void CheckMovement(KeySequence ks)
-   {
-       if (ks.HasKey(Key.UpArrow))
-       {
-           orbPos.y -= speed;
-       }
-       if (ks.HasKey(Key.DownArrow))
-       {
-           orbPos.y += speed;
-       }
-       if (ks.HasKey(Key.LeftArrow))
-       {
-           orbPos.x -= speed;
-       }
-       if (ks.HasKey(Key.RightArrow))
-       {
-           orbPos.x += speed;
-       }
-       if (ks.HasKey(Key.KeypadPlus))
-       {
-           speed++;
-       }
-       if (ks.HasKey(Key.KeypadMinus))
-       {
-           speed--;
-       }
-   }
-
-
-   void ClampPositionToFrame()
-   {
-       if (orbPos.x > buffer.width - 1)
-       {
-           orbPos.x = buffer.width - 1;
-       }
-       if (orbPos.x < 0)
-       {
-           orbPos.x = 0;
-       }
-       if (orbPos.y > buffer.height - 1)
-       {
-           orbPos.y = buffer.height - 1;
-       }
-       if (orbPos.y < 0)
-       {
-           orbPos.y = 0;
-       }
-   }
-   void Draw()
-   {
-       DrawStringAt(8, 0, help);
-
-       position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
-
-       DrawStringAt(0, 4 * 8, position);
-       buffer.DrawLine(mousePos.x, mousePos.y, orbPos.x, orbPos.y, SystemColor.white);
-       buffer.SetAt(orbPos.x, orbPos.y, SystemColor.yellow);
-       DrawStringAt(0, 5 * 8, text);
-       buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
-       flasher = !flasher;
-       AsyncScreen.SetScreenBuffer(buffer);
-   }
-   void ProcessInput()
-   {
-       ks = kh.WaitForInput();
-       string input = KeyHandler.GetInputAsString();
-       if (input != "")
-       {
-           text = text.AddInput(input);
-       }
-       CheckMovement(ks);
-       if (ks.HasKey(Key.Mouse0))
-       {
-           mousePos = MouseHander.GetScreenPosition();
-       }
-       ClampPositionToFrame();
-   }
-   while (true)
-   {
-       buffer.FillAll(SystemColor.black);
-
-       Draw();
-       ProcessInput();
-
-       Runtime.Wait(1);
-   }*/

@@ -10,15 +10,12 @@ namespace Libraries.system
         public class Path
         {
             public List<string> parts = new List<string>();
-            public Drive drive;
             public List<File> fileparts = new List<File>();
 
             public Path(string rawPath)
             {
                 parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
-                drive = null;//FileSystemInternal.instance.GetDrive(parts[0]);/todo 0 fix
-                //todo 8 check d
-                File currentFile = drive.driveFile;
+                File currentFile = FileSystemInternal.instance.root;
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)
                 {

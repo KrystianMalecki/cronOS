@@ -457,15 +457,3 @@ public class FileEditor : EditorWindow
 }
 
 
-//todo 0 remove
-[System.Serializable]
-public class FileSO : UnityEngine.Object
-{
-    [SerializeField]
-    public File file;
-
-    public FileSO(File file)
-    {
-        this.file = file;
-    }
-}

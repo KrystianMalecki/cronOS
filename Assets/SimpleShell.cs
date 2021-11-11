@@ -13,18 +13,19 @@ using Libraries.system.output.graphics.system_colorspace;
 using NaughtyAttributes;
 public class SimpleShell : UnityEngine.MonoBehaviour
 {
-    [Button]
-    public void Begin()
+
+
+    public string Begin()
     {
-        const string help = "Press mouse to move to mouse\n"
-                + "Arrows to move\n"
-                + "Keypad +/- to change speed\n"
-                + "Type to type☻";
+        string prefix = "";
+        File currentFile = FileSystem.GetFileByPath("/System");
+        string console = "";
+
         SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
 
 
-        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/fontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
 
         void DrawCharAt(int x, int y, char character)
@@ -32,7 +33,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
             int index = character;
             int posx = index % 16;
             int posy = index / 16;
-            buffer.SetTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
         }
         void DrawStringAt(int x, int y, string text)
         {
@@ -52,38 +53,72 @@ public class SimpleShell : UnityEngine.MonoBehaviour
             }
         }
 
-
+        void UpdatePrefix()
+        {
+            prefix = currentFile.GetFullPath() + ">";
+        }
 
 
 
         string text = "";
         KeyHandler kh = new KeyHandler();
         KeySequence ks = null;
-        bool flasher = false;
-
-      
 
 
-       
+        int CountEncounters(string input, params char[] toFind)
+        {
+            int counter = 0;
+            foreach (char c in input)
+            {
+                foreach (char compareTo in toFind)
+                {
+                    if (compareTo == c)
+                    {
+                        counter++;
+                        break;
+                    }
+                }
+
+            }
+            return counter;
+        }
+
         void Draw()
         {
-            DrawStringAt(8, 0, help);
+            DrawStringAt(0, 0, console);
+            int consoleY = CountEncounters(console, '\r', '\n') + 1;
+            DrawStringAt(0, consoleY * 8, prefix);
 
 
-            DrawStringAt(0, 5 * 8, text);
-            buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
-            flasher = !flasher;
+            DrawStringAt(prefix.Length * 8, consoleY * 8, text);
             AsyncScreen.SetScreenBuffer(buffer);
         }
         void ProcessInput()
         {
             ks = kh.WaitForInput();
             string input = KeyHandler.GetInputAsString();
-            if (input != "")
+            foreach (char c in input)
             {
-                text = text.AddInput(input);
+                if (c == '\b') // has backspace/delete been pressed?
+                {
+                    if (text.Length != 0)
+                    {
+                        text = text.Substring(0, text.Length - 1);
+                    }
+                }
+                else if ((c == '\n') || (c == '\r')) // enter/return
+                {
+                    console += '\n' + prefix + text;
+                    text = "";
+                }
+                else
+                {
+                    text += c;
+                }
             }
         }
+
+        UpdatePrefix();
         while (true)
         {
             buffer.FillAll(SystemColor.black);
@@ -93,5 +128,6 @@ public class SimpleShell : UnityEngine.MonoBehaviour
 
             Runtime.Wait(1);
         }
+
     }
 }

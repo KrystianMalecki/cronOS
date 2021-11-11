@@ -37,12 +37,19 @@ namespace Libraries.system
             {
                 return array;
             }
-            public RectArray(int width, int height)
+            public void SetArray(T[] array)
+            {
+                this.array = array;
+              
+            }
+
+            public RectArray(int width = 0, int height = 0)
             {
                 array = new T[width * height];
                 this.width = width;
                 this.height = height;
             }
+
             public RectArray(RectArray<T> array)
             {
                 width = array.width;
@@ -50,6 +57,10 @@ namespace Libraries.system
                 this.array = new T[width * height];
                 Array.Copy(array.array, 0, this.array, 0, array.size);
             }
+
+           
+
+
             public void SetAt(int x, int y, T value)
             {
                 if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
