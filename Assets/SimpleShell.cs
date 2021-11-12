@@ -151,7 +151,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         }
         string GetChildren(string indent, File file, string prefix, bool recursive = false)
         {
-            string str = $"{indent}{prefix}{file.name}:{file.GetSize()}\n";
+            string str = $"{indent}{prefix}{file.name}:{file.GetByteSize()}\n";
             if (recursive)
             {
                 for (int i = 0; i < file.children.Count; i++)

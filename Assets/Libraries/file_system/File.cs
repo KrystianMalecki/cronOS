@@ -14,7 +14,7 @@ namespace Libraries.system
     namespace file_system
     {
         [System.Serializable]
-        public class File
+        public unsafe class File
         {
             public string name;
             [SerializeField]
@@ -28,7 +28,7 @@ namespace Libraries.system
             [SerializeField]
             public ThreadSafeList<File> children;
 
-            [SerializeReference]
+            [NonSerialized]
             public File parent;
 
             public void AddChild(File file)
@@ -104,20 +104,31 @@ namespace Libraries.system
             }
             public void Validate(bool recursive)
             {
-                foreach (var child in children)
+                if (children != null)
                 {
-                    child.parent = this;
-                    // Debug.Log("Validating " + child);
-                    if (recursive)
+                    foreach (var child in children)
                     {
-                        child.Validate(recursive);
+                        child.parent = this;
+                        // Debug.Log("Validating " + child);
+                        if (recursive)
+                        {
+                            child.Validate(recursive);
+                        }
                     }
                 }
             }
-            public string GetSize()
+            public int GetDataArraySize()
+            {
+                if (data == null)
+                {
+                    return 0;
+                }
+                return data.Length;
+            }
+            public string GetByteSize()
             {
                 int sizeScale = 0;
-                int currentSize = data.Length;
+                int currentSize = GetDataArraySize() + name.Length * 8 + 8 /*+ children.Count * 8 * 2*/;
                 while (currentSize > 1024)
                 {
                     currentSize = currentSize / 1024;

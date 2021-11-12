@@ -92,10 +92,10 @@ public class FileSystemInternal : MonoBehaviour
         }
         return newFile;
     }
-    //todo 1 add:
-    // . this
+    //todo 1 add: (make it better)
+    // . this maybe done?
     // special symbol that marks system path from system config
-    // .. up
+    // .. up only first one works
     // maybe later some regex?
     public string MakeAbsolutePath(string path, File currentFile = null)
     {

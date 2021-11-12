@@ -45,7 +45,8 @@ public class FileEditor : EditorWindow
         currentWindow._dataSP = null;
         currentWindow._childrenSP = null;
         currentWindow._dataSP = null;
-        currentWindow.dataArraySize = currentWindow.currentFile.data.Length;
+        Debug.Log($"{currentWindow} {currentFile}");
+        currentWindow.dataArraySize = currentWindow.currentFile.GetDataArraySize();
     }
     int size = 32;
     int page = 0;
@@ -104,8 +105,14 @@ public class FileEditor : EditorWindow
     bool toggleTextDataField = false;
     void OnGUI()
     {
+        // Debug.Log($"currentFile{currentFile == null} currentFileSO{currentFileSO == null} currentFileSP{currentFileSP == null} currentWindow{currentWindow == null}");
+        if (currentFileSP == null && currentFileSO != null)
+        {
+            currentFileSP = currentFileSO.FindProperty("currentFile");
+        }
         if (currentFile == null || currentFileSO == null || currentFileSP == null || currentWindow == null)
         {
+
             this.Close();
             return;
         }
@@ -203,23 +210,27 @@ public class FileEditor : EditorWindow
         GUILayout.Label("Full path: " + path, GUILayout.ExpandWidth(true));
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
         File father = currentFile;
+        List<File> files = new List<File>();
+        files.Add(father);
         while (father.parent != null)
         {
             father = father.parent;
+            files.Add(father);
         }
-        List<File> files = new List<File>();
-        files.Insert(0, father);
+        files.Reverse();
+        /*  File lastOneFile = father;
+          DrawPathButton(father);
+          for (int i = 1; i < pathParts.Length; i++)
+          {
+              files.Insert(i, lastOneFile.GetChildByName(pathParts[i]));
+              DrawPathButton(files[i]);
 
-        File lastOneFile = father;
-        DrawPathButton(father);
-        for (int i = 1; i < pathParts.Length; i++)
+              lastOneFile = files[i];
+          }*/
+        for (int i = 0; i < files.Count; i++)
         {
-            files.Insert(i, lastOneFile.GetChildByName(pathParts[i]));
             DrawPathButton(files[i]);
-
-            lastOneFile = files[i];
         }
-
 
         GUILayout.EndHorizontal();
     }
@@ -258,7 +269,7 @@ public class FileEditor : EditorWindow
         GUILayout.Label("Item:", GUILayout.Width(40));
 
         dataSelectedValue = EditorGUILayout.IntField(GUIContent.none, dataSelectedValue, GUILayout.Width(40), GUILayout.ExpandWidth(false));
-        GUI.enabled = (dataSelectedPos > -1 && dataSelectedPos < currentFile.data.Length + 1) && (dataSelectedValue > -1 && dataSelectedValue < 256);
+        GUI.enabled = (dataSelectedPos > -1 && dataSelectedPos < currentFile.GetDataArraySize() + 1) && (dataSelectedValue > -1 && dataSelectedValue < 256);
         if (GUILayout.Button("Insert", GUILayout.Width(60)))
         {
             ArrayUtility.Insert(ref currentFile.data, dataSelectedPos, (byte)dataSelectedValue);
@@ -270,7 +281,7 @@ public class FileEditor : EditorWindow
         var typeRect = GUILayoutUtility.GetLastRect();
         GUI.Label(typeRect, new GUIContent("", "Insert before selected byte"));
 
-        GUI.enabled = (dataSelectedPos > -1 && dataSelectedPos < currentFile.data.Length) && (dataSelectedValue > -1 && dataSelectedValue < 256);
+        GUI.enabled = (dataSelectedPos > -1 && dataSelectedPos < currentFile.GetDataArraySize()) && (dataSelectedValue > -1 && dataSelectedValue < 256);
 
         if (GUILayout.Button("Set", GUILayout.Width(60)))
         {

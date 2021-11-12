@@ -25,7 +25,10 @@ public class CodeTask
     public CodeObject codeObject;
     private static FieldInfo fieldInfoOfStackTrace = typeof(Exception).GetField("captured_traces", BindingFlags.NonPublic | BindingFlags.Instance);
 
-
+    public CodeTask()
+    {
+       // Debug.LogError("Creation of code task");
+    }
     public void RunCode(CodeObject codeObject)
     {
         this.codeObject = codeObject;
