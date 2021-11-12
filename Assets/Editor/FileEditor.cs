@@ -43,14 +43,14 @@ public class FileEditor : EditorWindow
     public void SetValues()
     {
         currentWindow._dataSP = null;
-        currentWindow._filesSP = null;
+        currentWindow._childrenSP = null;
         currentWindow._dataSP = null;
         currentWindow.dataArraySize = currentWindow.currentFile.data.Length;
     }
     int size = 32;
     int page = 0;
     SerializedProperty _permissionsSP;
-    SerializedProperty _filesSP;
+    SerializedProperty _childrenSP;
     SerializedProperty _dataSP;
     SerializedProperty permissionsSP
     {
@@ -63,15 +63,15 @@ public class FileEditor : EditorWindow
             return _permissionsSP;
         }
     }
-    SerializedProperty filesSP
+    SerializedProperty childrenSP
     {
         get
         {
-            if (_filesSP == null)
+            if (_childrenSP == null)
             {
-                _filesSP = currentFileSP.FindPropertyRelative("files");
+                _childrenSP = currentFileSP.FindPropertyRelative("children");
             }
-            return _filesSP;
+            return _childrenSP;
         }
     }
     SerializedProperty dataSP
@@ -145,8 +145,8 @@ public class FileEditor : EditorWindow
         EditorGUILayout.EndFoldoutHeaderGroup();
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-        //files
-        EditorGUILayout.PropertyField(filesSP);
+        //children
+        EditorGUILayout.PropertyField(childrenSP);
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
         GUILayout.EndHorizontal();
 

@@ -55,7 +55,13 @@ namespace Libraries.system.file_system
                 returnValue = FileSystemInternal.instance.RemoveFile(path);
             }, sync);//should be always sync
         }
-
+        public static string MakeAbsolutePath(string path, File currentFile = null)
+        {
+            return ScriptManager.AddDelegateToStack((ref bool done, ref string returnValue) =>
+            {
+                returnValue = FileSystemInternal.instance.MakeAbsolutePath(path, currentFile);
+            }, sync);//should be always sync
+        }
 
     }
 }

@@ -26,19 +26,19 @@ namespace Libraries.system
             public byte[] data;
 
             [SerializeField]
-            public ThreadSafeList<File> files;
+            public ThreadSafeList<File> children;
 
             [SerializeReference]
             public File parent;
 
             public void AddChild(File file)
             {
-                files.Add(file);
+                children.Add(file);
                 file.parent = this;
             }
             public void RemoveFile(File file)
             {
-                files.Remove(file);
+                children.Remove(file);
                 file.parent = null;
             }
 
@@ -74,13 +74,13 @@ namespace Libraries.system
             }
             public File GetChildByName(string name)
             {
-                lock (files)
+                lock (children)
                 {
-                    for (int i = 0; i < files.Count; i++)
+                    for (int i = 0; i < children.Count; i++)
                     {
-                        if (files[i].name == name)
+                        if (children[i].name == name)
                         {
-                            return files[i];
+                            return children[i];
                         }
                     }
                 }
@@ -104,7 +104,7 @@ namespace Libraries.system
             }
             public void Validate(bool recursive)
             {
-                foreach (var child in files)
+                foreach (var child in children)
                 {
                     child.parent = this;
                     // Debug.Log("Validating " + child);
@@ -114,6 +114,18 @@ namespace Libraries.system
                     }
                 }
             }
+            public string GetSize()
+            {
+                int sizeScale = 0;
+                int currentSize = data.Length;
+                while (currentSize > 1024)
+                {
+                    currentSize = currentSize / 1024;
+                    sizeScale++;
+                }
+                return $"{currentSize}{SIZES[sizeScale]}B";
+            }
+            private readonly string[] SIZES = { "k", "M", "G", "T" };
         }
 
     }
@@ -122,10 +134,15 @@ namespace Libraries.system
 [Flags]
 public enum FilePermission
 {
-    isFolder = 0b1000,
-    read = 0b0100,
-    write = 0b0010,
-    execute = 0b0001
+    //hasExtension =  0b01000000
+    //hidden =        0b00100000,
+    //isLink =        0b00010000,
+
+
+    isFolder = 0b00001000,
+    read = 0b00000100,
+    write = 0b00000010,
+    execute = 0b00000001
 
 
 }

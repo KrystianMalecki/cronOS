@@ -36,6 +36,12 @@ namespace Libraries.system
             ProcessorManager.mainEncoding.GetBytes(&character, 1, &b, 1);
             return b;
         }
+        public unsafe static char ByteToChar(byte character)
+        {
+            char b = 'l';
+            ProcessorManager.mainEncoding.GetChars(&character, 1, &b, 1);
+            return b;
+        }
     }
 
 }

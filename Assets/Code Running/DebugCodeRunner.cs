@@ -17,19 +17,6 @@ public class DebugCodeRunner : MonoBehaviour
     public bool runOnStart;
     [Foldout("Code")]
     [ResizableTextArea] public string code;
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
-    public static DebugCodeRunner instance;
-
     public void Start()
     {
         if (runOnStart)

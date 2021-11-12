@@ -12,23 +12,23 @@ public class FilePropertyDrawer : PropertyDrawer
         Init(property);
 
         return EditorGUIUtility.singleLineHeight
-            + EditorGUI.GetPropertyHeight(filesSP)
+            + EditorGUI.GetPropertyHeight(childrenSP)
             + EditorGUI.GetPropertyHeight(permissionsSP)
             ;
     }
     SerializedProperty nameSP;
     SerializedProperty permissionsSP;
-    SerializedProperty filesSP;
+    SerializedProperty childrenSP;
     public void Init(SerializedProperty property)
     {
         nameSP = property.FindPropertyRelative("name");
         permissionsSP = property.FindPropertyRelative("permissions");
-        filesSP = property.FindPropertyRelative("files");
+        childrenSP = property.FindPropertyRelative("children");
 
     }
     public void TryInit(SerializedProperty property)
     {
-        if (filesSP == null)
+        if (childrenSP == null)
         {
             Init(property);
         }
@@ -45,7 +45,7 @@ public class FilePropertyDrawer : PropertyDrawer
         var buttonRect = new Rect(main.x + (main.width / 2) + 20, main.y, main.width / 2 - 20, EditorGUIUtility.singleLineHeight);
 
         var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, EditorGUI.GetPropertyHeight(permissionsSP));
-        var filesRect = new Rect(main.x + 2, permissionsRect.y + EditorGUI.GetPropertyHeight(permissionsSP), main.width - 2, EditorGUI.GetPropertyHeight(filesSP));
+        var filesRect = new Rect(main.x + 2, permissionsRect.y + EditorGUI.GetPropertyHeight(permissionsSP), main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
 
         var button = new Rect(position.x + position.width * 0.25f, position.y + position.height - EditorGUIUtility.singleLineHeight - 6, position.width * 0.5f, EditorGUIUtility.singleLineHeight);
 
@@ -57,7 +57,7 @@ public class FilePropertyDrawer : PropertyDrawer
         EditorGUI.PropertyField(permissionsRect, permissionsSP);
 
         GUI.color = new Color(1.1f, 1.1f, 1.1f);
-        EditorGUI.PropertyField(filesRect, filesSP);
+        EditorGUI.PropertyField(filesRect, childrenSP);
         GUI.color = Color.white;
        // EditorGUI.indentLevel++;
 
