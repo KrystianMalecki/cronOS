@@ -36,7 +36,7 @@ namespace Libraries.system
                 children.Add(file);
                 file.parent = this;
             }
-            public void RemoveFile(File file)
+            public void RemoveChild(File file)
             {
                 children.Remove(file);
                 file.parent = null;
@@ -65,7 +65,7 @@ namespace Libraries.system
             }
             public void MoveFileTo(File desitination)
             {
-                parent.RemoveFile(this);
+                parent.RemoveChild(this);
                 desitination.AddChild(this);
             }
             public string ReturnDataAsString()
@@ -100,9 +100,9 @@ namespace Libraries.system
 
             public void OnValidate()
             {
-                Validate(false);
+                GenerateParentLinks(false);
             }
-            public void Validate(bool recursive)
+            public void GenerateParentLinks(bool recursive)
             {
                 if (children != null)
                 {
@@ -112,7 +112,7 @@ namespace Libraries.system
                         // Debug.Log("Validating " + child);
                         if (recursive)
                         {
-                            child.Validate(recursive);
+                            child.GenerateParentLinks(recursive);
                         }
                     }
                 }
@@ -136,7 +136,7 @@ namespace Libraries.system
                 }
                 return $"{currentSize}{SIZES[sizeScale]}B";
             }
-            private readonly string[] SIZES = { "k", "M", "G", "T" };
+            private readonly string[] SIZES = { "", "k", "M", "G", "T" };
         }
 
     }

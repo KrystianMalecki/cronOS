@@ -20,18 +20,14 @@ public class FileSystemInternal : MonoBehaviour
         {
             Destroy(this);
         }
-        ValidateRoot();
+        drive.GenerateParentLinks();
 
     }
     #endregion
-    public File root;
+    public DriveSO drive;
     public static readonly char catalogSymbol = '/';
 
-    [Button]
-    private void ValidateRoot()
-    {
-        root.Validate(true);
-    }
+
     public File GetFileByPath(File father, string rawPath)
     {
         string[] parts = rawPath.Split(catalogSymbol);
@@ -57,7 +53,7 @@ public class FileSystemInternal : MonoBehaviour
     }
     public File GetFileByPath(string rawPath)
     {
-        return GetFileByPath(root, rawPath);
+        return GetFileByPath(drive.root, rawPath);
 
     }
     public Path GetPath(string rawPath)
@@ -68,7 +64,7 @@ public class FileSystemInternal : MonoBehaviour
     {
         //todo-future add errors
         File file = GetFileByPath(path);
-        file.parent.RemoveFile(file);
+        file.parent.RemoveChild(file);
         return true;
     }
     public File MakeFolder(string name)
@@ -100,7 +96,7 @@ public class FileSystemInternal : MonoBehaviour
     public string MakeAbsolutePath(string path, File currentFile = null)
     {
         string bufferPath = path;
-      //  Debug.Log($"path:{bufferPath} file:{currentFile}");
+        //  Debug.Log($"path:{bufferPath} file:{currentFile}");
         if (currentFile != null)
         {
             if (bufferPath.StartsWith(".."))

@@ -12,10 +12,10 @@ namespace Libraries.system
             public List<string> parts = new List<string>();
             public List<File> fileparts = new List<File>();
 
-            public Path(string rawPath)
+            public Path(string rawPath, File root = null)
             {
                 parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
-                File currentFile = FileSystemInternal.instance.root;
+                File currentFile = root == null ? FileSystemInternal.instance.drive.root : root;
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)
                 {

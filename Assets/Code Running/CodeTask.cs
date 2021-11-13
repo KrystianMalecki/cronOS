@@ -27,7 +27,7 @@ public class CodeTask
 
     public CodeTask()
     {
-       // Debug.LogError("Creation of code task");
+        // Debug.LogError("Creation of code task");
     }
     public void RunCode(CodeObject codeObject)
     {
@@ -108,28 +108,47 @@ public class CodeTask
 
                  FieldInfo[] fis = current.GetType().GetFields(bf);
                  Debug.Log(fis.GetValuesToString());*/
-                int line = 0;
-                int column = 0;
+                string line = "";
+                string file = "";
+                int linePos = 0;
+                int columnPos = 0;
 
                 object field = fieldInfoOfStackTrace.GetValue(e);
                 string reason = "";
-                if (field != null)
+                try
                 {
-                    //  System.Diagnostics.StackTrace[] stack = (System.Diagnostics.StackTrace[])field;
-                    //  System.Diagnostics.StackTrace trace = stack[0];
-                    System.Diagnostics.StackFrame frame = ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
-
-                    //  Debug.Log(((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0));
-                    line = frame.GetFileLineNumber();
-                    column = frame.GetFileColumnNumber();
-
-                }
-                else
-                {
-                    (line, column) = GetColumnAndLineFromExceptionMessage(e.Message);
+                    string s = e.StackTrace;
+                    (linePos, columnPos) = GetLineAndColumnFromExceptionMessage(e.Message);
                     reason = e.Message;
+                    file = e.Source;
+
+                    Debug.Log(e);
                 }
-                Debug.Log($"{e.GetType()} line:{line} column:{column}\n reason:{reason}");
+                catch (Exception ex)
+                {
+                    System.Diagnostics.StackFrame frame = ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
+                    linePos = frame.GetFileLineNumber();
+                    columnPos = frame.GetFileColumnNumber();
+                    file = frame.GetFileName();
+                    line = codeObject.code.Split('\n')[linePos - 1];
+                }
+                /* if (field != null)
+                 {
+                     //  System.Diagnostics.StackTrace[] stack = (System.Diagnostics.StackTrace[])field;
+                     //  System.Diagnostics.StackTrace trace = stack[0];
+                     System.Diagnostics.StackFrame frame = ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
+
+                     //  Debug.Log(((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0));
+                     line = frame.GetFileLineNumber();
+                     column = frame.GetFileColumnNumber();
+
+                 }
+                 else
+                 {
+                     (line, column) = GetLineAndColumnFromExceptionMessage(e.Message);
+                     reason = e.Message;
+                 }*/
+                Debug.Log($"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");
                 /* System.Diagnostics.StackTrace[] stacktrace = fi.GetValue(current) as System.Diagnostics.StackTrace[];
                  for (int i = 0; i < stacktrace.Length; i++)
                  {
@@ -167,7 +186,7 @@ public class CodeTask
 
 
     }
-    (int line, int column) GetColumnAndLineFromExceptionMessage(string message)
+    (int line, int column) GetLineAndColumnFromExceptionMessage(string message)
     {
         int line = 0;
         int column = 0;

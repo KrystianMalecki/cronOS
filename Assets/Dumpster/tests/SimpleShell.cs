@@ -16,10 +16,7 @@ using Libraries.system.output;
 public class SimpleShell : UnityEngine.MonoBehaviour
 {
 
-
-
-
-    public string Begin()
+    public void Begin()
     {
         string prefix = "";
         File currentFile = FileSystem.GetFileByPath("/System");
@@ -29,7 +26,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         Screen.InitScreenBuffer(buffer);
 
 
-        File fontAtlas = FileSystem.GetFileByPath("/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
 
         void DrawCharAt(int x, int y, char character)
@@ -183,7 +180,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         Screen.InitScreenBuffer(buffer);
 
 
-        File fontAtlas = FileSystem.GetFileByPath("/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
 
         void DrawCharAt(int x, int y, char character)

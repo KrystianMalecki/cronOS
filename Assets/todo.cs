@@ -1,13 +1,14 @@
 //todo 0 add todos here
 
-//todo 0 make DriveSO and implement it in FileSystem
 
-//todo 1 fix enum mask error in inspector
+//todo-recheck fix enum mask error in inspector, use default enum mask drawer, just add display for options next to it, its ok
 
 
 //todo 2 cleanup files
 
+//todo 3 think about better path 
 
+//todo 4 think about #include-ing core libraries like system or system.file_system
 
 
 //todo-future add compressed textures/pallet based images

@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 [CustomPropertyDrawer(typeof(File))]
-public class FilePropertyDrawer : PropertyDrawer
+public class FilePD : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
@@ -84,7 +84,8 @@ public class FilePropertyDrawer : PropertyDrawer
 
         if (GUI.Button(buttonRect, "Open in editor"))
         {
-            FileEditor.ShowWindow(property.GetTargetObjectOfProperty() as File/*, property,property.serializedObject*/);
+            ((DriveSO)property.serializedObject.targetObject).GenerateParentLinks();
+            FileEditor.DisplayCurrentFile(property.GetTargetObjectOfProperty() as File, property, property.serializedObject);
         }
         property.serializedObject.ApplyModifiedProperties();
 

@@ -10,82 +10,122 @@ public class FileEditor : EditorWindow
     public static FileEditor currentWindow;
     [SerializeReference]
     public File currentFile = null;
-    [SerializeReference]
-    public SerializedProperty currentFileSP;
-    [SerializeField]
-    public SerializedObject currentFileSO;
+    public SerializedProperty currentFileSP = null;
+    public SerializedObject currentFileSO = null;
     [SerializeReference]
 
-    public File lastOne;
+    public File lastOne = null;
 
-
-    public static void ShowWindow(File file/*, SerializedProperty fileSP, SerializedObject fileSO*/)
+    public static void DisplayCurrentFile(File file, SerializedProperty serializedProperty, SerializedObject serializedObject = null)
     {
-        currentWindow = EditorWindow.GetWindow<FileEditor>(typeof(FileEditor));
-        if (currentWindow.currentFile != file && currentWindow.currentFile != null)
+        if (currentWindow == null)
         {
-            currentWindow.lastOne = currentWindow.currentFile;
+            ShowWindow(file, serializedProperty, serializedObject);
         }
-        file.OnValidate(); //toto warning! can be expensive
-        currentWindow.currentFile = file;
+        else
+        {
+            currentWindow.currentFileSP = serializedProperty;
+            Debug.Log(currentWindow.toggleTopFields);
+            currentWindow.ChangeCurrentFile(file);
+        }
+    }
+    public static void ShowWindow(File file, SerializedProperty serializedProperty, SerializedObject serializedObject = null)
+    {
 
-        currentWindow.SetValues();
+        currentWindow = EditorWindow.GetWindow<FileEditor>(typeof(FileEditor));
 
-        /*   currentWindow.currentFileSP = fileSP;
-           currentWindow.currentFileSO = fileSO;*/
-        currentWindow.currentFileSO = new SerializedObject(currentWindow);
-        currentWindow.currentFileSP = currentWindow.currentFileSO.FindProperty("currentFile");
-        //  currentWindow.dataProperities = new Dictionary<int, SerializedProperty>();
-        currentWindow.dataViewScrollPosition = Vector2.zero;
+        currentWindow.currentFileSO = serializedObject;
+        currentWindow.currentFileSP = serializedProperty;
+
+        currentWindow.ChangeCurrentFile(file);
 
 
+
+
+
+    }
+    public void ChangeCurrentFile(File file)
+    {
+        if (currentFile != file && currentFile != null)
+        {
+            lastOne = currentFile;
+        }
+        currentFile = file;
+
+        currentFile.OnValidate();
+        toggleTopFields = true;
+        SetValues();
+        dataViewScrollPosition = Vector2.zero;
+
+        UpdateWindow();
     }
     public void SetValues()
     {
-        currentWindow._dataSP = null;
-        currentWindow._childrenSP = null;
-        currentWindow._dataSP = null;
-        Debug.Log($"{currentWindow} {currentFile}");
-        currentWindow.dataArraySize = currentWindow.currentFile.GetDataArraySize();
+        TryFixEditorValues();
+
+        permissionsSP = currentFileSP.FindPropertyRelative("permissions");
+
+        childrenSP = currentFileSP.FindPropertyRelative("children");
+
+        dataSP = currentFileSP.FindPropertyRelative("data");
+
+        dataArraySize = currentFile.GetDataArraySize();
+
+    }
+    SerializedProperty FindPropertyOfFile(File f)
+    {
+        SerializedProperty buffer;
+        if (currentFileSO.targetObject.GetType() == typeof(DriveSO))
+        {
+            buffer = currentFileSO.FindProperty("root");
+        }
+        else
+        {
+            buffer = currentFileSO.FindProperty("currentFile");
+        }
+        Debug.Log($"{f} {buffer} ");
+        Path p = new Path(f.GetFullPath(), buffer.GetTargetObjectOfProperty() as File);
+        for (int i = 1; i < p.fileparts.Count; i++)
+        {
+            Debug.Log(p.fileparts[i]);
+            int pos = p.fileparts[i - 1].children.FindIndex(x => x == p.fileparts[i]);
+            buffer = buffer.FindPropertyRelative($"children.items.Array.data[{pos}]");
+
+        }
+        return buffer;
+    }
+    void TryFixEditorValues()
+    {
+        if (currentFileSO == null)
+        {
+            Debug.LogWarning("Something went wrong with currentFileSO!");
+            currentFileSO = new SerializedObject(currentWindow);
+        }
+
+        if (currentFileSP == null)
+        {
+            Debug.LogWarning("Something went wrong with currentFileSP!");
+            if (currentFileSO.targetObject != null)
+            {
+                if (currentFileSO.targetObject.GetType() == typeof(DriveSO))
+                {
+                    currentFileSP = currentFileSO.FindProperty("root");
+
+                }
+                else
+                {
+                    currentFileSP = currentFileSO.FindProperty("currentFile");
+
+                }
+            }
+        }
     }
     int size = 32;
     int page = 0;
-    SerializedProperty _permissionsSP;
-    SerializedProperty _childrenSP;
-    SerializedProperty _dataSP;
-    SerializedProperty permissionsSP
-    {
-        get
-        {
-            if (_permissionsSP == null)
-            {
-                _permissionsSP = currentFileSP.FindPropertyRelative("permissions");
-            }
-            return _permissionsSP;
-        }
-    }
-    SerializedProperty childrenSP
-    {
-        get
-        {
-            if (_childrenSP == null)
-            {
-                _childrenSP = currentFileSP.FindPropertyRelative("children");
-            }
-            return _childrenSP;
-        }
-    }
-    SerializedProperty dataSP
-    {
-        get
-        {
-            if (_dataSP == null)
-            {
-                _dataSP = currentFileSP.FindPropertyRelative("data");
-            }
-            return _dataSP;
-        }
-    }
+    SerializedProperty permissionsSP;
+    SerializedProperty childrenSP;
+    SerializedProperty dataSP;
+
 
     Vector2 dataViewScrollPosition = Vector2.zero;
 
@@ -105,25 +145,29 @@ public class FileEditor : EditorWindow
     bool toggleTextDataField = false;
     void OnGUI()
     {
-        // Debug.Log($"currentFile{currentFile == null} currentFileSO{currentFileSO == null} currentFileSP{currentFileSP == null} currentWindow{currentWindow == null}");
-        if (currentFileSP == null && currentFileSO != null)
+
+        if (currentFile == null || currentWindow == null)
         {
-            currentFileSP = currentFileSO.FindProperty("currentFile");
+            Debug.LogWarning($"Something went wrong with currentFile{currentFile} or currentWindow{currentWindow}!");
+
+            this.Close();
+            return;
         }
+        TryFixEditorValues();
         if (currentFile == null || currentFileSO == null || currentFileSP == null || currentWindow == null)
         {
+            Debug.LogWarning($"Something went wrong with currentFile{currentFile} or currentFileSO{currentFileSO} or currentFileSP{currentFileSP} or currentWindow{currentWindow}!");
 
             this.Close();
             return;
         }
 
-
         windowWidth = position.width - 10;
-        //  boxWidth = Mathf.Min((windowWidth - 20) / (size + 1), 40);
 
         EditorGUI.BeginChangeCheck();
 
         toggleTopFields = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleTopFields, "Main values"));
+
         if (toggleTopFields)
         {
             DrawTopGoersBar();
@@ -146,8 +190,24 @@ public class FileEditor : EditorWindow
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
             //permissions
             GUILayout.Label("Permissions: ");
-            EditorGUILayout.PropertyField(permissionsSP);
 
+            //  EditorGUILayout.PropertyField(permissionsSP);
+
+            GUILayout.Space(EditorGUIUtility.singleLineHeight);
+
+            GUI.enabled = currentFile.parent != null;
+            if (GUILayout.Button("Delete file"))
+            {
+                if (EditorUtility.DisplayDialog("Delete file?",
+                $"Are you sure want to delete {currentFile.name}?", "Yes", "No"))
+                {
+                    File parent = currentFile.parent;
+                    parent.RemoveChild(currentFile);
+                    DisplayCurrentFile(parent, FindPropertyOfFile(parent), currentFileSO);
+
+                }
+            }
+            GUI.enabled = true;
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
@@ -188,19 +248,23 @@ public class FileEditor : EditorWindow
 
 
         //save all
-        /*if (EditorGUI.EndChangeCheck())
+        if (EditorGUI.EndChangeCheck())
         {
             currentFileSO.ApplyModifiedProperties();
 
-        }*/
+        }
 
         //   currentFileSP.serializedObject.Update();
     }
     public void UpdateWindow()
     {
-        currentFileSO.Update();
+        currentFileSO.ApplyModifiedProperties();
         SetValues();
         dataAsString = null;
+        EditorUtility.SetDirty(currentWindow);
+
+        EditorUtility.SetDirty(currentFileSO.targetObject);
+        Repaint();
     }
     void DrawButtonPath()
     {
@@ -242,7 +306,7 @@ public class FileEditor : EditorWindow
         string lastName = lastOne == null ? "" : (lastOne.name);
         if (GUILayout.Button("Go back to last one: " + lastName))
         {
-            FileEditor.ShowWindow(lastOne);
+            FileEditor.DisplayCurrentFile(lastOne, FindPropertyOfFile(lastOne), currentFileSO);
         }
         GUILayout.Space(80);
 
@@ -250,7 +314,7 @@ public class FileEditor : EditorWindow
         string parentName = currentFile.parent == null ? "" : (currentFile.parent.name);
         if (GUILayout.Button("Go to parent: " + parentName))
         {
-            FileEditor.ShowWindow(currentFile.parent);
+            FileEditor.DisplayCurrentFile(currentFile.parent, FindPropertyOfFile(currentFile.parent), currentFileSO);
         }
 
         GUI.enabled = true;
@@ -315,8 +379,8 @@ public class FileEditor : EditorWindow
             {
                 ByteArray ba = JsonUtility.FromJson<ByteArray>(EditorGUIUtility.systemCopyBuffer);
                 currentFile.data = ba.array;
+                currentFileSO.Update();
                 UpdateWindow();
-                EditorUtility.SetDirty(currentWindow);
             }
             catch (Exception e)
             {
@@ -349,6 +413,7 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
         {
             currentFile.data = dataAsString.ToBytes();
+            currentFileSO.Update();
             UpdateWindow();
         }
 
@@ -450,7 +515,7 @@ public class FileEditor : EditorWindow
         GUI.enabled = file.name != currentFile.name;
         if (GUILayout.Button(file.name, GUILayout.MinWidth(1), GUILayout.ExpandWidth(false)))
         {
-            FileEditor.ShowWindow(file);
+            FileEditor.DisplayCurrentFile(file, FindPropertyOfFile(file), currentFileSO);
         }
         GUI.enabled = true;
         GUILayout.Label("/", GUILayout.MinWidth(1), GUILayout.ExpandWidth(false));

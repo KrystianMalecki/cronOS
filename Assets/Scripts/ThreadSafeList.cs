@@ -352,6 +352,20 @@ public class ThreadSafeList<T> : IList<T>, IList
         return default(T);
     }
 
+    public int FindIndex(Func<T, bool> func)
+    {
+        lock (this.sync)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (func.Invoke(items[i]))
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
     public static implicit operator List<T>(ThreadSafeList<T> tsl)
     {
         return new List<T>(tsl.GetEnumerator().Iterate());

@@ -30,7 +30,7 @@ public class test : native_ue.MonoBehaviour
         Screen.InitScreenBuffer(buffer);
 
 
-        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
 
         void DrawCharAt(int x, int y, char character)
@@ -166,7 +166,7 @@ public class test : native_ue.MonoBehaviour
         SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
         string str = "Hello, world!";
-        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
         void DrawCharAt(int x, int y, char character)
         {
@@ -271,7 +271,7 @@ public class test : native_ue.MonoBehaviour
         Screen.InitScreenBuffer(buffer);
 
 
-        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
 
         void DrawCharAt(int x, int y, char character)
@@ -407,7 +407,7 @@ public class test : native_ue.MonoBehaviour
         Screen.InitScreenBuffer(buffer);
 
 
-        File fontAtlas = FileSystem.GetFileByPath("C:/System/fontAtlas");
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
         SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
 
         Console.Debug(1);
