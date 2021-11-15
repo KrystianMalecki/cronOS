@@ -1,14 +1,13 @@
 //todo 0 add todos here
 
 
-//todo-recheck fix enum mask error in inspector, use default enum mask drawer, just add display for options next to it, its ok
+//todo 0 THINK about commands and command interfaces/base classes. They could be problematic when using "working directory" but it can just be added by "-at/-w *paste path here*".
+//BUT changing WD will be really problematic. Should you fight it? idk. Maybe just make them return special commands? like "cmd: cwd *paste path here*" and something that is running those should do something with it?
 
-
-//todo 2 cleanup files
-
-//todo 3 think about better path 
+//todo 3 think about better path logic
 
 //todo 4 think about #include-ing core libraries like system or system.file_system
+
 
 
 //todo-future add compressed textures/pallet based images
@@ -22,4 +21,4 @@
 
 //todo-future add more file types/extensions
 
-//todo-future 
+//todo-recheck fix enum mask error in inspector, use default enum mask drawer, just add display for options next to it, its ok

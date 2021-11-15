@@ -26,7 +26,7 @@ public class FilePD : PropertyDrawer
         }
         return EditorGUIUtility.singleLineHeight
             + childredHeight
-        //+ EditorGUI.GetPropertyHeight(permissionsSP)
+        + EditorGUI.GetPropertyHeight(permissionsSP)
         ;
     }
     SerializedProperty nameSP;
@@ -54,7 +54,7 @@ public class FilePD : PropertyDrawer
         var buttonRect = new Rect(main.x + (main.width / 2) + 20, main.y, main.width / 2 - 20, EditorGUIUtility.singleLineHeight);
 
 
-        var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, 0/* EditorGUI.GetPropertyHeight(permissionsSP)*/);
+        var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, EditorGUI.GetPropertyHeight(permissionsSP));
         var filesRect = new Rect(main.x + 2, permissionsRect.y + permissionsRect.height, main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
 
         var button = new Rect(position.x + position.width * 0.25f, position.y + position.height - EditorGUIUtility.singleLineHeight - 6, position.width * 0.5f, EditorGUIUtility.singleLineHeight);
@@ -64,7 +64,7 @@ public class FilePD : PropertyDrawer
         // EditorGUI.indentLevel--;
         EditorGUI.PropertyField(nameRect, nameSP, GUIContent.none);
         //  permissionsSP.intValue = ((int)((FilePermission)EditorGUI.EnumFlagsField(permissionsRect, (FilePermission)permissionsSP.intValue)));
-        //   EditorGUI.PropertyField(permissionsRect, permissionsSP);
+        EditorGUI.PropertyField(permissionsRect, permissionsSP);
 
 
 

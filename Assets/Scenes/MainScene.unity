@@ -1082,7 +1082,6 @@ GameObject:
   - component: {fileID: 774406599}
   - component: {fileID: 774406598}
   - component: {fileID: 774406600}
-  - component: {fileID: 774406601}
   - component: {fileID: 774406602}
   m_Layer: 0
   m_Name: Testers
@@ -1164,22 +1163,6 @@ MonoBehaviour:
     width: 0
     height: 0
     colors: []
---- !u!114 &774406601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 774406597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3919847f123dc40b827ca2f1dbc3be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pta:
-    structureName: 
-    fields: []
-  outputCode: 
 --- !u!114 &774406602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17682,6 +17665,51 @@ Transform:
   m_Father: {fileID: 1501359164}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1032443449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1032443450}
+  - component: {fileID: 1032443451}
+  m_Layer: 0
+  m_Name: shell command CT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1032443450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032443449}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1032443451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032443449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  code: Console.Debug(ls.instance.Run("-wd /System -r"));
 --- !u!1 &1081877136
 GameObject:
   m_ObjectHideFlags: 0
@@ -17802,6 +17830,7 @@ Transform:
   - {fileID: 1941482589}
   - {fileID: 2108374107}
   - {fileID: 133933830}
+  - {fileID: 1032443450}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18094,66 +18123,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 1
-  code: "\r\n    {\r\n        string prefix = \"\";\r\n        File currentFile =
-    FileSystem.GetFileByPath(\"/System\");\r\n        string console = \"\";\r\n\r\n       
-    SystemScreenBuffer buffer = new SystemScreenBuffer();\r\n        Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n       
-    File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
-    SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n\r\n       
-    void DrawCharAt(int x, int y, char character)\r\n        {\r\n            int
-    index = Runtime.CharToByte(character);\r\n            int posx = index % 16;\r\n           
-    int posy = index / 16;\r\n            buffer.DrawTexture(x, y, fontTexture.GetRect(posx
-    * 8, (posy) * 8, 8, 8));\r\n        }\r\n        void DrawStringAt(int x, int
-    y, string text)\r\n        {\r\n            int posX = x;\r\n            int
-    posY = y;\r\n            for (int i = 0; i < text.Length; i++)\r\n           
-    {\r\n                char c = text.ToCharArray()[i];\r\n                if (c
-    == '\\n' || c == '\\r')\r\n                {\r\n                    posX = x;\r\n                   
-    posY += 8;\r\n                    continue;\r\n                }\r\n               
-    DrawCharAt(posX, posY, c);\r\n                posX += 8;\r\n            }\r\n       
-    }\r\n\r\n        void UpdatePrefix()\r\n        {\r\n            prefix = currentFile.GetFullPath()
-    + \">\";\r\n        }\r\n\r\n\r\n\r\n        string text = \"\";\r\n        KeyHandler
-    kh = new KeyHandler();\r\n        KeySequence ks = null;\r\n\r\n\r\n        int
-    CountEncounters(string input, params char[] toFind)\r\n        {\r\n           
-    int counter = 0;\r\n            foreach (char c in input)\r\n            {\r\n               
-    foreach (char compareTo in toFind)\r\n                {\r\n                   
-    if (compareTo == c)\r\n                    {\r\n                        counter++;\r\n                       
-    break;\r\n                    }\r\n                }\r\n\r\n            }\r\n           
-    return counter;\r\n        }\r\n\r\n        void Draw()\r\n        {\r\n           
-    DrawStringAt(0, 0, console);\r\n            int consoleY = CountEncounters(console,
-    '\\r', '\\n') + 1;\r\n            DrawStringAt(0, consoleY * 8, prefix);\r\n\r\n\r\n           
-    DrawStringAt(prefix.Length * 8, consoleY * 8, text);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
-    }\r\n        void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
-    string input = KeyHandler.GetInputAsString();\r\n            foreach (char c
-    in input)\r\n            {\r\n                if (c == '\\b') // has backspace/delete
-    been pressed?\r\n                {\r\n                    if (text.Length !=
-    0)\r\n                    {\r\n                        text = text.Substring(0,
-    text.Length - 1);\r\n                    }\r\n                }\r\n               
-    else if ((c == '\\n') || (c == '\\r')) // enter/return\r\n                {\r\n                   
-    console += '\\n' + prefix + text;\r\n                    string output = PraseCommand(text);\r\n                   
-    if (!string.IsNullOrEmpty(output))\r\n                    {\r\n                       
-    console += '\\n' + output;\r\n                    }\r\n                    text
-    = \"\";\r\n                }\r\n                else\r\n                {\r\n                   
-    text += c;\r\n                }\r\n            }\r\n        }\r\n        string
-    PraseCommand(string input)\r\n        {\r\n            string[] parts = input.Split('
-    ');\r\n            switch (parts[0])\r\n            {\r\n                case
-    \"cd\":\r\n                    {\r\n                        File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1],
-    currentFile));\r\n                        if (f == null)\r\n                       
-    {\r\n                            return $\"Couldn't find file {parts[1]}!\";\r\n                       
-    }\r\n                        currentFile = f;\r\n                        UpdatePrefix();\r\n                       
-    return \"\";\r\n                    }\r\n                case \"ls\":\r\n                   
-    {\r\n                        return GetChildren(\"\", currentFile, \"\", (parts.Length
-    > 1 ? (parts[1] == \"-a\") : false));\r\n                    }\r\n           
-    }\r\n            return $\"Couldn't find command `{parts[0]}`.\";\r\n       
-    }\r\n        string GetChildren(string indent, File file, string prefix, bool
-    recursive = false)\r\n        {\r\n            string str = $\"{indent}{prefix}{file.name}:{file.GetByteSize()}\\n\";\r\n           
-    if (recursive)\r\n            {\r\n                for (int i = 0; i < file.children.Count;
-    i++)\r\n                {\r\n                    File child = file.children[i];\r\n                   
-    str += GetChildren(indent + \" \", child, $\"{((i + 1) == file.children.Count
-    ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))} \", recursive);\r\n\r\n               
-    }\r\n            }\r\n            return str;\r\n        }\r\n        UpdatePrefix();\r\n       
-    while (true)\r\n        {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n           
-    Draw();\r\n            ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n       
-    }\r\n\r\n    }\r\n"
+  runOnStart: 0
+  code: "\r\n    {\r\n\r\n        {\r\n            string prefix = \"\";\r\n           
+    File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n            string
+    console = \"\";\r\n\r\n            SystemScreenBuffer buffer = new SystemScreenBuffer();\r\n           
+    Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n            File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n           
+    SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n\r\n           
+    void DrawCharAt(int x, int y, char character)\r\n            {\r\n               
+    int index = Runtime.CharToByte(character);\r\n                int posx = index
+    % 16;\r\n                int posy = index / 16;\r\n                buffer.DrawTexture(x,
+    y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));\r\n            }\r\n           
+    void DrawStringAt(int x, int y, string text)\r\n            {\r\n               
+    int posX = x;\r\n                int posY = y;\r\n                for (int i
+    = 0; i < text.Length; i++)\r\n                {\r\n                    char c
+    = text.ToCharArray()[i];\r\n                    if (c == '\\n' || c == '\\r')\r\n                   
+    {\r\n                        posX = x;\r\n                        posY += 8;\r\n                       
+    continue;\r\n                    }\r\n                    DrawCharAt(posX, posY,
+    c);\r\n                    posX += 8;\r\n                }\r\n            }\r\n\r\n           
+    void UpdatePrefix()\r\n            {\r\n                prefix = currentFile.GetFullPath()
+    + \">\";\r\n            }\r\n\r\n\r\n\r\n            string text = \"\";\r\n           
+    KeyHandler kh = new KeyHandler();\r\n            KeySequence ks = null;\r\n\r\n\r\n           
+    int CountEncounters(string input, params char[] toFind)\r\n            {\r\n               
+    int counter = 0;\r\n                foreach (char c in input)\r\n               
+    {\r\n                    foreach (char compareTo in toFind)\r\n                   
+    {\r\n                        if (compareTo == c)\r\n                        {\r\n                           
+    counter++;\r\n                            break;\r\n                        }\r\n                   
+    }\r\n\r\n                }\r\n                return counter;\r\n           
+    }\r\n\r\n            void Draw()\r\n            {\r\n                DrawStringAt(0,
+    0, console);\r\n                int consoleY = CountEncounters(console, '\\r',
+    '\\n') + 1;\r\n                DrawStringAt(0, consoleY * 8, prefix);\r\n\r\n\r\n               
+    DrawStringAt(prefix.Length * 8, consoleY * 8, text);\r\n                AsyncScreen.SetScreenBuffer(buffer);\r\n           
+    }\r\n            void ProcessInput()\r\n            {\r\n                ks =
+    kh.WaitForInput();\r\n                string input = KeyHandler.GetInputAsString();\r\n               
+    foreach (char c in input)\r\n                {\r\n                    if (c ==
+    '\\b') // has backspace/delete been pressed?\r\n                    {\r\n                       
+    if (text.Length != 0)\r\n                        {\r\n                           
+    text = text.Substring(0, text.Length - 1);\r\n                        }\r\n                   
+    }\r\n                    else if ((c == '\\n') || (c == '\\r')) // enter/return\r\n                   
+    {\r\n                        console += '\\n' + prefix + text;\r\n                       
+    string output = PraseCommand(text);\r\n                        if (!string.IsNullOrEmpty(output))\r\n                       
+    {\r\n                            console += '\\n' + output;\r\n                       
+    }\r\n                        text = \"\";\r\n                    }\r\n                   
+    else\r\n                    {\r\n                        text += c;\r\n                   
+    }\r\n                }\r\n            }\r\n            string PraseCommand(string
+    input)\r\n            {\r\n                string[] parts = input.Split(' ');\r\n               
+    string rawArgs = \"\";\r\n                for (int i = 1; i < parts.Length; i++)\r\n               
+    {\r\n                    rawArgs += parts[i];\r\n\r\n                }\r\n               
+    switch (parts[0])\r\n                {\r\n                    case \"cd\":\r\n                       
+    {\r\n                            File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1],
+    currentFile));\r\n                            if (f == null)\r\n                           
+    {\r\n                                return $\"Couldn't find file {parts[1]}!\";\r\n                           
+    }\r\n                            currentFile = f;\r\n                           
+    UpdatePrefix();\r\n                            return \"\";\r\n                       
+    }\r\n                    case \"ls\":\r\n                        {\r\n                           
+    return ls.instance.Run(\"-wd \" + currentFile.GetFullPath() + \" \" + rawArgs);\r\n                       
+    }\r\n                }\r\n                return $\"Couldn't find command `{parts[0]}`.\";\r\n           
+    }\r\n            string GetChildren(string indent, File file, string prefix,
+    bool recursive = false)\r\n            {\r\n                string str = $\"{indent}{prefix}{file.name}:{file.GetByteSize()}\\n\";\r\n               
+    if (recursive)\r\n                {\r\n                    for (int i = 0; i
+    < file.children.Count; i++)\r\n                    {\r\n                       
+    File child = file.children[i];\r\n                        str += GetChildren(indent
+    + \" \", child, $\"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192)
+    : Runtime.ByteToChar(195))} \", recursive);\r\n\r\n                    }\r\n               
+    }\r\n                return str;\r\n            }\r\n            UpdatePrefix();\r\n           
+    while (true)\r\n            {\r\n                buffer.FillAll(SystemColor.black);\r\n\r\n               
+    Draw();\r\n                ProcessInput();\r\n\r\n                Runtime.Wait(1);\r\n           
+    }\r\n\r\n        }\r\n\r\n    }\r\n"
 --- !u!114 &2108374106
 MonoBehaviour:
   m_ObjectHideFlags: 0

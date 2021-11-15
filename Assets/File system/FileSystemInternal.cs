@@ -28,21 +28,39 @@ public class FileSystemInternal : MonoBehaviour
     public static readonly char catalogSymbol = '/';
 
 
-    public File GetFileByPath(File father, string rawPath)
+    public File GetFileByPath(string rawPath, File parent = null)
     {
+
         string[] parts = rawPath.Split(catalogSymbol);
-        if (parts[0] != father.name)
+        if (parent == null)
         {
-            return null;
+            parent = drive.root;
         }
-        File currentFile = father;
+        /*  if (parts[0] != father.name)
+          {
+              return null;
+          }*/
+        File currentFile = parent;
         for (int i = 1; i < parts.Length; i++)
         {
-            if (string.IsNullOrEmpty(parts[i]))
+            string name = parts[i];
+            if (string.IsNullOrEmpty(name))
             {
                 return currentFile;
             }
-            currentFile = currentFile.GetChildByName(parts[i]);
+            if (name == ".")
+            {
+                currentFile = currentFile;//todo 0  why?
+            }
+            else if (name == "..")
+            {
+                currentFile = currentFile.parent;
+            }
+            else
+            {
+                currentFile = currentFile.GetChildByName(name);
+
+            }
             if (currentFile == null)
             {
                 return null;
@@ -51,11 +69,7 @@ public class FileSystemInternal : MonoBehaviour
         return currentFile;
 
     }
-    public File GetFileByPath(string rawPath)
-    {
-        return GetFileByPath(drive.root, rawPath);
 
-    }
     public Path GetPath(string rawPath)
     {
         return new Path(rawPath);
@@ -88,7 +102,7 @@ public class FileSystemInternal : MonoBehaviour
         }
         return newFile;
     }
-    //todo 1 add: (make it better)
+    //todo 1 add: (make it better) re,ove
     // . this maybe done?
     // special symbol that marks system path from system config
     // .. up only first one works
@@ -99,17 +113,9 @@ public class FileSystemInternal : MonoBehaviour
         //  Debug.Log($"path:{bufferPath} file:{currentFile}");
         if (currentFile != null)
         {
-            if (bufferPath.StartsWith(".."))
+            if (bufferPath.StartsWith("./"))
             {
-                if (currentFile.parent != null)
-                {
-
-                    bufferPath = currentFile.parent.GetFullPath() + "/" + bufferPath.Substring(2);
-                }
-            }
-            if (bufferPath.StartsWith("."))
-            {
-                bufferPath = currentFile.GetFullPath() + "/" + bufferPath.Substring(1);
+                bufferPath = currentFile.GetFullPath() + "/" + bufferPath.Substring(2);
             }
         }
         return bufferPath;

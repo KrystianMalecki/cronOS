@@ -35,7 +35,7 @@ public class ScriptManager : MonoBehaviour
     typeof(Libraries.system.output.graphics.texture32.Texture32),  typeof(Libraries.system.output.graphics.system_texture.SystemTexture),
     typeof(Libraries.system.output.graphics.color32.Color32),  typeof(Libraries.system.output.graphics.system_colorspace.ColorConstants),
     typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
-    typeof(Libraries.system.file_system.File),
+    typeof(Libraries.system.file_system.File),typeof(Libraries.system.shell.ls),
         typeof(Libraries.system.mathematics.Vector2),
             typeof(Libraries.system.input.KeyHandler)
 

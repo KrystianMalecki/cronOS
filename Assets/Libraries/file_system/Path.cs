@@ -7,6 +7,7 @@ namespace Libraries.system
 {
     namespace file_system
     {
+        //todo 0 think if it should be removed
         public class Path
         {
             public List<string> parts = new List<string>();

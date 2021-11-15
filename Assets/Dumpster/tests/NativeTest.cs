@@ -56,14 +56,16 @@ public class NativeTest : MonoBehaviour
     public string serOut;
     public void Start()
     {
-    
-       /* var s = CSharpScript.Create("begin", ScriptManager.instance.scriptOptionsBuffer
-           );
+        Debug.Log(StaticHelper.SplitString2Q(" -t \"balls\" \\").GetValuesToString());
+        Debug.Log(StaticHelper.SplitString2Q(" -t \"ba\\\"\\\"lls\" \\").GetValuesToString());
 
-        Debug.Log(s.Code);
-        s.ContinueWith("end");
-        Debug.Log(s.Code);
-        Debug.Log(s.ContinueWith("end").Code);*/
+        /* var s = CSharpScript.Create("begin", ScriptManager.instance.scriptOptionsBuffer
+            );
+
+         Debug.Log(s.Code);
+         s.ContinueWith("end");
+         Debug.Log(s.Code);
+         Debug.Log(s.ContinueWith("end").Code);*/
         /*  serOut = JsonUtility.ToJson(CSharpScript.Create(serIn, ScriptManager.instance.scriptOptionsBuffer
                  .WithReferences(ScriptManager.allLibraryDatas.ConvertAll(x => Assembly.Load(x.assembly)))
                  .WithImports(ScriptManager.allLibraryDatas.ConvertAll(x => x.nameSpace))

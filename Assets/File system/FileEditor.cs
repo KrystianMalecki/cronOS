@@ -25,7 +25,6 @@ public class FileEditor : EditorWindow
         else
         {
             currentWindow.currentFileSP = serializedProperty;
-            Debug.Log(currentWindow.toggleTopFields);
             currentWindow.ChangeCurrentFile(file);
         }
     }

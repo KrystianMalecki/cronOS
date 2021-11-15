@@ -6,11 +6,11 @@ namespace Libraries.system.file_system
 {
     public class FileSystem : BaseLibrary
     {
-        public static File GetFileByPath(string path)
+        public static File GetFileByPath(string path, File parent = null)
         {
             return ScriptManager.AddDelegateToStack((ref bool done, ref File returnValue) =>
             {
-                returnValue = FileSystemInternal.instance.GetFileByPath(path);
+                returnValue = FileSystemInternal.instance.GetFileByPath(path, parent);
             }, sync);//should be always sync
         }
         public static File MakeFile(string path, string name, byte[] data = null)
