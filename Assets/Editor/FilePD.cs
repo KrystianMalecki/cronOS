@@ -27,17 +27,21 @@ public class FilePD : PropertyDrawer
         return EditorGUIUtility.singleLineHeight
             + childredHeight
         + EditorGUI.GetPropertyHeight(permissionsSP)
+        + (childrenItemsSP.isExpanded ? EditorGUIUtility.singleLineHeight : 0)
         ;
     }
     SerializedProperty nameSP;
     SerializedProperty permissionsSP;
     SerializedProperty childrenSP;
+    SerializedProperty childrenItemsSP;
+
     public void Init(SerializedProperty property)
     {
 
         nameSP = property.FindPropertyRelative("name");
         permissionsSP = property.FindPropertyRelative("permissions");
         childrenSP = property.FindPropertyRelative("children");
+        childrenItemsSP = childrenSP.FindPropertyRelative("items");
 
 
     }
@@ -56,10 +60,9 @@ public class FilePD : PropertyDrawer
 
         var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, EditorGUI.GetPropertyHeight(permissionsSP));
         var filesRect = new Rect(main.x + 2, permissionsRect.y + permissionsRect.height, main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
+        var addChildButtonRect = new Rect(main.x, filesRect.y + filesRect.height, main.width, EditorGUIUtility.singleLineHeight);
 
-        var button = new Rect(position.x + position.width * 0.25f, position.y + position.height - EditorGUIUtility.singleLineHeight - 6, position.width * 0.5f, EditorGUIUtility.singleLineHeight);
 
-        var line = new Rect(position.x + position.width * 0.05f, button.y + EditorGUIUtility.singleLineHeight + 2, position.width * 0.9f, 2);
         //EditorGUI.PropertyField(main, property, label, true);
         // EditorGUI.indentLevel--;
         EditorGUI.PropertyField(nameRect, nameSP, GUIContent.none);
@@ -73,6 +76,15 @@ public class FilePD : PropertyDrawer
         try
         {
             EditorGUI.PropertyField(filesRect, childrenSP);
+            if (childrenItemsSP.isExpanded)
+            {
+                if (GUI.Button(addChildButtonRect, "Add child"))
+                {
+                    File file = property.GetTargetObjectOfProperty() as File;
+                    file.AddChild(new File());
+                    property.serializedObject.Update();
+                }
+            }
         }
         catch (Exception e)
         {

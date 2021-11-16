@@ -9,6 +9,8 @@ using UnityEngine;
 using System.Collections.Concurrent;
 using Libraries.system.file_system;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 public class ScriptManager : MonoBehaviour
 {
     #region singleton logic
@@ -35,9 +37,13 @@ public class ScriptManager : MonoBehaviour
     typeof(Libraries.system.output.graphics.texture32.Texture32),  typeof(Libraries.system.output.graphics.system_texture.SystemTexture),
     typeof(Libraries.system.output.graphics.color32.Color32),  typeof(Libraries.system.output.graphics.system_colorspace.ColorConstants),
     typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
-    typeof(Libraries.system.file_system.File),typeof(Libraries.system.shell.ls),
+    typeof(Libraries.system.file_system.File),typeof(Libraries.system.shell.IShellProgram),
         typeof(Libraries.system.mathematics.Vector2),
-            typeof(Libraries.system.input.KeyHandler)
+            typeof(Libraries.system.input.KeyHandler),
+                        typeof(System.Collections.Generic.Dictionary<string,string>),
+            typeof(System.Linq.Enumerable),typeof(helper.GlobalHelper),
+
+
 
     };
     public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => x.ToLibraryData());
@@ -57,14 +63,14 @@ public class ScriptManager : MonoBehaviour
         scriptOptionsBuffer = ScriptOptions.Default/*.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Release)*/;
 
         scriptOptionsBuffer = scriptOptionsBuffer.AddReferences(
-             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly,
-                          typeof(System.Exception).GetTypeInfo().Assembly
+             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly
+            //,typeof(System.Exception).GetTypeInfo().Assembly
 
 
             );
 
         scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
-               "UnityEngine", "System"
+          // "UnityEngine", "System"
           );
 
 
@@ -189,6 +195,13 @@ public class ScriptManager : MonoBehaviour
 
 
     }
+    static Regex includeRegex = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
+    static Regex includeRegex2 = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
+
+    static Regex redefineRegex = new Regex("\\s*#\\s*redefine\\s*.*\\s*.*;*");
+
+
+
     public static string CodeParser(string code)
     {
         List<string> lines = new List<string>(code.Split('\n'));
@@ -201,7 +214,7 @@ public class ScriptManager : MonoBehaviour
         for (int index = 0; index < lines.Count; index++)
         {
             string buffer = lines[index];
-            if ((positionToExpectNextInlcude == index && !buffer.StartsWith("#include ")))
+            if ((positionToExpectNextInlcude == index && !includeRegex.IsMatch(buffer)))
             {
                 if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
                 {
@@ -209,11 +222,12 @@ public class ScriptManager : MonoBehaviour
                 }
                 checkIncludes = false;
             }
+
             if (checkIncludes)
             {
-                if (buffer.StartsWith("#include "))
+                if (includeRegex.IsMatch(buffer))
                 {
-
+                    Debug.Log("found");
 
                     string between = buffer.GetRangeBetweenFirstLast("\"");
                     Debug.Log(between);
@@ -252,7 +266,7 @@ public class ScriptManager : MonoBehaviour
             }
             if (checkRedefines)
             {
-                if (buffer.StartsWith("#redefine "))
+                if (redefineRegex.IsMatch(buffer))
                 {
 
 

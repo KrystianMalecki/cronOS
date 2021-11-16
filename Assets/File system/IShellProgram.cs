@@ -1,3 +1,4 @@
+using helper;
 using Libraries.system;
 using Libraries.system.file_system;
 using System.Collections;
@@ -10,14 +11,23 @@ namespace Libraries.system
     {
         public interface IShellProgram
         {
+            public string GetName();
             public string Run(params string[] args);
+            public string Run(string arg);
+
         }
         public class ExtendedShellProgram : IShellProgram
         {
             protected virtual List<AcceptedArgument> argumentTypes => null;
+
+            public virtual string GetName()
+            {
+                return "";
+            }
+
             public virtual string Run(string arg)
             {
-                return Run(StaticHelper.SplitString2Q(arg).ToArray());
+                return Run(GlobalHelper.SplitString2Q(arg).ToArray());
             }
             public virtual string Run(params string[] args)
             {
@@ -59,58 +69,6 @@ namespace Libraries.system
                 }
             }
         }
-        public class ls : ExtendedShellProgram
-        {
-            private static ls _instance;
-            public static ls instance
-            {
-                get
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new ls();
-                    }
-                    return _instance;
-                }
-            }
-            private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
-        new AcceptedArgument("-wd", "working directory", true),
-        new AcceptedArgument("-r", "recursive", false),
-        new AcceptedArgument("-jn", "just names", false),
-                new AcceptedArgument("-sz", "show size", false),
-                new AcceptedArgument("-fp", "full paths instead of names", false),
-    };
 
-            protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
-
-            protected override string InternalRun(Dictionary<string, string> argPairs)
-            {
-                string path = "/";
-                if (argPairs.TryGetValue("-wd", out path))
-                {
-                }
-                File f = FileSystem.GetFileByPath(path);
-
-                return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
-            }
-            string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
-            {
-                string str = string.Format(
-                   onlyNames ? "{2}" : "{0," + indent + "}{1} {2}:{3}\n"
-                    , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
-                if (recursive)
-                {
-                    for (int i = 0; i < file.children.Count; i++)
-                    {
-                        File child = file.children[i];
-                        str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
-
-                    }
-                }
-                return str;
-            }
-
-
-        }
     }
 }

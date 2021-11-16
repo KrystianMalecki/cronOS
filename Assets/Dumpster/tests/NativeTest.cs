@@ -56,8 +56,6 @@ public class NativeTest : MonoBehaviour
     public string serOut;
     public void Start()
     {
-        Debug.Log(StaticHelper.SplitString2Q(" -t \"balls\" \\").GetValuesToString());
-        Debug.Log(StaticHelper.SplitString2Q(" -t \"ba\\\"\\\"lls\" \\").GetValuesToString());
 
         /* var s = CSharpScript.Create("begin", ScriptManager.instance.scriptOptionsBuffer
             );

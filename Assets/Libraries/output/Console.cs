@@ -33,7 +33,7 @@ namespace Libraries.system
                 UnityEngine.Debug.Log(obj.GetValuesToString());
 
             }
-            public static void Debug(object obj,
+            public static void Debug(object obj = null,
                 [CallerLineNumber] int lineNumber = 0,
                 [CallerMemberName] string caller = null)
             {

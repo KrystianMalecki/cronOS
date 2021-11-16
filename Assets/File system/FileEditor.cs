@@ -8,13 +8,13 @@ using UnityEngine;
 public class FileEditor : EditorWindow
 {
     public static FileEditor currentWindow;
-    [SerializeReference]
+
     public File currentFile = null;
     public SerializedProperty currentFileSP = null;
     public SerializedObject currentFileSO = null;
-    [SerializeReference]
+    //  [SerializeReference]
 
-    public File lastOne = null;
+    //  public File lastOne = null;
 
     public static void DisplayCurrentFile(File file, SerializedProperty serializedProperty, SerializedObject serializedObject = null)
     {
@@ -47,15 +47,15 @@ public class FileEditor : EditorWindow
     {
         if (currentFile != file && currentFile != null)
         {
-            lastOne = currentFile;
+            //   lastOne = currentFile;
         }
         currentFile = file;
 
         currentFile.OnValidate();
         toggleTopFields = true;
         SetValues();
-        dataViewScrollPosition = Vector2.zero;
-
+        dataViewScrollPos = Vector2.zero;
+        textScrollPos = Vector2.zero;
         UpdateWindow();
     }
     public void SetValues()
@@ -126,7 +126,8 @@ public class FileEditor : EditorWindow
     SerializedProperty dataSP;
 
 
-    Vector2 dataViewScrollPosition = Vector2.zero;
+    Vector2 dataViewScrollPos = Vector2.zero;
+    Vector2 textScrollPos = Vector2.zero;
 
     int dataArraySize = 0;
     int dataSelectedPos = 0;
@@ -139,6 +140,7 @@ public class FileEditor : EditorWindow
     float boxWidth = 28;
 
     bool toggleTopFields = true;
+    bool toggleBottomPart = true;
     bool toggleData = true;
 
     bool toggleTextDataField = false;
@@ -176,8 +178,12 @@ public class FileEditor : EditorWindow
             GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
             //name
             GUILayout.Label("Name: ", GUILayout.Width(50));
-
+            string before = currentFile.name;
             currentFile.name = GUILayout.TextField(currentFile.name, GUILayout.ExpandWidth(true));
+            if (before != currentFile.name)
+            {
+                currentFileSO.Update();
+            }
             GUILayout.EndHorizontal();
 
 
@@ -190,7 +196,8 @@ public class FileEditor : EditorWindow
             //permissions
             GUILayout.Label("Permissions: ");
 
-            //  EditorGUILayout.PropertyField(permissionsSP);
+            EditorGUILayout.PropertyField(permissionsSP);
+            // currentFileSO.Update();
 
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
@@ -202,6 +209,7 @@ public class FileEditor : EditorWindow
                 {
                     File parent = currentFile.parent;
                     parent.RemoveChild(currentFile);
+                    currentFileSO.Update();
                     DisplayCurrentFile(parent, FindPropertyOfFile(parent), currentFileSO);
 
                 }
@@ -219,31 +227,48 @@ public class FileEditor : EditorWindow
         //  GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         //clampting
-        GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-        toggleData = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleData, "Data"));
+        /*  toggleBottomPart = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleBottomPart, "Data"));
+          if (toggleBottomPart)
+          {*/
+
+
+
+     
+
+
+
+        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+        // array
+        GUILayout.BeginVertical(GUILayout.ExpandHeight(true));
+
+        toggleData = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleData, "Byte Data"));
+
         if (toggleData)
         {
-
-
             DrawPagePickers();
-            GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
             DrawSpecialControls();
-
-
-
-            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-            // array
-
             DrawDataArray();
-            if (toggleTextDataField)
-            {
-                DrawTextData();
-            }
-            GUILayout.EndHorizontal();
         }
+        GUILayout.EndVertical();
         EditorGUILayout.EndFoldoutHeaderGroup();
+
+        GUILayout.BeginVertical(GUILayout.ExpandHeight(true));
+
+        toggleTextDataField = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleTextDataField, "Text Data"));
+
+        if (toggleTextDataField)
+        {
+            DrawTextData();
+        }
+        GUILayout.EndVertical();
+
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
+        GUILayout.EndHorizontal();
+        /*  }
+          EditorGUILayout.EndFoldoutHeaderGroup();*/
 
 
         //save all
@@ -269,8 +294,15 @@ public class FileEditor : EditorWindow
     {
         string path = currentFile.GetFullPath();
         string[] pathParts = path.Split('/');
+        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
 
-        GUILayout.Label("Full path: " + path, GUILayout.ExpandWidth(true));
+        GUILayout.Label("Full path: " + path, GUILayout.ExpandWidth(false));
+        if (GUILayout.Button("Copy path", GUILayout.Width(90)))
+        {
+            EditorGUIUtility.systemCopyBuffer = path;
+
+        }
+        GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
         File father = currentFile;
         List<File> files = new List<File>();
@@ -280,6 +312,7 @@ public class FileEditor : EditorWindow
             father = father.parent;
             files.Add(father);
         }
+        //todo 0 just use Path()
         files.Reverse();
         /*  File lastOneFile = father;
           DrawPathButton(father);
@@ -301,27 +334,27 @@ public class FileEditor : EditorWindow
     {
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
 
-        GUI.enabled = lastOne != null && lastOne != currentFile;
-        string lastName = lastOne == null ? "" : (lastOne.name);
-        if (GUILayout.Button("Go back to last one: " + lastName))
-        {
-            FileEditor.DisplayCurrentFile(lastOne, FindPropertyOfFile(lastOne), currentFileSO);
-        }
-        GUILayout.Space(80);
+        /*  GUI.enabled = lastOne != null && lastOne != currentFile;
+          string lastName = lastOne == null ? "" : (lastOne.name);
+          if (GUILayout.Button("Go back to last one: " + lastName))
+          {
+              FileEditor.DisplayCurrentFile(lastOne, FindPropertyOfFile(lastOne), currentFileSO);
+          }
+          GUILayout.Space(80);*/
 
-        GUI.enabled = currentFile.parent != null;
-        string parentName = currentFile.parent == null ? "" : (currentFile.parent.name);
-        if (GUILayout.Button("Go to parent: " + parentName))
-        {
-            FileEditor.DisplayCurrentFile(currentFile.parent, FindPropertyOfFile(currentFile.parent), currentFileSO);
-        }
+        /* GUI.enabled = currentFile.parent != null;
+         string parentName = currentFile.parent == null ? "" : (currentFile.parent.name);
+         if (GUILayout.Button("Go to parent: " + parentName))
+         {
+             FileEditor.DisplayCurrentFile(currentFile.parent, FindPropertyOfFile(currentFile.parent), currentFileSO);
+         }
 
-        GUI.enabled = true;
+         GUI.enabled = true;*/
         GUILayout.EndHorizontal();
     }
     void DrawSpecialControls()
     {
-        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
 
         GUILayout.Space(40);
 
@@ -336,11 +369,11 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Insert", GUILayout.Width(60)))
         {
             ArrayUtility.Insert(ref currentFile.data, dataSelectedPos, (byte)dataSelectedValue);
+            currentFileSO.Update();
             dataAsString = null;
 
             UpdateWindow();
         }
-
         var typeRect = GUILayoutUtility.GetLastRect();
         GUI.Label(typeRect, new GUIContent("", "Insert before selected byte"));
 
@@ -349,12 +382,14 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Set", GUILayout.Width(60)))
         {
             currentFile.data[dataSelectedPos] = (byte)dataSelectedValue;
+            currentFileSO.Update();
             dataAsString = null;
             UpdateWindow();
         }
         if (GUILayout.Button("Remove", GUILayout.Width(60)))
         {
             ArrayUtility.RemoveAt(ref currentFile.data, dataSelectedPos);
+            currentFileSO.Update();
             dataAsString = null;
             UpdateWindow();
         }
@@ -366,6 +401,7 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Resize", GUILayout.Width(70)))
         {
             Array.Resize(ref currentFile.data, dataArraySize);
+            currentFileSO.Update();
             UpdateWindow();
         }
         if (GUILayout.Button("Copy", GUILayout.Width(70)))
@@ -389,7 +425,6 @@ public class FileEditor : EditorWindow
 
         }
         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
-
         if (GUILayout.Button("Toggle text data", GUILayout.Width(150)))
         {
             toggleTextDataField = !toggleTextDataField;
@@ -400,14 +435,17 @@ public class FileEditor : EditorWindow
     void DrawTextData()
     {
         GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-
         GUILayout.Label("As Text Input:", GUILayout.Width(90));
         if (string.IsNullOrEmpty(dataAsString))
         {
             dataAsString = currentFile.data.ToEncodedString();
         }
+        textScrollPos = EditorGUILayout.BeginScrollView(textScrollPos, GUILayout.ExpandHeight(true));
+        //  GUILayout.BeginVertical(GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+        dataAsString = EditorGUILayout.TextArea(dataAsString, GUILayout.MinWidth(100), GUILayout.ExpandHeight(true)/*, GUILayout.MinHeight(50)*/);
+        //  GUILayout.EndVertical();
 
-        dataAsString = EditorGUILayout.TextArea(dataAsString, GUILayout.MinWidth(100), GUILayout.ExpandWidth(true));
+        EditorGUILayout.EndScrollView();
 
         if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
         {
@@ -427,7 +465,7 @@ public class FileEditor : EditorWindow
         {
             length = size * size;
         }
-        dataViewScrollPosition = GUILayout.BeginScrollView(dataViewScrollPosition);
+        dataViewScrollPos = GUILayout.BeginScrollView(dataViewScrollPos);
 
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(false), GUILayout.Width(100));
         int indexChanged = dataSelectedPos;
@@ -469,8 +507,11 @@ public class FileEditor : EditorWindow
             var typeRect = GUILayoutUtility.GetLastRect();
             GUI.Label(typeRect, new GUIContent("", "byte " + i));
         }
+
         if (EditorGUI.EndChangeCheck())
         {
+            currentFileSO.Update();
+
             dataAsString = null;
             dataSelectedPos = indexChanged;
         }
@@ -481,12 +522,12 @@ public class FileEditor : EditorWindow
     }
     void DrawPagePickers()
     {
-        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
         GUI.enabled = page > 0;
         if (GUILayout.Button("Previous Page"))
         {
             page--;
-            dataViewScrollPosition = Vector2.zero;
+            dataViewScrollPos = Vector2.zero;
         }
         GUI.enabled = true;
         GUILayout.Label(" ", GUILayout.ExpandWidth(true));
@@ -499,7 +540,7 @@ public class FileEditor : EditorWindow
         if (GUILayout.Button("Next Page"))
         {
             page++;
-            dataViewScrollPosition = Vector2.zero;
+            dataViewScrollPos = Vector2.zero;
         }
         GUI.enabled = true;
 

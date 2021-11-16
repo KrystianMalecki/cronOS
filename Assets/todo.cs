@@ -1,10 +1,10 @@
 //todo 0 add todos here
 
-//todo 0 fix file editor not saving all data like names changes in current file (top part) also:
-//check if you can change default add File logic in lists. If not, maybe add buttons (file/folder) to do it?
 
-//todo 0 THINK about commands and command interfaces/base classes. They could be problematic when using "working directory" but it can just be added by "-at/-w *paste path here*".
-//BUT changing WD will be really problematic. Should you fight it? idk. Maybe just make them return special commands? like "cmd: cwd *paste path here*" and something that is running those should do something with it?
+//todo 0 think if fileSystem should be it's own library AND if it should use thread function stack or just lock files. Locking is good i guess
+
+
+//todo 2 add option to compress libraries (remove whitespaces etc)
 
 //todo 3 think about better path logic
 

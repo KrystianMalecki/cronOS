@@ -42,6 +42,7 @@ namespace Libraries.system
             ProcessorManager.mainEncoding.GetChars(&character, 1, &b, 1);
             return b;
         }
+        
     }
 
 }

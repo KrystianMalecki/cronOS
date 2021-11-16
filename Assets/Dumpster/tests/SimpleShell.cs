@@ -13,173 +13,279 @@ using Libraries.system.output.graphics.system_colorspace;
 using NaughtyAttributes;
 using Libraries.system.output;
 using Libraries.system.shell;
+using JetBrains.Annotations;
+using helper;
+using System.Linq;
+using System;
+//ls import
+public class ls : ExtendedShellProgram
+{
+    private static ls _instance;
+    public static ls instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new ls();
+            }
+            return _instance;
+        }
+    }
+    public override string GetName()
+    {
+        return "ls";
+    }
+    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
+        new AcceptedArgument("-wd", "working directory", true),
+        new AcceptedArgument("-r", "recursive", false),
+        new AcceptedArgument("-jn", "just names", false),
+                new AcceptedArgument("-sz", "show size", false),
+                new AcceptedArgument("-fp", "full paths instead of names", false),
+    };
+
+    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
+
+    protected override string InternalRun(Dictionary<string, string> argPairs)
+    {
+        string path = "/";
+        if (argPairs.TryGetValue("-wd", out path))
+        {
+        }
+        File f = FileSystem.GetFileByPath(path);
+
+        return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
+    }
+    string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
+    {
+        string str = string.Format(
+           onlyNames ? "{2}" : "{0," + indent + "}{1} {2}:{3}\n"
+            , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
+        if (recursive)
+        {
+            for (int i = 0; i < file.children.Count; i++)
+            {
+                File child = file.children[i];
+                str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
+
+            }
+        }
+        return str;
+    }
+
+
+}
 
 public class SimpleShell : UnityEngine.MonoBehaviour
 {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void Begin()
     {
 
+        //# include "/System/programs/programsLibrary"
+
+        string prefix = "";
+        File currentFile = FileSystem.GetFileByPath("/System");
+        string console = "";
+
+        SystemScreenBuffer buffer = new SystemScreenBuffer();
+        Screen.InitScreenBuffer(buffer);
+
+
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
+        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
+
+        void DrawCharAt(int x, int y, char character)
         {
-            string prefix = "";
-            File currentFile = FileSystem.GetFileByPath("/System");
-            string console = "";
-
-            SystemScreenBuffer buffer = new SystemScreenBuffer();
-            Screen.InitScreenBuffer(buffer);
-
-
-            File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
-            SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
-
-            void DrawCharAt(int x, int y, char character)
+            int index = Runtime.CharToByte(character);
+            int posx = index % 16;
+            int posy = index / 16;
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+        }
+        void DrawStringAt(int x, int y, string text)
+        {
+            int posX = x;
+            int posY = y;
+            for (int i = 0; i < text.Length; i++)
             {
-                int index = Runtime.CharToByte(character);
-                int posx = index % 16;
-                int posy = index / 16;
-                buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
-            }
-            void DrawStringAt(int x, int y, string text)
-            {
-                int posX = x;
-                int posY = y;
-                for (int i = 0; i < text.Length; i++)
+                char c = text.ToCharArray()[i];
+                if (c == '\n' || c == '\r')
                 {
-                    char c = text.ToCharArray()[i];
-                    if (c == '\n' || c == '\r')
+                    posX = x;
+                    posY += 8;
+                    continue;
+                }
+                DrawCharAt(posX, posY, c);
+                posX += 8;
+            }
+        }
+
+        void UpdatePrefix()
+        {
+            prefix = currentFile.GetFullPath() + ">";
+        }
+
+
+
+
+        string text = "";
+        KeyHandler kh = new KeyHandler();
+        KeySequence ks = null;
+
+
+        int CountEncounters(string input, params char[] toFind)
+        {
+            int counter = 0;
+            foreach (char c in input)
+            {
+                foreach (char compareTo in toFind)
+                {
+                    if (compareTo == c)
                     {
-                        posX = x;
-                        posY += 8;
-                        continue;
+                        counter++;
+                        break;
                     }
-                    DrawCharAt(posX, posY, c);
-                    posX += 8;
+                }
+
+            }
+            return counter;
+        }
+
+
+        void Draw()
+        {
+            DrawStringAt(0, 0, console);
+            int consoleY = CountEncounters(console, '\r', '\n') + 1;
+            DrawStringAt(0, consoleY * 8, prefix);
+
+
+            DrawStringAt(prefix.Length * 8, consoleY * 8, text);
+            AsyncScreen.SetScreenBuffer(buffer);
+        }
+        void ProcessInput()
+        {
+            ks = kh.WaitForInput();
+            string input = KeyHandler.GetInputAsString();
+            foreach (char c in input)
+            {
+                if (c == '\b') // has backspace/delete been pressed?
+                {
+                    if (text.Length != 0)
+                    {
+                        text = text.Substring(0, text.Length - 1);
+                    }
+                }
+                else if ((c == '\n') || (c == '\r')) // enter/return
+                {
+                    console += '\n' + prefix + text;
+                    string output = PraseCommand(text);
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        console += '\n' + output;
+                    }
+                    text = "";
+                }
+                else
+                {
+                    text += c;
                 }
             }
-
-            void UpdatePrefix()
+        }
+        string PraseCommand(string input)
+        {
+            string[] parts = input.Split(' ');
+          /*  string rawArgs = "";
+            for (int i = 1; i < parts.Length; i++)
             {
-                prefix = currentFile.GetFullPath() + ">";
-            }
+                rawArgs += parts[i]+" ";
 
-
-
-            string text = "";
-            KeyHandler kh = new KeyHandler();
-            KeySequence ks = null;
-
-
-            int CountEncounters(string input, params char[] toFind)
+            }*/
+            if (parts[0] == "cd")
             {
-                int counter = 0;
-                foreach (char c in input)
+                File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1], currentFile));
+                if (f == null)
                 {
-                    foreach (char compareTo in toFind)
+                    return $"Couldn't find file {parts[1]}!";
+                }
+                currentFile = f;
+                UpdatePrefix();
+                return "";
+            }
+            else
+            {
+             return   FindAndExecuteCommand(input+ "-wd " + currentFile.GetFullPath());
+            }
+          /*  switch (parts[0])
+            {
+                case "cd":
                     {
-                        if (compareTo == c)
+                        File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1], currentFile));
+                        if (f == null)
                         {
-                            counter++;
-                            break;
+                            return $"Couldn't find file {parts[1]}!";
                         }
+                        currentFile = f;
+                        UpdatePrefix();
+                        return "";
                     }
-
-                }
-                return counter;
-            }
-
-            void Draw()
-            {
-                DrawStringAt(0, 0, console);
-                int consoleY = CountEncounters(console, '\r', '\n') + 1;
-                DrawStringAt(0, consoleY * 8, prefix);
-
-
-                DrawStringAt(prefix.Length * 8, consoleY * 8, text);
-                AsyncScreen.SetScreenBuffer(buffer);
-            }
-            void ProcessInput()
-            {
-                ks = kh.WaitForInput();
-                string input = KeyHandler.GetInputAsString();
-                foreach (char c in input)
-                {
-                    if (c == '\b') // has backspace/delete been pressed?
+                case "ls":
                     {
-                        if (text.Length != 0)
-                        {
-                            text = text.Substring(0, text.Length - 1);
-                        }
+                        return ls.instance.Run("-wd " + currentFile.GetFullPath() + " " + rawArgs);
                     }
-                    else if ((c == '\n') || (c == '\r')) // enter/return
-                    {
-                        console += '\n' + prefix + text;
-                        string output = PraseCommand(text);
-                        if (!string.IsNullOrEmpty(output))
-                        {
-                            console += '\n' + output;
-                        }
-                        text = "";
-                    }
-                    else
-                    {
-                        text += c;
-                    }
-                }
-            }
-            string PraseCommand(string input)
+            }*/
+            return $"Couldn't find command `{parts[0]}`.";
+        }
+
+
+        string GetChildren(string indent, File file, string prefix, bool recursive = false)
+        {
+            string str = $"{indent}{prefix}{file.name}:{file.GetByteSize()}\n";
+            if (recursive)
             {
-                string[] parts = input.Split(' ');
-                string rawArgs = "";
-                for (int i = 1; i < parts.Length; i++)
+                for (int i = 0; i < file.children.Count; i++)
                 {
-                    rawArgs += parts[i];
+                    File child = file.children[i];
+                    str += GetChildren(indent + " ", child, $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))} ", recursive);
 
                 }
-                switch (parts[0])
-                {
-                    case "cd":
-                        {
-                            File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1], currentFile));
-                            if (f == null)
-                            {
-                                return $"Couldn't find file {parts[1]}!";
-                            }
-                            currentFile = f;
-                            UpdatePrefix();
-                            return "";
-                        }
-                    case "ls":
-                        {
-                            return ls.instance.Run("-wd " + currentFile.GetFullPath() + " " + rawArgs);
-                        }
-                }
-                return $"Couldn't find command `{parts[0]}`.";
             }
-            string GetChildren(string indent, File file, string prefix, bool recursive = false)
-            {
-                string str = $"{indent}{prefix}{file.name}:{file.GetByteSize()}\n";
-                if (recursive)
-                {
-                    for (int i = 0; i < file.children.Count; i++)
-                    {
-                        File child = file.children[i];
-                        str += GetChildren(indent + " ", child, $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))} ", recursive);
+            return str;
+        }
 
-                    }
-                }
-                return str;
-            }
-            UpdatePrefix();
-            while (true)
-            {
-                buffer.FillAll(SystemColor.black);
+        UpdatePrefix();
+        while (true)
+        {
+            buffer.FillAll(SystemColor.black);
 
-                Draw();
-                ProcessInput();
 
-                Runtime.Wait(1);
-            }
+            Draw();
+            ProcessInput();
 
+            Runtime.Wait(1);
         }
 
     }
@@ -230,7 +336,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
 
 
 
-        Console.Debug(ls.instance.Run("-f / "));
+        // Console.Debug(ls.instance.Run("-f / "));
 
         void Draw()
         {
@@ -266,5 +372,26 @@ public class SimpleShell : UnityEngine.MonoBehaviour
 
             Runtime.Wait(1);
         }
+    }
+
+    /*
+    
+     #include "/system/programs/ls"
+     */
+    static readonly IShellProgram[] commands = { ls.instance };
+    public static string FindAndExecuteCommand(string rawCommand)
+    {
+        List<string> parts = GlobalHelper.SplitString2Q(rawCommand);
+
+        string command = parts[0];
+        string restOfArgs = rawCommand.Substring(command.Length);
+        string output = $"Command '{command}' not found!";
+        for (int i = 0; i < commands.Length; i++)
+        {
+            if (commands[i].GetName() == command) {
+                return commands[i].Run(restOfArgs);
+            }
+        }
+        return output;
     }
 }

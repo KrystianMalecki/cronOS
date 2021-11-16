@@ -18,4 +18,5 @@ public class ThreadSafeListPropertyDrawer : PropertyDrawer
     {
         EditorGUI.PropertyField(position, property.FindPropertyRelative("items"), label, true);
     }
+
 }

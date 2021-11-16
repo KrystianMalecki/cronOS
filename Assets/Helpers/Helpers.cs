@@ -13,56 +13,62 @@ public class Helpers
 {
 
 }
-
-public static class StaticHelper
+namespace helper //todo 0 split to separate file
 {
-    public static List<string> SplitString2Q(string input)
+    public static class GlobalHelper
     {
-        bool qSearch = false;
-        List<string> output = new List<string>();
-        string currentPart = "";
-        bool lastCharIsEscape = false;
-        for (int i = 0; i < input.Length; i++)
+        public static List<string> SplitString2Q(string input)
         {
-
-            char c = input[i];
-            if (c == '"' && !lastCharIsEscape)
+            bool qSearch = false;
+            List<string> output = new List<string>();
+            string currentPart = "";
+            bool lastCharIsEscape = false;
+            for (int i = 0; i < input.Length; i++)
             {
-                if (qSearch)
+
+                char c = input[i];
+                if (c == '"' && !lastCharIsEscape)
                 {
-                    qSearch = false;
+                    if (qSearch)
+                    {
+                        qSearch = false;
+                        output.Add(currentPart);
+                        currentPart = "";
+                    }
+                    else
+                    {
+                        qSearch = true;
+                    }
+                }
+                else if (c == ' ' && !qSearch)
+                {
                     output.Add(currentPart);
                     currentPart = "";
                 }
                 else
                 {
-                    qSearch = true;
+                    if (c == '\\')
+                    {
+                        lastCharIsEscape = true;
+                    }
+                    else
+                    {
+                        lastCharIsEscape = false;
+                        currentPart += c;
+                    }
                 }
             }
-            else if (c == ' ' && !qSearch)
+            if (!string.IsNullOrWhiteSpace(currentPart) || !string.IsNullOrEmpty(currentPart))
             {
                 output.Add(currentPart);
-                currentPart = "";
             }
-            else
-            {
-                if (c == '\\')
-                {
-                    lastCharIsEscape = true;
-                }
-                else
-                {
-                    lastCharIsEscape = false;
-                    currentPart += c;
-                }
-            }
+            return output;
         }
-        if (!string.IsNullOrWhiteSpace(currentPart) || !string.IsNullOrEmpty(currentPart))
-        {
-            output.Add(currentPart);
-        }
-        return output;
     }
+}
+public static class StaticHelper
+{
+
     public static void TestFunction(Action a, [CallerMemberName] string fromName = "unknown name", [CallerFilePath] string fromPath = @"\unknown path")
     {
 
