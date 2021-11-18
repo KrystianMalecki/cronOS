@@ -15,16 +15,8 @@ namespace Libraries.system
         public class Console : BaseLibrary
         {
 
-            public static void Write(string text)
-            {
-
-                ScriptManager.AddDelegateToStack(() => { ScreenManager.AddToScreen(text); }, sync);
-
-            }
-            public static void WriteLine(string text)
-            {
-                Write(text + "\n");
-            }
+           
+          
 
             public static void Debug(params object[] obj)
             {

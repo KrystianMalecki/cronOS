@@ -3,7 +3,6 @@ using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
@@ -13,9 +12,10 @@ using System.Text;
 public class ScreenManager : MonoBehaviour
 {
     public static ScreenManager instance;
-    public TextMeshProUGUI screen;
     [NaughtyAttributes.ReadOnly]
     public Texture2D bufferTexture;
+    public Transform localTransform;
+    public Material mat;
     public RawImage rawImage;
     private int pixelWidth;
     private int pixelHeight;
@@ -33,10 +33,7 @@ public class ScreenManager : MonoBehaviour
         }
     }
 
-    public static void AddToScreen(string text)
-    {
-        instance.screen.text += text;
-    }
+
 
     public void InitScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
@@ -45,7 +42,8 @@ public class ScreenManager : MonoBehaviour
         pixelHeight = screenBuffer.GetHeight();
 
         bufferTexture.filterMode = FilterMode.Point;
-        rawImage.texture = bufferTexture;
+      //  rawImage.texture = bufferTexture;
+        mat.SetTexture("_AltTex", bufferTexture);
     }
     public void SetScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
@@ -61,7 +59,7 @@ public class ScreenManager : MonoBehaviour
         bufferTexture.Apply();
 
 
-        rawImage.SetAllDirty();
+      //  rawImage.SetAllDirty();
 
 
     }

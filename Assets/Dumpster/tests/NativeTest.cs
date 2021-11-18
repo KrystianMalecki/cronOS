@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using sio = System.IO;
-using TMPro;
 using System.Text;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -21,19 +20,7 @@ public class NativeTest : MonoBehaviour
     HashSet<KeyCode> keysPressed;
     public SystemTexture st;
     public byte[] arr;
-    public TextMeshProUGUI t;
-    [Button]
-    public void makeAll()
-    {
-        t.text = "";
-        for (byte i = 1; i < 255; i++)
-
-        {
-            string text = GetAsNewChar(i);
-            Debug.Log(i + " " + text);
-            t.text += text;
-        }
-    }
+  
     public unsafe string GetAsNewChar(byte b, int count = 1)
     {
         return Encoding.GetEncoding(437).GetString(&b, count);

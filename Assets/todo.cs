@@ -1,6 +1,10 @@
 //todo 0 add todos here
 
 
+
+//todo 0 fix mouseHandler by using screen matrix
+
+
 //todo 0 think if fileSystem should be it's own library AND if it should use thread function stack or just lock files. Locking is good i guess
 
 

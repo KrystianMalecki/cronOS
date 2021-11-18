@@ -255,7 +255,6 @@ public class test : native_ue.MonoBehaviour
         int a = 0;
         while (true)
         {
-            Console.WriteLine(a.ToString());
             a++;
             Runtime.Wait(1);
         }
