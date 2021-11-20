@@ -9,7 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: New Material
   m_Shader: {fileID: 4800000, guid: bb7a3d04ea4647d4b9750a1105fe41df, type: 3}
-  m_ShaderKeywords: _USEALT_ON _USECONVERGENCE_ON _USECURVE_ON _USESCANLINES_ON _USEVIGNETTE_ON
+  m_ShaderKeywords: _USEALT_ON _USECONVERGENCE_ON _USESCANLINES2_ON _USESCANLINES_ON
+    _USEVIGNETTE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -48,7 +49,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 645b2801e9250854a9b7e6c11a37622b, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -81,16 +82,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbberationStrength: 1
+    - _AbberationStrength: 0
     - _AlphaClip: 0
     - _Blend: 0
-    - _Brightness: 1
+    - _Brightness: 4
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
-    - _CurveX: 4
-    - _CurveY: 4
+    - _CurveX: 6
+    - _CurveY: 6
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -103,10 +104,15 @@ Material:
     - _GlossyReflections: 0
     - _Intensity: 0
     - _LineDistributionPow: 10
-    - _LineScale: 1.5
+    - _LineDistributionPow2: 4
+    - _LineScale: 1
+    - _LineScale2: 0.04
     - _LineWeight: 0.779
+    - _LineWeight2: 1
     - _LineWeightMax: 0.5
+    - _LineWeightMax2: 0.7
     - _LineWeightMin: 0.3
+    - _LineWeightMin2: 0.2
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Offset: 0
@@ -114,6 +120,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ScanSpeed: 20
+    - _ScanSpeed2: 1.79
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -122,11 +129,12 @@ Material:
     - _Surface: 0
     - _UseAlt: 1
     - _UseConvergence: 1
-    - _UseCurve: 1
+    - _UseCurve: 0
     - _UseScanLines: 1
+    - _UseScanLines2: 1
     - _UseVignette: 1
     - _ValueX: 0.027
-    - _VignettePower: 0.1
+    - _VignettePower: 0.05
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _Zoom: 1

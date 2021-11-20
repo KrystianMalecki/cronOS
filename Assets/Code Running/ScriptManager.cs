@@ -28,6 +28,8 @@ public class ScriptManager : MonoBehaviour
         TryToInitScriptOptions();
     }
     #endregion
+    private const string LINE_NUMBER_PREPROCESSOR_CODE = "__LINE__";
+    private const string FILE_NUMBER_PREPROCESSOR_CODE = "__FILE__";
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
     public ScriptOptions scriptOptionsBuffer = null;
@@ -245,7 +247,7 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                         List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
-                        lines[index] = "//" + buffer.Substring(1);
+                        lines[index] = "//" + buffer;
                         for (int iL = 0; iL < importedLines.Count; iL++)
                         {
                             string importedLine = importedLines[iL];
@@ -253,6 +255,7 @@ public class ScriptManager : MonoBehaviour
 
                         }
                         positionToExpectNextInlcude = index + importedLines.Count;
+                        index--;
                     }
                     else
                     {
@@ -298,7 +301,7 @@ public class ScriptManager : MonoBehaviour
                     {
                         Debug.Log($"line:{lines[i]}. replace {definition} for {definitionReplacor} so now it looks: { lines[i].Replace(definition, definitionReplacor)}");
 
-                        lines[i] = lines[i].Replace(definition, definitionReplacor);
+                        lines[i] = lines[i].Replace(definition, definitionReplacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (i + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");//todo-future change unknown
                     }
                 }
             }

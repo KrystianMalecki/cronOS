@@ -43,7 +43,7 @@ public class ScreenManager : MonoBehaviour
 
         bufferTexture.filterMode = FilterMode.Point;
       //  rawImage.texture = bufferTexture;
-        mat.SetTexture("_AltTex", bufferTexture);
+        mat.SetTexture("_MainTex", bufferTexture);
     }
     public void SetScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {

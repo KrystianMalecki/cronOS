@@ -30,16 +30,16 @@ public class FileSystemInternal : MonoBehaviour
 
     public File GetFileByPath(string rawPath, File parent = null)
     {
-
+        return GetPath(rawPath, parent).GetFile();
+        if (rawPath == null)
+        {
+            rawPath = "";
+        }
         string[] parts = rawPath.Split(catalogSymbol);
         if (parent == null)
         {
             parent = drive.root;
         }
-        /*  if (parts[0] != father.name)
-          {
-              return null;
-          }*/
         File currentFile = parent;
         for (int i = 1; i < parts.Length; i++)
         {
@@ -70,9 +70,9 @@ public class FileSystemInternal : MonoBehaviour
 
     }
 
-    public Path GetPath(string rawPath)
+    public Path GetPath(string rawPath, File parent = null)
     {
-        return new Path(rawPath);
+        return new Path(rawPath, parent);
     }
     public bool RemoveFile(string path)
     {
@@ -107,17 +107,17 @@ public class FileSystemInternal : MonoBehaviour
     // special symbol that marks system path from system config
     // .. up only first one works
     // maybe later some regex?
-    public string MakeAbsolutePath(string path, File currentFile = null)
-    {
-        string bufferPath = path;
-        //  Debug.Log($"path:{bufferPath} file:{currentFile}");
-        if (currentFile != null)
-        {
-            if (bufferPath.StartsWith("./"))
-            {
-                bufferPath = currentFile.GetFullPath() + "/" + bufferPath.Substring(2);
-            }
-        }
-        return bufferPath;
-    }
+    /* public string MakeAbsolutePath(string path, File currentFile = null)
+     {
+         string bufferPath = path;
+         //  Debug.Log($"path:{bufferPath} file:{currentFile}");
+         if (currentFile != null)
+         {
+             if (bufferPath.StartsWith("./"))
+             {
+                 bufferPath = currentFile.GetFullPath() + "/" + bufferPath.Substring(2);
+             }
+         }
+         return bufferPath;
+     }*/
 }

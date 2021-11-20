@@ -10,31 +10,84 @@ namespace Libraries.system
         //todo 0 think if it should be removed
         public class Path
         {
-            public List<string> parts = new List<string>();
-            public List<File> fileparts = new List<File>();
+            public string[] parts;
+            public List<File> fileparts = null;
 
-            public Path(string rawPath, File root = null)
+            public Path(string rawPath, File parent = null)
             {
-                parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
-                File currentFile = root == null ? FileSystemInternal.instance.drive.root : root;
-                fileparts.Add(currentFile);
-                for (int i = 1; i < parts.Count; i++)
+                if (rawPath == null)
                 {
-                    if (string.IsNullOrEmpty(parts[i]))
+                    rawPath = "";
+                }
+                //ls ./home
+                //ls -wd 
+                rawPath = rawPath.StartsWith("./") ? (parent.GetFullPath() + rawPath.Substring(1)) : rawPath;
+                parts = rawPath.Split(FileSystemInternal.catalogSymbol);
+                File currentFile = FileSystemInternal.instance.drive.root;
+
+                try
+                {
+                    while (rawPath.Contains("../"))
                     {
-                        break;
+
+                        int upStartIndex = rawPath.IndexOf("../");
+
+                        int ealierCatalogIndex = rawPath.LastIndexOf("/", upStartIndex - 2);
+                        string parentPart = rawPath.Substring(ealierCatalogIndex, (upStartIndex + 2) - ealierCatalogIndex);
+                        int ealierParentCatalogIndex = rawPath.LastIndexOf("/", ealierCatalogIndex);
+
+                        string parentParentPart = rawPath.Substring(ealierParentCatalogIndex, ealierCatalogIndex - ealierParentCatalogIndex);
+                        string pre = rawPath.Substring(0, ealierParentCatalogIndex);
+                        string after = rawPath.Substring((upStartIndex + 2));
+                        rawPath = pre + after;
+
                     }
-                    currentFile = currentFile.GetChildByName(parts[i]);
-                    if (currentFile == null)
+                }
+                catch (Exception e)
+                {
+
+                }
+                fileparts = new List<File>();
+                fileparts.Add(currentFile);//root
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    string name = parts[i];
+                    if (string.IsNullOrEmpty(name))
                     {
                         //todo-future throw error
                         break;
                     }
+                    if (name == "..")
+                    {
+                        currentFile = currentFile.parent;
+                    }
                     else
                     {
-                        fileparts.Add(currentFile);
+                        currentFile = currentFile.GetChildByName(name);
                     }
+                    if (currentFile == null)
+                    {
+                        //todo-future throw error
+
+                        parts = null;
+                        fileparts = null;
+                        break;
+                    }
+                    fileparts.Add(currentFile);
                 }
+            }
+            public override string ToString()
+            {
+                //  return parts == null ? "" : string.Join(/*FileSystemInternal.catalogSymbol.ToString()*/"-", parts);
+                string path = "";
+                fileparts?.ForEach(x => path += x.name + "-");
+                return path;
+
+            }
+            public File GetFile()
+            {
+
+                return fileparts?[fileparts.Count - 1];
             }
         }
     }

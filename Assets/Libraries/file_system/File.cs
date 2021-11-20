@@ -1,3 +1,4 @@
+using helper;
 using NaughtyAttributes;
 using System;
 using System.Collections;
@@ -44,10 +45,13 @@ namespace Libraries.system
 
             public string GetFullPath()
             {
+
+
                 if (parent == null)
                 {
                     return name;
                 }
+
                 return string.Concat(parent.GetFullPath(), "/", name);
             }
             public Path GetPathClass()
@@ -125,20 +129,14 @@ namespace Libraries.system
                 }
                 return data.Length;
             }
-            public string GetByteSize()
-            {
-                int sizeScale = 0;
-                int currentSize = GetDataArraySize() + name.Length * 8 + 8 /*+ children.Count * 8 * 2*/;
-                while (currentSize > 1024)
-                {
-                    currentSize = currentSize / 1024;
-                    sizeScale++;
-                }
-                return $"{currentSize}{SIZES[sizeScale]}B";
-            }
-            private readonly string[] SIZES = { "", "k", "M", "G", "T" };
-        }
 
+            public string GetByteSize(bool prefixed = true)
+            {
+                int size = GetDataArraySize() + name.Length * 8 + 8;
+                return $"{(prefixed ? size.ChangeToPrefixedValue() : size.ToString())}B";
+            }
+
+        }
     }
 }
 [Serializable]

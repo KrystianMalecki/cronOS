@@ -31,7 +31,7 @@ namespace Libraries.system
             {
 
 
-                UnityEngine.Debug.Log($"{caller} at {lineNumber}. Logs: {obj}");
+                UnityEngine.Debug.Log($"{caller} at {lineNumber}. Logs: '{obj}'");
 
             }
             public static void Line([System.Runtime.CompilerServices.CallerLineNumber] int line = 0)

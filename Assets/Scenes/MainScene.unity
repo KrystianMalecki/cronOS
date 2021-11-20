@@ -282,7 +282,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -512,346 +512,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  <useLegacyMeshGeneration>k__BackingField: 1
-  m_Maskable: 0
-  m_IsMaskingGraphic: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  m_text: "<mspace=1em>\nA quick brown fox jumps over the lazy dog.\r\n0123456789
-    \xBF?\xA1!`'\"., <>()[]{} &@%*^#$\\/\r\n\r\n* Wienil\xE4inen sioux'ta puhuva
-    \xF6kyzombie diggaa \xC5san roquefort-tacoja.\r\n* \xC7a me fait peur de f\xEAter
-    no\xEBl l\xE0, sur cette \xEEle bizarro\xEFde o\xF9 une m\xE8re et sa m\xF4me
-    essaient de me tuer avec un g\xE2teau \xE0 la cig\xFCe br\xFBl\xE9.\r\n* Zw\xF6lf
-    Boxk\xE4mpfer jagten Eva quer \xFCber den Sylter Deich.\r\n* El ping\xFCino Wenceslao
-    hizo kil\xF3metros bajo exhaustiva lluvia y fr\xEDo, a\xF1oraba a su querido
-    cachorro.\r\n\r\n\u250C\u2500\u252C\u2500\u2510 \u2554\u2550\u2566\u2550\u2557
-    \u2552\u2550\u2564\u2550\u2555 \u2553\u2500\u2565\u2500\u2556\r\n\u2502 \u2502
-    \u2502 \u2551 \u2551 \u2551 \u2502 \u2502 \u2502 \u2551 \u2551 \u2551\r\n\u251C\u2500\u253C\u2500\u2524
-    \u2560\u2550\u256C\u2550\u2563 \u255E\u2550\u256A\u2550\u2561 \u255F\u2500\u256B\u2500\u2562\r\n\u2514\u2500\u2534\u2500\u2518
-    \u255A\u2550\u2569\u2550\u255D \u2558\u2550\u2567\u2550\u255B \u2559\u2500\u2568\u2500\u255C\r\n\r\n\u2591\u2591\u2591\u2591\u2591
-    \u2590\u2580\u2588\u2580\u258C .\xB7\u2219\u2022\u25CB\xB0\u25CB\u2022\u2219\xB7.\r\n\u2592\u2592\u2592\u2592\u2592
-    \u2590 \u2588 \u258C \u263A\u263B \u2665\u2666\u2663\u2660 \u266A\u266B\u263C\r\n\u2593\u2593\u2593\u2593\u2593
-    \u2590\u2580\u2588\u2580\u258C  $ \xA2 \xA3 \xA5 \u20A7\r\n\u2588\u2588\u2588\u2588\u2588
-    \u2590\u2584\u2588\u2584\u258C \u25C4\u25BA\u25B2\u25BC \u2190\u2192\u2191\u2193\u2195\u21A8\r\n"
-  m_IsTextBackingStringDirty: 0
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
-  m_currentFontAsset: {fileID: 0}
-  m_isSDFShader: 0
-  m_sharedMaterial: {fileID: -8698091202956628803, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
-  m_currentMaterial: {fileID: 0}
-  m_currentMaterialIndex: 0
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_isMaterialDirty: 0
-  m_fontColor32:
-    rgba: 4294967295
-  m_fontColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  m_underlineColor:
-    rgba: 4294967295
-  m_strikethroughColor:
-    rgba: 4294967295
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-    topRight:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-    bottomLeft:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-    bottomRight:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_tintSprite: 0
-  m_spriteColor:
-    rgba: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyle:
-    m_Name: 
-    m_HashCode: 0
-    m_OpeningDefinition: 
-    m_ClosingDefinition: 
-    m_OpeningTagArray: 
-    m_ClosingTagArray: 
-    m_OpeningTagUnicodeArray: []
-    m_ClosingTagUnicodeArray: []
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    rgba: 4294967295
-  m_outlineColor:
-    rgba: 4278190080
-  m_outlineWidth: 0
-  m_fontSize: 8
-  m_currentFontSize: 0
-  m_fontSizeBase: 8
-  m_fontWeight: 400
-  m_FontWeightInternal: 400
-  m_enableAutoSizing: 0
-  m_maxFontSize: 0
-  m_minFontSize: 0
-  m_AutoSizeIterationCount: 0
-  m_AutoSizeMaxIterationCount: 100
-  m_IsAutoSizePointSizeSet: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_FontStyleInternal: 0
-  m_isUsingBold: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 1024
-  m_textAlignment: 65535
-  m_lineJustification: 0
-  m_textContainerLocalCorners:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_characterSpacing: 0
-  m_cSpacing: 0
-  m_monoSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: -8
-  m_lineSpacingDelta: 0
-  m_lineHeight: -32767
-  m_IsDrivenLineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_charWidthAdjDelta: 0
-  m_enableWordWrapping: 1
-  m_isCharacterWrappingEnabled: 0
-  m_isNonBreakingSpace: 0
-  m_isIgnoringAlignment: 0
-  m_wordWrappingRatios: 1
-  m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_isTextTruncated: 0
-  m_enableKerning: 0
-  m_GlyphHorizontalAdvanceAdjustment: 0
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 0
-  m_isOverlay: 0
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_isMaskingEnabled: 0
-  isMaskUpdateRequired: 0
-  m_ignoreCulling: 1
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_renderMode: 255
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_firstVisibleCharacter: 0
-  m_maxVisibleCharacters: 99999
-  m_maxVisibleWords: 99999
-  m_maxVisibleLines: 99999
-  m_useMaxVisibleDescender: 0
-  m_pageToDisplay: 1
-  m_isNewPage: 0
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_marginLeft: 0
-  m_marginRight: 0
-  m_marginWidth: 0
-  m_marginHeight: 0
-  m_width: -1
-  m_textInfo: {textComponent: {fileID: 0}, characterCount: 0, spriteCount: 0, spaceCount: 0, wordCount: 0, linkCount: 0, lineCount: 0, pageCount: 0, materialCount: 0}
-  m_havePropertiesChanged: 0
-  m_isUsingLegacyAnimationComponent: 0
-  m_transform: {fileID: 0}
-  m_rectTransform: {fileID: 0}
-  m_PreviousRectTransformSize: {x: 0, y: 0}
-  m_PreviousPivotPosition: {x: 0, y: 0}
-  <autoSizeTextContainer>k__BackingField: 0
-  m_autoSizeTextContainer: 0
-  m_mesh: {fileID: 0}
-  m_isVolumetricText: 0
-  m_spriteAnimator: {fileID: 0}
-  m_flexibleHeight: -1
-  m_flexibleWidth: -1
-  m_minWidth: 0
-  m_minHeight: 0
-  m_maxWidth: 0
-  m_maxHeight: 0
-  m_LayoutElement: {fileID: 0}
-  m_preferredWidth: 0
-  m_renderedWidth: 0
-  m_isPreferredWidthDirty: 0
-  m_preferredHeight: 0
-  m_renderedHeight: 0
-  m_isPreferredHeightDirty: 0
-  m_isCalculatingPreferredValues: 0
-  m_layoutPriority: 0
-  m_isLayoutDirty: 0
-  m_isAwake: 0
-  m_isWaitingOnResourceLoad: 0
-  m_inputSource: 0
-  m_fontScaleMultiplier: 0
-  tag_LineIndent: 0
-  tag_Indent: 0
-  tag_NoParsing: 0
-  m_isParsingText: 0
-  m_FXMatrix:
-    e00: 0
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 0
-  m_isFXMatrixSet: 0
-  m_InternalTextProcessingArraySize: 0
-  m_totalCharacterCount: 0
-  m_characterCount: 0
-  m_firstCharacterOfLine: 0
-  m_firstVisibleCharacterOfLine: 0
-  m_lastCharacterOfLine: 0
-  m_lastVisibleCharacterOfLine: 0
-  m_lineNumber: 0
-  m_lineVisibleCharacterCount: 0
-  m_pageNumber: 0
-  m_PageAscender: 0
-  m_maxTextAscender: 0
-  m_maxCapHeight: 0
-  m_ElementAscender: 0
-  m_ElementDescender: 0
-  m_maxLineAscender: 0
-  m_maxLineDescender: 0
-  m_startOfLineAscender: 0
-  m_startOfLineDescender: 0
-  m_lineOffset: 0
-  m_htmlColor:
-    rgba: 4294967295
-  m_colorGradientPreset: {fileID: 0}
-  m_colorGradientPresetIsTinted: 0
-  m_tabSpacing: 0
-  m_spacing: 0
-  m_TextStyleStackDepth: 0
-  m_ItalicAngle: 0
-  m_padding: 0
-  m_baselineOffset: 0
-  m_xAdvance: 0
-  m_textElementType: 0
-  m_cached_TextElement:
-    m_ElementType: 0
-    m_Unicode: 0
-    m_TextAsset: {fileID: 0}
-    m_Glyph:
-      m_Index: 0
-      m_Metrics:
-        m_Width: 0
-        m_Height: 0
-        m_HorizontalBearingX: 0
-        m_HorizontalBearingY: 0
-        m_HorizontalAdvance: 0
-      m_GlyphRect:
-        m_X: 0
-        m_Y: 0
-        m_Width: 0
-        m_Height: 0
-      m_Scale: 1
-      m_AtlasIndex: 0
-    m_GlyphIndex: 0
-    m_Scale: 0
-  m_defaultSpriteAsset: {fileID: 0}
-  m_currentSpriteAsset: {fileID: 0}
-  m_spriteCount: 0
-  m_spriteIndex: 0
-  m_spriteAnimationID: 0
-  m_ignoreActiveState: 0
-  m_isRebuildingLayout: 0
-  m_ClipRect:
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  m_ValidRect: 0
-  m_hasFontAssetChanged: 0
-  m_subTextObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_previousLossyScaleY: -1
-  m_RectTransformCorners:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_canvasRenderer: {fileID: 0}
-  m_canvas: {fileID: 448482744}
-  m_CanvasScaleFactor: 0
-  m_isFirstAllocation: 0
-  m_max_characters: 8
-  m_baseMaterial: {fileID: 0}
-  m_isScrollRegionSet: 0
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
-  m_EnvMapMatrix:
-    e00: 0
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 0
 --- !u!222 &512668660
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -952,7 +612,7 @@ Transform:
   m_GameObject: {fileID: 544366077}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -8.32}
-  m_LocalScale: {x: 1.3333334, y: 1, z: 1}
+  m_LocalScale: {x: 2.586, y: 1.94, z: 1.94}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1372,332 +1032,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  <useLegacyMeshGeneration>k__BackingField: 1
-  m_Maskable: 1
-  m_IsMaskingGraphic: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  m_text: "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u2302
-    \xA1\xA2\xA3\xA4\xA5\xA6\xA7\xA8\xA9\xAA\xAB\xAC-\xAE\xAF\xB0\xB1\xB2\xB3\xB4\xB5\xB6\xB7\xB8\xB9\xBA\xBB\xBC\xBD\xBE\xBF\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF\xD0\xD1\xD2\xD3\xD4\xD5\xD6\xD7\xD8\xD9\xDA\xDB\xDC\xDD\xDE\xDF\xE0\xE1\xE2\xE3\xE4\xE5\xE6\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9\xFA\xFB\xFC\xFD\xFE\xFF\u0100\u0101\u0102\u0103\u0104\u0105\u0106\u0107\u0108\u0109\u010A\u010B\u010C\u010D\u010E\u010F\u0110\u0111\u0112\u0113\u0114\u0115\u0116\u0117\u0118\u0119\u011A\u011B\u011C\u011D\u011E\u011F\u0120\u0121\u0122\u0123\u0124\u0125\u0126\u0127\u0128\u0129\u012A\u012B\u012C\u012D\u012E\u012F\u0130\u0131\u0132\u0133\u0134\u0135\u0136\u0137\u0138\u0139\u013A\u013B\u013C\u013D\u013E\u013F\u0140\u0141\u0142\u0143\u0144\u0145\u0146\u0147\u0148\u0149\u014A\u014B\u014C\u014D\u014E\u014F\u0150\u0151\u0152\u0153\u0154\u0155\u0156\u0157\u0158\u0159\u015A\u015B\u015C\u015D\u015E\u015F\u0160\u0161\u0162\u0163\u0164\u0165\u0166\u0167\u0168\u0169\u016A\u016B\u016C\u016D\u016E\u016F\u0170\u0171\u0172\u0173\u0174\u0175\u0176\u0177\u0178\u0179\u017A\u017B\u017C\u017D\u017E\u017F\u0192\u01A1\u01B7\u01FA\u01FB\u01FC\u01FD\u01FE\u01FF\u0218\u0219\u021A\u021B\u0251\u0278\u02C6\u02C7\u02C9\u02D8\u02D9\u02DA\u02DB\u02DC\u02DD\u037E\u0384\u0385\u0386\u0387\u0388\u0389\u038A\u038C\u038E\u038F\u0390\u0391\u0392\u0393\u0394\u0395\u0396\u0397\u0398\u0399\u039A\u039B\u039C\u039D\u039E\u039F\u03A0\u03A1\u03A3\u03A4\u03A5\u03A6\u03A7\u03A8\u03A9\u03AA\u03AB\u03AC\u03AD\u03AE\u03AF\u03B0\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03B9\u03BA\u03BB\u03BC\u03BD\u03BE\u03BF\u03C0\u03C1\u03C2\u03C3\u03C4\u03C5\u03C6\u03C7\u03C8\u03C9\u03CA\u03CB\u03CC\u03CD\u03CE\u03D0\u03F4\u0400\u0401\u0402\u0403\u0404\u0405\u0406\u0407\u0408\u0409\u040A\u040B\u040C\u040D\u040E\u040F\u0410\u0411\u0412\u0413\u0414\u0415\u0416\u0417\u0418\u0419\u041A\u041B\u041C\u041D\u041E\u041F\u0420\u0421\u0422\u0423\u0424\u0425\u0426\u0427\u0428\u0429\u042A\u042B\u042C\u042D\u042E\u042F\u0430\u0431\u0432\u0433\u0434\u0435\u0436\u0437\u0438\u0439\u043A\u043B\u043C\u043D\u043E\u043F\u0440\u0441\u0442\u0443\u0444\u0445\u0446\u0447\u0448\u0449\u044A\u044B\u044C\u044D\u044E\u044F\u0450\u0451\u0452\u0453\u0454\u0455\u0456\u0457\u0458\u0459\u045A\u045B\u045C\u045D\u045E\u045F\u0490\u0491\u05BE\u05D0\u05D1\u05D2\u05D3\u05D4\u05D5\u05D6\u05D7\u05D8\u05D9\u05DA\u05DB\u05DC\u05DD\u05DE\u05DF\u05E0\u05E1\u05E2\u05E3\u05E4\u05E5\u05E6\u05E7\u05E8\u05E9\u05EA\u05F0\u05F1\u05F2\u05F3\u05F4\u1D1B\u1D26\u1D28\u1E80\u1E81\u1E82\u1E83\u1E84\u1E85\u1E9F\u1EF2\u1EF3\u2010\u2012\u2013\u2014\u2015\u2017\u2018\u2019\u201A\u201B\u201C\u201D\u201E\u201F\u2020\u2021\u2022\u2026\u2027\u2030\u2032\u2033\u2035\u2039\u203A\u203C\u203E\u203F\u2040\u2044\u2054\u2074\u2075\u2076\u2077\u2078\u2079\u207A\u207B\u207F\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089\u208A\u208B\u20A3\u20A4\u20A7\u20AA\u20AC\u2105\u2113\u2116\u2122\u2126\u212E\u2150\u2151\u2153\u2154\u2155\u2156\u2157\u2158\u2159\u215A\u215B\u215C\u215D\u215E\u2190\u2191\u2192\u2193\u2194\u2195\u21A8\u2202\u2205\u2206\u2208\u220F\u2211\u2212\u2215\u2219\u221A\u221E\u221F\u2229\u222B\u2248\u2260\u2261\u2264\u2265\u2299\u2300\u2302\u2310\u2320\u2321\u2500\u2502\u250C\u2510\u2514\u2518\u251C\u2524\u252C\u2534\u253C\u2550\u2551\u2552\u2553\u2554\u2555\u2556\u2557\u2558\u2559\u255A\u255B\u255C\u255D\u255E\u255F\u2560\u2561\u2562\u2563\u2564\u2565\u2566\u2567\u2568\u2569\u256A\u256B\u256C\u2580\u2581\u2584\u2588\u258C\u2590\u2591\u2592\u2593\u25A0\u25A1\u25AA\u25AB\u25AC\u25B2\u25BA\u25BC\u25C4\u25CA\u25CB\u25CF\u25D8\u25D9\u25E6\u263A\u263B\u263C\u2640\u2642\u2660\u2663\u2665\u2666\u266A\u266B\u2713\uFB01\uFB02\uFFFD"
-  m_IsTextBackingStringDirty: 0
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
-  m_currentFontAsset: {fileID: 0}
-  m_isSDFShader: 0
-  m_sharedMaterial: {fileID: -8698091202956628803, guid: 4c3108ae2c0098c42a39784b7468d847, type: 2}
-  m_currentMaterial: {fileID: 0}
-  m_currentMaterialIndex: 0
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_isMaterialDirty: 0
-  m_fontColor32:
-    rgba: 4294967295
-  m_fontColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
-  m_underlineColor:
-    rgba: 4294967295
-  m_strikethroughColor:
-    rgba: 4294967295
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-    topRight:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-    bottomLeft:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-    bottomRight:
-      r: 1
-      g: 1
-      b: 1
-      a: 1
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_tintSprite: 0
-  m_spriteColor:
-    rgba: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyle:
-    m_Name: 
-    m_HashCode: 0
-    m_OpeningDefinition: 
-    m_ClosingDefinition: 
-    m_OpeningTagArray: 
-    m_ClosingTagArray: 
-    m_OpeningTagUnicodeArray: []
-    m_ClosingTagUnicodeArray: []
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    rgba: 4294967295
-  m_outlineColor:
-    rgba: 4278190080
-  m_outlineWidth: 0
-  m_fontSize: 72
-  m_currentFontSize: 0
-  m_fontSizeBase: 72
-  m_fontWeight: 400
-  m_FontWeightInternal: 400
-  m_enableAutoSizing: 0
-  m_maxFontSize: 0
-  m_minFontSize: 0
-  m_AutoSizeIterationCount: 0
-  m_AutoSizeMaxIterationCount: 100
-  m_IsAutoSizePointSizeSet: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_FontStyleInternal: 0
-  m_isUsingBold: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 1024
-  m_textAlignment: 65535
-  m_lineJustification: 0
-  m_textContainerLocalCorners:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_characterSpacing: 0
-  m_cSpacing: 0
-  m_monoSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingDelta: 0
-  m_lineHeight: -32767
-  m_IsDrivenLineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_charWidthAdjDelta: 0
-  m_enableWordWrapping: 1
-  m_isCharacterWrappingEnabled: 0
-  m_isNonBreakingSpace: 0
-  m_isIgnoringAlignment: 0
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_isTextTruncated: 0
-  m_enableKerning: 1
-  m_GlyphHorizontalAdvanceAdjustment: 0
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOverlay: 0
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_isMaskingEnabled: 0
-  isMaskUpdateRequired: 0
-  m_ignoreCulling: 1
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_renderMode: 255
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_firstVisibleCharacter: 0
-  m_maxVisibleCharacters: 99999
-  m_maxVisibleWords: 99999
-  m_maxVisibleLines: 99999
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_isNewPage: 0
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_marginLeft: 0
-  m_marginRight: 0
-  m_marginWidth: 0
-  m_marginHeight: 0
-  m_width: -1
-  m_textInfo: {textComponent: {fileID: 0}, characterCount: 0, spriteCount: 0, spaceCount: 0, wordCount: 0, linkCount: 0, lineCount: 0, pageCount: 0, materialCount: 0}
-  m_havePropertiesChanged: 0
-  m_isUsingLegacyAnimationComponent: 0
-  m_transform: {fileID: 0}
-  m_rectTransform: {fileID: 0}
-  m_PreviousRectTransformSize: {x: 0, y: 0}
-  m_PreviousPivotPosition: {x: 0, y: 0}
-  <autoSizeTextContainer>k__BackingField: 0
-  m_autoSizeTextContainer: 0
-  m_mesh: {fileID: 0}
-  m_isVolumetricText: 0
-  m_spriteAnimator: {fileID: 0}
-  m_flexibleHeight: -1
-  m_flexibleWidth: -1
-  m_minWidth: 0
-  m_minHeight: 0
-  m_maxWidth: 0
-  m_maxHeight: 0
-  m_LayoutElement: {fileID: 0}
-  m_preferredWidth: 0
-  m_renderedWidth: 0
-  m_isPreferredWidthDirty: 0
-  m_preferredHeight: 0
-  m_renderedHeight: 0
-  m_isPreferredHeightDirty: 0
-  m_isCalculatingPreferredValues: 0
-  m_layoutPriority: 0
-  m_isLayoutDirty: 0
-  m_isAwake: 0
-  m_isWaitingOnResourceLoad: 0
-  m_inputSource: 0
-  m_fontScaleMultiplier: 0
-  tag_LineIndent: 0
-  tag_Indent: 0
-  tag_NoParsing: 0
-  m_isParsingText: 0
-  m_FXMatrix:
-    e00: 0
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 0
-  m_isFXMatrixSet: 0
-  m_InternalTextProcessingArraySize: 0
-  m_totalCharacterCount: 0
-  m_characterCount: 0
-  m_firstCharacterOfLine: 0
-  m_firstVisibleCharacterOfLine: 0
-  m_lastCharacterOfLine: 0
-  m_lastVisibleCharacterOfLine: 0
-  m_lineNumber: 0
-  m_lineVisibleCharacterCount: 0
-  m_pageNumber: 0
-  m_PageAscender: 0
-  m_maxTextAscender: 0
-  m_maxCapHeight: 0
-  m_ElementAscender: 0
-  m_ElementDescender: 0
-  m_maxLineAscender: 0
-  m_maxLineDescender: 0
-  m_startOfLineAscender: 0
-  m_startOfLineDescender: 0
-  m_lineOffset: 0
-  m_htmlColor:
-    rgba: 4294967295
-  m_colorGradientPreset: {fileID: 0}
-  m_colorGradientPresetIsTinted: 0
-  m_tabSpacing: 0
-  m_spacing: 0
-  m_TextStyleStackDepth: 0
-  m_ItalicAngle: 0
-  m_padding: 0
-  m_baselineOffset: 0
-  m_xAdvance: 0
-  m_textElementType: 0
-  m_cached_TextElement:
-    m_ElementType: 0
-    m_Unicode: 0
-    m_TextAsset: {fileID: 0}
-    m_Glyph:
-      m_Index: 0
-      m_Metrics:
-        m_Width: 0
-        m_Height: 0
-        m_HorizontalBearingX: 0
-        m_HorizontalBearingY: 0
-        m_HorizontalAdvance: 0
-      m_GlyphRect:
-        m_X: 0
-        m_Y: 0
-        m_Width: 0
-        m_Height: 0
-      m_Scale: 1
-      m_AtlasIndex: 0
-    m_GlyphIndex: 0
-    m_Scale: 0
-  m_defaultSpriteAsset: {fileID: 0}
-  m_currentSpriteAsset: {fileID: 0}
-  m_spriteCount: 0
-  m_spriteIndex: 0
-  m_spriteAnimationID: 0
-  m_ignoreActiveState: 0
-  m_isRebuildingLayout: 0
-  m_ClipRect:
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  m_ValidRect: 0
-  m_hasFontAssetChanged: 0
-  m_subTextObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_previousLossyScaleY: -1
-  m_RectTransformCorners:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_canvasRenderer: {fileID: 0}
-  m_canvas: {fileID: 448482744}
-  m_CanvasScaleFactor: 0
-  m_isFirstAllocation: 0
-  m_max_characters: 8
-  m_baseMaterial: {fileID: 0}
-  m_isScrollRegionSet: 0
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
-  m_EnvMapMatrix:
-    e00: 0
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 0
 --- !u!222 &632187782
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18860,11 +18194,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 0
+  runOnStart: 1
   code: "# include \"/System/programs/programsLibrary\"\r\n\r\n        string prefix
     = \"\";\r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n       
-    string console = \"\";\r\n\r\n        SystemScreenBuffer buffer = new SystemScreenBuffer();\r\n       
-    Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
+    string console = \"\";\r\n        string bufferedText = \"\";\r\n        int
+    historyPointer = 0;\r\n        List<string> history = new List<string>();\r\n       
+    SystemScreenBuffer buffer = new SystemScreenBuffer();\r\n        Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n       
+    File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
     SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n\r\n       
     void DrawCharAt(int x, int y, char character)\r\n        {\r\n            int
     index = Runtime.CharToByte(character);\r\n            int posx = index % 16;\r\n           
@@ -18893,34 +18229,41 @@ MonoBehaviour:
     in input)\r\n            {\r\n                if (c == '\\b') // has backspace/delete
     been pressed?\r\n                {\r\n                    if (text.Length !=
     0)\r\n                    {\r\n                        text = text.Substring(0,
-    text.Length - 1);\r\n                    }\r\n                }\r\n               
-    else if ((c == '\\n') || (c == '\\r')) // enter/return\r\n                {\r\n                   
-    console += '\\n' + prefix + text;\r\n                    string output = PraseCommand(text);\r\n                   
+    text.Length - 1);\r\n                        bufferedText = text;\r\n                   
+    }\r\n                }\r\n                else if ((c == '\\n') || (c == '\\r'))
+    // enter/return\r\n                {\r\n                    console += '\\n'
+    + prefix + text;\r\n                    string output = PraseCommand(text);\r\n                   
     if (!string.IsNullOrEmpty(output))\r\n                    {\r\n                       
     console += '\\n' + output;\r\n                    }\r\n                    text
-    = \"\";\r\n                }\r\n                else\r\n                {\r\n                   
-    text += c;\r\n                }\r\n            }\r\n        }\r\n        string
-    PraseCommand(string input)\r\n        {\r\n            string[] parts = input.Split('
-    ');\r\n          /*  string rawArgs = \"\";\r\n            for (int i = 1; i
-    < parts.Length; i++)\r\n            {\r\n                rawArgs += parts[i]+\"
-    \";\r\n\r\n            }*/\r\n            if (parts[0] == \"cd\")\r\n           
-    {\r\n                File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1],
-    currentFile));\r\n                if (f == null)\r\n                {\r\n                   
+    = \"\";\r\n                    bufferedText = \"\";\r\n                }\r\n               
+    else\r\n                {\r\n                    text += c;\r\n                   
+    bufferedText = text;\r\n                }\r\n            }\r\n        \r\n           
+    if (ks.HasKey(Key.UpArrow))\r\n            {\r\n                historyPointer--;\r\n               
+    if (historyPointer < 0)\r\n                {\r\n                    historyPointer
+    = 0;\r\n                }\r\n                if (historyPointer > history.Count)\r\n               
+    {\r\n                    historyPointer = history.Count;\r\n                }\r\n               
+    if (historyPointer == history.Count)\r\n                {\r\n                   
+    text = bufferedText;\r\n                }\r\n                else\r\n               
+    {\r\n                    text = history[historyPointer];\r\n                }\r\n           
+    }\r\n            if (ks.HasKey(Key.DownArrow))\r\n            {\r\n               
+    historyPointer++;\r\n                if (historyPointer < 0)\r\n               
+    {\r\n                    historyPointer = 0;\r\n                }\r\n               
+    if (historyPointer > history.Count)\r\n                {\r\n                   
+    historyPointer = history.Count;\r\n                }\r\n                if (historyPointer
+    == history.Count)\r\n                {\r\n                    text = bufferedText;\r\n               
+    }\r\n                else\r\n                {\r\n                    text =
+    history[historyPointer];\r\n                }\r\n            }\r\n        }\r\n       
+    string PraseCommand(string input)\r\n        {\r\n            history.Add(input);\r\n           
+    historyPointer++;\r\n            string[] parts = input.Split(' ');\r\n           
+    if (parts[0] == \"cd\")\r\n            {\r\n                File f = FileSystem.GetFileByPath(parts[1],
+    currentFile);\r\n                if (f == null)\r\n                {\r\n                   
     return $\"Couldn't find file {parts[1]}!\";\r\n                }\r\n               
     currentFile = f;\r\n                UpdatePrefix();\r\n                return
-    \"\";\r\n            }\r\n            else\r\n            {\r\n             return  
-    FindAndExecuteCommand(input+ \"-wd \" + currentFile.GetFullPath());\r\n           
-    }\r\n          /*  switch (parts[0])\r\n            {\r\n                case
-    \"cd\":\r\n                    {\r\n                        File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1],
-    currentFile));\r\n                        if (f == null)\r\n                       
-    {\r\n                            return $\"Couldn't find file {parts[1]}!\";\r\n                       
-    }\r\n                        currentFile = f;\r\n                        UpdatePrefix();\r\n                       
-    return \"\";\r\n                    }\r\n                case \"ls\":\r\n                   
-    {\r\n                        return ls.instance.Run(\"-wd \" + currentFile.GetFullPath()
-    + \" \" + rawArgs);\r\n                    }\r\n            }*/\r\n           
-    return $\"Couldn't find command `{parts[0]}`.\";\r\n        }\r\n\r\n\r\n       
-    string GetChildren(string indent, File file, string prefix, bool recursive =
-    false)\r\n        {\r\n            string str = $\"{indent}{prefix}{file.name}:{file.GetByteSize()}\\n\";\r\n           
+    \"\";\r\n            }\r\n            else\r\n            {\r\n               
+    return FindAndExecuteCommand(input + \" -wd \" + currentFile.GetFullPath());\r\n           
+    }\r\n            return $\"Couldn't find command `{parts[0]}`.\";\r\n       
+    }\r\n\r\n\r\n        string GetChildren(string indent, File file, string prefix,
+    bool recursive = false)\r\n        {\r\n            string str = $\"{indent}{prefix}{file.name}:{file.GetByteSize()}\\n\";\r\n           
     if (recursive)\r\n            {\r\n                for (int i = 0; i < file.children.Count;
     i++)\r\n                {\r\n                    File child = file.children[i];\r\n                   
     str += GetChildren(indent + \" \", child, $\"{((i + 1) == file.children.Count
@@ -18928,7 +18271,7 @@ MonoBehaviour:
     }\r\n            }\r\n            return str;\r\n        }\r\n\r\n        UpdatePrefix();\r\n       
     while (true)\r\n        {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n\r\n           
     Draw();\r\n            ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n       
-    }\r\n\r\n    "
+    }"
 --- !u!114 &2108374106
 MonoBehaviour:
   m_ObjectHideFlags: 0

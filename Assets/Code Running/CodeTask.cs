@@ -88,7 +88,7 @@ public class CodeTask
                     linePos = frame.GetFileLineNumber();
                     columnPos = frame.GetFileColumnNumber();
                     file = frame.GetFileName();
-                    line = codeObject.code.Split('\n')[linePos - 1];
+                    line = codeObject.code.Split('\n')[linePos ];
                 }
               
                 Debug.Log($"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");

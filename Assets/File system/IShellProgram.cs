@@ -31,7 +31,7 @@ namespace Libraries.system
             }
             public virtual string Run(params string[] args)
             {
-                Debug.Log(args.ToArray().GetValuesToString());
+
                 Dictionary<string, string> argPairs = new Dictionary<string, string>();
                 for (int i = 0; i < args.Length; i++)
                 {
@@ -40,8 +40,12 @@ namespace Libraries.system
                     {
                         if (argument.valued)
                         {
-                            argPairs.Add(args[i], args[i + 1]);
-                            i++;
+                            if (args.Length > i + 1)
+                            {
+                                argPairs.Add(args[i], args[i + 1]);
+
+                                i++;
+                            }
                         }
                         else
                         {

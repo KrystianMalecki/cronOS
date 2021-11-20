@@ -16,12 +16,13 @@ using Libraries.system.shell;
 using JetBrains.Annotations;
 using helper;
 using System.Linq;
-using System;
+
+
 //ls import
-public class ls : ExtendedShellProgram
+/*public class ls : ExtendedShellProgram
 {
-    private static ls _instance;
-    public static ls instance
+    private static  ls _instance;
+    public static  ls instance
     {
         get
         {
@@ -36,7 +37,7 @@ public class ls : ExtendedShellProgram
     {
         return "ls";
     }
-    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
+    private static  readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
         new AcceptedArgument("-wd", "working directory", true),
         new AcceptedArgument("-r", "recursive", false),
         new AcceptedArgument("-jn", "just names", false),
@@ -57,16 +58,16 @@ public class ls : ExtendedShellProgram
         return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
     }
     string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
-    {
-        string str = string.Format(
-           onlyNames ? "{2}" : "{0," + indent + "}{1} {2}:{3}\n"
+    { string str = string.Format(
+           onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
             , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
         if (recursive)
         {
             for (int i = 0; i < file.children.Count; i++)
             {
+                bool last = i + 1 == file.children.Count;
                 File child = file.children[i];
-                str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
+                str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
 
             }
         }
@@ -74,8 +75,8 @@ public class ls : ExtendedShellProgram
     }
 
 
-}
-
+}*/
+public class ls : ExtendedShellProgram { private static ls _instance; public static ls instance { get { if (_instance == null) { _instance = new ls(); } return _instance; } } public override string GetName() { return "ls"; } private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> { new AcceptedArgument("-wd", "working directory", true), new AcceptedArgument("-r", "recursive", false), new AcceptedArgument("-jn", "just names", false), new AcceptedArgument("-sz", "show size", false), new AcceptedArgument("-fp", "full paths instead of names", false), }; protected override List<AcceptedArgument> argumentTypes => _argumentTypes; protected override string InternalRun(Dictionary<string, string> argPairs) { string path = "/"; if (argPairs.TryGetValue("-wd", out path)) { } File f = FileSystem.GetFileByPath(path); return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp")); } string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths) { string str = string.Format(onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n", "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize()); if (recursive) { for (int i = 0; i < file.children.Count; i++) { bool last = i + 1 == file.children.Count; File child = file.children[i]; str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths); } } return str; } }
 public class SimpleShell : UnityEngine.MonoBehaviour
 {
 
@@ -92,7 +93,19 @@ public class SimpleShell : UnityEngine.MonoBehaviour
 
 
 
+    public void Awake()
+    {
+        UnityEngine.Debug.Log(GlobalHelper.SplitString2Q("ls -w \"/System\"").GetValuesToString("|"));
+        UnityEngine.Debug.Log(new Path("/System/"));
+        UnityEngine.Debug.Log(new Path("/System/programs"));
+        UnityEngine.Debug.Log(new Path("./ls", FileSystem.GetFileByPath("/System/programs")));
+        UnityEngine.Debug.Log(new Path("./..", FileSystem.GetFileByPath("/System/programs")));
+        UnityEngine.Debug.Log(new Path("./../programs", FileSystem.GetFileByPath("/System/programs")));
+        UnityEngine.Debug.Log(new Path("./../can'tfind", FileSystem.GetFileByPath("/System/programs")));
+        UnityEngine.Debug.Log(new Path("./../../programs", FileSystem.GetFileByPath("/System/programs/ls")));
+        UnityEngine.Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
 
+    }
 
 
 
@@ -111,7 +124,9 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         string prefix = "";
         File currentFile = FileSystem.GetFileByPath("/System");
         string console = "";
-
+        string bufferedText = "";
+        int historyPointer = 0;
+        List<string> history = new List<string>();
         SystemScreenBuffer buffer = new SystemScreenBuffer();
         Screen.InitScreenBuffer(buffer);
 
@@ -197,6 +212,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                     if (text.Length != 0)
                     {
                         text = text.Substring(0, text.Length - 1);
+                        bufferedText = text;
                     }
                 }
                 else if ((c == '\n') || (c == '\r')) // enter/return
@@ -208,25 +224,64 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                         console += '\n' + output;
                     }
                     text = "";
+                    bufferedText = "";
                 }
                 else
                 {
                     text += c;
+                    bufferedText = text;
+                }
+            }
+        
+            if (ks.HasKey(Key.UpArrow))
+            {
+                historyPointer--;
+                if (historyPointer < 0)
+                {
+                    historyPointer = 0;
+                }
+                if (historyPointer > history.Count)
+                {
+                    historyPointer = history.Count;
+                }
+                if (historyPointer == history.Count)
+                {
+                    text = bufferedText;
+                }
+                else
+                {
+                    text = history[historyPointer];
+                }
+            }
+            if (ks.HasKey(Key.DownArrow))
+            {
+                historyPointer++;
+                if (historyPointer < 0)
+                {
+                    historyPointer = 0;
+                }
+                if (historyPointer > history.Count)
+                {
+                    historyPointer = history.Count;
+                }
+                if (historyPointer == history.Count)
+                {
+                    text = bufferedText;
+                }
+                else
+                {
+                    text = history[historyPointer];
                 }
             }
         }
         string PraseCommand(string input)
         {
+            history.Add(input);
+            historyPointer++;
             string[] parts = input.Split(' ');
-          /*  string rawArgs = "";
-            for (int i = 1; i < parts.Length; i++)
-            {
-                rawArgs += parts[i]+" ";
-
-            }*/
             if (parts[0] == "cd")
             {
-                File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1], currentFile));
+                File f = FileSystem.GetFileByPath(parts[1], currentFile);
                 if (f == null)
                 {
                     return $"Couldn't find file {parts[1]}!";
@@ -237,26 +292,8 @@ public class SimpleShell : UnityEngine.MonoBehaviour
             }
             else
             {
-             return   FindAndExecuteCommand(input+ "-wd " + currentFile.GetFullPath());
+                return FindAndExecuteCommand(input + " -wd " + currentFile.GetFullPath());
             }
-          /*  switch (parts[0])
-            {
-                case "cd":
-                    {
-                        File f = FileSystem.GetFileByPath(FileSystem.MakeAbsolutePath(parts[1], currentFile));
-                        if (f == null)
-                        {
-                            return $"Couldn't find file {parts[1]}!";
-                        }
-                        currentFile = f;
-                        UpdatePrefix();
-                        return "";
-                    }
-                case "ls":
-                    {
-                        return ls.instance.Run("-wd " + currentFile.GetFullPath() + " " + rawArgs);
-                    }
-            }*/
             return $"Couldn't find command `{parts[0]}`.";
         }
 
@@ -292,6 +329,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
     public void s()
     {
         string charInfo = "";
+
 
         SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);
         Screen.InitScreenBuffer(buffer);
@@ -375,7 +413,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
     }
 
     /*
-    
+
      #include "/system/programs/ls"
      */
     static readonly IShellProgram[] commands = { ls.instance };
@@ -384,11 +422,12 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         List<string> parts = GlobalHelper.SplitString2Q(rawCommand);
 
         string command = parts[0];
-        string restOfArgs = rawCommand.Substring(command.Length);
+        string restOfArgs = (rawCommand.Length <= command.Length) ? "" : rawCommand.Substring(command.Length);
         string output = $"Command '{command}' not found!";
         for (int i = 0; i < commands.Length; i++)
         {
-            if (commands[i].GetName() == command) {
+            if (commands[i].GetName() == command)
+            {
                 return commands[i].Run(restOfArgs);
             }
         }

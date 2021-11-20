@@ -64,6 +64,20 @@ namespace helper //todo 0 split to separate file
             }
             return output;
         }
+        public static string ChangeToPrefixedValue(this int num)
+        {
+            int sizeScale = 0;
+            int currentSize = num;
+            while (currentSize > 1024)
+            {
+                currentSize = currentSize / 1024;
+                sizeScale++;
+            }
+            return $"{currentSize}{SIZES[sizeScale]}";
+        }
+
+
+        private static readonly string[] SIZES = { "", "k", "M", "G", "T" };
     }
 }
 public static class StaticHelper
@@ -80,7 +94,7 @@ public static class StaticHelper
 
         }
         double timeEnd = Time.realtimeSinceStartupAsDouble;
-        Debug.LogWarning("Time to run function from " + fromName + " in " + fromPath.Substring(fromPath.LastIndexOf('\\') + 1) + " :" + (timeEnd - time));
+        Debug.LogWarning("Time elapsed to run function from " + fromName + " in " + fromPath.Substring(fromPath.LastIndexOf('\\') + 1) + " :" + (timeEnd - time));
 
     }
     public static IEnumerable<T> Iterate<T>(this IEnumerator<T> iterator)
