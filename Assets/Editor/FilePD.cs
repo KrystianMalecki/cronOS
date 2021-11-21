@@ -68,19 +68,19 @@ public class FilePD : PropertyDrawer
         var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, EditorGUI.GetPropertyHeight(permissionsSP));
         var filesRect = new Rect(main.x + 2, permissionsRect.y + permissionsRect.height, main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
         var addChildButtonRect = new Rect(main.x, filesRect.y + filesRect.height, main.width, EditorGUIUtility.singleLineHeight);
-        Debug.Log("frame");
+      /*  Debug.Log("frame");
         say(main);
         say(nameRect);
         say(buttonRect);
         say(permissionsRect);
         say(filesRect);
-        say(addChildButtonRect);
+        say(addChildButtonRect);*/
 
         //EditorGUI.PropertyField(main, property, label, true);
         // EditorGUI.indentLevel--;
         EditorGUI.PropertyField(nameRect, nameSP, GUIContent.none);
         //  permissionsSP.intValue = ((int)((FilePermission)EditorGUI.EnumFlagsField(permissionsRect, (FilePermission)permissionsSP.intValue)));
-        EditorGUI.PropertyField(permissionsRect, permissionsSP);
+      //  EditorGUI.PropertyField(permissionsRect, permissionsSP);
 
 
 
@@ -89,6 +89,7 @@ public class FilePD : PropertyDrawer
         try
         {
             EditorGUI.PropertyField(filesRect, childrenSP);
+            Debug.Log("hm?");
             if (/*childrenItemsSP.isExpanded ||*/ true)
             {
                 if (GUI.Button(addChildButtonRect, "Add child"))

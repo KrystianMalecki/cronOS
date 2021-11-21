@@ -4,16 +4,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
+using Sirenix.Serialization;
+using Sirenix.OdinInspector;
+
 [CreateAssetMenu(fileName = "Drive", menuName = "ScriptableObjects/Drive")]
 
-[System.Serializable]
-public class DriveSO : ScriptableObject
+//[Serializable]
+public class DriveSO : SerializedScriptableObject
 {
-    [SerializeField]
+    [NonSerialized, OdinSerialize]
+ //  [SerializeField]
     public File root;
-  //  public Dictionary<string, File> pathLinks = new Dictionary<string, File>();
+    //  public Dictionary<string, File> pathLinks = new Dictionary<string, File>();
 
-    [Button]
+    [NaughtyAttributes.Button]
     public void OpenEditor()
     {
         GenerateParentLinks();
@@ -21,7 +26,7 @@ public class DriveSO : ScriptableObject
         SerializedObject so = new SerializedObject(this, this);
         FileEditor.ShowWindow(root, so.FindProperty("root"), so);
     }
-    [Button]
+    [NaughtyAttributes.Button]
     public void GenerateParentLinks()
     {
         root.GenerateParentLinks(true);

@@ -1,5 +1,6 @@
 using helper;
 using NaughtyAttributes;
+using Sirenix.Serialization;
 using System;
 using System.Collections;
 
@@ -14,14 +15,15 @@ namespace Libraries.system
 {
     namespace file_system
     {
-        [System.Serializable]
+       // [System.Serializable]
+
         public unsafe class File
         {
             [SerializeField]
 
             public string name;
             [SerializeField]
-            [EnumMask]
+           // [EnumMask]
             public FilePermission permissions = (FilePermission)0b0111;
 
             [AllowNesting]
@@ -30,7 +32,8 @@ namespace Libraries.system
 
             public byte[] data;
 
-            [SerializeField]
+            //  [SerializeField]
+            [NonSerialized, OdinSerialize]
             public ThreadSafeList<File> children;
 
             [NonSerialized]

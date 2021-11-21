@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-[CustomPropertyDrawer(typeof(DriveSO))]
+//[CustomPropertyDrawer(typeof(DriveSO))]
 
 public class DrivePD : PropertyDrawer
 {

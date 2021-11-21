@@ -1,14 +1,15 @@
 
+using Sirenix.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
-[Serializable]
+
 public class ThreadSafeList<T> : IList<T>, IList
 {
-    [SerializeField]
+    [NonSerialized, OdinSerialize]
     List<T> items;
     object sync;
 
