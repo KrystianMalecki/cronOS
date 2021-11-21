@@ -2,15 +2,18 @@
 
 
 
-//done?  think if fileSystem should be it's own library AND if it should use thread function stack or just lock files. Locking is good i guess
-//todo 0 test this ^
+
 
 
 //todo 3 think about better path logic
 
 //todo 4 think about #include-ing core libraries like system or system.file_system
 
-//todo 5 add delete redefine preprocessor label and code
+//todo 9 upgrade preprocessor:
+// - add delete redefine preprocessor label and code
+// - add variables to redefine
+// - think how to maybe make redefines store values
+
 
 
 
@@ -37,5 +40,8 @@
 //todo-recheck fix enum mask error in inspector, use default enum mask drawer, just add display for options next to it, its ok
 
 
-//todo-recheck fix mouseHandler by using screen matrix
+//todo-recheck fix mouseHandler by using screen matrix]
+
+//done?  think if fileSystem should be it's own library AND if it should use thread function stack or just lock files. Locking is good i guess
+//todo-recheck test this ^
 

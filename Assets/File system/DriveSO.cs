@@ -9,9 +9,9 @@ using UnityEditor;
 [System.Serializable]
 public class DriveSO : ScriptableObject
 {
-    //[SerializeField]
+    [SerializeField]
     public File root;
-
+  //  public Dictionary<string, File> pathLinks = new Dictionary<string, File>();
 
     [Button]
     public void OpenEditor()
@@ -26,4 +26,6 @@ public class DriveSO : ScriptableObject
     {
         root.GenerateParentLinks(true);
     }
+
+
 }

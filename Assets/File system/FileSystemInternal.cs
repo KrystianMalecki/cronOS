@@ -31,49 +31,13 @@ public class FileSystemInternal : MonoBehaviour
     public File GetFileByPath(string rawPath, File parent = null)
     {
         return GetPath(rawPath, parent).GetFile();
-        if (rawPath == null)
-        {
-            rawPath = "";
-        }
-        string[] parts = rawPath.Split(catalogSymbol);
-        if (parent == null)
-        {
-            parent = drive.root;
-        }
-        File currentFile = parent;
-        for (int i = 1; i < parts.Length; i++)
-        {
-            string name = parts[i];
-            if (string.IsNullOrEmpty(name))
-            {
-                return currentFile;
-            }
-            if (name == ".")
-            {
-                currentFile = currentFile;//todo 0  why?
-            }
-            else if (name == "..")
-            {
-                currentFile = currentFile.parent;
-            }
-            else
-            {
-                currentFile = currentFile.GetChildByName(name);
-
-            }
-            if (currentFile == null)
-            {
-                return null;
-            }
-        }
-        return currentFile;
-
     }
 
     public Path GetPath(string rawPath, File parent = null)
     {
         return new Path(rawPath, parent);
     }
+
     public bool RemoveFile(string path)
     {
         //todo-future add errors
@@ -96,28 +60,8 @@ public class FileSystemInternal : MonoBehaviour
         newFile.permissions = (FilePermission)0b0111;
 
         newFile.children = null;
-        if (data != null)
-        {
-            newFile.data = data;
-        }
+        newFile.data = data;
+
         return newFile;
     }
-    //todo 1 add: (make it better) re,ove
-    // . this maybe done?
-    // special symbol that marks system path from system config
-    // .. up only first one works
-    // maybe later some regex?
-    /* public string MakeAbsolutePath(string path, File currentFile = null)
-     {
-         string bufferPath = path;
-         //  Debug.Log($"path:{bufferPath} file:{currentFile}");
-         if (currentFile != null)
-         {
-             if (bufferPath.StartsWith("./"))
-             {
-                 bufferPath = currentFile.GetFullPath() + "/" + bufferPath.Substring(2);
-             }
-         }
-         return bufferPath;
-     }*/
 }

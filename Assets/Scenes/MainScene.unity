@@ -1200,40 +1200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a56801d32e14354cb08dafaecd760db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  st:
-    array:
-    - _value: 1
-    - _value: 2
-    - _value: 3
-    - _value: 4
-    width: 0
-    height: 0
-    transparencyFlag: 255
-  arr: 020000000200000000000000
-  datas2: 
-  f:
-    name: 
-    permissions: 7
-    data: 
-    children:
-      items: []
-  permission: 0
-  serIn: FileSystem.MakeFile("C:/lol/LOL/lol/lol.lol/lol")
-  serOut: 
-  textureFile:
-    name: 
-    permissions: 7
-    data: 
-    children:
-      items: []
-  stf:
-    width: 0
-    height: 0
-    colors: []
-  outSTF:
-    width: 0
-    height: 0
-    colors: []
 --- !u!114 &774406602
 MonoBehaviour:
   m_ObjectHideFlags: 0

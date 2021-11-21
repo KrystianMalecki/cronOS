@@ -141,7 +141,7 @@ public class FileEditor : EditorWindow
 
     bool toggleTopFields = true;
     bool toggleBottomPart = true;
-    bool toggleData = true;
+    bool toggleData = false;
 
     bool toggleTextDataField = false;
     void OnGUI()

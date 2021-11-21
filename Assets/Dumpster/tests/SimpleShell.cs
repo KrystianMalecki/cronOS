@@ -19,10 +19,10 @@ using System.Linq;
 
 
 //ls import
-/*public class ls : ExtendedShellProgram
+public class ls : ExtendedShellProgram
 {
-    private static  ls _instance;
-    public static  ls instance
+    private static ls _instance;
+    public static ls instance
     {
         get
         {
@@ -37,8 +37,10 @@ using System.Linq;
     {
         return "ls";
     }
-    private static  readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
+    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
         new AcceptedArgument("-wd", "working directory", true),
+                new AcceptedArgument("-p", "path", true),
+
         new AcceptedArgument("-r", "recursive", false),
         new AcceptedArgument("-jn", "just names", false),
                 new AcceptedArgument("-sz", "show size", false),
@@ -49,18 +51,24 @@ using System.Linq;
 
     protected override string InternalRun(Dictionary<string, string> argPairs)
     {
-        string path = "/";
-        if (argPairs.TryGetValue("-wd", out path))
+        string wdPath = "/";
+        if (argPairs.TryGetValue("-wd", out wdPath))
         {
         }
-        File f = FileSystem.GetFileByPath(path);
-
+        File workingDirectory = FileSystem.GetFileByPath(wdPath);
+        string path = "/";
+        if (argPairs.TryGetValue("-p", out path))
+        {
+        }
+        File f = FileSystem.GetFileByPath(path, workingDirectory);
+        Console.Debug($"{f} {path}");
         return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
     }
     string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
-    { string str = string.Format(
-           onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
-            , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
+    {
+        string str = string.Format(
+             onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
+              , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
         if (recursive)
         {
             for (int i = 0; i < file.children.Count; i++)
@@ -75,8 +83,8 @@ using System.Linq;
     }
 
 
-}*/
-public class ls : ExtendedShellProgram { private static ls _instance; public static ls instance { get { if (_instance == null) { _instance = new ls(); } return _instance; } } public override string GetName() { return "ls"; } private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> { new AcceptedArgument("-wd", "working directory", true), new AcceptedArgument("-r", "recursive", false), new AcceptedArgument("-jn", "just names", false), new AcceptedArgument("-sz", "show size", false), new AcceptedArgument("-fp", "full paths instead of names", false), }; protected override List<AcceptedArgument> argumentTypes => _argumentTypes; protected override string InternalRun(Dictionary<string, string> argPairs) { string path = "/"; if (argPairs.TryGetValue("-wd", out path)) { } File f = FileSystem.GetFileByPath(path); return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp")); } string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths) { string str = string.Format(onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n", "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize()); if (recursive) { for (int i = 0; i < file.children.Count; i++) { bool last = i + 1 == file.children.Count; File child = file.children[i]; str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths); } } return str; } }
+}
+//public class ls : ExtendedShellProgram { private static ls _instance; public static ls instance { get { if (_instance == null) { _instance = new ls(); } return _instance; } } public override string GetName() { return "ls"; } private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> { new AcceptedArgument("-wd", "working directory", true), new AcceptedArgument("-r", "recursive", false), new AcceptedArgument("-jn", "just names", false), new AcceptedArgument("-sz", "show size", false), new AcceptedArgument("-fp", "full paths instead of names", false), }; protected override List<AcceptedArgument> argumentTypes => _argumentTypes; protected override string InternalRun(Dictionary<string, string> argPairs) { string path = "/"; if (argPairs.TryGetValue("-wd", out path)) { } File f = FileSystem.GetFileByPath(path); return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp")); } string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths) { string str = string.Format(onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n", "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize()); if (recursive) { for (int i = 0; i < file.children.Count; i++) { bool last = i + 1 == file.children.Count; File child = file.children[i]; str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths); } } return str; } }
 public class SimpleShell : UnityEngine.MonoBehaviour
 {
 
@@ -93,19 +101,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
 
 
 
-    public void Awake()
-    {
-        UnityEngine.Debug.Log(GlobalHelper.SplitString2Q("ls -w \"/System\"").GetValuesToString("|"));
-        UnityEngine.Debug.Log(new Path("/System/"));
-        UnityEngine.Debug.Log(new Path("/System/programs"));
-        UnityEngine.Debug.Log(new Path("./ls", FileSystem.GetFileByPath("/System/programs")));
-        UnityEngine.Debug.Log(new Path("./..", FileSystem.GetFileByPath("/System/programs")));
-        UnityEngine.Debug.Log(new Path("./../programs", FileSystem.GetFileByPath("/System/programs")));
-        UnityEngine.Debug.Log(new Path("./../can'tfind", FileSystem.GetFileByPath("/System/programs")));
-        UnityEngine.Debug.Log(new Path("./../../programs", FileSystem.GetFileByPath("/System/programs/ls")));
-        UnityEngine.Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
 
-    }
 
 
 
@@ -232,7 +228,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                     bufferedText = text;
                 }
             }
-        
+
             if (ks.HasKey(Key.UpArrow))
             {
                 historyPointer--;

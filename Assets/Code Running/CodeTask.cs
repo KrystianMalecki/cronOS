@@ -80,7 +80,7 @@ public class CodeTask
                     reason = e.Message;
                     file = e.Source;
 
-                    Debug.Log(e);
+                    Debug.Log("NormalException");
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +88,9 @@ public class CodeTask
                     linePos = frame.GetFileLineNumber();
                     columnPos = frame.GetFileColumnNumber();
                     file = frame.GetFileName();
-                    line = codeObject.code.Split('\n')[linePos ];
+                    reason = e.Message;
+                   // line = codeObject.code.Split('\n')[linePos];
+                    Debug.Log("CheatedException");
                 }
               
                 Debug.Log($"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");

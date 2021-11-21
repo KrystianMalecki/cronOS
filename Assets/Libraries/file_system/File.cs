@@ -17,6 +17,8 @@ namespace Libraries.system
         [System.Serializable]
         public unsafe class File
         {
+            [SerializeField]
+
             public string name;
             [SerializeField]
             [EnumMask]
@@ -24,6 +26,8 @@ namespace Libraries.system
 
             [AllowNesting]
             [HideInInspector]
+            [SerializeField]
+
             public byte[] data;
 
             [SerializeField]
@@ -78,13 +82,16 @@ namespace Libraries.system
             }
             public File GetChildByName(string name)
             {
-                lock (children)
+                if (children != null)
                 {
-                    for (int i = 0; i < children.Count; i++)
+                    lock (children)
                     {
-                        if (children[i].name == name)
+                        for (int i = 0; i < children.Count; i++)
                         {
-                            return children[i];
+                            if (children[i].name == name)
+                            {
+                                return children[i];
+                            }
                         }
                     }
                 }
@@ -112,6 +119,7 @@ namespace Libraries.system
                 {
                     foreach (var child in children)
                     {
+                        Debug.Log($"{name}-{this}-{child}");
                         child.parent = this;
                         // Debug.Log("Validating " + child);
                         if (recursive)

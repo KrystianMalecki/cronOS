@@ -12,22 +12,24 @@ public class FilePD : PropertyDrawer
     {
         if (property == null)
         {
+            Debug.Log("UH!");
             return 0;
         }
         Init(property);
         float childredHeight = 0;
+        //  Debug.Log($"|{nameSP?.GetTargetObjectOfProperty()}-{permissionsSP?.GetTargetObjectOfProperty()}-{childrenSP?.GetTargetObjectOfProperty()}-{childrenItemsSP}|");
         try
         {
             childredHeight = EditorGUI.GetPropertyHeight(childrenSP);
         }
         catch (Exception e)
         {
-
+            //Debug.LogException(e);
         }
-        return EditorGUIUtility.singleLineHeight
+        return EditorGUIUtility.singleLineHeight * 2
             + childredHeight
         + EditorGUI.GetPropertyHeight(permissionsSP)
-        + (childrenItemsSP.isExpanded ? EditorGUIUtility.singleLineHeight : 0)
+         + (childrenItemsSP.isExpanded ? EditorGUIUtility.singleLineHeight : 0)
         ;
     }
     SerializedProperty nameSP;
@@ -41,8 +43,13 @@ public class FilePD : PropertyDrawer
         nameSP = property.FindPropertyRelative("name");
         permissionsSP = property.FindPropertyRelative("permissions");
         childrenSP = property.FindPropertyRelative("children");
-        childrenItemsSP = childrenSP.FindPropertyRelative("items");
+          childrenItemsSP = childrenSP.FindPropertyRelative("items");
 
+
+    }
+    public void say(Rect r)
+    {
+        Debug.Log($"{nameSP.GetTargetObjectOfProperty()} {r} {r.x} {r.y} {r.width} {r.height}");
 
     }
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -61,7 +68,13 @@ public class FilePD : PropertyDrawer
         var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, EditorGUI.GetPropertyHeight(permissionsSP));
         var filesRect = new Rect(main.x + 2, permissionsRect.y + permissionsRect.height, main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
         var addChildButtonRect = new Rect(main.x, filesRect.y + filesRect.height, main.width, EditorGUIUtility.singleLineHeight);
-
+        Debug.Log("frame");
+        say(main);
+        say(nameRect);
+        say(buttonRect);
+        say(permissionsRect);
+        say(filesRect);
+        say(addChildButtonRect);
 
         //EditorGUI.PropertyField(main, property, label, true);
         // EditorGUI.indentLevel--;
@@ -76,7 +89,7 @@ public class FilePD : PropertyDrawer
         try
         {
             EditorGUI.PropertyField(filesRect, childrenSP);
-            if (childrenItemsSP.isExpanded)
+            if (/*childrenItemsSP.isExpanded ||*/ true)
             {
                 if (GUI.Button(addChildButtonRect, "Add child"))
                 {
@@ -88,7 +101,7 @@ public class FilePD : PropertyDrawer
         }
         catch (Exception e)
         {
-
+          //  Debug.LogException(e);
         }
 
         GUI.color = Color.white;
