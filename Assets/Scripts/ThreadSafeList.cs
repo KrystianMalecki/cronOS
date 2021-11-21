@@ -8,8 +8,8 @@ using UnityEngine;
 [Serializable]
 public class ThreadSafeList<T> : IList<T>, IList
 {
-    [SerializeReference]
-   public List<T> items;
+    [SerializeField]
+    List<T> items;
     object sync;
 
     public ThreadSafeList()
