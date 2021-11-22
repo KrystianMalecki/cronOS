@@ -4,12 +4,13 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-//[CustomPropertyDrawer(typeof(ThreadSafeList<>))]
+[CustomPropertyDrawer(typeof(ThreadSafeList<>))]
 
 public class ThreadSafeListPropertyDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
+        Debug.Log(property);
         return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("items"));
     }
 

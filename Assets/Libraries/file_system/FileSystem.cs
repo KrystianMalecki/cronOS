@@ -22,7 +22,9 @@ namespace Libraries.system.file_system
         public static File MakeFile(string rawPath)
         {
             string[] path = rawPath.Split(FileSystemInternal.catalogSymbol);
-            File currentFile = FileSystemInternal.instance.drive.root;
+            throw new System.Exception("Not implemented");//todo 0 fix
+
+            File currentFile = null;// FileSystemInternal.instance.drive.root;
             for (int i = 0; i < path.Length; i++)
             {
                 File newFile = GetFileByPath("./" + path[i], currentFile);
@@ -32,7 +34,7 @@ namespace Libraries.system.file_system
                 }
                 currentFile = newFile;
             }
-          
+
             return currentFile;
         }
         public static File MakeFolder(string path, string name)

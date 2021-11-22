@@ -14,12 +14,13 @@ namespace Libraries.system
 
             public Path(string rawPath, File parent = null)
             {
+                throw new Exception("Not implemented");//todo 0 fix
                 rawPath ??= "";
-                parent ??= FileSystemInternal.instance.drive.root;
+                //    parent ??= FileSystemInternal.instance.drive.root;
                 rawPath = rawPath.StartsWith("./") ? (parent.GetFullPath() + rawPath.Substring(1)) : rawPath;
                 parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
 
-                File currentFile = FileSystemInternal.instance.drive.root;
+                File currentFile = null;//FileSystemInternal.instance.drive.root;
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)
                 {
@@ -43,7 +44,7 @@ namespace Libraries.system
                         fileparts.RemoveAt(fileparts.Count - 1);
 
                         currentFile = currentFile?.parent;
-                      //  continue;
+                        //  continue;
                     }
                     else
                     {
