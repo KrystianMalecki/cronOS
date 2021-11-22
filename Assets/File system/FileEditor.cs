@@ -51,7 +51,7 @@ public class FileEditor : EditorWindow
         }
         currentFile = file;
 
-        currentFile.OnValidate();
+
         toggleTopFields = true;
         SetValues();
         dataViewScrollPos = Vector2.zero;
@@ -64,7 +64,7 @@ public class FileEditor : EditorWindow
 
         permissionsSP = currentFileSP.FindPropertyRelative("permissions");
 
-        childrenSP = currentFileSP.FindPropertyRelative("children");
+   //     childrenSP = currentFileSP.FindPropertyRelative("children");
 
         dataSP = currentFileSP.FindPropertyRelative("data");
 
@@ -122,7 +122,7 @@ public class FileEditor : EditorWindow
     int size = 32;
     int page = 0;
     SerializedProperty permissionsSP;
-    SerializedProperty childrenSP;
+   // SerializedProperty childrenSP;
     SerializedProperty dataSP;
 
 
@@ -201,13 +201,13 @@ public class FileEditor : EditorWindow
 
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-            GUI.enabled = currentFile.parent != null;
+            GUI.enabled = currentFile.Parent != null;
             if (GUILayout.Button("Delete file"))
             {
                 if (EditorUtility.DisplayDialog("Delete file?",
                 $"Are you sure want to delete {currentFile.name}?", "Yes", "No"))
                 {
-                    File parent = currentFile.parent;
+                    File parent = currentFile.Parent;
                     parent.RemoveChild(currentFile);
                     currentFileSO.Update();
                     DisplayCurrentFile(parent, FindPropertyOfFile(parent), currentFileSO);
@@ -220,7 +220,7 @@ public class FileEditor : EditorWindow
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         //children
-        EditorGUILayout.PropertyField(childrenSP);
+      //  EditorGUILayout.PropertyField(childrenSP);
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
         GUILayout.EndHorizontal();
 
@@ -307,9 +307,9 @@ public class FileEditor : EditorWindow
         File father = currentFile;
         List<File> files = new List<File>();
         files.Add(father);
-        while (father.parent != null)
+        while (father.Parent != null)
         {
-            father = father.parent;
+            father = father.Parent;
             files.Add(father);
         }
         //todo 0 just use Path()

@@ -240,7 +240,7 @@ public class ScriptManager : MonoBehaviour
                     if (!importedLibraries.Contains(between))
                     {
                         importedLibraries.Add(between);
-                        File f = FileSystemInternal.instance.GetFileByPath(between);
+                        File f = FileSystemInternal.instance.drive.GetFileByPath(between);
                         if (f == null)
                         {
                             lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";

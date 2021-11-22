@@ -20,7 +20,7 @@ public class FilePD : PropertyDrawer
         //  Debug.Log($"|{nameSP?.GetTargetObjectOfProperty()}-{permissionsSP?.GetTargetObjectOfProperty()}-{childrenSP?.GetTargetObjectOfProperty()}-{childrenItemsSP}|");
         try
         {
-            childredHeight = EditorGUI.GetPropertyHeight(childrenSP);
+            //  childredHeight = EditorGUI.GetPropertyHeight(childrenSP);
         }
         catch (Exception e)
         {
@@ -29,21 +29,21 @@ public class FilePD : PropertyDrawer
         return EditorGUIUtility.singleLineHeight * 2
             + childredHeight
         + EditorGUI.GetPropertyHeight(permissionsSP)
-         + (childrenItemsSP.isExpanded ? EditorGUIUtility.singleLineHeight : 0)
+        //  + (childrenItemsSP.isExpanded ? EditorGUIUtility.singleLineHeight : 0)
         ;
     }
     SerializedProperty nameSP;
     SerializedProperty permissionsSP;
-    SerializedProperty childrenSP;
-    SerializedProperty childrenItemsSP;
+    //   SerializedProperty childrenSP;
+    //  SerializedProperty childrenItemsSP;
 
     public void Init(SerializedProperty property)
     {
 
         nameSP = property.FindPropertyRelative("name");
         permissionsSP = property.FindPropertyRelative("permissions");
-        childrenSP = property.FindPropertyRelative("children");
-          childrenItemsSP = childrenSP?.FindPropertyRelative("items");
+        //    childrenSP = property.FindPropertyRelative("children");
+        //    childrenItemsSP = childrenSP?.FindPropertyRelative("items");
 
 
     }
@@ -62,14 +62,14 @@ public class FilePD : PropertyDrawer
 
 
         var permissionsRect = new Rect(main.x, main.y + EditorGUIUtility.singleLineHeight, main.width, EditorGUI.GetPropertyHeight(permissionsSP));
-        var filesRect = new Rect(main.x + 2, permissionsRect.y + permissionsRect.height, main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
-        var addChildButtonRect = new Rect(main.x, filesRect.y + filesRect.height, main.width, EditorGUIUtility.singleLineHeight);
-    
+        //   var filesRect = new Rect(main.x + 2, permissionsRect.y + permissionsRect.height, main.width - 2, EditorGUI.GetPropertyHeight(childrenSP));
+        var addChildButtonRect = new Rect(main.x, permissionsRect.y + permissionsRect.height, main.width, EditorGUIUtility.singleLineHeight);
+
         //EditorGUI.PropertyField(main, property, label, true);
         // EditorGUI.indentLevel--;
         EditorGUI.PropertyField(nameRect, nameSP, GUIContent.none);
         //  permissionsSP.intValue = ((int)((FilePermission)EditorGUI.EnumFlagsField(permissionsRect, (FilePermission)permissionsSP.intValue)));
-      //  EditorGUI.PropertyField(permissionsRect, permissionsSP);
+          EditorGUI.PropertyField(permissionsRect, permissionsSP);
 
 
 
@@ -77,7 +77,7 @@ public class FilePD : PropertyDrawer
         GUI.color = new Color(1.1f, 1.1f, 1.1f);
         try
         {
-           // EditorGUI.PropertyField(filesRect, childrenSP);
+            // EditorGUI.PropertyField(filesRect, childrenSP);
             if (/*childrenItemsSP.isExpanded ||*/ true)
             {
                 if (GUI.Button(addChildButtonRect, "Add child"))
@@ -90,7 +90,7 @@ public class FilePD : PropertyDrawer
         }
         catch (Exception e)
         {
-          //  Debug.LogException(e);
+            //  Debug.LogException(e);
         }
 
         GUI.color = Color.white;
@@ -98,8 +98,9 @@ public class FilePD : PropertyDrawer
 
         if (GUI.Button(buttonRect, "Open in editor"))
         {
-            ((DriveSO)property.serializedObject.targetObject).GenerateParentLinks();
-            FileEditor.DisplayCurrentFile(property.GetTargetObjectOfProperty() as File, property, property.serializedObject);
+            ((DriveSO)property.serializedObject.targetObject).GenerateCacheData();
+             FileEditor.DisplayCurrentFile(property.GetTargetObjectOfProperty() as File, property, property.serializedObject);
+            //Debug.Log(((File)property.GetTargetObjectOfProperty()).drive.files[0]);
         }
         property.serializedObject.ApplyModifiedProperties();
 

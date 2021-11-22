@@ -40,7 +40,7 @@ public class DrivePD : PropertyDrawer
         }
         if (GUILayout.Button("Generate parent links"))
         {
-            ((DriveSO)property.GetTargetObjectOfProperty()).GenerateParentLinks();
+            ((DriveSO)property.GetTargetObjectOfProperty()).GenerateCacheData();
 
         }
         EditorGUILayout.EndHorizontal();

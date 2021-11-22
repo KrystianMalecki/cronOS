@@ -43,7 +43,7 @@ namespace Libraries.system
                         fileparts.RemoveAt(fileparts.Count - 1);
                         fileparts.RemoveAt(fileparts.Count - 1);
 
-                        currentFile = currentFile?.parent;
+                        currentFile = currentFile?.Parent;
                         //  continue;
                     }
                     else

@@ -8,12 +8,12 @@ namespace Libraries.system.file_system
     {
         public static File GetFileByPath(string path, File parent = null)
         {
-            return FileSystemInternal.instance.GetFileByPath(path, parent);
+            return FileSystemInternal.instance.drive.GetFileByPath(path, parent);
         }
         public static File MakeFile(string path, string name, byte[] data = null)
         {
-            File file = FileSystemInternal.instance.MakeFile(name, data);
-            File parent = FileSystemInternal.instance.GetFileByPath(path);
+            File file = FileSystemInternal.instance.drive.MakeFile(name, data);
+            File parent = FileSystemInternal.instance.drive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
 
@@ -39,14 +39,14 @@ namespace Libraries.system.file_system
         }
         public static File MakeFolder(string path, string name)
         {
-            File file = FileSystemInternal.instance.MakeFolder(name);
-            File parent = FileSystemInternal.instance.GetFileByPath(path);
+            File file = FileSystemInternal.instance.drive.MakeFolder(name);
+            File parent = FileSystemInternal.instance.drive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
         }
         public static bool RemoveFile(string path)
         {
-            return FileSystemInternal.instance.RemoveFile(path);
+            return FileSystemInternal.instance.drive.RemoveFile(path);
 
         }
 

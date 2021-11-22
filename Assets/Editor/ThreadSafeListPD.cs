@@ -10,7 +10,6 @@ public class ThreadSafeListPropertyDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        Debug.Log(property);
         return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("items"));
     }
 

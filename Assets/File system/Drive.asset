@@ -13,4 +13,19 @@ MonoBehaviour:
   m_Name: Drive
   m_EditorClassIdentifier: 
   files:
-    items: []
+    items:
+    - fileID: 0
+      parentID: -1
+      name: root
+      permissions: 0
+      data: 
+    - fileID: 1
+      parentID: 0
+      name: rootChild
+      permissions: 0
+      data: 
+    - fileID: 2
+      parentID: 1
+      name: rootChildChild
+      permissions: 13
+      data: 
