@@ -5,7 +5,6 @@
 
 
 
-//todo 3 think about better path logic
 
 //todo 4 think about #include-ing core libraries like system or system.file_system
 

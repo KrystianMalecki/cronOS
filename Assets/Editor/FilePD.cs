@@ -98,9 +98,9 @@ public class FilePD : PropertyDrawer
 
         if (GUI.Button(buttonRect, "Open in editor"))
         {
-            ((DriveSO)property.serializedObject.targetObject).GenerateCacheData();
-             FileEditor.DisplayCurrentFile(property.GetTargetObjectOfProperty() as File, property, property.serializedObject);
-            //Debug.Log(((File)property.GetTargetObjectOfProperty()).drive.files[0]);
+            ((Drive)property.serializedObject.targetObject).GenerateCacheData();
+             FileEditor.DisplayCurrentFile(property.GetTargetObjectOfProperty() as File, property,null, property.serializedObject);
+            //Debug.Log(((File)property.GetTargetObjectOfProperty()).mainDrive.files[0]);
         }
         property.serializedObject.ApplyModifiedProperties();
 

@@ -125,7 +125,13 @@ public class ThreadSafeList<T> : IList<T>, IList
             this.items.CopyTo(array, index);
         }
     }
-
+    public List<T> ReturnCopy()
+    {
+        lock (this.sync)
+        {
+          return new List<T>(items);
+        }
+    }
     public bool Contains(T item)
     {
         lock (this.sync)

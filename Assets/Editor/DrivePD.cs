@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-//[CustomPropertyDrawer(typeof(DriveSO))]
+[CustomPropertyDrawer(typeof(Drive))]
 
 public class DrivePD : PropertyDrawer
 {
@@ -34,13 +34,16 @@ public class DrivePD : PropertyDrawer
         EditorGUILayout.PropertyField(property, GUIContent.none);
         if (GUILayout.Button("Open Editor"))
         {
-            ((DriveSO)property.GetTargetObjectOfProperty()).OpenEditor();
+            ((Drive)property.GetTargetObjectOfProperty()).GenerateCacheData();
+
+            ((Drive)property.GetTargetObjectOfProperty()).OpenEditor();
             //  SerializedProperty root = property.FindPropertyRelative("root");
             //  FileEditor.DisplayCurrentFile(root.GetTargetObjectOfProperty() as File, root, property.serializedObject);
         }
         if (GUILayout.Button("Generate parent links"))
         {
-            ((DriveSO)property.GetTargetObjectOfProperty()).GenerateCacheData();
+            ((Drive)property.GetTargetObjectOfProperty()).GenerateCacheData();
+
 
         }
         EditorGUILayout.EndHorizontal();

@@ -10,11 +10,13 @@ using System.Collections.Concurrent;
 [CreateAssetMenu(fileName = "Drive", menuName = "ScriptableObjects/Drive")]
 
 [Serializable]
-public class DriveSO : ScriptableObject
+public class Drive : ScriptableObject
 {
     // [SerializeField]
     // public File root;
     //  public Dictionary<string, File> pathLinks = new Dictionary<string, File>();
+    [NonSerialized]
+    public bool cached = false;
     [SerializeField]
     public ThreadSafeList<File> files = new ThreadSafeList<File>();
     [SerializeField]
@@ -25,16 +27,32 @@ public class DriveSO : ScriptableObject
         GenerateCacheData();
 
         SerializedObject so = new SerializedObject(this, this);
-       //   FileEditor.ShowWindow(root, so.FindProperty("root"), so);
+        //   FileEditor.ShowWindow(root, so.FindProperty("root"), so);
     }
-  /*  [Button]
-    public void GenerateParentLinks()
+    /*  [Button]
+      public void GenerateParentLinks()
+      {
+          GenerateCacheData();
+      }*/
+    public File GetRoot()
     {
-        GenerateCacheData();
-    }*/
+        File root = GetFileByID(0);
+        root ??= GetFileByPath("");
+        return root;
+    }
     [Button]
     public void GenerateCacheData()
     {
+        cached = true;
+        for (int i = 0; i < files.Count; i++)
+        {
+            if (files[i].children != null)
+            {
+
+
+                files[i].children.Clear();
+            }
+        }
         for (int i = 0; i < files.Count; i++)
         {
             File file = files[i];
@@ -95,7 +113,13 @@ public class DriveSO : ScriptableObject
         freeSpaces.Enqueue(file.FileID);
         return true;
     }
-    public File MakeFolder(string name)//todo 0 add comments. This is not added to files
+    /**
+     <summary> 
+    This doesn't add <see cref="File"/> of type folder to <see cref="DriveSO"/>
+    </summary>
+       <returns>New sample folder</returns>
+     **/
+    public File MakeFolder(string name)
     {
         File newFile = new File();
         newFile.name = name;
@@ -103,7 +127,13 @@ public class DriveSO : ScriptableObject
 
         return newFile;
     }
-    public File MakeFile(string name, byte[] data = null)//todo 0 add comments. This is not added to files
+    /**
+     <summary> 
+    This doesn't add <see cref="File"/> to <see cref="DriveSO"/>
+    </summary>
+       <returns>New sample file</returns>
+     **/
+    public File MakeFile(string name, byte[] data = null)
     {
         File newFile = new File();
         newFile.name = name;

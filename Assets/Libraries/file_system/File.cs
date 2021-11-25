@@ -41,7 +41,7 @@ namespace Libraries.system
             public ThreadSafeList<File> children;
 
             [NonSerialized]
-            private DriveSO drive;
+            private Drive drive;
 
             [NonSerialized]
             private File _parent;
@@ -64,7 +64,11 @@ namespace Libraries.system
             internal int ParentID { get { return parentID; } }
 
 
-            internal void SetDrive(DriveSO drive)
+            public Drive GetDrive()
+            {
+                return drive;
+            }
+            internal void SetDrive(Drive drive)
             {
                 this.drive = drive;
             }
@@ -97,20 +101,10 @@ namespace Libraries.system
                 }
                 return string.Concat(Parent.GetFullPath(), "/", name);
             }
-            public Path GetPathClass()
+            public Path GetPathClass(File root = null)
             {
-                throw new Exception("Not implemented");//todo 0 fix
 
-                string rawPath = "";
-                if (Parent == null)
-                {
-                    rawPath = name;
-                }
-                else
-                {
-                    rawPath = string.Concat(Parent.GetFullPath(), "/", name);
-                }
-                return new Path(rawPath);
+                return new Path(GetFullPath(), null, root == null ? drive?.GetRoot() : root);
             }
             public void MoveFileTo(File desitination)
             {

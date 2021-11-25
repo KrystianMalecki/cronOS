@@ -20,13 +20,22 @@ public class FileSystemInternal : MonoBehaviour
         {
             Destroy(this);
         }
-        drive.GenerateCacheData();
+        mainDrive.GenerateCacheData();
 
     }
     #endregion
-    public DriveSO drive;
+    public Drive mainDrive;
     public static readonly char catalogSymbol = '/';
+    public ThreadSafeList<Drive> drives = new ThreadSafeList<Drive>();
 
-
-
+    public void CacheAllDrives()
+    {
+        for (int i = 0; i < drives.Count; i++)
+        {
+            if (!drives[i].cached)
+            {
+                drives[i].GenerateCacheData();
+            }
+        }
+    }
 }
