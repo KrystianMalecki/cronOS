@@ -29,33 +29,18 @@ MonoBehaviour:
       name: rootChildChild
       permissions: 13
       data: 
-    - fileID: 2
-      parentID: 1
-      name: rootChildChild
-      permissions: 13
+    - fileID: 3
+      parentID: 0
+      name: new File 3
+      permissions: 7
       data: 
-    - fileID: 2
-      parentID: 1
-      name: rootChildChild
-      permissions: 13
+    - fileID: 4
+      parentID: 0
+      name: 4
+      permissions: 7
       data: 
-    - fileID: 2
-      parentID: 1
-      name: rootChildChild
-      permissions: 13
-      data: 
-    - fileID: 2
-      parentID: 1
-      name: rootChildChild
-      permissions: 13
-      data: 
-    - fileID: 2
-      parentID: 1
-      name: rootChildChild
-      permissions: 13
-      data: 
-    - fileID: 2
-      parentID: 1
-      name: rootChildChild
-      permissions: 13
+    - fileID: 5
+      parentID: 0
+      name: 5
+      permissions: 7
       data: 

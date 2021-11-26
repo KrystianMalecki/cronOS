@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//todo 8 rethink if Makers should be sync or not
 namespace Libraries.system.file_system
 {
-    //todo 0 fix library to use mainDrive
     public class FileSystem : BaseLibrary
     {
         public static File GetFileByPath(string path, File parent = null)
@@ -13,7 +11,7 @@ namespace Libraries.system.file_system
         }
         public static File MakeFile(string path, string name, byte[] data = null)
         {
-            File file = FileSystemInternal.instance.mainDrive.MakeFile(name, data);
+            File file = Drive.MakeFile(name, data);
             File parent = FileSystemInternal.instance.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
@@ -39,7 +37,7 @@ namespace Libraries.system.file_system
         }
         public static File MakeFolder(string path, string name)
         {
-            File file = FileSystemInternal.instance.mainDrive.MakeFolder(name);
+            File file = Drive.MakeFolder(name);
             File parent = FileSystemInternal.instance.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;

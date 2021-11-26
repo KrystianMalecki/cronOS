@@ -60,6 +60,12 @@ namespace Libraries.system
                     }
                     fileparts.Add(currentFile);
                 }
+                if(parts.Count==1&&currentFile.GetFullPath()!= rawPath)
+                {
+                    //Debug.Log("uh!");
+                    parts = null;
+                    fileparts = null;
+                }
             }
             public override string ToString()
             {

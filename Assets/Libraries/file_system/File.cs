@@ -60,8 +60,9 @@ namespace Libraries.system
                 }
             }
 
-            internal int FileID { get { return fileID; } }
-            internal int ParentID { get { return parentID; } }
+            internal int FileID { get { return fileID; } set { fileID = value; } }
+            internal int ParentID { get { return parentID; } set { parentID = value; } }
+
 
 
             public Drive GetDrive()
@@ -73,7 +74,7 @@ namespace Libraries.system
                 this.drive = drive;
             }
 
-            public void AddChild(File file)
+            public File AddChild(File file)
             {
                 if (children == null)
                 {
@@ -82,17 +83,22 @@ namespace Libraries.system
                 children.Add(file);
                 if (file.fileID == -1)
                 {
-                    file.fileID = file.drive.GetFreeID();
+                    drive.AddFileToDrive(file);
                 }
                 file.Parent = (this);
-
+                return file;
             }
             public void RemoveChild(File file)
             {
                 children?.Remove(file);
-                file.Parent = (null);
+                file.Deparent();
+                drive.RemoveFileFromDrive(file);
             }
-
+            public void Deparent()
+            {
+                Parent = (null);
+                _parent = null;
+            }
             public string GetFullPath()
             {
                 if (Parent == null)
@@ -103,7 +109,7 @@ namespace Libraries.system
             }
             public Path GetPathClass(File root = null)
             {
-
+               
                 return new Path(GetFullPath(), null, root == null ? drive?.GetRoot() : root);
             }
             public void MoveFileTo(File desitination)

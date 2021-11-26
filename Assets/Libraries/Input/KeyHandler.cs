@@ -2,8 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using InternalLogger;
 using System.Linq;
+using UnityEngine;
 
 namespace Libraries.system
 {
@@ -25,7 +25,7 @@ namespace Libraries.system
                 }
                 catch (Exception e)
                 {
-                    FlagLogger.Log(LogFlags.SystemError, " error", e);
+                    Debug.Log(" error"+ e);
                 }
             }
             public bool GetKeyDown(Key key)

@@ -32,6 +32,7 @@ public class DrivePD : PropertyDrawer
           */
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
         EditorGUILayout.PropertyField(property, GUIContent.none);
+        EditorGUILayout.LabelField("DO NOT USE +");
         if (GUILayout.Button("Open Editor"))
         {
             ((Drive)property.GetTargetObjectOfProperty()).GenerateCacheData();

@@ -11,7 +11,6 @@ using UnityEngine;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using InternalLogger;
 
 
 [Serializable]
@@ -57,7 +56,7 @@ public class CodeTask
         }
         catch (ThreadAbortException tae)
         {
-            FlagLogger.LogWarning(LogFlags.SystemWarning, "Aborted thread running code.\nData: " + tae.Message);
+            Debug.LogWarning( "Aborted thread running code.\nData: " + tae.Message);
         }
         catch (Exception e)
         {
@@ -129,7 +128,7 @@ public class CodeTask
     }
     public void Destroy()
     {
-        FlagLogger.LogWarning(LogFlags.SystemWarning, "Destroying CodeTask");
+        Debug.LogWarning("Destroying CodeTask");
         ScriptManager.instance.RemoveCodeTask(this);
         if (thread != null)
         {
@@ -140,7 +139,7 @@ public class CodeTask
         }
         else
         {
-            FlagLogger.LogWarning(LogFlags.SystemWarning, "thread was null");
+            Debug.LogWarning("thread was null");
 
         }
     }

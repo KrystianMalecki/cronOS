@@ -27,7 +27,7 @@ public class Drive : ScriptableObject
         GenerateCacheData();
 
         SerializedObject so = new SerializedObject(this, this);
-        //   FileEditor.ShowWindow(root, so.FindProperty("root"), so);
+        FileEditor.DisplayCurrentFile(GetRoot(), null, null, so);
     }
     /*  [Button]
       public void GenerateParentLinks()
@@ -56,6 +56,7 @@ public class Drive : ScriptableObject
         for (int i = 0; i < files.Count; i++)
         {
             File file = files[i];
+            file.FileID = i;
             file.SetDrive(this);
             File parent = GetFileByID(file.ParentID);
             file.Parent = parent;
@@ -109,8 +110,13 @@ public class Drive : ScriptableObject
     {
         //todo-future add errors
         File file = GetFileByPath(path);
+
+        return RemoveFile(file);
+    }
+    public bool RemoveFile(File file)
+    {
+        //todo-future add errors
         file.Parent.RemoveChild(file);
-        freeSpaces.Enqueue(file.FileID);
         return true;
     }
     /**
@@ -119,7 +125,7 @@ public class Drive : ScriptableObject
     </summary>
        <returns>New sample folder</returns>
      **/
-    public File MakeFolder(string name)
+    public static File MakeFolder(string name)
     {
         File newFile = new File();
         newFile.name = name;
@@ -133,7 +139,7 @@ public class Drive : ScriptableObject
     </summary>
        <returns>New sample file</returns>
      **/
-    public File MakeFile(string name, byte[] data = null)
+    public static File MakeFile(string name, byte[] data = null)
     {
         File newFile = new File();
         newFile.name = name;
@@ -145,10 +151,12 @@ public class Drive : ScriptableObject
     }
     public int GetFreeID()
     {
-        if (freeSpaces.Count > 1)
+        if (freeSpaces.Count > 0)
         {
             if (freeSpaces.TryDequeue(out int result))
             {
+                        Debug.Log(freeSpaces.GetValuesToString());
+
                 return result;
             }
         }
@@ -156,5 +164,30 @@ public class Drive : ScriptableObject
         return files.Count;
 
     }
+    private int SetAt(int pos, File file)
+    {
+        if (files.Count <= pos)
+        {
+            pos = files.Count;
+            file.FileID = (pos);
+            files.Add(file);
+        }
+        else
+        {
+            files[pos] = file;
+        }
+        return pos;
+    }
+    public void AddFileToDrive(File file)
+    {
+        file.FileID = GetFreeID();
+        SetAt(file.FileID, file);
+    }
+    public void RemoveFileFromDrive(File file)
+    {
+        //  files.RemoveAt(file.FileID); //why? cuz now you can still retrive it
+        freeSpaces.Enqueue(file.FileID);
+        Debug.Log(freeSpaces.GetValuesToString());
 
+    }
 }

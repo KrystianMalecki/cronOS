@@ -1,4 +1,3 @@
-using InternalLogger;
 using Microsoft.CodeAnalysis.Scripting;
 using NaughtyAttributes;
 using System;
@@ -119,7 +118,7 @@ public class ScriptManager : MonoBehaviour
 
     public void KillAll()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "Kill All");
+        Debug.Log("Kill All");
         for (int i = 0; i < scriptsRunning.Count; i++)
         {
             CodeTask ct = scriptsRunning[i];
@@ -168,7 +167,7 @@ public class ScriptManager : MonoBehaviour
                         }
                         else
                         {
-                            FlagLogger.Log(LogFlags.DebugInfo, "killing null:");
+                            Debug.Log("killing null:");
                             _delegateBuffer.Speak();
                         }
                     }
@@ -188,12 +187,12 @@ public class ScriptManager : MonoBehaviour
     }
     public void RunCode(CodeObject codeObject)
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "Making new codeTask");
+        Debug.Log("Making new codeTask");
         CodeTask codeTask = new CodeTask();
         scriptsRunning.Add(codeTask);
-        codeObject.code = CodeParser(codeObject.code);
+        CodeParser(ref codeObject);
         codeTask.RunCode(codeObject);
-        FlagLogger.Log(LogFlags.DebugInfo, "After running code");
+        Debug.Log("After running code");
 
 
     }
@@ -205,19 +204,20 @@ public class ScriptManager : MonoBehaviour
     static Regex undefineRegex = new Regex("\\s*#\\s*undefine\\s*.*\\s*;*");
     static Regex undefineRegexOld = new Regex("\\s*#\\s*undefine\\s*.*\\s*.*;*");
 
-    public static string CodeParser(string code)
+    static Regex redefineSplitRegex = new Regex(@"( +)|([\\(\\),])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
+
+    public static void CodeParser(ref CodeObject codeObject)
     {
-        List<string> lines = new List<string>(code.Split('\n'));
+        List<string> lines = new List<string>(codeObject.code.Split('\n'));
 
         List<string> importedLibraries = new List<string>();
-        Dictionary<string, string> currentRedefines = new Dictionary<string, string>();
+        Dictionary<string, RedefineGroup> currentRedefines = new Dictionary<string, RedefineGroup>();
 
         int positionToExpectNextInlcude = 0;
         bool checkIncludes = true;
         bool checkRedefines = true;
         bool checkUndefines = true;
 
-        //todo 0 make buffer save to line[index] at the end. Stop saving and reading every change
         for (int index = 0; index < lines.Count; index++)
         {
             string buffer = lines[index];
@@ -226,22 +226,32 @@ public class ScriptManager : MonoBehaviour
 
                 foreach (var item in currentRedefines)
                 {
-                    Debug.Log($"line:{buffer}. replace {item.Key} for {item.Value} so now it looks: { buffer.Replace(item.Key, item.Value)}");
+                    Debug.Log($"line:{buffer}. replace {item.Key} for {item.Value} so now it looks: { buffer.Replace(item.Key, item.Value.replacor)}");
 
 
-                    buffer.Replace(item.Key, item.Value).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");//todo-future change unknown
+                    buffer.Replace(item.Key, item.Value.replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");//todo-future change unknown
 
                 }
             }
 
-            if (checkRedefines)
+
+            if ((positionToExpectNextInlcude == index && !includeRegex.IsMatch(buffer)))
             {
-                if (redefineRegex.IsMatch(buffer))
+                if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
+                {
+                    positionToExpectNextInlcude++;
+                }
+                checkIncludes = false;
+            }
+
+            if (checkRedefines || true)
+            {
+                if (redefineRegex.IsMatch(buffer) || true)
                 {
 
-
-                    //  string definition = buffer.GetRangeBetweenFirstNext(" ");
-                    string[] lineParts = buffer.Split(' ');
+                    // buffer = "  #  define    lol(x,y) Console.Debug($\"{x} and {y}\")";
+                    string[] lineParts = redefineSplitRegex.Split(buffer); // buffer.Split(' ', '(', ')', ',');
+                                                                           //  List<string> regex = redefineSplitRegex.Split(buffer).ToList();
                     string definition = lineParts[1];
                     if (ONLY_UPPERCASE_REDEFINE)
                     {
@@ -251,20 +261,15 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-                    //  int indexOfFirst = buffer.IndexOf(" ") + 1;
-                    //  int indexOfSecond = buffer.IndexOf(" ", indexOfFirst) + 1;
-                    //  Debug.Log(lineParts.GetValuesToString());
 
                     string definitionReplacor = string.Join(" ", lineParts.Skip(2).Take(lineParts.Length - 2).ToArray());
 
-                    // string definitionReplacor = buffer.Substring(indexOfSecond + 1);
-                    //  Debug.Log(/*$"indexOfFirst{indexOfFirst}' indexOfSecond{indexOfSecond}'*/$"  definition'{definition}' definitionReplacor'{definitionReplacor}'");
                     if (definition == null || definitionReplacor == null)
                     {
-
+                        continue;
                     }
                     buffer = "//" + buffer.Substring(1);
-                    currentRedefines.Add(definition, definitionReplacor);
+                    currentRedefines.Add(definition, new RedefineGroup(definitionReplacor, new string[] { "" }));
 
                 }
             }
@@ -277,15 +282,6 @@ public class ScriptManager : MonoBehaviour
                     currentRedefines.Remove(definition);
                 }
             }
-            if ((positionToExpectNextInlcude == index && !includeRegex.IsMatch(buffer)))
-            {
-                if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
-                {
-                    positionToExpectNextInlcude++;
-                }
-                checkIncludes = false;
-            }
-
             if (checkIncludes)
             {
                 if (includeRegex.IsMatch(buffer))
@@ -302,6 +298,11 @@ public class ScriptManager : MonoBehaviour
                         File f = FileSystemInternal.instance.mainDrive.GetFileByPath(between);
                         if (f == null)
                         {
+                            /*if (null.Contains( between))
+                            {
+                           //todo 9 think about #include-ing core libraries like system or system.file_system
+// this would be the best with system variables
+                            }*/
                             lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";
                             continue;
                         }
@@ -318,7 +319,7 @@ public class ScriptManager : MonoBehaviour
                     }
                     else
                     {
-                        lines[index] = $"//There would be imported \"{between}\" but it was already imported!";
+                        lines[index] = $"//There would be imported \"{between}\" but it was already imported earlier!";
 
                         //todo-future add compilation error
                     }
@@ -331,7 +332,7 @@ public class ScriptManager : MonoBehaviour
 
         }
         Debug.Log(lines.GetValuesToString("\n"));
-        return string.Join("\n", lines);
+        codeObject.code = string.Join("\n", lines);
     }
 
 
@@ -357,5 +358,16 @@ public class ScriptManager : MonoBehaviour
         {
             action.Invoke();
         }, sync);
+    }
+    public struct RedefineGroup
+    {
+        public string replacor;
+        public string[] arguments;
+
+        public RedefineGroup(string replacor, string[] arguments)
+        {
+            this.replacor = replacor;
+            this.arguments = arguments;
+        }
     }
 }
