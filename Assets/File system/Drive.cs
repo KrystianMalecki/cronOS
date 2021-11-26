@@ -155,7 +155,7 @@ public class Drive : ScriptableObject
         {
             if (freeSpaces.TryDequeue(out int result))
             {
-                        Debug.Log(freeSpaces.GetValuesToString());
+                Debug.Log(freeSpaces.GetValuesToString());
 
                 return result;
             }
@@ -180,6 +180,7 @@ public class Drive : ScriptableObject
     }
     public void AddFileToDrive(File file)
     {
+        file.SetDrive(this);
         file.FileID = GetFreeID();
         SetAt(file.FileID, file);
     }

@@ -31,16 +31,21 @@ MonoBehaviour:
       data: 
     - fileID: 3
       parentID: 0
-      name: new File 3
+      name: System
       permissions: 7
       data: 
     - fileID: 4
-      parentID: 0
-      name: 4
+      parentID: 3
+      name: new File 4
       permissions: 7
       data: 
     - fileID: 5
-      parentID: 0
-      name: 5
+      parentID: 3
+      name: new File 5
+      permissions: 7
+      data: 
+    - fileID: 6
+      parentID: 3
+      name: new File 6
       permissions: 7
       data: 

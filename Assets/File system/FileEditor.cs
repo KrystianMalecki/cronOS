@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 //todo 5 add "move file to"
-//todo 5 add caching of basic variables like Path
 public class FileEditor : EditorWindow
 {
     public FileEditor currentWindow;
@@ -58,7 +57,13 @@ public class FileEditor : EditorWindow
 
     bool canEditIds = false;
 
-
+    private void SetupChildren(bool refresh = false)
+    {
+        if (children == null || refresh)
+        {
+            children = currentFile.children?.ReturnCopy();
+        }
+    }
 
     public static void DisplayCurrentFile(File file, SerializedProperty serializedProperty, FileEditor currentWindow, SerializedObject serializedObject = null)
     {
@@ -101,10 +106,9 @@ public class FileEditor : EditorWindow
         SetValues(true);
         canEditIds = false;
         SetupDrive();
-        children = null;
-        children = currentFile?.children?.ReturnCopy();
-        SetupPath(true);
+        SetupChildren(true);
 
+        SetupPath(true);
 
         dataViewScrollPos = Vector2.zero;
         textScrollPos = Vector2.zero;
@@ -115,7 +119,7 @@ public class FileEditor : EditorWindow
         drive = currentFile?.GetDrive();
         if (drive == null)
         {
-            driveAssetPath = EditorPrefs.GetString("driveInstanceID", null);
+            driveAssetPath = EditorPrefs.GetString("drivePath", null);
             if (string.IsNullOrEmpty(driveAssetPath))
             {
                 drive = AssetDatabase.LoadAssetAtPath<Drive>(driveAssetPath);
@@ -129,6 +133,7 @@ public class FileEditor : EditorWindow
         else
         {
             driveAssetPath = AssetDatabase.GetAssetPath(drive);
+            EditorPrefs.SetString("drivePath", driveAssetPath);
 
         }
     }
@@ -222,16 +227,20 @@ public class FileEditor : EditorWindow
 
 
         EditorGUI.BeginChangeCheck();
+        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+
+        EditorGUILayout.BeginVertical();
 
         toggleTopFields = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleTopFields, "Main values"));
 
         if (toggleTopFields)
         {
+
             DrawTopGoersBar();
 
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+            GUILayout.BeginHorizontal();
             //name
             GUILayout.Label("Name: ", GUILayout.Width(50));
             string before = currentFile.name;
@@ -248,7 +257,6 @@ public class FileEditor : EditorWindow
 
 
 
-            GUILayout.Space(EditorGUIUtility.singleLineHeight);
             //permissions
             GUILayout.Label("Permissions: ");
 
@@ -270,7 +278,7 @@ public class FileEditor : EditorWindow
                 }
             }
             GUI.enabled = true;
-            GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+            GUILayout.BeginHorizontal();
 
             canEditIds = GUILayout.Toggle(canEditIds, "Edit ids");
             GUI.enabled = canEditIds;
@@ -294,13 +302,21 @@ public class FileEditor : EditorWindow
             GUILayout.EndHorizontal();
 
             GUI.enabled = true;
+
         }
+        EditorGUILayout.EndVertical();
+
         EditorGUILayout.EndFoldoutHeaderGroup();
 
         //children
-        GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
+
+        EditorGUILayout.BeginVertical();
+        toggleChildren = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleChildren, "Children:"));
         DrawChildren();
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.EndHorizontal();
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         //  EditorGUILayout.PropertyField(childrenSP);
@@ -365,30 +381,38 @@ public class FileEditor : EditorWindow
     }
     void DrawChildren()
     {
-        toggleChildren = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleChildren, "Children:"));
-        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
         if (toggleChildren && children != null)
         {
+            Debug.Log($"ch{children}");
+            Debug.Log($"ch2{children.Count}");
+            Debug.Log($"ch3{children.GetValuesToString()}");
+
             for (int i = 0; i < children.Count; i++)
             {
                 if (i % childrenInLine == 0)
                 {
                     EditorGUILayout.EndHorizontal();
 
-                    EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+                    EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
 
                 }
-                DrawChild(children[i]);
+                if (DrawChild(children[i]))
+                {
+                    break;
+                }
 
             }
         }
         EditorGUILayout.EndHorizontal();
         if (toggleChildren)
         {
-            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
             if (GUILayout.Button("Add Child"))
             {
                 File f = currentFile.AddChild(Drive.MakeFile($"new File "));
+                SetupChildren(true);
+
                 f.name += f.FileID;
                 currentFileSO.Update();
                 UpdateWindow();
@@ -397,13 +421,14 @@ public class FileEditor : EditorWindow
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
     }
-    void DrawChild(File child)
+    bool DrawChild(File child)
     {
-        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
 
-        if (GUILayout.Button(child.name, GUILayout.Width(windowWidth / childrenInLine - 20)))
+        if (GUILayout.Button(child.name, GUILayout.Width((windowWidth / (childrenInLine - 1)) / 2 - 100)))
         {
-            ChangeCurrentFile(child);
+            FileEditor.DisplayCurrentFile(child, FindPropertyOfFile(child), currentWindow, currentFileSO);
+
         }
         if (GUILayout.Button("-", GUILayout.Width(18)))
         {
@@ -413,12 +438,12 @@ public class FileEditor : EditorWindow
                 currentFile.RemoveChild(child);
                 currentFileSO.Update();
                 UpdateWindow();
-
+                return true;
             }
 
         }
         EditorGUILayout.EndHorizontal();
-
+        return false;
     }
     void UpdateWindow()
     {
@@ -437,7 +462,7 @@ public class FileEditor : EditorWindow
     {
         bufferedPath = currentFile.GetFullPath();
         SetupPath();
-        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+        GUILayout.BeginHorizontal();
 
         GUILayout.Label("Full path: " + bufferedPath, GUILayout.ExpandWidth(false));
         if (GUILayout.Button("Copy path", GUILayout.Width(90)))
@@ -446,7 +471,7 @@ public class FileEditor : EditorWindow
 
         }
         GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+        GUILayout.BeginHorizontal();
 
 
         if (bufferedPathObject != null && bufferedPathObject.fileparts != null)
@@ -465,7 +490,7 @@ public class FileEditor : EditorWindow
     }
     void DrawTopGoersBar()
     {
-        GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
+        GUILayout.BeginHorizontal();
 
         /*  GUI.enabled = lastOne != null && lastOne != currentFile;
           string lastName = lastOne == null ? "" : (lastOne.name);
