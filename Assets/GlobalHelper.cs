@@ -3,62 +3,36 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace helper
 {
     public static class GlobalHelper
     {
-        public static List<string> SplitString2Q(string input)
-        {
-            bool qSearch = false;
-            List<string> output = new List<string>();
-            string currentPart = "";
-            bool lastCharIsEscape = false;
-            for (int i = 0; i < input.Length; i++)
-            {
+        static Regex spaceQArgsRegex = new Regex(@"( +)|([\\(\\),])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
+        static Regex spaceAndQRegex = new Regex(@"( +)|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
 
-                char c = input[i];
-                if (c == '"' && !lastCharIsEscape)
-                {
-                    if (qSearch)
-                    {
-                        qSearch = false;
-                        output.Add(currentPart);
-                        currentPart = "";
-                    }
-                    else
-                    {
-                        qSearch = true;
-                    }
-                }
-                else if (c == ' ' && !qSearch)
-                {
-                    output.Add(currentPart);
-                    currentPart = "";
-                }
-                else
-                {
-                    if (c == '\\')
-                    {
-                        lastCharIsEscape = true;
-                    }
-                    else
-                    {
-                        lastCharIsEscape = false;
-                        currentPart += c;
-                    }
-                }
-            }
-            if (!string.IsNullOrWhiteSpace(currentPart) || !string.IsNullOrEmpty(currentPart))
-            {
-                output.Add(currentPart);
-            }
-            return output;
+        public static List<string> SplitSpaceQ(this string input)
+        {
+            return spaceAndQRegex.Split(input).ToList();
+        }
+        public static List<string> SplitSpaceQCustom(this string input, string custom)
+        {
+            return new Regex(@"( +)|(["+custom+@"])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))").Split(input).ToList();
+        }
+        public static List<string> SplitSpaceQArgs(this string input)
+        {
+            return spaceQArgsRegex.Split(input).ToList();
+        }
+        public static List<string> SplitSpaceQArgsCustom(this string input,string custom)
+        {
+            return new Regex(@"( +)|([\\(\\),"+custom+@"])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))").Split(input).ToList();
         }
         public static string ChangeToPrefixedValue(this int num)
         {
@@ -69,7 +43,7 @@ namespace helper
                 currentSize = currentSize / 1024;
                 sizeScale++;
             }
-            return $"{currentSize}{SIZES[sizeScale]}";
+            return $"{ currentSize}{SIZES[sizeScale]}";
         }
 
 

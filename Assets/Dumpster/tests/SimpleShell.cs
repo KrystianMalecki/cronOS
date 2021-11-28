@@ -415,7 +415,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
     static readonly IShellProgram[] commands = { ls.instance };
     public static string FindAndExecuteCommand(string rawCommand)
     {
-        List<string> parts = GlobalHelper.SplitString2Q(rawCommand);
+        List<string> parts = rawCommand.SplitSpaceQ();
 
         string command = parts[0];
         string restOfArgs = (rawCommand.Length <= command.Length) ? "" : rawCommand.Substring(command.Length);

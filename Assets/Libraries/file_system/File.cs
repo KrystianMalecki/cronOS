@@ -18,10 +18,15 @@ namespace Libraries.system
 
         public unsafe class File
         {
+            public File()
+            {
+                fileID = -1;
+                parentID = -1;
+            }
             [SerializeField]
-            private int fileID = -1;
+            protected int fileID = -1;
             [SerializeField]
-            private int parentID = -1;
+            protected int parentID = -1;
 
 
             [SerializeField]
@@ -81,7 +86,7 @@ namespace Libraries.system
                     children = new ThreadSafeList<File>();
                 }
                 children.Add(file);
-                if (file.fileID == -1)
+                if (file.fileID == -1 || file.fileID == 0)
                 {
                     drive.AddFileToDrive(file);
                 }
@@ -109,7 +114,7 @@ namespace Libraries.system
             }
             public Path GetPathClass(File root = null)
             {
-               
+
                 return new Path(GetFullPath(), null, root == null ? drive?.GetRoot() : root);
             }
             public void MoveFileTo(File desitination)

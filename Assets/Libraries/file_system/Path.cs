@@ -60,7 +60,8 @@ namespace Libraries.system
                     }
                     fileparts.Add(currentFile);
                 }
-                if(parts.Count==1&&currentFile.GetFullPath()!= rawPath)
+
+                if (parts != null && parts.Count == 1 && currentFile.GetFullPath() != rawPath)
                 {
                     //Debug.Log("uh!");
                     parts = null;

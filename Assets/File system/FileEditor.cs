@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-//todo 5 add "move file to"
 public class FileEditor : EditorWindow
 {
     public FileEditor currentWindow;
@@ -264,17 +263,28 @@ public class FileEditor : EditorWindow
             // currentFileSO.Update();
 
             GUILayout.Space(EditorGUIUtility.singleLineHeight);
-            GUI.enabled = currentFile.Parent != null;
+            GUI.enabled = currentFile.FileID != 0;
             if (GUILayout.Button("Delete file"))
             {
-                if (EditorUtility.DisplayDialog("Delete file?",
-                $"Are you sure want to delete '{currentFile.name}' from '{currentFile.GetFullPath()}'?", "Yes", "No"))
+                int answer = EditorUtility.DisplayDialogComplex("Delete file?",
+                $"Are you sure want to delete '{currentFile.name}' from '{currentFile.GetFullPath()}'?", "Yes", "No", "Remove 'completely' from drive");
+                if (answer == 0)
                 {
                     File parent = currentFile.Parent;
                     parent.RemoveChild(currentFile);
                     currentFileSO.Update();
                     DisplayCurrentFile(parent, FindPropertyOfFile(parent), currentWindow, currentFileSO);
 
+                }
+                else if (answer == 2)
+                {
+                    File parent = currentFile.Parent;
+                    parent.RemoveChild(currentFile);
+                    currentFile.name = "[REMOVED FILE]";
+                    currentFile.Parent = null;
+                    currentFile.data = null;
+                    currentFileSO.Update();
+                    DisplayCurrentFile(parent, FindPropertyOfFile(parent), currentWindow, currentFileSO);
                 }
             }
             GUI.enabled = true;
@@ -302,6 +312,49 @@ public class FileEditor : EditorWindow
             GUILayout.EndHorizontal();
 
             GUI.enabled = true;
+            //name
+            /*GUILayout.Label("Move to: ", GUILayout.Width(50));
+            string before = currentFile.name;
+            currentFile.name = GUILayout.TextField(currentFile.name, GUILayout.ExpandWidth(true));
+            if (before != currentFile.name)
+            {
+                currentFileSO.Update();
+            }*/
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy file"))
+            {
+                EditorGUIUtility.systemCopyBuffer = JsonUtility.ToJson(currentFile);
+
+            }
+            if (GUILayout.Button("Paste file"))
+            {
+                if (EditorUtility.DisplayDialog("Paste file?",
+                $"do you want to paste file with parent id?", "With", "Without")) //todo-recheck  think about this
+                {
+                    File copiedFile = null;
+                    try
+                    {
+                        copiedFile = JsonUtility.FromJson<File>(EditorGUIUtility.systemCopyBuffer);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("Error when pasting file:" + e.Message);
+                    }
+                    currentFile.name = copiedFile.name;
+                    currentFile.data = copiedFile.data;
+                    currentFile.Parent = copiedFile.Parent;
+                    currentFileSO.Update();
+                    DisplayCurrentFile(currentFile, FindPropertyOfFile(currentFile), currentWindow, currentFileSO);
+
+
+                }
+                else
+                {
+
+                }
+
+            }
+            GUILayout.EndHorizontal();
 
         }
         EditorGUILayout.EndVertical();
@@ -319,17 +372,10 @@ public class FileEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
         GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-        //  EditorGUILayout.PropertyField(childrenSP);
         GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.Width(windowWidth));
         GUILayout.EndHorizontal();
 
-        //  GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-        //clampting
-
-        /*  toggleBottomPart = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleBottomPart, "Data"));
-          if (toggleBottomPart)
-          {*/
 
 
 
@@ -366,8 +412,7 @@ public class FileEditor : EditorWindow
         EditorGUILayout.EndFoldoutHeaderGroup();
 
         GUILayout.EndHorizontal();
-        /*  }
-          EditorGUILayout.EndFoldoutHeaderGroup();*/
+
 
 
         //save all
@@ -377,18 +422,14 @@ public class FileEditor : EditorWindow
 
         }
 
-        //   currentFileSP.serializedObject.Update();
     }
     void DrawChildren()
     {
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
         if (toggleChildren && children != null)
         {
-            Debug.Log($"ch{children}");
-            Debug.Log($"ch2{children.Count}");
-            Debug.Log($"ch3{children.GetValuesToString()}");
 
-            for (int i = 0; i < children.Count; i++)
+            for (int i = 0; i < children?.Count; i++)
             {
                 if (i % childrenInLine == 0)
                 {
@@ -423,6 +464,7 @@ public class FileEditor : EditorWindow
     }
     bool DrawChild(File child)
     {
+        bool state = false;
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
 
         if (GUILayout.Button(child.name, GUILayout.Width((windowWidth / (childrenInLine - 1)) / 2 - 100)))
@@ -432,18 +474,32 @@ public class FileEditor : EditorWindow
         }
         if (GUILayout.Button("-", GUILayout.Width(18)))
         {
-            if (EditorUtility.DisplayDialog("Delete child?",
-               $"Are you sure want to delete child '{child.name}' from '{currentFile.GetFullPath()}'?", "Yes", "No"))
+            int answer = EditorUtility.DisplayDialogComplex("Delete child?",
+               $"Are you sure want to delete 'child {currentFile.name}' from '{currentFile.GetFullPath()}'?", "Yes", "No", "Remove 'completely' from drive");
+            if (answer == 0)
             {
                 currentFile.RemoveChild(child);
                 currentFileSO.Update();
                 UpdateWindow();
-                return true;
+                state= true;
+
             }
+            else if (answer == 2)
+            {
+                currentFile.RemoveChild(child);
+                child.name = "[REMOVED FILE]";
+                child.Parent = null;
+                child.data = null;
+                currentFileSO.Update();
+                UpdateWindow();
+                state= true;
+
+            }
+
 
         }
         EditorGUILayout.EndHorizontal();
-        return false;
+        return state;
     }
     void UpdateWindow()
     {
@@ -728,6 +784,7 @@ public class FileEditor : EditorWindow
             this.array = array;
         }
     }
+
 }
 
 

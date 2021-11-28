@@ -16,36 +16,28 @@ MonoBehaviour:
     items:
     - fileID: 0
       parentID: -1
-      name: root
+      name: ALL MY HOMIES HATE UNITY
       permissions: 0
       data: 
     - fileID: 1
-      parentID: 0
-      name: rootChildTomczak
-      permissions: 0
-      data: 6c73
+      parentID: -1
+      name: 
+      permissions: 8
+      data: 
     - fileID: 2
       parentID: 1
-      name: rootChildChild
-      permissions: 13
+      name: System
+      permissions: 8
       data: 
     - fileID: 3
-      parentID: 0
-      name: System
+      parentID: -1
+      name: new File 3
       permissions: 7
       data: 
     - fileID: 4
-      parentID: 3
-      name: new File 4
+      parentID: 2
+      name: fontAtlas
       permissions: 7
       data: 
-    - fileID: 5
-      parentID: 3
-      name: new File 5
-      permissions: 7
-      data: 
-    - fileID: 6
-      parentID: 3
-      name: new File 6
-      permissions: 7
-      data: 
+  freeSpaces:
+    items: 03000000

@@ -12,15 +12,24 @@ using System.Collections.Concurrent;
 [Serializable]
 public class Drive : ScriptableObject
 {
-    // [SerializeField]
-    // public File root;
-    //  public Dictionary<string, File> pathLinks = new Dictionary<string, File>();
+    /*[Button]
+    void Say()
+    {
+        for (int i = 0; i < files.Count; i++)
+        {
+            Debug.Log($"id{files[i].FileID} parentID{files[i].ParentID}");
+
+        }
+    }*/
+
     [NonSerialized]
     public bool cached = false;
+    // [Header("DO NOT USE +")]
     [SerializeField]
     public ThreadSafeList<File> files = new ThreadSafeList<File>();
     [SerializeField]
-    public ConcurrentQueue<int> freeSpaces = new ConcurrentQueue<int>();
+    public ThreadSafeList<int> freeSpaces = new ThreadSafeList<int>();
+
     [NaughtyAttributes.Button]
     public void OpenEditor()
     {
@@ -29,14 +38,10 @@ public class Drive : ScriptableObject
         SerializedObject so = new SerializedObject(this, this);
         FileEditor.DisplayCurrentFile(GetRoot(), null, null, so);
     }
-    /*  [Button]
-      public void GenerateParentLinks()
-      {
-          GenerateCacheData();
-      }*/
+
     public File GetRoot()
     {
-        File root = GetFileByID(0);
+        File root = GetFileByID(1);
         root ??= GetFileByPath("");
         return root;
     }
@@ -58,6 +63,10 @@ public class Drive : ScriptableObject
             File file = files[i];
             file.FileID = i;
             file.SetDrive(this);
+            if (file.FileID == file.ParentID)
+            {
+                Debug.Log("FUCK UNITY");
+            }
             File parent = GetFileByID(file.ParentID);
             file.Parent = parent;
             parent?.AddChild(file);
@@ -67,6 +76,18 @@ public class Drive : ScriptableObject
     {
         try
         {
+            if (id == 0)
+            {
+                return null;
+            }
+            if (id < 0)
+            {
+                return null;
+            }
+            else if (id >= files.Count)
+            {
+                return null;
+            }
             return files[id];
         }
         catch (Exception e)
@@ -153,12 +174,12 @@ public class Drive : ScriptableObject
     {
         if (freeSpaces.Count > 0)
         {
-            if (freeSpaces.TryDequeue(out int result))
-            {
-                Debug.Log(freeSpaces.GetValuesToString());
+            int result = freeSpaces[0];
 
-                return result;
-            }
+            Debug.Log(freeSpaces.ToFormatedString());
+            freeSpaces.RemoveAt(0);
+            return result;
+
         }
 
         return files.Count;
@@ -187,8 +208,15 @@ public class Drive : ScriptableObject
     public void RemoveFileFromDrive(File file)
     {
         //  files.RemoveAt(file.FileID); //why? cuz now you can still retrive it
-        freeSpaces.Enqueue(file.FileID);
-        Debug.Log(freeSpaces.GetValuesToString());
+        freeSpaces.Add(file.FileID);
+        if (file.children != null)
+        {
+            for (int i = 0; i < file.children.Count; i++)
+            {
+                RemoveFileFromDrive(file.children[i]);
+            }
+        }
+        Debug.Log(freeSpaces.ToFormatedString());
 
     }
 }

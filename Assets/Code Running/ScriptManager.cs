@@ -9,6 +9,8 @@ using System.Collections.Concurrent;
 using Libraries.system.file_system;
 using System.Linq;
 using System.Text.RegularExpressions;
+using helper;
+using System.Xml;
 
 public class ScriptManager : MonoBehaviour
 {
@@ -196,15 +198,15 @@ public class ScriptManager : MonoBehaviour
 
 
     }
-    static Regex includeRegex = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
+    static Regex includeRegex = new Regex("\\s*#\\s*include\\s*\".*\"\\s*");
     static Regex includeRegex2 = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
 
-    static Regex redefineRegex = new Regex("\\s*#\\s*redefine\\s*.*\\s*.*;*");
+    static Regex redefineRegex = new Regex("\\s*#\\s*redefine\\s*.*\\s*.*");
 
-    static Regex undefineRegex = new Regex("\\s*#\\s*undefine\\s*.*\\s*;*");
+    static Regex undefineRegex = new Regex("\\s*#\\s*undefine\\s*.*\\s*");
     static Regex undefineRegexOld = new Regex("\\s*#\\s*undefine\\s*.*\\s*.*;*");
 
-    static Regex redefineSplitRegex = new Regex(@"( +)|([\\(\\),])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
+
 
     public static void CodeParser(ref CodeObject codeObject)
     {
@@ -215,8 +217,8 @@ public class ScriptManager : MonoBehaviour
 
         int positionToExpectNextInlcude = 0;
         bool checkIncludes = true;
-        bool checkRedefines = true;
-        bool checkUndefines = true;
+        bool checkRedefines = false;
+        bool checkUndefines = false;//todo 2 restore old redefines OR restore them to only replace parts
 
         for (int index = 0; index < lines.Count; index++)
         {
@@ -224,14 +226,48 @@ public class ScriptManager : MonoBehaviour
             if (currentRedefines.Count > 0)
             {
 
+                List<string> parts = buffer.SplitSpaceQArgs();
                 foreach (var item in currentRedefines)
                 {
-                    Debug.Log($"line:{buffer}. replace {item.Key} for {item.Value} so now it looks: { buffer.Replace(item.Key, item.Value.replacor)}");
+                    // Debug.Log($"line:{buffer}. replace {item.Key} for {item.Value} so now it looks: { buffer.Replace(item.Key, item.Value.replacor)}");
+
+                    //todo-z no replace args with values. Impossible #redefine "lol($x,$y)" "Console.Debug($x+"--"+$y)";
+                    for (int i = 0; i < parts.Count; i++)
+                    {
 
 
-                    buffer.Replace(item.Key, item.Value.replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");//todo-future change unknown
+
+                        string part = parts[i];
+
+                        if (part == item.Key)
+                        {
+                            List<string> args = parts.GetRangeBetweenFirstNext("(", ")", i, false);
+
+                            args.RemoveAll(x => (x == "," || string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)));
+                            string replacor = item.Value.replacor;
+
+                            List<string> replacorParts = replacor.SplitSpaceQArgs();
+
+                            for (int j = 0; j < item.Value.arguments.Length; j++)
+                            {
+                                int Rindex = replacorParts.FindIndex(x => x == item.Value.arguments[j]);
+                                if (Rindex != -1)
+                                {
+                                    replacorParts[Rindex] = args[j];
+                                }
+                            }
+                            replacor = string.Join("", replacorParts);
+                            parts[i]= part.Replace(item.Key, replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
+                            int startIndex = parts.IndexOf("(");
+                            int endIndex = parts.IndexOf(")", startIndex);
+                            parts.RemoveRange(startIndex, endIndex - startIndex+1);
+                        }
+                        
+                    }
 
                 }
+                buffer =string.Join("", parts);
+
             }
 
 
@@ -244,15 +280,20 @@ public class ScriptManager : MonoBehaviour
                 checkIncludes = false;
             }
 
-            if (checkRedefines || true)
+            if (checkRedefines)
             {
-                if (redefineRegex.IsMatch(buffer) || true)
+                if (redefineRegex.IsMatch(buffer))
                 {
 
-                    // buffer = "  #  define    lol(x,y) Console.Debug($\"{x} and {y}\")";
-                    string[] lineParts = redefineSplitRegex.Split(buffer); // buffer.Split(' ', '(', ')', ',');
-                                                                           //  List<string> regex = redefineSplitRegex.Split(buffer).ToList();
-                    string definition = lineParts[1];
+
+                    List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
+                    List<string> args = lineParts.GetRangeBetweenFirstNext("(", ")", 0, false);                                           //  List<string> regex = redefineSplitRegex.Split(buffer).ToList();
+                    args.RemoveAll(x => (x == ","));
+                    string definition = string.Join(' ', lineParts.GetRangeBetweenFirstNext("redefine", "to", 0, false));
+                    if (definition.Contains("("))
+                    {
+                        definition = definition.Substring(0, definition.IndexOf("(")).Trim();
+                    }
                     if (ONLY_UPPERCASE_REDEFINE)
                     {
                         if (definition != definition.ToUpper())
@@ -261,15 +302,15 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(2).Take(lineParts.Length - 2).ToArray());
+                    int toIndex = lineParts.IndexOf("to");
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(toIndex + 1).Take(lineParts.Count - toIndex).ToArray());
 
                     if (definition == null || definitionReplacor == null)
                     {
                         continue;
                     }
                     buffer = "//" + buffer.Substring(1);
-                    currentRedefines.Add(definition, new RedefineGroup(definitionReplacor, new string[] { "" }));
+                    currentRedefines.Add(definition, new RedefineGroup(definitionReplacor, args.ToArray()));
 
                 }
             }
@@ -331,7 +372,7 @@ public class ScriptManager : MonoBehaviour
 
 
         }
-        Debug.Log(lines.GetValuesToString("\n"));
+        Debug.Log(lines.ToFormatedString("\n"));
         codeObject.code = string.Join("\n", lines);
     }
 

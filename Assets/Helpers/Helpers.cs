@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -36,11 +37,11 @@ public static class StaticHelper
         while (iterator.MoveNext())
             yield return iterator.Current;
     }
-    public static string GetValuesToString<T>(this IEnumerable<T> ie, string splitter = ", ")
+    public static string ToFormatedString<T>(this IEnumerable<T> ie, string splitter = ", ")
     {
         return string.Join(splitter, ie);
     }
-    public static string GetValuesToString(this IDictionary ie, string splitter = ", ")
+    public static string ToFormatedString(this IDictionary ie, string splitter = ", ")
     {
         string s = "";
         foreach (var v in ie.Keys)
@@ -49,7 +50,7 @@ public static class StaticHelper
         }
         return s;
     }
-    public static string GetValuesToString<T>(this T[] ie, string splitter = ", ")
+    public static string ToFormatedString<T>(this T[] ie, string splitter = ", ")
     {
         return string.Join(splitter, ie);
     }
@@ -101,18 +102,26 @@ public static class StaticHelper
       {
           return variable;
       }*/
-    public static string GetRangeBetweenFirstLast(this string input, string key, int offset = 0)
+    public static string GetRangeBetweenFirstLast(this string input, string key, int offset = 0, bool includeKeys = true)
     {
-        int startPos = input.IndexOf(key, offset) + 1;
-        int endPos = input.LastIndexOf(key) - startPos;
+        return input.GetRangeBetweenFirstLast(key, key, offset, includeKeys);
+    }
+    public static string GetRangeBetweenFirstLast(this string input, string startKey, string endKey, int offset = 0, bool includeKeys = true)
+    {
+        int startPos = input.IndexOf(startKey, offset) + 1 + (includeKeys ? 0 : 1);
+        int endPos = input.LastIndexOf(endKey) - startPos + (includeKeys ? 0 : -1);
         return input.Substring(startPos, endPos);
     }
-    public static string GetRangeBetweenFirstNext(this string input, string key, int offset = 0)
+    public static string GetRangeBetweenFirstNext(this string input, string key, int offset = 0, bool includeKeys = true)
     {
-        int startPos = input.IndexOf(key, offset) + 1;
+        return input.GetRangeBetweenFirstNext(key, key, offset, includeKeys);
+    }
+    public static string GetRangeBetweenFirstNext(this string input, string startKey, string endKey, int offset = 0, bool includeKeys = true)
+    {
+        int startPos = input.IndexOf(startKey, offset) + 1 + (includeKeys ? 0 : 1);
 
-        int endPos = input.IndexOf(key, startPos) - startPos;
-        Debug.Log($"start pos:{startPos}.endPos{endPos}.calc of first{input.IndexOf(key, offset)}. calc of sendobnd{input.IndexOf(key, startPos)}");
+        int endPos = input.IndexOf(endKey, startPos) - startPos + (includeKeys ? 0 : -1);
+        Debug.Log($"start pos:{startPos}.endPos{endPos}.calc of first{input.IndexOf(startKey, offset)}. calc of sendobnd{input.IndexOf(endKey, startPos)}");
         return input.Substring(startPos, endPos);
     }
     public static byte[] SetByteValue(this byte[] array, byte[] data, int index)
@@ -155,6 +164,17 @@ public static class StaticHelper
         var s = (T)Marshal.PtrToStructure(ptr, typeof(T));
         Marshal.FreeHGlobal(ptr);
         return s;
+    }
+
+
+    public static List<string> GetRangeBetweenFirstNext(this List<string> input, string startKey, string endKey, int offset = 0, bool includeKeys = true)
+    {
+        List<string> workableInput = new List<string>(input.Skip(offset));
+
+        int start = workableInput.FindIndex(x => x == startKey) + (includeKeys ? 0 : 1);
+        int end = workableInput.FindIndex(start + 1, x => x == endKey) + (includeKeys ? 0 : -1);
+
+        return workableInput.Skip(start).Take(end - start + 1).ToList();
     }
 }
 
