@@ -76,12 +76,15 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                   , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
             if (recursive)
             {
-                for (int i = 0; i < file?.children.Count; i++)
+                if (file.children != null)
                 {
-                    bool last = i + 1 == file.children.Count;
-                    File child = file.children[i];
-                    str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
+                    for (int i = 0; i < file?.children.Count; i++)
+                    {
+                        bool last = i + 1 == file.children.Count;
+                        File child = file.children[i];
+                        str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
 
+                    }
                 }
             }
             return str;

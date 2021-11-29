@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+//todo 0 change child buttons to be more sizable. MinWidth etc.
 public class FileEditor : EditorWindow
 {
     public FileEditor currentWindow;

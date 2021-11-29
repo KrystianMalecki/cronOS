@@ -89,7 +89,7 @@ public class CodeTask
                     columnPos = frame.GetFileColumnNumber();
                     file = frame.GetFileName();
                     reason = e.Message;
-                   // line = codeObject.code.Split('\n')[linePos];
+                    line = codeObject.code.Split('\n')[linePos];
                     Debug.Log("CheatedException");
                 }
               
