@@ -11,7 +11,7 @@ using UnityEngine;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-
+using Libraries.system;
 
 [Serializable]
 public class CodeTask
@@ -49,7 +49,8 @@ public class CodeTask
                  , ScriptManager.instance.scriptOptionsBuffer
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
-                 .WithEmitDebugInformation(true)
+                .WithFilePath("debugpath/")
+                
                 );
            
 

@@ -41,9 +41,8 @@ public class FileEditor : EditorWindow
     float boxWidth = 28;
 
     bool toggleTopFields = true;
-    bool toggleBottomPart = true;
     bool toggleData = false;
-    bool toggleChildren = false;
+    bool toggleChildren = true;
     bool toggleTextDataField = false;
     List<File> children = null;
     int childrenInLine = 5;

@@ -18,26 +18,31 @@ using helper;
 using System.Linq;
 
 
-//ls import
-public class ls : ExtendedShellProgram
+
+//public class ls : ExtendedShellProgram { private static ls _instance; public static ls instance { get { if (_instance == null) { _instance = new ls(); } return _instance; } } public override string GetName() { return "ls"; } private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> { new AcceptedArgument("-wd", "working directory", true), new AcceptedArgument("-r", "recursive", false), new AcceptedArgument("-jn", "just names", false), new AcceptedArgument("-sz", "show size", false), new AcceptedArgument("-fp", "full paths instead of names", false), }; protected override List<AcceptedArgument> argumentTypes => _argumentTypes; protected override string InternalRun(Dictionary<string, string> argPairs) { string path = "/"; if (argPairs.TryGetValue("-wd", out path)) { } File f = FileSystem.GetFileByPath(path); return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp")); } string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths) { string str = string.Format(onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n", "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize()); if (recursive) { for (int i = 0; i < file.children.Count; i++) { bool last = i + 1 == file.children.Count; File child = file.children[i]; str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths); } } return str; } }
+public class SimpleShell : UnityEngine.MonoBehaviour
 {
-    private static ls _instance;
-    public static ls instance
+    //ls import
+
+    public class ls : ExtendedShellProgram
     {
-        get
+        private static ls _instance;
+        public static ls instance
         {
-            if (_instance == null)
+            get
             {
-                _instance = new ls();
+                if (_instance == null)
+                {
+                    _instance = new ls();
+                }
+                return _instance;
             }
-            return _instance;
         }
-    }
-    public override string GetName()
-    {
-        return "ls";
-    }
-    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
+        public override string GetName()
+        {
+            return "ls";
+        }
+        private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
         new AcceptedArgument("-wd", "working directory", true),
                 new AcceptedArgument("-p", "path", true),
 
@@ -47,47 +52,43 @@ public class ls : ExtendedShellProgram
                 new AcceptedArgument("-fp", "full paths instead of names", false),
     };
 
-    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
+        protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
 
-    protected override string InternalRun(Dictionary<string, string> argPairs)
-    {
-        string wdPath = "/";
-        if (argPairs.TryGetValue("-wd", out wdPath))
+        protected override string InternalRun(Dictionary<string, string> argPairs)
         {
-        }
-        File workingDirectory = FileSystem.GetFileByPath(wdPath);
-        string path = "/";
-        if (argPairs.TryGetValue("-p", out path))
-        {
-        }
-        File f = FileSystem.GetFileByPath(path, workingDirectory);
-        Console.Debug($"{f} {path}");
-        return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
-    }
-    string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
-    {
-        string str = string.Format(
-             onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
-              , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
-        if (recursive)
-        {
-            for (int i = 0; i < file.children.Count; i++)
+            string wdPath = "/";
+            if (argPairs.TryGetValue("-wd", out wdPath))
             {
-                bool last = i + 1 == file.children.Count;
-                File child = file.children[i];
-                str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
-
             }
+            File workingDirectory = FileSystem.GetFileByPath(wdPath);
+            string path = "/";
+            if (argPairs.TryGetValue("-p", out path))
+            {
+            }
+            File f = FileSystem.GetFileByPath(path, workingDirectory);
+            Console.Debug($"{f} {path}");
+            return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
         }
-        return str;
+        string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
+        {
+            string str = string.Format(
+                 onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
+                  , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
+            if (recursive)
+            {
+                for (int i = 0; i < file?.children.Count; i++)
+                {
+                    bool last = i + 1 == file.children.Count;
+                    File child = file.children[i];
+                    str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
+
+                }
+            }
+            return str;
+        }
+
+
     }
-
-
-}
-//public class ls : ExtendedShellProgram { private static ls _instance; public static ls instance { get { if (_instance == null) { _instance = new ls(); } return _instance; } } public override string GetName() { return "ls"; } private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> { new AcceptedArgument("-wd", "working directory", true), new AcceptedArgument("-r", "recursive", false), new AcceptedArgument("-jn", "just names", false), new AcceptedArgument("-sz", "show size", false), new AcceptedArgument("-fp", "full paths instead of names", false), }; protected override List<AcceptedArgument> argumentTypes => _argumentTypes; protected override string InternalRun(Dictionary<string, string> argPairs) { string path = "/"; if (argPairs.TryGetValue("-wd", out path)) { } File f = FileSystem.GetFileByPath(path); return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp")); } string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths) { string str = string.Format(onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n", "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize()); if (recursive) { for (int i = 0; i < file.children.Count; i++) { bool last = i + 1 == file.children.Count; File child = file.children[i]; str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths); } } return str; } }
-public class SimpleShell : UnityEngine.MonoBehaviour
-{
-
 
 
 
@@ -410,7 +411,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
 
     /*
 
-     #include "/system/programs/ls"
+     #include "/System/programs/ls"
      */
     static readonly IShellProgram[] commands = { ls.instance };
     public static string FindAndExecuteCommand(string rawCommand)

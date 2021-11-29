@@ -30,6 +30,7 @@ public class ScriptManager : MonoBehaviour
     }
     #endregion
     private const string LINE_NUMBER_PREPROCESSOR_CODE = "__LINE__";
+
     private const string FILE_NUMBER_PREPROCESSOR_CODE = "__FILE__";
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
@@ -75,7 +76,9 @@ public class ScriptManager : MonoBehaviour
         scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
           // "UnityEngine", "System"
           );
-
+        scriptOptionsBuffer = scriptOptionsBuffer
+            .WithEmitDebugInformation(true)
+            .WithFileEncoding(ProcessorManager.mainEncoding);
 
     }
     public void RemoveCodeTask(CodeTask codeTask)
@@ -169,8 +172,8 @@ public class ScriptManager : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("killing null:");
-                            _delegateBuffer.Speak();
+                          //  Debug.Log("killing null:");
+                            //_delegateBuffer.Speak();
                         }
                     }
                     _delegateBuffer = null;
@@ -198,13 +201,13 @@ public class ScriptManager : MonoBehaviour
 
 
     }
-    static Regex includeRegex = new Regex("\\s*#\\s*include\\s*\".*\"\\s*");
-    static Regex includeRegex2 = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
+    static Regex includeRegex = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*");
+    static Regex includeRegex2 = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*;*");
 
-    static Regex redefineRegex = new Regex("\\s*#\\s*redefine\\s*.*\\s*.*");
+    static Regex redefineRegex = new Regex("^\\s*#\\s*redefine\\s*.*\\s*.*");
 
-    static Regex undefineRegex = new Regex("\\s*#\\s*undefine\\s*.*\\s*");
-    static Regex undefineRegexOld = new Regex("\\s*#\\s*undefine\\s*.*\\s*.*;*");
+    static Regex undefineRegex = new Regex("^\\s*#\\s*undefine\\s*.*\\s*");
+    static Regex undefineRegexOld = new Regex("^\\s*#\\s*undefine\\s*.*\\s*.*;*");
 
 
 
@@ -213,12 +216,12 @@ public class ScriptManager : MonoBehaviour
         List<string> lines = new List<string>(codeObject.code.Split('\n'));
 
         List<string> importedLibraries = new List<string>();
-        Dictionary<string, RedefineGroup> currentRedefines = new Dictionary<string, RedefineGroup>();
+        Dictionary<string, string> currentRedefines = new Dictionary<string, string>();
 
         int positionToExpectNextInlcude = 0;
         bool checkIncludes = true;
-        bool checkRedefines = false;
-        bool checkUndefines = false;//todo 2 restore old redefines OR restore them to only replace parts
+        bool checkRedefines = true;
+        bool checkUndefines = true;
 
         for (int index = 0; index < lines.Count; index++)
         {
@@ -241,32 +244,17 @@ public class ScriptManager : MonoBehaviour
 
                         if (part == item.Key)
                         {
-                            List<string> args = parts.GetRangeBetweenFirstNext("(", ")", i, false);
 
-                            args.RemoveAll(x => (x == "," || string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x)));
-                            string replacor = item.Value.replacor;
+                            string replacor = item.Value;
 
-                            List<string> replacorParts = replacor.SplitSpaceQArgs();
+                            parts[i] = part.Replace(item.Key, replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
 
-                            for (int j = 0; j < item.Value.arguments.Length; j++)
-                            {
-                                int Rindex = replacorParts.FindIndex(x => x == item.Value.arguments[j]);
-                                if (Rindex != -1)
-                                {
-                                    replacorParts[Rindex] = args[j];
-                                }
-                            }
-                            replacor = string.Join("", replacorParts);
-                            parts[i]= part.Replace(item.Key, replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
-                            int startIndex = parts.IndexOf("(");
-                            int endIndex = parts.IndexOf(")", startIndex);
-                            parts.RemoveRange(startIndex, endIndex - startIndex+1);
                         }
-                        
+
                     }
 
                 }
-                buffer =string.Join("", parts);
+                buffer = string.Join("", parts);
 
             }
 
@@ -287,13 +275,9 @@ public class ScriptManager : MonoBehaviour
 
 
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
-                    List<string> args = lineParts.GetRangeBetweenFirstNext("(", ")", 0, false);                                           //  List<string> regex = redefineSplitRegex.Split(buffer).ToList();
-                    args.RemoveAll(x => (x == ","));
-                    string definition = string.Join(' ', lineParts.GetRangeBetweenFirstNext("redefine", "to", 0, false));
-                    if (definition.Contains("("))
-                    {
-                        definition = definition.Substring(0, definition.IndexOf("(")).Trim();
-                    }
+                    int definitionIndex = lineParts.FindIndex(x => x != "#" && !string.IsNullOrWhiteSpace(x) && x != "redefine");
+                    string definition = lineParts[definitionIndex];
+
                     if (ONLY_UPPERCASE_REDEFINE)
                     {
                         if (definition != definition.ToUpper())
@@ -302,15 +286,14 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-                    int toIndex = lineParts.IndexOf("to");
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(toIndex + 1).Take(lineParts.Count - toIndex).ToArray());
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionIndex + 1).Take(lineParts.Count - definitionIndex).ToArray()).TrimStart();
 
                     if (definition == null || definitionReplacor == null)
                     {
                         continue;
                     }
                     buffer = "//" + buffer.Substring(1);
-                    currentRedefines.Add(definition, new RedefineGroup(definitionReplacor, args.ToArray()));
+                    currentRedefines.Add(definition, definitionReplacor);
 
                 }
             }
@@ -318,8 +301,10 @@ public class ScriptManager : MonoBehaviour
             {
                 if (undefineRegex.IsMatch(buffer))
                 {
-                    string[] lineParts = buffer.Split(' ');
-                    string definition = lineParts[1];
+
+                    List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
+                    int definitionIndex = lineParts.FindIndex(x => x != "#" || string.IsNullOrEmpty(x) || x != "undefine");
+                    string definition = lineParts[definitionIndex];
                     currentRedefines.Remove(definition);
                 }
             }
@@ -349,14 +334,18 @@ public class ScriptManager : MonoBehaviour
                         }
                         List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
                         buffer = "//" + buffer;
+                        lines[index] = buffer;
                         for (int iL = 0; iL < importedLines.Count; iL++)
                         {
                             string importedLine = importedLines[iL];
-                            lines.Insert(index + iL, importedLine);
+                            lines.Insert(index + iL+1, importedLine);
+
 
                         }
                         positionToExpectNextInlcude = index + importedLines.Count;
+                        
                         index--;
+                        continue;
                     }
                     else
                     {

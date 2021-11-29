@@ -21,7 +21,7 @@ public class NativeTest : MonoBehaviour
     public void Start()
     {
         Debug.Log("  # define   lol(x,y)   Cosnole.Log($\"lol {x} {y}\")".SplitSpaceQ().ToFormatedString("-"));
-        /* Debug.Log(new Path("./..", FileSystem.GetFileByPath("/")));
+         Debug.Log(new Path("./..", FileSystem.GetFileByPath("/")));
 
 
          Debug.Log(new Path("/System/"));
@@ -31,7 +31,7 @@ public class NativeTest : MonoBehaviour
          Debug.Log(new Path("./../programs", FileSystem.GetFileByPath("/System/programs")));
          Debug.Log(new Path("./../can'tfind", FileSystem.GetFileByPath("/System/programs")));
          Debug.Log(new Path("./../../programs", FileSystem.GetFileByPath("/System/programs/ls")));
-         Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));*/
+         Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
         // FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");
 
     }

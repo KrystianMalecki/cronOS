@@ -40,9 +40,20 @@ namespace Libraries.system
                     }
                     if (name == "..")
                     {
-                        fileparts.RemoveAt(fileparts.Count - 1);
-                        fileparts.RemoveAt(fileparts.Count - 1);
+                        if (fileparts.Count > 1)
+                        {
+                            fileparts.RemoveAt(fileparts.Count - 1);
+                            fileparts.RemoveAt(fileparts.Count - 1);
 
+                            parts.RemoveAt(i);
+
+                        }
+                        else
+                        {
+                            parts = null;
+                            fileparts = null;
+                            break;
+                        }
                         currentFile = currentFile?.Parent;
                         //  continue;
                     }
