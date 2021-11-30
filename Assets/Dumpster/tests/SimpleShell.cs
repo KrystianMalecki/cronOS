@@ -44,12 +44,11 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         }
         private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
         new AcceptedArgument("-wd", "working directory", true),
-                new AcceptedArgument("-p", "path", true),
-
+        new AcceptedArgument("-p", "path", true),
         new AcceptedArgument("-r", "recursive", false),
         new AcceptedArgument("-jn", "just names", false),
-                new AcceptedArgument("-sz", "show size", false),
-                new AcceptedArgument("-fp", "full paths instead of names", false),
+        new AcceptedArgument("-sz", "show size", false),
+        new AcceptedArgument("-fp", "full paths instead of names", false),
     };
 
         protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
@@ -76,9 +75,9 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                   , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
             if (recursive)
             {
-                if (file.children != null)
+                if (file.children != null||true)
                 {
-                    for (int i = 0; i < file?.children.Count; i++)
+                    for (int i = 0; i < file.children?.Count; i++)
                     {
                         bool last = i + 1 == file.children.Count;
                         File child = file.children[i];
@@ -145,9 +144,10 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         {
             int posX = x;
             int posY = y;
+            char[] charText = text.ToCharArray();
             for (int i = 0; i < text.Length; i++)
             {
-                char c = text.ToCharArray()[i];
+                char c = charText[i];
                 if (c == '\n' || c == '\r')
                 {
                     posX = x;
@@ -322,7 +322,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
             Draw();
             ProcessInput();
 
-            Runtime.Wait(1);
+            Runtime.Wait();
         }
 
     }
