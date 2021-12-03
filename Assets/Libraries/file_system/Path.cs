@@ -12,14 +12,15 @@ namespace Libraries.system
             public List<string> parts = new List<string>();
             public List<File> fileparts = new List<File>();
 
-            public Path(string rawPath, File parent = null)
+            public Path(string rawPath, File parent = null, File root = null)
             {
                 rawPath ??= "";
-                parent ??= FileSystemInternal.instance.drive.root;
+                parent ??= root == null ? FileSystemInternal.instance.mainDrive.GetRoot() : root;
+
                 rawPath = rawPath.StartsWith("./") ? (parent.GetFullPath() + rawPath.Substring(1)) : rawPath;
                 parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
 
-                File currentFile = FileSystemInternal.instance.drive.root;
+                File currentFile = root == null ? FileSystemInternal.instance.mainDrive.GetRoot() : root;
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)
                 {
@@ -39,11 +40,22 @@ namespace Libraries.system
                     }
                     if (name == "..")
                     {
-                        fileparts.RemoveAt(fileparts.Count - 1);
-                        fileparts.RemoveAt(fileparts.Count - 1);
+                        if (fileparts.Count > 1)
+                        {
+                            fileparts.RemoveAt(fileparts.Count - 1);
+                            fileparts.RemoveAt(fileparts.Count - 1);
 
-                        currentFile = currentFile?.parent;
-                      //  continue;
+                            parts.RemoveAt(i);
+
+                        }
+                        else
+                        {
+                            parts = null;
+                            fileparts = null;
+                            break;
+                        }
+                        currentFile = currentFile?.Parent;
+                        //  continue;
                     }
                     else
                     {
@@ -58,6 +70,13 @@ namespace Libraries.system
                         break;
                     }
                     fileparts.Add(currentFile);
+                }
+
+                if (parts != null && parts.Count == 1 && currentFile.GetFullPath() != rawPath)
+                {
+                    //Debug.Log("uh!");
+                    parts = null;
+                    fileparts = null;
                 }
             }
             public override string ToString()

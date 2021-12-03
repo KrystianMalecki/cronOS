@@ -26,6 +26,7 @@ public class InputManager : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(Input.inputString))
             {
+
                 lock (instance.lockObj)
                 {
                     inputBuffer.Append(Input.inputString);

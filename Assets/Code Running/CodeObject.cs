@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 using System;
-using InternalLogger;
 
 [Serializable]
 public class CodeObject
@@ -23,7 +22,7 @@ public class CodeObject
     }
     public void DisplayLibraries()
     {
-        libraries.ForEach(x => { FlagLogger.Log(LogFlags.DebugInfo, x.assembly + "-" + x.nameSpace); });
+        libraries.ForEach(x => { Debug.Log(x.assembly + "-" + x.nameSpace); });
     }
 }
 [SerializeField]

@@ -27,7 +27,7 @@ namespace Libraries.system
 
             public virtual string Run(string arg)
             {
-                return Run(GlobalHelper.SplitString2Q(arg).ToArray());
+                return Run(arg.SplitSpaceQ().ToArray());
             }
             public virtual string Run(params string[] args)
             {

@@ -1,12 +1,11 @@
 using helper;
 using NaughtyAttributes;
-using Sirenix.Serialization;
 using System;
 using System.Collections;
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
@@ -15,68 +14,112 @@ namespace Libraries.system
 {
     namespace file_system
     {
-       // [System.Serializable]
+        [System.Serializable]
 
         public unsafe class File
         {
+            public File()
+            {
+                fileID = -1;
+                parentID = -1;
+            }
             [SerializeField]
+            protected int fileID = -1;
+            [SerializeField]
+            protected int parentID = -1;
 
-            public string name;
+
             [SerializeField]
-           // [EnumMask]
+            public string name;
+
+
+            [SerializeField]
+            [EnumFlags]
             public FilePermission permissions = (FilePermission)0b0111;
 
-            [AllowNesting]
+
             [HideInInspector]
             [SerializeField]
-
             public byte[] data;
 
-            //  [SerializeField]
-            [NonSerialized, OdinSerialize]
+            [NonSerialized]
             public ThreadSafeList<File> children;
 
             [NonSerialized]
-            public File parent;
+            private Drive drive;
 
-            public void AddChild(File file)
+            [NonSerialized]
+            private File _parent;
+            //  [NonSerialized]
+            public File Parent
             {
+                get
+                {
+                    return _parent;
+
+                }
+                set
+                {
+                    _parent = value;
+                    parentID = (_parent == null ? -1 : _parent.fileID);
+                }
+            }
+
+            internal int FileID { get { return fileID; } set { fileID = value; } }
+            internal int ParentID { get { return parentID; } set { parentID = value; } }
+
+
+
+            public Drive GetDrive()
+            {
+                return drive;
+            }
+            internal void SetDrive(Drive drive)
+            {
+                this.drive = drive;
+            }
+
+            public File AddChild(File file)
+            {
+                if (children == null)
+                {
+                    children = new ThreadSafeList<File>();
+                }
                 children.Add(file);
-                file.parent = this;
+                if (file.fileID == -1 || file.fileID == 0)
+                {
+                    drive.AddFileToDrive(file);
+                }
+                file.Parent = (this);
+                return file;
             }
             public void RemoveChild(File file)
             {
-                children.Remove(file);
-                file.parent = null;
+                children?.Remove(file);
+                file.Deparent();
+                drive.RemoveFileFromDrive(file);
             }
-
+            public void Deparent()
+            {
+                Parent = (null);
+                _parent = null;
+            }
             public string GetFullPath()
             {
-
-
-                if (parent == null)
+                if (Parent == null)
                 {
                     return name;
                 }
-
-                return string.Concat(parent.GetFullPath(), "/", name);
+                return string.Concat(Parent.GetFullPath(), "/", name);
             }
-            public Path GetPathClass()
+            public Path GetPathClass(File root = null)
             {
-                string rawPath = "";
-                if (parent == null)
-                {
-                    rawPath = name;
-                }
-                else
-                {
-                    rawPath = string.Concat(parent.GetFullPath(), "/", name);
-                }
-                return new Path(rawPath);
+
+                return new Path(GetFullPath(), null, root == null ? drive?.GetRoot() : root);
             }
             public void MoveFileTo(File desitination)
             {
-                parent.RemoveChild(this);
+                Parent.RemoveChild(this);
                 desitination.AddChild(this);
             }
             public string ReturnDataAsString()
@@ -85,20 +128,7 @@ namespace Libraries.system
             }
             public File GetChildByName(string name)
             {
-                if (children != null)
-                {
-                    lock (children)
-                    {
-                        for (int i = 0; i < children.Count; i++)
-                        {
-                            if (children[i].name == name)
-                            {
-                                return children[i];
-                            }
-                        }
-                    }
-                }
-                return null;
+                return children?.Find(x => x.name == name);
             }
 
             public override string ToString()
@@ -112,26 +142,8 @@ namespace Libraries.system
                 return (permissions & FilePermission.isFolder) == FilePermission.isFolder;
             }
 
-            public void OnValidate()
-            {
-                GenerateParentLinks(false);
-            }
-            public void GenerateParentLinks(bool recursive)
-            {
-                if (children != null)
-                {
-                    foreach (var child in children)
-                    {
-                        Debug.Log($"{name}-{this}-{child}");
-                        child.parent = this;
-                        // Debug.Log("Validating " + child);
-                        if (recursive)
-                        {
-                            child.GenerateParentLinks(recursive);
-                        }
-                    }
-                }
-            }
+
+
             public int GetDataArraySize()
             {
                 if (data == null)
@@ -146,6 +158,7 @@ namespace Libraries.system
                 int size = GetDataArraySize() + name.Length * 8 + 8;
                 return $"{(prefixed ? size.ChangeToPrefixedValue() : size.ToString())}B";
             }
+
 
         }
     }

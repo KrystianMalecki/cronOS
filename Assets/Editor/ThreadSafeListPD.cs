@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-//[CustomPropertyDrawer(typeof(ThreadSafeList<>))]
+[CustomPropertyDrawer(typeof(ThreadSafeList<>))]
 
 public class ThreadSafeListPropertyDrawer : PropertyDrawer
 {

@@ -50,7 +50,7 @@ namespace Libraries.system.output.graphics
             {
                 color = unityColor;
             }
-            //todo-cleanup move Unity Dependant stuff
+            //todo-cleanup move Unity Dependant stuff.Move to extension methods?
             public static implicit operator Color32(UnityEngine.Color32 col)
             {
                 return new Color32(col);

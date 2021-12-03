@@ -22,7 +22,7 @@ namespace Libraries.system
             {
 
 
-                UnityEngine.Debug.Log(obj.GetValuesToString());
+                UnityEngine.Debug.Log(obj.ToFormatedString());
 
             }
             public static void Debug(object obj = null,

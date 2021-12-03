@@ -1,4 +1,3 @@
-using InternalLogger;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using UnityEngine;
 public class MainThreadDelegate<T> : ITryToRun
 {
     public T returnValue;
-    //todo 4 check if locking is better
+    //todo-recheck check if locking is better
   //  public object locker;
 
     public volatile bool done = false;
@@ -23,19 +22,19 @@ public class MainThreadDelegate<T> : ITryToRun
     }
     ~MainThreadDelegate()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().GetValuesToString());
+      //  Debug.Log( "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToFormatedString());
 
     }
     public void Speak()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "I'm a: " + function.Method.GetMethodBody().GetILAsByteArray().GetValuesToString());
+        Debug.Log("I'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToFormatedString());
     }
 
     public bool TryToRun()
     {
         if (done)
         {
-            FlagLogger.Log(LogFlags.DebugInfo, "it is now done");
+            Debug.Log( "it is now done");
             Speak();
             return done;
         }

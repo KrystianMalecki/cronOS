@@ -1,15 +1,14 @@
 
-using Sirenix.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
-
+[Serializable]
 public class ThreadSafeList<T> : IList<T>, IList
 {
-    [NonSerialized, OdinSerialize]
+    [SerializeField]
     List<T> items;
     object sync;
 
@@ -126,7 +125,13 @@ public class ThreadSafeList<T> : IList<T>, IList
             this.items.CopyTo(array, index);
         }
     }
-
+    public List<T> ReturnCopy()
+    {
+        lock (this.sync)
+        {
+          return new List<T>(items);
+        }
+    }
     public bool Contains(T item)
     {
         lock (this.sync)

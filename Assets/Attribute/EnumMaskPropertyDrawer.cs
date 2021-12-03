@@ -1,4 +1,4 @@
-
+#if UNITY_EDITOR
 /*
  Written by: Lucas Antunes (aka ItsaMeTuni), lucasba8@gmail.com
  In: 2/15/2018
@@ -532,3 +532,4 @@ public enum EnumMaskLayout
     Vertical,
     Horizontal
 }
+#endif

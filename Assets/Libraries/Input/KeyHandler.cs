@@ -2,8 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using InternalLogger;
 using System.Linq;
+using UnityEngine;
 
 namespace Libraries.system
 {
@@ -25,7 +25,7 @@ namespace Libraries.system
                 }
                 catch (Exception e)
                 {
-                    FlagLogger.Log(LogFlags.SystemError, " error", e);
+                    Debug.Log(" error" + e);
                 }
             }
             public bool GetKeyDown(Key key)
@@ -103,14 +103,58 @@ namespace Libraries.system
 
                   }, true);*/
             }
+
+
+
+
+            bool combinedCharacterMode = false;
+            public string combinedBuffer = "";
+            public string TryGetCombinedSymbol(KeySequence ks)
+            {
+                combinedCharacterMode = ks.ReadAnyAlt(false);
+                if (combinedCharacterMode)
+                {
+                    int digit = ks.ReadDigit(true);
+                    if (digit != -1)
+                    {
+                        Debug.Log("added"+digit+"to"+combinedBuffer);
+
+                        combinedBuffer += digit;
+                    }
+                    if (combinedBuffer.Length == 3)
+                    {
+                        if (byte.TryParse(combinedBuffer, out byte value))
+                        {
+                            Debug.Log(value);
+
+                            combinedBuffer = "";
+                            combinedCharacterMode = false;
+                            return "" + Runtime.ByteToChar(value);
+                        }
+
+                        combinedBuffer = "";
+                        combinedCharacterMode = false;
+
+                    }
+                }
+                else
+                {
+                    combinedBuffer = "";
+                }
+                return "";
+
+            }
         }
         public class KeySequence
         {
             public List<Key> keys;
-            public bool HasKey(Key key)
+            public bool ReadKey(Key key, bool remove = true)
             {
                 bool b = keys.Contains(key);
-                keys.Remove(key);
+                if (remove)
+                {
+                    keys.Remove(key);
+                }
                 return b;
             }
             public KeySequence(List<Key> keys)
@@ -129,11 +173,63 @@ namespace Libraries.system
             {
                 return String.Join(", ", keys);
             }
-            /* public char GetFirstCharacter()
-             {
-                 Char.
-                 Key k = keys.Find(x => Key.A >= x && x <= Key.Z);
-             }*/
+            public bool ReadAnyAlt(bool remove = true)
+            {
+                return ReadKey(Key.LeftAlt, remove) || ReadKey(Key.RightAlt, remove) || ReadKey(Key.AltGr, remove);
+            }
+            public bool ReadAnyShift(bool remove = true)
+            {
+                return ReadKey(Key.LeftShift, remove) || ReadKey(Key.RightShift, remove);
+
+            }
+            public bool ReadAnyCtrl(bool remove = true)
+            {
+                return ReadKey(Key.LeftControl, remove) || ReadKey(Key.RightControl, remove);
+            }
+            public int ReadDigit(bool remove = true)
+            {
+                if (ReadKey(Key.Alpha0, remove) || ReadKey(Key.Keypad0, remove))
+                {
+                    return 0;
+                }
+                else if (ReadKey(Key.Alpha1, remove) || ReadKey(Key.Keypad1, remove))
+                {
+                    return 1;
+                }
+                else if (ReadKey(Key.Alpha2, remove) || ReadKey(Key.Keypad2, remove))
+                {
+                    return 2;
+                }
+                else if (ReadKey(Key.Alpha3, remove) || ReadKey(Key.Keypad3, remove))
+                {
+                    return 3;
+                }
+                else if (ReadKey(Key.Alpha4, remove) || ReadKey(Key.Keypad4, remove))
+                {
+                    return 4;
+                }
+                else if (ReadKey(Key.Alpha5, remove) || ReadKey(Key.Keypad5, remove))
+                {
+                    return 5;
+                }
+                else if (ReadKey(Key.Alpha6, remove) || ReadKey(Key.Keypad6, remove))
+                {
+                    return 6;
+                }
+                else if (ReadKey(Key.Alpha7, remove) || ReadKey(Key.Keypad7, remove))
+                {
+                    return 7;
+                }
+                else if (ReadKey(Key.Alpha8, remove) || ReadKey(Key.Keypad8, remove))
+                {
+                    return 8;
+                }
+                else if (ReadKey(Key.Alpha9, remove) || ReadKey(Key.Keypad9, remove))
+                {
+                    return 9;
+                }
+                return -1;
+            }
         }
         public static class InputHelpers
         {
@@ -156,6 +252,47 @@ namespace Libraries.system
                     {
                         current += c;
                     }
+                }
+                return current;
+            }
+            public static string AddInputSpecial(this string current, string input, KeySequence keySequence)
+            {
+                bool shift = keySequence.ReadAnyShift(false);
+                bool alt = keySequence.ReadAnyAlt(false);
+                bool ctrl = keySequence.ReadAnyCtrl(false);
+
+                //Debug.Log($"alt{alt} shift{shift} ctrl{ctrl}");
+                for (int i = 0; i < input.Length; i++)
+                {
+                    char c = input[i];
+                    if (c == '\b') // has backspace/delete been pressed?
+                    {
+                        if (current.Length != 0)
+                        {
+                            current = current.Substring(0, current.Length - 1);
+                            continue;
+                        }
+                    }
+                    else if ((c == '\n') || (c == '\r')) // enter/return
+                    {
+                        current += '\n';
+                        continue;
+                    }
+                    /* else if (alt)
+                     {
+                         //if (input.Length > (i + 1))
+                         {
+                             current += '\\' + c;
+                             Debug.Log('\\' + c);
+                             continue;
+
+
+                         }
+                     }*/
+
+
+                    current += shift ? ("" + c).ToUpperInvariant() : c;
+
                 }
                 return current;
             }

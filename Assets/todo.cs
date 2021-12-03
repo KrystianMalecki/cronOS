@@ -2,17 +2,19 @@
 
 
 
+//todo 0 try locking
+
+
+//todo 0 fixes needed
+//- mouse to screen is not working on build
+//- add some debug menus for build
+//- make some visible progress?
 
 
 
-//todo 3 think about better path logic
 
-//todo 4 think about #include-ing core libraries like system or system.file_system
 
-//todo 9 upgrade preprocessor:
-// - add delete redefine preprocessor label and code
-// - add variables to redefine
-// - think how to maybe make redefines store values
+
 
 
 

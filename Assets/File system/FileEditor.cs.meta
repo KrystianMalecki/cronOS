@@ -3,7 +3,10 @@ guid: 69c3c99136ad73944877078ca7138dcd
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - currentWindow: {instanceID: 0}
+  - drive0: {fileID: 11400000, guid: a96cb9c30cd782444998606b6ccbcd40, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

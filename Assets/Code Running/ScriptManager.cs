@@ -1,4 +1,3 @@
-using InternalLogger;
 using Microsoft.CodeAnalysis.Scripting;
 using NaughtyAttributes;
 using System;
@@ -10,6 +9,8 @@ using System.Collections.Concurrent;
 using Libraries.system.file_system;
 using System.Linq;
 using System.Text.RegularExpressions;
+using helper;
+using System.Xml;
 
 public class ScriptManager : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class ScriptManager : MonoBehaviour
     }
     #endregion
     private const string LINE_NUMBER_PREPROCESSOR_CODE = "__LINE__";
+
     private const string FILE_NUMBER_PREPROCESSOR_CODE = "__FILE__";
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
@@ -74,7 +76,9 @@ public class ScriptManager : MonoBehaviour
         scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
           // "UnityEngine", "System"
           );
-
+        scriptOptionsBuffer = scriptOptionsBuffer
+            .WithEmitDebugInformation(true)
+            .WithFileEncoding(ProcessorManager.mainEncoding);
 
     }
     public void RemoveCodeTask(CodeTask codeTask)
@@ -119,7 +123,7 @@ public class ScriptManager : MonoBehaviour
 
     public void KillAll()
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "Kill All");
+        Debug.Log("Kill All");
         for (int i = 0; i < scriptsRunning.Count; i++)
         {
             CodeTask ct = scriptsRunning[i];
@@ -168,8 +172,8 @@ public class ScriptManager : MonoBehaviour
                         }
                         else
                         {
-                            FlagLogger.Log(LogFlags.DebugInfo, "killing null:");
-                            _delegateBuffer.Speak();
+                            //  Debug.Log("killing null:");
+                            //_delegateBuffer.Speak();
                         }
                     }
                     _delegateBuffer = null;
@@ -188,35 +192,74 @@ public class ScriptManager : MonoBehaviour
     }
     public void RunCode(CodeObject codeObject)
     {
-        FlagLogger.Log(LogFlags.DebugInfo, "Making new codeTask");
+        Debug.Log("Making new codeTask");
         CodeTask codeTask = new CodeTask();
         scriptsRunning.Add(codeTask);
-        codeObject.code = CodeParser(codeObject.code);
+        CodeParser(ref codeObject);
         codeTask.RunCode(codeObject);
-        FlagLogger.Log(LogFlags.DebugInfo, "After running code");
+        Debug.Log("After running code");
 
 
     }
-    static Regex includeRegex = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
-    static Regex includeRegex2 = new Regex("\\s*#\\s*include\\s*\".*\"\\s*;*");
+    static Regex includeRegex = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*");
+    static Regex includeRegex2 = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*;*");
 
-    static Regex redefineRegex = new Regex("\\s*#\\s*redefine\\s*.*\\s*.*;*");
+    static Regex redefineRegex = new Regex("^\\s*#\\s*redefine\\s*.*\\s*.*");
+
+    static Regex undefineRegex = new Regex("^\\s*#\\s*undefine\\s*.*\\s*");
+    static Regex undefineRegexOld = new Regex("^\\s*#\\s*undefine\\s*.*\\s*.*;*");
 
 
 
-    public static string CodeParser(string code)
+    public static void CodeParser(ref CodeObject codeObject)
     {
-        List<string> lines = new List<string>(code.Split('\n'));
+        List<string> lines = new List<string>(codeObject.code.Split('\n'));
 
         List<string> importedLibraries = new List<string>();
+        Dictionary<string, string> currentRedefines = new Dictionary<string, string>();
+
         int positionToExpectNextInlcude = 0;
         bool checkIncludes = true;
         bool checkRedefines = true;
+        bool checkUndefines = true;
 
         for (int index = 0; index < lines.Count; index++)
         {
             string buffer = lines[index];
-            if ((positionToExpectNextInlcude == index && !includeRegex.IsMatch(buffer)))
+            if (currentRedefines.Count > 0)
+            {
+
+                List<string> parts = buffer.SplitSpaceQArgs();
+                foreach (var item in currentRedefines)
+                {
+                    // Debug.Log($"line:{buffer}. replace {item.Key} for {item.Value} so now it looks: { buffer.Replace(item.Key, item.Value.replacor)}");
+
+                    //todo-z no replace args with values. Impossible #redefine "lol($x,$y)" "Console.Debug($x+"--"+$y)";
+                    for (int i = 0; i < parts.Count; i++)
+                    {
+
+
+
+                        string part = parts[i];
+
+                        if (part == item.Key)
+                        {
+
+                            string replacor = item.Value;
+
+                            parts[i] = part.Replace(item.Key, replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
+
+                        }
+
+                    }
+
+                }
+                buffer = string.Join("", parts);
+
+            }
+
+
+            if ((positionToExpectNextInlcude < index && !includeRegex.IsMatch(buffer)))
             {
                 if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
                 {
@@ -225,57 +268,18 @@ public class ScriptManager : MonoBehaviour
                 checkIncludes = false;
             }
 
-            if (checkIncludes)
-            {
-                if (includeRegex.IsMatch(buffer))
-                {
-                    Debug.Log("found");
-
-                    string between = buffer.GetRangeBetweenFirstLast("\"");
-                    Debug.Log(between);
-                    if (string.IsNullOrEmpty(between))
-                    {
-                        between = buffer.GetRangeBetweenFirstLast("\'");
-                    }
-                    if (!importedLibraries.Contains(between))
-                    {
-                        importedLibraries.Add(between);
-                        File f = FileSystemInternal.instance.GetFileByPath(between);
-                        if (f == null)
-                        {
-                            lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";
-                            continue;
-                        }
-                        List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
-                        lines[index] = "//" + buffer;
-                        for (int iL = 0; iL < importedLines.Count; iL++)
-                        {
-                            string importedLine = importedLines[iL];
-                            lines.Insert(index + iL, importedLine);
-
-                        }
-                        positionToExpectNextInlcude = index + importedLines.Count;
-                        index--;
-                    }
-                    else
-                    {
-                        lines[index] = $"//There would be imported \"{between}\" but it was already imported!";
-
-                        //todo-future add compilation error
-                    }
-
-
-                }
-            }
             if (checkRedefines)
             {
                 if (redefineRegex.IsMatch(buffer))
                 {
 
+                    positionToExpectNextInlcude++;
+                    List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
+                    int definitionIndex = lineParts.FindIndex(x => x != "#" && !string.IsNullOrWhiteSpace(x) && x != "redefine");
+                    int definitionEndIndex = lineParts.FindIndex(definitionIndex, x => string.IsNullOrWhiteSpace(x));
 
-                    //  string definition = buffer.GetRangeBetweenFirstNext(" ");
-                    string[] lineParts = buffer.Split(' ');
-                    string definition = lineParts[1];
+                    string definition = string.Join("", lineParts.GetRange(definitionIndex, definitionEndIndex - definitionIndex));
+
                     if (ONLY_UPPERCASE_REDEFINE)
                     {
                         if (definition != definition.ToUpper())
@@ -284,30 +288,84 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-                    //  int indexOfFirst = buffer.IndexOf(" ") + 1;
-                    //  int indexOfSecond = buffer.IndexOf(" ", indexOfFirst) + 1;
-                    Debug.Log(lineParts.GetValuesToString());
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionIndex).ToArray()).TrimStart();
 
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(2).Take(lineParts.Length - 2).ToArray());
-
-                    // string definitionReplacor = buffer.Substring(indexOfSecond + 1);
-                    Debug.Log(/*$"indexOfFirst{indexOfFirst}' indexOfSecond{indexOfSecond}'*/$"  definition'{definition}' definitionReplacor'{definitionReplacor}'");
                     if (definition == null || definitionReplacor == null)
                     {
-
+                        continue;
                     }
-                    lines[index] = "//" + buffer.Substring(1);
-                    for (int i = index + 1; i < lines.Count; i++)
-                    {
-                        Debug.Log($"line:{lines[i]}. replace {definition} for {definitionReplacor} so now it looks: { lines[i].Replace(definition, definitionReplacor)}");
+                    buffer = "//" + buffer.Substring(1);
+                    currentRedefines.Add(definition, definitionReplacor);
 
-                        lines[i] = lines[i].Replace(definition, definitionReplacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (i + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");//todo-future change unknown
-                    }
                 }
             }
+            if (checkUndefines)
+            {
+                if (undefineRegex.IsMatch(buffer))
+                {
+                    positionToExpectNextInlcude++;
+
+                    List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
+                    int definitionIndex = lineParts.FindIndex(x => x != "#" || string.IsNullOrEmpty(x) || x != "undefine");
+                    string definition = lineParts[definitionIndex];
+                    currentRedefines.Remove(definition);
+                }
+            }
+            if (checkIncludes)
+            {
+                if (includeRegex.IsMatch(buffer))
+                {
+
+                    string between = buffer.GetRangeBetweenFirstLast("\"");
+                    if (string.IsNullOrEmpty(between))
+                    {
+                        between = buffer.GetRangeBetweenFirstLast("\'");
+                    }
+                    if (!importedLibraries.Contains(between))
+                    {
+                        importedLibraries.Add(between);
+                        File f = FileSystemInternal.instance.mainDrive.GetFileByPath(between);
+                        if (f == null)
+                        {
+                            /*if (null.Contains( between))
+                            {
+                           //todo 9 think about #include-ing core libraries like system or system.file_system
+                            // this would be the best with system variables
+                            }*/
+                            lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";
+                            continue;
+                        }
+                        List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
+                        buffer = "//imported: " + buffer;
+                        lines[index] = buffer;
+                        for (int iL = 0; iL < importedLines.Count; iL++)
+                        {
+                            string importedLine = importedLines[iL];
+                            lines.Insert(index + iL + 1, importedLine);
+
+
+                        }
+                        positionToExpectNextInlcude = index + importedLines.Count;
+
+                        index--;
+                        continue;
+                    }
+                    else
+                    {
+                        lines[index] = $"//There would be imported \"{between}\" but it was already imported earlier!";
+
+                        //todo-future add compilation error
+                    }
+
+
+                }
+            }
+            lines[index] = buffer;
+
+
         }
-        Debug.Log(lines.GetValuesToString("\n"));
-        return string.Join("\n", lines);
+        Debug.Log(lines.ToFormatedString("\n"));
+        codeObject.code = string.Join("\n", lines);
     }
 
 
@@ -333,5 +391,16 @@ public class ScriptManager : MonoBehaviour
         {
             action.Invoke();
         }, sync);
+    }
+    public struct RedefineGroup
+    {
+        public string replacor;
+        public string[] arguments;
+
+        public RedefineGroup(string replacor, string[] arguments)
+        {
+            this.replacor = replacor;
+            this.arguments = arguments;
+        }
     }
 }
