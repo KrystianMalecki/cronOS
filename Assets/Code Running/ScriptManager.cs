@@ -172,7 +172,7 @@ public class ScriptManager : MonoBehaviour
                         }
                         else
                         {
-                          //  Debug.Log("killing null:");
+                            //  Debug.Log("killing null:");
                             //_delegateBuffer.Speak();
                         }
                     }
@@ -259,7 +259,7 @@ public class ScriptManager : MonoBehaviour
             }
 
 
-            if ((positionToExpectNextInlcude == index && !includeRegex.IsMatch(buffer)))
+            if ((positionToExpectNextInlcude < index && !includeRegex.IsMatch(buffer)))
             {
                 if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
                 {
@@ -273,10 +273,12 @@ public class ScriptManager : MonoBehaviour
                 if (redefineRegex.IsMatch(buffer))
                 {
 
-
+                    positionToExpectNextInlcude++;
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
                     int definitionIndex = lineParts.FindIndex(x => x != "#" && !string.IsNullOrWhiteSpace(x) && x != "redefine");
-                    string definition = lineParts[definitionIndex];
+                    int definitionEndIndex = lineParts.FindIndex(definitionIndex, x => string.IsNullOrWhiteSpace(x));
+
+                    string definition = string.Join("", lineParts.GetRange(definitionIndex, definitionEndIndex - definitionIndex));
 
                     if (ONLY_UPPERCASE_REDEFINE)
                     {
@@ -286,7 +288,7 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionIndex + 1).Take(lineParts.Count - definitionIndex).ToArray()).TrimStart();
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionIndex).ToArray()).TrimStart();
 
                     if (definition == null || definitionReplacor == null)
                     {
@@ -301,6 +303,7 @@ public class ScriptManager : MonoBehaviour
             {
                 if (undefineRegex.IsMatch(buffer))
                 {
+                    positionToExpectNextInlcude++;
 
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
                     int definitionIndex = lineParts.FindIndex(x => x != "#" || string.IsNullOrEmpty(x) || x != "undefine");
@@ -327,23 +330,23 @@ public class ScriptManager : MonoBehaviour
                             /*if (null.Contains( between))
                             {
                            //todo 9 think about #include-ing core libraries like system or system.file_system
-// this would be the best with system variables
+                            // this would be the best with system variables
                             }*/
                             lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";
                             continue;
                         }
                         List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
-                        buffer = "//" + buffer;
+                        buffer = "//imported: " + buffer;
                         lines[index] = buffer;
                         for (int iL = 0; iL < importedLines.Count; iL++)
                         {
                             string importedLine = importedLines[iL];
-                            lines.Insert(index + iL+1, importedLine);
+                            lines.Insert(index + iL + 1, importedLine);
 
 
                         }
                         positionToExpectNextInlcude = index + importedLines.Count;
-                        
+
                         index--;
                         continue;
                     }

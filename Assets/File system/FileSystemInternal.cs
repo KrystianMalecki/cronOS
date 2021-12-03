@@ -24,7 +24,9 @@ public class FileSystemInternal : MonoBehaviour
 
     }
     #endregion
+
     public Drive mainDrive;
+
     public static readonly char catalogSymbol = '/';
 
 

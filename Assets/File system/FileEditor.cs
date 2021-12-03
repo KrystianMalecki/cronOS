@@ -1,10 +1,10 @@
+#if UNITY_EDITOR
 using Libraries.system.file_system;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-//todo 0 change child buttons to be more sizable. MinWidth etc.
 public class FileEditor : EditorWindow
 {
     public FileEditor currentWindow;
@@ -16,15 +16,11 @@ public class FileEditor : EditorWindow
 
     public Path bufferedPathObject = null;
     public string bufferedPath = null;
-    //  [SerializeReference]
-
-    //  public File lastOne = null;
 
 
     int size = 32;
     int page = 0;
     SerializedProperty permissionsSP;
-    // SerializedProperty childrenSP;
     SerializedProperty dataSP;
 
 
@@ -48,8 +44,7 @@ public class FileEditor : EditorWindow
     List<File> children = null;
     int childrenInLine = 5;
 
-    [SerializeField]
-    public Drive drive0;
+
 
     int idBuffer;
     int parentIDBuffer;
@@ -118,6 +113,19 @@ public class FileEditor : EditorWindow
         drive = currentFile?.GetDrive();
         if (drive == null)
         {
+            UpdateDrive();
+        }
+        else
+        {
+            driveAssetPath = AssetDatabase.GetAssetPath(drive);
+            EditorPrefs.SetString("drivePath", driveAssetPath);
+
+        }
+    }
+    void UpdateDrive()
+    {
+        if (drive == null)
+        {
             driveAssetPath = EditorPrefs.GetString("drivePath", null);
             if (string.IsNullOrEmpty(driveAssetPath))
             {
@@ -131,9 +139,10 @@ public class FileEditor : EditorWindow
         }
         else
         {
-            driveAssetPath = AssetDatabase.GetAssetPath(drive);
-            EditorPrefs.SetString("drivePath", driveAssetPath);
-
+            if (!drive.cached)
+            {
+                drive.GenerateCacheData();
+            }
         }
     }
     void SetValues(bool refresh = false)
@@ -168,13 +177,13 @@ public class FileEditor : EditorWindow
         }
         if (currentFileSO == null)
         {
-            Debug.LogWarning("Something went wrong with currentFileSO!");
+            // Debug.LogWarning("Something went wrong with currentFileSO!");
             currentFileSO = new SerializedObject(currentWindow);
         }
 
         if (currentFileSP == null || refresh)
         {
-            Debug.LogWarning("Something went wrong with currentFileSP!");
+            // Debug.LogWarning("Something went wrong with currentFileSP!");
             if (currentFileSO.targetObject != null)
             {
                 currentFileSP = FindPropertyOfFile(currentFile);
@@ -205,12 +214,12 @@ public class FileEditor : EditorWindow
             this.Close();
             return;
         }
-        if (currentFile.GetDrive() == null || !currentFile.GetDrive().cached)
+        if (drive == null || !drive.cached)
         {
             //   FileSystemInternal.instance.CacheAllDrives();
-            drive0.GenerateCacheData();
-            currentFile = drive0.GetFileByID(currentFile.FileID);
-            Debug.Log("Recached data");
+            UpdateDrive();
+            UpdateWindow();
+            return;
         }
 
         SetValues();
@@ -467,7 +476,7 @@ public class FileEditor : EditorWindow
         bool state = false;
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
 
-        if (GUILayout.Button(child.name, GUILayout.Width((windowWidth / (childrenInLine - 1)) / 2 - 100)))
+        if (GUILayout.Button(child.name))
         {
             FileEditor.DisplayCurrentFile(child, FindPropertyOfFile(child), currentWindow, currentFileSO);
 
@@ -481,7 +490,7 @@ public class FileEditor : EditorWindow
                 currentFile.RemoveChild(child);
                 currentFileSO.Update();
                 UpdateWindow();
-                state= true;
+                state = true;
 
             }
             else if (answer == 2)
@@ -492,7 +501,7 @@ public class FileEditor : EditorWindow
                 child.data = null;
                 currentFileSO.Update();
                 UpdateWindow();
-                state= true;
+                state = true;
 
             }
 
@@ -788,3 +797,4 @@ public class FileEditor : EditorWindow
 }
 
 
+#endif

@@ -2,6 +2,14 @@
 
 
 
+//todo 0 try locking
+
+
+//todo 0 fixes needed
+//- mouse to screen is not working on build
+//- add some debug menus for build
+//- make some visible progress?
+
 
 
 

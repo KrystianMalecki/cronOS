@@ -96,6 +96,10 @@ public static class StaticHelper
     }
     public static string ToEncodedString(this byte[] variable)
     {
+        if (variable == null)
+        {
+            return "";
+        }
         return ProcessorManager.mainEncoding.GetString(variable);
     }
     /*  public static byte[] GetRange(this byte[] variable, int start, int length)

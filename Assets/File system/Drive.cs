@@ -34,9 +34,11 @@ public class Drive : ScriptableObject
     public void OpenEditor()
     {
         GenerateCacheData();
-
+#if UNITY_EDITOR
         SerializedObject so = new SerializedObject(this, this);
+
         FileEditor.DisplayCurrentFile(GetRoot(), null, null, so);
+#endif
     }
 
     public File GetRoot()

@@ -9,9 +9,10 @@ namespace Libraries.system.file_system
         {
             return FileSystemInternal.instance.mainDrive.GetFileByPath(path, parent);
         }
-        public static File MakeFile(string path, string name, byte[] data = null)
+        public static File MakeFile(string path, string name, FilePermission filePermission, byte[] data = null)
         {
             File file = Drive.MakeFile(name, data);
+            file.permissions = filePermission;
             File parent = FileSystemInternal.instance.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;

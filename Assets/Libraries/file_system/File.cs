@@ -34,7 +34,7 @@ namespace Libraries.system
 
 
             [SerializeField]
-            [EnumMask]
+            [EnumFlags]
             public FilePermission permissions = (FilePermission)0b0111;
 
 
@@ -158,6 +158,7 @@ namespace Libraries.system
                 int size = GetDataArraySize() + name.Length * 8 + 8;
                 return $"{(prefixed ? size.ChangeToPrefixedValue() : size.ToString())}B";
             }
+
 
         }
     }

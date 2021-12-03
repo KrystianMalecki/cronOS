@@ -43,29 +43,29 @@ public class CodeTask
     {
         try
         {
-            
-   
+
+
             await CSharpScript.EvaluateAsync(codeObject.code
                  , ScriptManager.instance.scriptOptionsBuffer
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
                 .WithFilePath("debugpath/")
-                
+
                 );
-           
+
 
         }
         catch (ThreadAbortException tae)
         {
-            Debug.LogWarning( "Aborted thread running code.\nData: " + tae.Message);
+            Debug.LogWarning("Aborted thread running code.\nData: " + tae.Message);
         }
         catch (Exception e)
         {
-          
+
             try
             {
 
-             
+
                 string line = "";
                 string file = "";
                 int linePos = 0;
@@ -89,12 +89,18 @@ public class CodeTask
                     columnPos = frame.GetFileColumnNumber();
                     file = frame.GetFileName();
                     reason = e.Message;
-                    line = codeObject.code.Split('\n')[linePos];
                     Debug.Log("CheatedException");
                 }
-              
+                try
+                {
+                    string[] lines = codeObject.code.Split('\n');
+
+                    line = lines[linePos - 1] + "\n" + lines[linePos] + "\n" + lines[linePos + 1] + "\n" + lines[linePos + 2];
+                }
+                catch (Exception ex)
+                { }
                 Debug.Log($"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");
-             
+
             }
             catch (Exception ee)
             {
@@ -111,7 +117,7 @@ public class CodeTask
         int column = 0;
         int commaLocation = message.IndexOf(",");
 
-       
+
         line = int.Parse(
             message.Substring(message.IndexOf("(") + 1, commaLocation - message.IndexOf("(") - 1)
             );
