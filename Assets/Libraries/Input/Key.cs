@@ -28,7 +28,7 @@ namespace Libraries.system
                 return ((char)wrapper);
             }
         }
-        public enum Key
+        public enum Key:short
         {
 
             None = 0,

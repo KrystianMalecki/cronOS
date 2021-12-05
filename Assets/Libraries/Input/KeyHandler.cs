@@ -109,15 +109,17 @@ namespace Libraries.system
 
             bool combinedCharacterMode = false;
             public string combinedBuffer = "";
-            public string TryGetCombinedSymbol(KeySequence ks)
+            public string TryGetCombinedSymbol(ref KeySequence ks)
             {
-                combinedCharacterMode = ks.ReadAnyAlt(false);
+                combinedCharacterMode = ks.ReadAnyAlt(true);
                 if (combinedCharacterMode)
                 {
-                    int digit = ks.ReadDigit(true);
+                    int digit = ks.ReadDigit(out Key key,true);
                     if (digit != -1)
                     {
-                        Debug.Log("added"+digit+"to"+combinedBuffer);
+                        cooldownKeys.Add(key);
+
+                        Debug.Log("added" + digit + "to" + combinedBuffer);
 
                         combinedBuffer += digit;
                     }
@@ -186,49 +188,115 @@ namespace Libraries.system
             {
                 return ReadKey(Key.LeftControl, remove) || ReadKey(Key.RightControl, remove);
             }
-            public int ReadDigit(bool remove = true)
+
+            public int ReadDigit(out Key readDigit, bool remove = true)
             {
-                if (ReadKey(Key.Alpha0, remove) || ReadKey(Key.Keypad0, remove))
+                readDigit = Key.None;
+                if (ReadKey(Key.Alpha0, remove))
                 {
+                    readDigit = Key.Alpha0;
                     return 0;
                 }
-                else if (ReadKey(Key.Alpha1, remove) || ReadKey(Key.Keypad1, remove))
+                else if (ReadKey(Key.Keypad0, remove))
                 {
+                    readDigit = Key.Keypad0;
+                    return 0;
+                }
+                else if (ReadKey(Key.Alpha1, remove))
+                {
+                    readDigit = Key.Alpha1;
                     return 1;
                 }
-                else if (ReadKey(Key.Alpha2, remove) || ReadKey(Key.Keypad2, remove))
+                else if (ReadKey(Key.Keypad1, remove))
                 {
+                    readDigit = Key.Keypad1;
+                    return 1;
+                }
+                else if (ReadKey(Key.Alpha2, remove))
+                {
+                    readDigit = Key.Alpha2;
                     return 2;
                 }
-                else if (ReadKey(Key.Alpha3, remove) || ReadKey(Key.Keypad3, remove))
+                else if (ReadKey(Key.Keypad2, remove))
                 {
+                    readDigit = Key.Keypad2;
+                    return 2;
+                }
+                else if (ReadKey(Key.Alpha3, remove))
+                {
+                    readDigit = Key.Alpha3;
                     return 3;
                 }
-                else if (ReadKey(Key.Alpha4, remove) || ReadKey(Key.Keypad4, remove))
+                else if (ReadKey(Key.Keypad3, remove))
                 {
+                    readDigit = Key.Keypad3;
+                    return 3;
+                }
+                else if (ReadKey(Key.Alpha4, remove))
+                {
+                    readDigit = Key.Alpha4;
                     return 4;
                 }
-                else if (ReadKey(Key.Alpha5, remove) || ReadKey(Key.Keypad5, remove))
+                else if (ReadKey(Key.Keypad4, remove))
                 {
+                    readDigit = Key.Keypad4;
+                    return 4;
+                }
+                else if (ReadKey(Key.Alpha5, remove))
+                {
+                    readDigit = Key.Alpha5;
                     return 5;
                 }
-                else if (ReadKey(Key.Alpha6, remove) || ReadKey(Key.Keypad6, remove))
+                else if (ReadKey(Key.Keypad5, remove))
                 {
+                    readDigit = Key.Keypad5;
+                    return 5;
+                }
+                else if (ReadKey(Key.Alpha6, remove))
+                {
+                    readDigit = Key.Alpha6;
                     return 6;
                 }
-                else if (ReadKey(Key.Alpha7, remove) || ReadKey(Key.Keypad7, remove))
+                else if (ReadKey(Key.Keypad6, remove))
                 {
+                    readDigit = Key.Keypad6;
+                    return 6;
+                }
+                else if (ReadKey(Key.Alpha7, remove))
+                {
+                    readDigit = Key.Alpha7;
                     return 7;
                 }
-                else if (ReadKey(Key.Alpha8, remove) || ReadKey(Key.Keypad8, remove))
+                else if (ReadKey(Key.Keypad7, remove))
                 {
+                    readDigit = Key.Keypad7;
+                    return 7;
+                }
+                else if (ReadKey(Key.Alpha8, remove))
+                {
+                    readDigit = Key.Alpha8;
                     return 8;
                 }
-                else if (ReadKey(Key.Alpha9, remove) || ReadKey(Key.Keypad9, remove))
+                else if (ReadKey(Key.Keypad8, remove))
                 {
+                    readDigit = Key.Keypad8;
+                    return 8;
+                }
+                else if (ReadKey(Key.Alpha9, remove))
+                {
+                    readDigit = Key.Alpha9;
+                    return 9;
+                }
+                else if (ReadKey(Key.Keypad9, remove))
+                {
+                    readDigit = Key.Keypad9;
                     return 9;
                 }
                 return -1;
+            }
+            public int ReadDigit(bool remove = true)
+            {
+                return ReadDigit(out _, remove);
             }
         }
         public static class InputHelpers

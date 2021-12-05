@@ -22,6 +22,8 @@ namespace Libraries.system
             {
                 fileID = -1;
                 parentID = -1;
+                name = "";
+                
             }
             [SerializeField]
             protected int fileID = -1;

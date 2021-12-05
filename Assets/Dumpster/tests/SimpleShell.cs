@@ -288,7 +288,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         {
             ks = kh.WaitForInput();
             string input = KeyHandler.GetInputAsString();
-            text += kh.TryGetCombinedSymbol(ks);
+            text += kh.TryGetCombinedSymbol(ref ks);
           //  text = text.AddInputSpecial(input, ks);
 
             CheckMovement(ks);

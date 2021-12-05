@@ -18209,9 +18209,10 @@ MonoBehaviour:
     buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);\r\n           
     flasher = !flasher;\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
     }\r\n        void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
-    string input = KeyHandler.GetInputAsString();\r\n            text += kh.TryGetCombinedSymbol(ks);\r\n           
-    text = text.AddInputSpecial(input, ks);\r\n\r\n            CheckMovement(ks);\r\n           
-    if (ks.ReadKey(Key.Mouse0))\r\n            {\r\n                mousePos = MouseHander.GetScreenPosition();\r\n           
+    string input = KeyHandler.GetInputAsString();\r\n            text += kh.TryGetCombinedSymbol(ref
+    ks);\r\n            text = text.AddInputSpecial(input, ks);\r\n\rConsole.Debug(ks);\n           
+    CheckMovement(ks);\r\n            if (ks.ReadKey(Key.Mouse0))\r\n           
+    {\r\n                mousePos = MouseHander.GetScreenPosition();\r\n           
     }\r\n            ClampPositionToFrame();\r\n        }\r\n        while (true)\r\n       
     {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n            Draw();\r\n           
     ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n        }\r\n   "
