@@ -6,6 +6,7 @@ namespace Libraries.system.output.graphics
     {
         using Libraries.system.mathematics;
         using Libraries.system.output.graphics.system_colorspace;
+        using UnityEngine;
 
         [Serializable]
         public class SystemTexture : RectArray<SystemColor>
@@ -38,12 +39,42 @@ namespace Libraries.system.output.graphics
 
                 header[0] = transparencyFlag;
 
-                return header.Concat(base.ToData(SystemColor.sizeOf, x => x.value.ToBytes())).ToArray();
+                return header.Concat(base.ToData(SystemColor.sizeOf, Converter)).ToArray();
             }
+            static byte dataInByte = (byte)Mathf.RoundToInt(1f / SystemColor.sizeOf);
+            byte[] buffer = new byte[1];
+            byte[] buffer2 = new byte[1];
 
+            byte counter;
+            public byte[] Converter(SystemColor x)
+            {
+                buffer[0] <<= 8 / dataInByte;
+                buffer[0] += x.value;
+                counter++;
+                if (counter == dataInByte)
+                {
+                    buffer2 = buffer.Clone() as byte[];
+                    buffer[0] = 0;
+                    counter = 0;
+                    return buffer2;
+                }
+                return Array.Empty<byte>();
+            }
             public static SystemTexture FromData(byte[] data)
             {
-                SystemTexture texture = new SystemTexture(RectArray<SystemColor>.FromData(data.Skip(HEADER_SIZE).ToArray(), SystemColor.sizeOf, x => x[0]));
+                SystemTexture texture = new SystemTexture(RectArray<SystemColor>.FromData(data.Skip(HEADER_SIZE).ToArray(), SystemColor.sizeOf, x =>
+                {
+                    if (dataInByte > 1)
+                    {
+                        byte val0 = x[0];
+                        val0 >>= 8 / dataInByte;
+                        byte val1 = x[0];
+                        val1 <<= 8 / dataInByte;
+                        val1 >>= 8 / dataInByte;
+                        return new SystemColor[] { val0, val1 };
+                    }
+                    return new SystemColor[] { x[0] };
+                }));
                 byte[] header = data.Take(HEADER_SIZE).ToArray();
 
                 texture.transparencyFlag = header[0];

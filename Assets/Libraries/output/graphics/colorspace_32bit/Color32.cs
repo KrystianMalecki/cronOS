@@ -11,7 +11,7 @@ namespace Libraries.system.output.graphics
         {
             private UnityEngine.Color32 color;
 
-            public static readonly short sizeOf = sizeof(int);
+            public const float sizeOf = sizeof(int);
 
             public byte r
             {

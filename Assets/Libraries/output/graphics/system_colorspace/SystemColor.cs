@@ -118,7 +118,7 @@ namespace Libraries.system.output.graphics
                 return "unknown";
             }
 
-            public static readonly short sizeOf = sizeof(byte);
+            public const float sizeOf = 1f * sizeof(byte) / 1;
 
             public static readonly SystemColor black = new SystemColor(0);
             public static readonly SystemColor blue = new SystemColor(1);

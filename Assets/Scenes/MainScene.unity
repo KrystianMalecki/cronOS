@@ -18161,7 +18161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 1
+  runOnStart: 0
   code: "# redefine //# #\r\n        //# include \"/System/test_library\"\r\n       
     //commnet\r\n\r\n        Console.Debug();\r\n        const string help = \"Press
     mouse to move to mouse\\n\"\r\n                   + \"Arrows to move\\n\"\r\n                  

@@ -1,6 +1,7 @@
 //#define DLL
 
 using NaughtyAttributes;
+using SQLitePCL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace Libraries.system
             public void SetArray(T[] array)
             {
                 this.array = array;
-              
+
             }
 
             public RectArray(int width = 0, int height = 0)
@@ -58,7 +59,7 @@ namespace Libraries.system
                 Array.Copy(array.array, 0, this.array, 0, array.size);
             }
 
-           
+
 
 
             public void SetAt(int x, int y, T value)
@@ -95,15 +96,22 @@ namespace Libraries.system
             {
                 Fill(0, 0, width, height, value);
             }
-            protected byte[] ToData(short sizeOfT, Func<T, byte[]> converter)
+            //todo 0 think about making another function that will use byte instead of byte[] cuz new byte[]{};
+            protected byte[] ToData(float sizeOfT, Func<T, byte[]> converter)
             {
-                byte[] __bytes = new byte[sizeof(Int32) + sizeof(Int32) + (sizeOfT * size)];
+                int fullSize = 8 - (array.Length % 8) + array.Length;
+                byte[] __bytes = new byte[sizeof(Int32) + sizeof(Int32) + Mathf.CeilToInt(sizeOfT * size)];
                 int __counter = 0;
                 __bytes.SetByteValue(width.ToBytes(), __counter); __counter += (sizeof(Int32));
                 __bytes.SetByteValue(height.ToBytes(), __counter); __counter += (sizeof(Int32));
-                for (int i = 0; i < array.Length; i++)
+                for (int i = 0; i < fullSize; i++)
                 {
-                    byte[] output = converter.Invoke(array[i]);
+                    T val = default(T);
+                    if (array.Length > i)
+                    {
+                        val = array[i];
+                    }
+                    byte[] output = converter.Invoke(val);
 
                     for (int j = 0; j < output.Length; j++, __counter += 1)
                     {
@@ -114,20 +122,34 @@ namespace Libraries.system
                 }
                 return __bytes;
             }
-
-            protected static RectArray<T> FromData(byte[] data, short sizeOfT, Func<byte[], T> converter)
+            public static int Round(float f)
             {
-                int __counter = 0;
-                int width = BitConverter.ToInt32(data, __counter); __counter += (sizeof(Int32));
-                int height = BitConverter.ToInt32(data, __counter); __counter += (sizeof(Int32));
+                return Mathf.RoundToInt(f);
+            }
+            protected static RectArray<T> FromData(byte[] data, float sizeOfT, Func<byte[], T[]> converter)
+            {
+                float __counter = 0;
+                int minSizeOfT = Round(sizeOfT);
+                minSizeOfT += minSizeOfT < 1 ? 1 : 0;
+                int width = BitConverter.ToInt32(data, Round(__counter)); __counter += (sizeof(Int32));
+                int height = BitConverter.ToInt32(data, Round(__counter)); __counter += (sizeof(Int32));
                 RectArray<T> __structure = new RectArray<T>(width, height);
-                byte[] buffers = new byte[sizeOfT];
-                for (int k = 0; __counter < data.Length; __counter += sizeOfT, k++)
+                byte[] buffers = new byte[minSizeOfT];
+                for (int k = 0; __counter < data.Length; __counter += minSizeOfT)
                 {
                     //  Debug.Log($"iter {__counter} compare to {data.Length}");
-                    Array.Copy(data, __counter, buffers, 0, sizeOfT);
-                    T t = converter.Invoke(buffers);
-                    __structure.array[k] = t;
+                    Array.Copy(data, Round(__counter), buffers, 0, minSizeOfT);
+                    T[] t = converter.Invoke(buffers);
+                    for (int j = 0; j < t.Length; j++)
+                    {
+                        if (j > k || k >= __structure.array.Length)
+                        {
+                            break;
+                        }
+                        // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
+                        __structure.array[k] = t[j];
+                        k++;
+                    }
                     //   Debug.Log($"copyied from {data.ToArrayString()} at {__counter} to {buffers.ToArrayString()} at {0} with length {sizeOfT} which gave {t}");
 
                 }
@@ -158,5 +180,7 @@ namespace Libraries.system
                 return newArray;
             }
         }
+
+
     }
 }

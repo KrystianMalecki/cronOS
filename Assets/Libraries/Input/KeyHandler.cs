@@ -119,7 +119,6 @@ namespace Libraries.system
                     {
                         cooldownKeys.Add(key);
 
-                        Debug.Log("added" + digit + "to" + combinedBuffer);
 
                         combinedBuffer += digit;
                     }
@@ -127,7 +126,6 @@ namespace Libraries.system
                     {
                         if (byte.TryParse(combinedBuffer, out byte value))
                         {
-                            Debug.Log(value);
 
                             combinedBuffer = "";
                             combinedCharacterMode = false;

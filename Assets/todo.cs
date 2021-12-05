@@ -1,11 +1,20 @@
+
+//last thing: BW texture, compressing files/textures, keyboard input 
+
+
+
 //todo 0 add todos here
 
 
 
-//todo 0 try locking
+//todo 0 add compressed textures/pallet based images. Almost done - test
+//SystemColor is 0-16 so 4 bits so 2 can be compressed into 1 byte. Same thing with black-white children like fonts or masks.
+
+//todo 0 convert fontTexture to BWTexture
 
 
-//todo 0 fixes needed
+
+//todo 9 fixes needed
 //- mouse to screen is not working on build
 //- add some debug menus for build
 //- make some visible progress?
@@ -22,8 +31,7 @@
 
 //future
 
-//todo-future add compressed textures/pallet based images
-//SystemColor is 0-16 so 4 bits so 2 can be compressed into 1 byte. Same thing with black-white children like fonts or masks.
+
 
 
 //todo-future add lolcat command and CT

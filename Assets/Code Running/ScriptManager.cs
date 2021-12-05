@@ -123,7 +123,6 @@ public class ScriptManager : MonoBehaviour
 
     public void KillAll()
     {
-        Debug.Log("Kill All");
         for (int i = 0; i < scriptsRunning.Count; i++)
         {
             CodeTask ct = scriptsRunning[i];
