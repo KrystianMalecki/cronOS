@@ -17,31 +17,27 @@ namespace Libraries.system
         [Serializable]
         public class RectArray<T>
         {
-            [SerializeField]
-            public T[] array;
-            [SerializeField]
-            [AllowNesting, ReadOnly]
-            public int width;
-            [SerializeField]
-            [AllowNesting, ReadOnly]
+            [SerializeField] public T[] array;
 
+            [SerializeField] [AllowNesting, ReadOnly]
+            public int width;
+
+            [SerializeField] [AllowNesting, ReadOnly]
             public int height;
+
             public int size
             {
-                get
-                {
-                    return width * height;
-                }
+                get { return width * height; }
             }
 
             public T[] GetArray()
             {
                 return array;
             }
+
             public void SetArray(T[] array)
             {
                 this.array = array;
-
             }
 
             public RectArray(int width = 0, int height = 0)
@@ -60,22 +56,23 @@ namespace Libraries.system
             }
 
 
-
-
             public void SetAt(int x, int y, T value)
             {
                 if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
                 {
                     return;
                 }
+
                 array[y * width + x] = value;
             }
+
             public void Fill(int x, int y, int width, int height, T value)
             {
                 if (!IsBoxInRange(x, y, width, height) && ProcessorManager.instance.ignoreSomeErrors)
                 {
                     return;
                 }
+
                 for (int iterY = y; iterY < height; iterY++)
                 {
                     for (int iterX = x; iterX < width; iterX++)
@@ -84,26 +81,32 @@ namespace Libraries.system
                     }
                 }
             }
+
             public T GetAt(int x, int y)
             {
                 if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
                 {
                     return default(T);
                 }
+
                 return array[y * width + x];
             }
+
             public void FillAll(T value)
             {
                 Fill(0, 0, width, height, value);
             }
-            //todo 0 think about making another function that will use byte instead of byte[] cuz new byte[]{};
+
+            //todo 0 think about making another function that will use byte instead of byte[] cuz new byte[]{}; impossible, can't make something like null byte
             protected byte[] ToData(float sizeOfT, Func<T, byte[]> converter)
             {
                 int fullSize = 8 - (array.Length % 8) + array.Length;
-                byte[] __bytes = new byte[sizeof(Int32) + sizeof(Int32) + Mathf.CeilToInt(sizeOfT * size)];
+                byte[] __bytes = new byte[sizeof(Int32) + sizeof(Int32) + Round(sizeOfT * fullSize)];
                 int __counter = 0;
-                __bytes.SetByteValue(width.ToBytes(), __counter); __counter += (sizeof(Int32));
-                __bytes.SetByteValue(height.ToBytes(), __counter); __counter += (sizeof(Int32));
+                __bytes.SetByteValue(width.ToBytes(), __counter);
+                __counter += (sizeof(Int32));
+                __bytes.SetByteValue(height.ToBytes(), __counter);
+                __counter += (sizeof(Int32));
                 for (int i = 0; i < fullSize; i++)
                 {
                     T val = default(T);
@@ -111,28 +114,39 @@ namespace Libraries.system
                     {
                         val = array[i];
                     }
+
                     byte[] output = converter.Invoke(val);
 
-                    for (int j = 0; j < output.Length; j++, __counter += 1)
+                    for (int j = 0; j < output.Length; j++)
                     {
-                        // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
-                        __bytes[__counter] = output[j];
-                    }
+                        if (__counter == 2054)
+                        {
+                            Debug.Log("before");
+                        }
 
+                        Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
+                        __bytes[__counter] = output[j];
+                        __counter += 1;
+                    }
                 }
+
                 return __bytes;
             }
+
             public static int Round(float f)
             {
                 return Mathf.RoundToInt(f);
             }
+
             protected static RectArray<T> FromData(byte[] data, float sizeOfT, Func<byte[], T[]> converter)
             {
                 float __counter = 0;
                 int minSizeOfT = Round(sizeOfT);
                 minSizeOfT += minSizeOfT < 1 ? 1 : 0;
-                int width = BitConverter.ToInt32(data, Round(__counter)); __counter += (sizeof(Int32));
-                int height = BitConverter.ToInt32(data, Round(__counter)); __counter += (sizeof(Int32));
+                int width = BitConverter.ToInt32(data, Round(__counter));
+                __counter += (sizeof(Int32));
+                int height = BitConverter.ToInt32(data, Round(__counter));
+                __counter += (sizeof(Int32));
                 RectArray<T> __structure = new RectArray<T>(width, height);
                 byte[] buffers = new byte[minSizeOfT];
                 for (int k = 0; __counter < data.Length; __counter += minSizeOfT)
@@ -146,27 +160,31 @@ namespace Libraries.system
                         {
                             break;
                         }
+
                         // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
                         __structure.array[k] = t[j];
                         k++;
                     }
                     //   Debug.Log($"copyied from {data.ToArrayString()} at {__counter} to {buffers.ToArrayString()} at {0} with length {sizeOfT} which gave {t}");
-
                 }
+
                 /*  for (int i = 0; __counter < data.Length; __counter += sizeOfT, i++)
                   {
                       __structure.array[i] = converter.Invoke(data);
                   }*/
                 return __structure;
             }
+
             public bool IsPointInRange(int x, int y)
             {
                 return x >= 0 && x < width && y >= 0 && y < height;
             }
+
             public bool IsBoxInRange(int x, int y, int width, int height)
             {
                 return x >= 0 && x + width <= this.width && y >= 0 && y + height <= this.height;
             }
+
             public RectArray<T> GetRect(int x, int y, int width, int height)
             {
                 RectArray<T> newArray = new RectArray<T>(width, height);
@@ -177,10 +195,23 @@ namespace Libraries.system
                         newArray.SetAt(currentX, currentY, this.GetAt(x + currentX, y + currentY));
                     }
                 }
+
+                return newArray;
+            }
+
+            public RectArray<S> Convert<S>(Func<T, S> converter)
+            {
+                RectArray<S> newArray = new RectArray<S>(width, height);
+                for (int currentY = 0; currentY < height; currentY++)
+                {
+                    for (int currentX = 0; currentX < width; currentX++)
+                    {
+                        newArray.SetAt(currentX, currentY, converter.Invoke(this.GetAt(currentX, currentY)));
+                    }
+                }
+
                 return newArray;
             }
         }
-
-
     }
 }

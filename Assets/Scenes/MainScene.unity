@@ -199,6 +199,60 @@ MonoBehaviour:
     + posy * 16))}\";\r\n            }\r\n        }\r\n        while (true)\r\n       
     {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n            Draw();\r\n           
     ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n        }\r\n    }\r\n"
+--- !u!1 &239008022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239008023}
+  - component: {fileID: 239008024}
+  m_Layer: 0
+  m_Name: font to mask CT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &239008023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239008022}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &239008024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239008022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  code: "File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
+    SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n       
+    MaskTexture mask = new MaskTexture(fontTexture.width,fontTexture.height);\r\n       
+    //copy all the data from the font texture to the mask texture\r\n        for
+    (int y = 0; y < fontTexture.height; y++)\r\n        {\r\n            for (int
+    x = 0; x < fontTexture.width; x++)\r\n            {\r\n                mask.SetAt(x,
+    y, fontTexture.GetAt(x, y)==SystemColor.white);\r\n            }\r\n        }\r\n     
+    File maskFile=  FileSystem.MakeFile(\"/System/defaultFontMask\");\r\n      maskFile.data
+    = mask.ToData();"
 --- !u!1 &358341496
 GameObject:
   m_ObjectHideFlags: 0
@@ -17826,7 +17880,7 @@ GameObject:
   - component: {fileID: 1081877137}
   - component: {fileID: 1081877138}
   m_Layer: 0
-  m_Name: InputManager2
+  m_Name: InputManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17941,6 +17995,8 @@ Transform:
   - {fileID: 1032443450}
   - {fileID: 605426659}
   - {fileID: 851211591}
+  - {fileID: 239008023}
+  - {fileID: 1640294208}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18068,6 +18124,84 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1640294207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1640294208}
+  - component: {fileID: 1640294209}
+  m_Layer: 0
+  m_Name: newer fontAtlas preview CT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1640294208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640294207}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1640294209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640294207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  code: "{\r\n        string charInfo = \"\";\r\n\r\n\r\n        SystemScreenBuffer
+    buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
+    Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontMask\");\r\n       
+    MaskTexture fontTexture = MaskTexture.FromData(fontAtlas.data);\r\n\r\n       
+    void DrawCharAt(int x, int y, char character)\r\n        {\r\n            int
+    index = Runtime.CharToByte(character);\r\n            int posx = index % 16;\r\n           
+    int posy = index / 16;\r\n            buffer.DrawTexture(x, y, fontTexture.GetRect(posx
+    * 8, (posy) * 8, 8, 8).Convert<SystemColor>\r\n                (x=>x? SystemColor.white:SystemColor.black),\r\n               
+    fontTexture.transparencyFlag);\r\n        }\r\n        void DrawStringAt(int
+    x, int y, string text)\r\n        {\r\n            int posX = x;\r\n           
+    int posY = y;\r\n            for (int i = 0; i < text.Length; i++)\r\n           
+    {\r\n                char c = text.ToCharArray()[i];\r\n                if (c
+    == '\\n' || c == '\\r')\r\n                {\r\n                    posX = x;\r\n                   
+    posY += 8;\r\n                    continue;\r\n                }\r\n               
+    DrawCharAt(posX, posY, c);\r\n                posX += 8;\r\n            }\r\n       
+    }\r\n\r\n\r\n\r\n\r\n\r\n        string text = \"\";\r\n        KeyHandler kh
+    = new KeyHandler();\r\n        KeySequence ks = null;\r\n        Vector2Int mousePos
+    = new Vector2Int(0, 0);\r\n\r\n\r\n\r\n        // Console.Debug(ls.instance.Run(\"-f
+    / \"));\r\n\r\n        void Draw()\r\n        {\r\n\r\n            buffer.DrawTexture(0,
+    0, fontTexture.Convert\r\n                (x=>x? SystemColor.white:SystemColor.black),
+    fontTexture.transparencyFlag);\r\n            DrawStringAt(0, 17 * 8, charInfo);\r\n           
+    DrawStringAt(0, 18 * 8, text);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
+    }\r\n        void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
+    string input = KeyHandler.GetInputAsString();\r\n            if (input != \"\")\r\n           
+    {\r\n                text = text.AddInput(input);\r\n            }\r\n           
+    mousePos = MouseHander.GetScreenPosition();\r\n            if (mousePos.x < 8
+    * 16 && mousePos.y < 8 * 16)\r\n            {\r\n                int posx = (mousePos.x
+    / 8) % 16;\r\n                int posy = (mousePos.y / 8);\r\n               
+    //charInfo = $\"{mousePos.y} {posy} {(mousePos.y / 8)}\";\r\n               
+    charInfo = $\"X{posx} Y{posy} {posx + posy * 16} Char:{Runtime.ByteToChar((byte)(posx
+    + posy * 16))}\";\r\n            }\r\n        }\r\n        while (true)\r\n       
+    {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n            Draw();\r\n           
+    ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n        }\r\n    }"
 --- !u!1 &1879574975
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ using Libraries.system.file_system;
 using Libraries.system.output.graphics.system_texture;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output;
+using Libraries.system.output.graphics.mask_texture;
 
 public class test : native_ue.MonoBehaviour
 {
@@ -414,6 +415,116 @@ public class test : native_ue.MonoBehaviour
 
             Runtime.Wait(1);
         }
+    }
+
+    void e()
+    {
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
+        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
+        MaskTexture mask = new MaskTexture(fontTexture.width,fontTexture.height);
+        //copy all the data from the font texture to the mask texture
+        for (int y = 0; y < fontTexture.height; y++)
+        {
+            for (int x = 0; x < fontTexture.width; x++)
+            {
+                mask.SetAt(x, y, fontTexture.GetAt(x, y)==SystemColor.white);
+            }
+        }
+        File maskFile=  FileSystem.MakeFile("/System/defaultFontMask");
+        maskFile.data = mask.ToData();
+    }
+
+    void ee()
+    {
+        
+    {
+        string charInfo = "";
+
+
+        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);
+        Screen.InitScreenBuffer(buffer);
+
+
+        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontMask");
+        MaskTexture fontTexture = MaskTexture.FromData(fontAtlas.data);
+
+        void DrawCharAt(int x, int y, char character)
+        {
+            int index = Runtime.CharToByte(character);
+            int posx = index % 16;
+            int posy = index / 16;
+            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8).Convert<SystemColor>
+                (x=>x? SystemColor.white:SystemColor.black),
+                fontTexture.transparencyFlag);
+        }
+        void DrawStringAt(int x, int y, string text)
+        {
+            int posX = x;
+            int posY = y;
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text.ToCharArray()[i];
+                if (c == '\n' || c == '\r')
+                {
+                    posX = x;
+                    posY += 8;
+                    continue;
+                }
+                DrawCharAt(posX, posY, c);
+                posX += 8;
+            }
+        }
+
+
+
+
+
+        string text = "";
+        KeyHandler kh = new KeyHandler();
+        KeySequence ks = null;
+        Vector2Int mousePos = new Vector2Int(0, 0);
+
+
+
+        // Console.Debug(ls.instance.Run("-f / "));
+
+        void Draw()
+        {
+
+            buffer.DrawTexture(0, 0, fontTexture.Convert
+                (x=>x? SystemColor.white:SystemColor.black), fontTexture.transparencyFlag);
+            DrawStringAt(0, 17 * 8, charInfo);
+            DrawStringAt(0, 18 * 8, text);
+            AsyncScreen.SetScreenBuffer(buffer);
+        }
+        void ProcessInput()
+        {
+            ks = kh.WaitForInput();
+            string input = KeyHandler.GetInputAsString();
+            if (input != "")
+            {
+                text = text.AddInput(input);
+            }
+            mousePos = MouseHander.GetScreenPosition();
+            if (mousePos.x < 8 * 16 && mousePos.y < 8 * 16)
+            {
+                int posx = (mousePos.x / 8) % 16;
+                int posy = (mousePos.y / 8);
+                //charInfo = $"{mousePos.y} {posy} {(mousePos.y / 8)}";
+                charInfo = $"X{posx} Y{posy} {posx + posy * 16} Char:{Runtime.ByteToChar((byte)(posx + posy * 16))}";
+            }
+        }
+        while (true)
+        {
+            buffer.FillAll(SystemColor.black);
+
+            Draw();
+            ProcessInput();
+
+            Runtime.Wait(1);
+        }
+    }
+
     }
 }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Libraries.system
 {
     namespace input
@@ -19,18 +20,20 @@ namespace Libraries.system
                     return Key.None;
                 }
             }
+
             public static KeyCode ToBase(this Key wrapper)
             {
                 return (KeyCode)wrapper;
             }
+
             public static char ToChar(this Key wrapper)
             {
                 return ((char)wrapper);
             }
         }
-        public enum Key:short
-        {
 
+        public enum Key : short
+        {
             None = 0,
             Backspace = 8,
             Tab = 9,

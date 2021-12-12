@@ -1,8 +1,5 @@
-
-
 namespace Libraries.system.output.graphics
 {
-
     namespace system_screen_buffer
     {
         using Libraries.system.mathematics;
@@ -13,12 +10,12 @@ namespace Libraries.system.output.graphics
         {
             public SystemScreenBuffer(int width, int height) : base(width, height)
             {
-
             }
+
             public SystemScreenBuffer() : base(Screen.screenWidth, Screen.screenHeight)
             {
-
             }
+
             public int GetHeight()
             {
                 return height;
@@ -28,25 +25,30 @@ namespace Libraries.system.output.graphics
             {
                 return width;
             }
+
             public UnityEngine.Color32 GetUnityColorAt(int x, int y)
             {
                 return GetAt(x, y).ToColor32();
             }
 
-            public void DrawTexture(int x, int y, RectArray<SystemColor> texture, byte transparencyFlag = 0xff, bool drawPartialy = true)
+            public void DrawTexture(int x, int y, RectArray<SystemColor> texture, byte transparencyFlag = 0xff,
+                bool drawPartialy = true)
             {
-                if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors && !drawPartialy)
+                if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors &&
+                    !drawPartialy)
                 {
-                    return;//todo-future add error
+                    return; //todo-future add error
                 }
+
                 for (int iterY = 0; iterY < texture.height; iterY++)
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
                         if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
                         {
-                            return;//todo-future add error
+                            return; //todo-future add error
                         }
+
                         if (transparencyFlag != 0xff && transparencyFlag == texture.GetAt(iterX, iterY))
                         {
                             //  SetAt(x + iterX, y + iterY, SystemColor.red);
@@ -58,6 +60,7 @@ namespace Libraries.system.output.graphics
                     }
                 }
             }
+
             public void DrawLine(int startX, int startY, int endX, int endY, SystemColor color)
             {
                 float x;
@@ -78,7 +81,6 @@ namespace Libraries.system.output.graphics
                 i = 1;
                 while (i <= step)
                 {
-
                     SetAt(Math.Round(x), Math.Round(y), color);
                     x = x + dx;
                     y = y + dy;
@@ -86,6 +88,5 @@ namespace Libraries.system.output.graphics
                 }
             }
         }
-
     }
 }

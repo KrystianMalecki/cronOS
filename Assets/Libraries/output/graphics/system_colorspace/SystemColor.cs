@@ -1,4 +1,3 @@
-
 using System;
 using System.Globalization;
 using UnityEngine;
@@ -8,6 +7,7 @@ namespace Libraries.system.output.graphics
     namespace system_colorspace
     {
         using color32;
+
         public static class ColorConstants
         {
             internal static Color32 ToCronosColor(this UnityEngine.Color32 color)
@@ -31,15 +31,19 @@ namespace Libraries.system.output.graphics
             public static readonly Color32 LightMagenta32 = new Color32(255, 85, 255);
             public static readonly Color32 Yellow32 = new Color32(255, 255, 85);
             public static readonly Color32 White32 = new Color32(255, 255, 255);
-            public static Color32[] SystemColors = new Color32[] { Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32, LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32 };
 
-
+            public static Color32[] SystemColors = new Color32[]
+            {
+                Black32, Blue32, Green32, Cyan32, Red32, Magenta32, Brown32, LightGray32, DarkGray32, LightBlue32,
+                LightGreen32, LightCyan32, LightRed32, LightMagenta32, Yellow32, White32
+            };
         }
+
         [Serializable]
         public struct SystemColor
         {
-            [SerializeField]
-            private byte _value;
+            [SerializeField] private byte _value;
+
             public byte value
             {
                 get
@@ -53,12 +57,13 @@ namespace Libraries.system.output.graphics
                     {
                         value = 15;
                     }
+
                     if (value > 15)
                     {
                         value = 0;
                     }
-                    this._value = value;
 
+                    this._value = value;
                 }
             }
 
@@ -66,33 +71,39 @@ namespace Libraries.system.output.graphics
             {
                 this._value = value;
             }
+
             public static implicit operator SystemColor(byte val)
             {
                 return new SystemColor(val);
             }
+
             public static implicit operator byte(SystemColor val)
             {
                 return val.value;
             }
+
             public static SystemColor operator ++(SystemColor sc)
             {
                 sc.value += 1;
                 return sc;
             }
+
             public static SystemColor operator --(SystemColor sc)
             {
                 sc.value -= 1;
                 return sc;
             }
+
             public static bool operator ==(SystemColor sc, SystemColor sc2)
             {
-
                 return sc.value == sc2.value;
             }
+
             public static bool operator !=(SystemColor sc, SystemColor sc2)
             {
                 return !(sc == sc2);
             }
+
             public override string ToString()
             {
                 switch (value)
@@ -113,8 +124,8 @@ namespace Libraries.system.output.graphics
                     case 13: return "light_magenta";
                     case 14: return "yellow";
                     case 15: return "white";
-
                 }
+
                 return "unknown";
             }
 
@@ -139,9 +150,4 @@ namespace Libraries.system.output.graphics
             public Color32 ToColor32() => ColorConstants.SystemColors[value];
         }
     }
-
 }
-
-
-
-

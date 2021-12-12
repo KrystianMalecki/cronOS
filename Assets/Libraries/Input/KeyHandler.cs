@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +12,7 @@ namespace Libraries.system
         {
             public HashSet<Key> pressedDownKeys = new HashSet<Key>();
             public HashSet<Key> cooldownKeys = new HashSet<Key>();
+
             private void CheckKeys()
             {
                 try
@@ -21,13 +21,13 @@ namespace Libraries.system
                     cooldownKeys.IntersectWith(pressedNow);
                     pressedDownKeys.Clear();
                     pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys));
-
                 }
                 catch (Exception e)
                 {
                     Debug.Log(" error" + e);
                 }
             }
+
             public bool GetKeyDown(Key key)
             {
                 //test.instance.count5++;
@@ -61,8 +61,10 @@ namespace Libraries.system
                     Runtime.Wait();
                     ScriptManager.AddDelegateToStack(CheckKeys, true);
                 }
+
                 return new KeySequence(pressedDownKeys);
             }
+
             public KeySequence WaitForInputDown()
             {
                 ScriptManager.AddDelegateToStack(CheckKeys, true);
@@ -72,13 +74,18 @@ namespace Libraries.system
                     Runtime.Wait();
                     ScriptManager.AddDelegateToStack(CheckKeys, true);
                 }
+
                 cooldownKeys.UnionWith(pressedDownKeys);
                 return new KeySequence(pressedDownKeys);
             }
+
             public static string GetInputAsString()
             {
-                return InputManager.GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
+                return
+                    InputManager
+                        .GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
             }
+
             public static string WaitForStringInput()
             {
                 string buffer = "";
@@ -87,6 +94,7 @@ namespace Libraries.system
                     buffer = InputManager.GetInput();
                     Runtime.Wait();
                 }
+
                 return buffer;
 
                 /*  return ScriptManager.AddDelegateToStack((ref bool done, ref string ret) =>
@@ -105,16 +113,15 @@ namespace Libraries.system
             }
 
 
-
-
             bool combinedCharacterMode = false;
             public string combinedBuffer = "";
+
             public string TryGetCombinedSymbol(ref KeySequence ks)
             {
                 combinedCharacterMode = ks.ReadAnyAlt(true);
                 if (combinedCharacterMode)
                 {
-                    int digit = ks.ReadDigit(out Key key,true);
+                    int digit = ks.ReadDigit(out Key key, true);
                     if (digit != -1)
                     {
                         cooldownKeys.Add(key);
@@ -122,11 +129,11 @@ namespace Libraries.system
 
                         combinedBuffer += digit;
                     }
+
                     if (combinedBuffer.Length == 3)
                     {
                         if (byte.TryParse(combinedBuffer, out byte value))
                         {
-
                             combinedBuffer = "";
                             combinedCharacterMode = false;
                             return "" + Runtime.ByteToChar(value);
@@ -134,20 +141,21 @@ namespace Libraries.system
 
                         combinedBuffer = "";
                         combinedCharacterMode = false;
-
                     }
                 }
                 else
                 {
                     combinedBuffer = "";
                 }
-                return "";
 
+                return "";
             }
         }
+
         public class KeySequence
         {
             public List<Key> keys;
+
             public bool ReadKey(Key key, bool remove = true)
             {
                 bool b = keys.Contains(key);
@@ -155,33 +163,40 @@ namespace Libraries.system
                 {
                     keys.Remove(key);
                 }
+
                 return b;
             }
+
             public KeySequence(List<Key> keys)
             {
                 this.keys = new List<Key>(keys);
             }
+
             public KeySequence(IEnumerable<Key> keys)
             {
                 this.keys = new List<Key>(keys);
             }
+
             public KeySequence(ThreadSafeList<Key> keys)
             {
                 this.keys = new List<Key>(keys);
             }
+
             public override string ToString()
             {
                 return String.Join(", ", keys);
             }
+
             public bool ReadAnyAlt(bool remove = true)
             {
                 return ReadKey(Key.LeftAlt, remove) || ReadKey(Key.RightAlt, remove) || ReadKey(Key.AltGr, remove);
             }
+
             public bool ReadAnyShift(bool remove = true)
             {
                 return ReadKey(Key.LeftShift, remove) || ReadKey(Key.RightShift, remove);
-
             }
+
             public bool ReadAnyCtrl(bool remove = true)
             {
                 return ReadKey(Key.LeftControl, remove) || ReadKey(Key.RightControl, remove);
@@ -290,13 +305,16 @@ namespace Libraries.system
                     readDigit = Key.Keypad9;
                     return 9;
                 }
+
                 return -1;
             }
+
             public int ReadDigit(bool remove = true)
             {
                 return ReadDigit(out _, remove);
             }
         }
+
         public static class InputHelpers
         {
             public static string AddInput(this string current, string input)
@@ -319,8 +337,10 @@ namespace Libraries.system
                         current += c;
                     }
                 }
+
                 return current;
             }
+
             public static string AddInputSpecial(this string current, string input, KeySequence keySequence)
             {
                 bool shift = keySequence.ReadAnyShift(false);
@@ -358,8 +378,8 @@ namespace Libraries.system
 
 
                     current += shift ? ("" + c).ToUpperInvariant() : c;
-
                 }
+
                 return current;
             }
         }

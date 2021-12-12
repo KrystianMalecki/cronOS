@@ -1,5 +1,4 @@
-﻿
-using Libraries.system.mathematics;
+﻿using Libraries.system.mathematics;
 using System.Linq;
 
 namespace Libraries.system.output.graphics
@@ -9,7 +8,6 @@ namespace Libraries.system.output.graphics
         public UnityEngine.Color32 GetUnityColorAt(int x, int y);
         public int GetWidth();
         public int GetHeight();
-
     }
     //to be replaced
     //again
@@ -23,21 +21,16 @@ namespace Libraries.system.output.graphics
 
         public static void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            ScriptManager.AddDelegateToStack(() =>
-            {
-                ScreenManager.instance.InitScreenBuffer(screenBuffer);
-            });
+            ScriptManager.AddDelegateToStack(() => { ScreenManager.instance.InitScreenBuffer(screenBuffer); });
         }
+
         public static void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            ScriptManager.AddDelegateToStack(() =>
-            {
-                ScreenManager.instance.SetScreenBuffer(screenBuffer);
-            }, sync
+            ScriptManager.AddDelegateToStack(() => { ScreenManager.instance.SetScreenBuffer(screenBuffer); }, sync
             );
-
         }
     }
+
     public class AsyncScreen : Screen
     {
         public static bool sync => no;

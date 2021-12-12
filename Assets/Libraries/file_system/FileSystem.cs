@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Libraries.system.file_system
 {
     public class FileSystem : BaseLibrary
@@ -9,6 +10,7 @@ namespace Libraries.system.file_system
         {
             return FileSystemInternal.instance.mainDrive.GetFileByPath(path, parent);
         }
+
         public static File MakeFile(string path, string name, FilePermission filePermission, byte[] data = null)
         {
             File file = Drive.MakeFile(name, data);
@@ -16,9 +18,8 @@ namespace Libraries.system.file_system
             File parent = FileSystemInternal.instance.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
-
-
         }
+
         public static File MakeFile(string rawPath)
         {
             string[] path = rawPath.Split(FileSystemInternal.catalogSymbol);
@@ -31,11 +32,13 @@ namespace Libraries.system.file_system
                 {
                     newFile = MakeFolder(currentFile.GetFullPath(), path[i]);
                 }
+
                 currentFile = newFile;
             }
 
             return currentFile;
         }
+
         public static File MakeFolder(string path, string name)
         {
             File file = Drive.MakeFolder(name);
@@ -43,11 +46,10 @@ namespace Libraries.system.file_system
             parent.AddChild(file);
             return file;
         }
+
         public static bool RemoveFile(string path)
         {
             return FileSystemInternal.instance.mainDrive.RemoveFile(path);
-
         }
-
     }
 }

@@ -43,7 +43,8 @@ public class ScriptManager : MonoBehaviour
     typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),  typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
     typeof(Libraries.system.file_system.File),typeof(Libraries.system.shell.IShellProgram),
         typeof(Libraries.system.mathematics.Vector2),
-            typeof(Libraries.system.input.KeyHandler),
+            typeof(Libraries.system.input.KeyHandler),typeof(Libraries.system.input.MouseHander),
+            typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
                         typeof(System.Collections.Generic.Dictionary<string,string>),
             typeof(System.Linq.Enumerable),typeof(helper.GlobalHelper),
 

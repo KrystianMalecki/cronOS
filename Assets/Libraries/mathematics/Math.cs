@@ -18,27 +18,31 @@ namespace Libraries.system
             {
                 return System.Math.Abs(number);
             }
+
             public static float Abs(float number)
             {
                 return System.Math.Abs(number);
             }
+
             public static int Abs(int number)
             {
                 return System.Math.Abs(number);
             }
+
             public static int Round(decimal number)
             {
                 return (int)(number);
             }
+
             public static int Round(double number)
             {
                 return (int)(number);
             }
+
             public static int Round(float number)
             {
                 return (int)(number);
             }
         }
-
     }
 }

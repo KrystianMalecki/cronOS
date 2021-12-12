@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 namespace Libraries.system
 {
     namespace file_system
@@ -32,12 +33,14 @@ namespace Libraries.system
                         fileparts = null;
                         break;
                     }
+
                     string name = parts[i];
                     if (string.IsNullOrEmpty(name))
                     {
                         //todo-future throw error
                         break;
                     }
+
                     if (name == "..")
                     {
                         if (fileparts.Count > 1)
@@ -46,7 +49,6 @@ namespace Libraries.system
                             fileparts.RemoveAt(fileparts.Count - 1);
 
                             parts.RemoveAt(i);
-
                         }
                         else
                         {
@@ -54,6 +56,7 @@ namespace Libraries.system
                             fileparts = null;
                             break;
                         }
+
                         currentFile = currentFile?.Parent;
                         //  continue;
                     }
@@ -61,6 +64,7 @@ namespace Libraries.system
                     {
                         currentFile = currentFile.GetChildByName(name);
                     }
+
                     if (currentFile == null)
                     {
                         //todo-future throw error
@@ -69,6 +73,7 @@ namespace Libraries.system
                         fileparts = null;
                         break;
                     }
+
                     fileparts.Add(currentFile);
                 }
 
@@ -79,16 +84,18 @@ namespace Libraries.system
                     fileparts = null;
                 }
             }
+
             public override string ToString()
             {
-                string path = parts == null ? "" : string.Join(/*FileSystemInternal.catalogSymbol.ToString()*/"-", parts) + "\n";
+                string path = parts == null
+                    ? ""
+                    : string.Join( /*FileSystemInternal.catalogSymbol.ToString()*/"-", parts) + "\n";
                 fileparts?.ForEach(x => path += x.name + "-");
                 return path;
-
             }
+
             public File GetFile()
             {
-
                 return fileparts?[fileparts.Count - 1];
             }
         }

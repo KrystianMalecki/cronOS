@@ -7,8 +7,7 @@ using UnityEngine;
 public class MainThreadDelegate<T> : ITryToRun
 {
     public T returnValue;
-    //todo-recheck check if locking is better
-  //  public object locker;
+
 
     public volatile bool done = false;
     public MTDFunction function;

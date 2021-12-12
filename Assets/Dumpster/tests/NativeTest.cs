@@ -16,7 +16,7 @@ using Libraries.system.output.graphics.system_texture;
 using System.Linq;
 using helper;
 using Libraries.system.output.graphics.system_colorspace;
-using Libraries.system.output.graphics.sbw_texture;
+using Libraries.system.output.graphics.mask_texture;
 
 public class NativeTest : MonoBehaviour
 {
@@ -37,7 +37,7 @@ public class NativeTest : MonoBehaviour
           Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
         */
         Debug.Log(SystemColor.sizeOf);
-        BWTexture st = new BWTexture(2, 2);
+        MaskTexture st = new MaskTexture(2, 2);
         st.SetAt(0, 0, true);
         st.SetAt(0, 1, false);
         st.SetAt(1, 0, true);
@@ -46,7 +46,7 @@ public class NativeTest : MonoBehaviour
 
         byte[] data = st.ToData();
         Debug.Log(data.ToFormatedString());
-        BWTexture st2 = BWTexture.FromData(data);
+        MaskTexture st2 = MaskTexture.FromData(data);
         Debug.Log(st2.array.ToFormatedString());
         byte[] data2 = st2.ToData();
         Debug.Log(data2.ToFormatedString());
