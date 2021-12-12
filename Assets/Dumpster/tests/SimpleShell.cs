@@ -319,7 +319,7 @@ public class SimpleShell : UnityEngine.MonoBehaviour
     public void Begin()
     {
 
-        //# include "/System/programs/programsLibrary"
+        //# include "/System/libraries/programsLibrary.ll"
 
         string prefix = "";
         File currentFile = FileSystem.GetFileByPath("/System");

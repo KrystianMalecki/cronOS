@@ -253,6 +253,88 @@ MonoBehaviour:
     y, fontTexture.GetAt(x, y)==SystemColor.white);\r\n            }\r\n        }\r\n     
     File maskFile=  FileSystem.MakeFile(\"/System/defaultFontMask\");\r\n      maskFile.data
     = mask.ToData();"
+--- !u!1 &343881318
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 343881319}
+  - component: {fileID: 343881320}
+  m_Layer: 0
+  m_Name: advanced CT (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &343881319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343881318}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &343881320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343881318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  code: "# redefine //# #\r\n//# include \"/System/libraries/fontLibrary.ll\"\r\n       
+    //commnet\r\n\r\n        const string help = \"Press mouse to move to mouse\\n\"\r\n                  
+    + \"Arrows to move\\n\"\r\n                   + \"Keypad +/- to change speed\\n\"\r\n                  
+    + \"Type to type\u263B\";\r\n        SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth,
+    Screen.screenHeight);\r\n        Screen.InitScreenBuffer(buffer);\r\n\r\n\n\r\n       
+    Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);\r\n       
+    Vector2Int mousePos = new Vector2Int(0, 0);\r\n\r\n        string position =
+    \"\";\r\n        string text = \"\";\r\n        int speed = 1;\r\n        KeyHandler
+    kh = new KeyHandler();\r\n        KeySequence ks = null;\r\n        bool flasher
+    = false;\r\n\r\n        void CheckMovement(KeySequence ks)\r\n        {\r\n           
+    if (ks.ReadKey(Key.UpArrow))\r\n            {\r\n                orbPos.y -=
+    speed;\r\n            }\r\n            if (ks.ReadKey(Key.DownArrow))\r\n           
+    {\r\n                orbPos.y += speed;\r\n            }\r\n            if (ks.ReadKey(Key.LeftArrow))\r\n           
+    {\r\n                orbPos.x -= speed;\r\n            }\r\n            if (ks.ReadKey(Key.RightArrow))\r\n           
+    {\r\n                orbPos.x += speed;\r\n            }\r\n            if (ks.ReadKey(Key.KeypadPlus))\r\n           
+    {\r\n                speed++;\r\n            }\r\n            if (ks.ReadKey(Key.KeypadMinus))\r\n           
+    {\r\n                speed--;\r\n            }\r\n        }\r\n\r\n\r\n       
+    void ClampPositionToFrame()\r\n        {\r\n            if (orbPos.x > buffer.width
+    - 1)\r\n            {\r\n                orbPos.x = buffer.width - 1;\r\n           
+    }\r\n            if (orbPos.x < 0)\r\n            {\r\n                orbPos.x
+    = 0;\r\n            }\r\n            if (orbPos.y > buffer.height - 1)\r\n           
+    {\r\n                orbPos.y = buffer.height - 1;\r\n            }\r\n           
+    if (orbPos.y < 0)\r\n            {\r\n                orbPos.y = 0;\r\n           
+    }\r\n        }\r\n        void Draw()\r\n        {\r\n            DrawStringAt(buffer,8,
+    0, help);\r\n\r\n            position = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n\r\n           
+    DrawStringAt(buffer,0, 4 * 8, position);\r\n            buffer.DrawLine(mousePos.x,
+    mousePos.y, orbPos.x, orbPos.y, SystemColor.white);\r\n            buffer.SetAt(orbPos.x,
+    orbPos.y, SystemColor.yellow);\r\n            DrawStringAt(buffer,0, 5 * 8, text);\r\n           
+    buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);\r\n           
+    flasher = !flasher;\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
+    }\r\n        void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
+    string input = KeyHandler.GetInputAsString();\r\n            text += kh.TryGetCombinedSymbol(ref
+    ks);\r\n            text = text.AddInputSpecial(input, ks);\r\n            CheckMovement(ks);\r\n           
+    if (ks.ReadKey(Key.Mouse0))\r\n            {\r\n                mousePos = MouseHander.GetScreenPosition();\r\n           
+    }\r\n            ClampPositionToFrame();\r\n        }\r\n        while (true)\r\n       
+    {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n            Draw();\r\n           
+    ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n        }"
 --- !u!1 &358341496
 GameObject:
   m_ObjectHideFlags: 0
@@ -17997,6 +18079,7 @@ Transform:
   - {fileID: 851211591}
   - {fileID: 239008023}
   - {fileID: 1640294208}
+  - {fileID: 343881319}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18381,26 +18464,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  code: "# include \"/System/programs/programsLibrary\"\r\n\r\n        string prefix
-    = \"\";\r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n       
+  code: "# include \"/System/libraries/programsLibrary.ll\"\r\n\r# include \"/System/libraries/fontLibrary.ll\"\n       
+    string prefix = \"\";\r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n       
     string console = \"\";\r\n        string bufferedText = \"\";\r\n        int
     historyPointer = 0;\r\n        List<string> history = new List<string>();\r\n       
     SystemScreenBuffer buffer = new SystemScreenBuffer();\r\n        Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n       
-    File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
-    SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n\r\n       
-    void DrawCharAt(int x, int y, char character)\r\n        {\r\n            int
-    index = Runtime.CharToByte(character);\r\n            int posx = index % 16;\r\n           
-    int posy = index / 16;\r\n            buffer.DrawTexture(x, y, fontTexture.GetRect(posx
-    * 8, (posy) * 8, 8, 8));\r\n        }\r\n        void DrawStringAt(int x, int
-    y, string text)\r\n        {\r\n            int posX = x;\r\n            int
-    posY = y;\r\n            char[] charText = text.ToCharArray();\r\n           
-    for (int i = 0; i < text.Length; i++)\r\n            {\r\n                char
-    c = charText[i];\r\n                if (c == '\\r')\r\n                {\r\n                   
-    posX = x;\r\n                    continue;\r\n                }\r\n               
-    else if (c == '\\n')\r\n                {\r\n                    posX = x;\r\n                   
-    posY += 8;\r\n                    continue;\r\n                }\r\n               
-    DrawCharAt(posX, posY, c);\r\n                posX += 8;\r\n            }\r\n       
-    }\r\n\r\n        void UpdatePrefix()\r\n        {\r\n            prefix = currentFile.GetFullPath()
+    void UpdatePrefix()\r\n        {\r\n            prefix = currentFile.GetFullPath()
     + \">\";\r\n        }\r\n\r\n\r\n\r\n\r\n        string text = \"\";\r\n\r\n\r\n\r\n       
     int CountEncounters(string input, params char[] toFind)\r\n        {\r\n           
     int counter = 0;\r\n            foreach (char c in input)\r\n            {\r\n               
@@ -18408,9 +18477,9 @@ MonoBehaviour:
     if (compareTo == c)\r\n                    {\r\n                        counter++;\r\n                       
     break;\r\n                    }\r\n                }\r\n\r\n            }\r\n           
     return counter;\r\n        }\r\n\r\n\r\n        void Draw()\r\n        {\r\n           
-    DrawStringAt(0, 0, console);\r\n            int consoleY = CountEncounters(console,
-    '\\r', '\\n') + 1;\r\n            DrawStringAt(0, consoleY * 8, prefix);\r\n\r\n\r\n           
-    DrawStringAt(prefix.Length * 8, consoleY * 8, text);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
+    DrawStringAt(buffer,0, 0, console);\r\n            int consoleY = CountEncounters(console,
+    '\\r', '\\n') + 1;\r\n            DrawStringAt(buffer,0, consoleY * 8, prefix);\r\n\r\n\r\n           
+    DrawStringAt(buffer,prefix.Length * 8, consoleY * 8, text);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
     }\r\n        KeyHandler kh = new KeyHandler();\r\n        KeySequence ks = null;\r\n       
     void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
     string input = KeyHandler.GetInputAsString();\r\n            bool shift = ks.ReadAnyShift();\r\n           
@@ -18460,7 +18529,7 @@ MonoBehaviour:
     }\r\n            }\r\n            return str;\r\n        }\r\n\r\n        UpdatePrefix();\r\n       
     while (true)\r\n        {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n\r\n           
     Draw();\r\n            ProcessInput();\r\n\r\n            Runtime.Wait();\r\n       
-    }\r\n\r"
+    }\r\n\r\n"
 --- !u!114 &2108374106
 MonoBehaviour:
   m_ObjectHideFlags: 0

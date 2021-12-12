@@ -261,11 +261,16 @@ public class ScriptManager : MonoBehaviour
 
             if ((positionToExpectNextInlcude < index && !includeRegex.IsMatch(buffer)))
             {
-                if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") || buffer.StartsWith("/*"))
+                if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") ||
+                    buffer.StartsWith("/*"))
                 {
                     positionToExpectNextInlcude++;
                 }
-                checkIncludes = false;
+                else
+                {
+                    Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
+                    checkIncludes = false;
+                }
             }
 
             if (checkRedefines)
@@ -288,7 +293,7 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionIndex).ToArray()).TrimStart();
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex-1).ToArray()).TrimStart();
 
                     if (definition == null || definitionReplacor == null)
                     {
@@ -336,7 +341,8 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                         List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
-                        buffer = "//imported: " + buffer;
+                        buffer = "//imported: " + between;
+                            
                         lines[index] = buffer;
                         for (int iL = 0; iL < importedLines.Count; iL++)
                         {
@@ -345,7 +351,7 @@ public class ScriptManager : MonoBehaviour
 
 
                         }
-                        positionToExpectNextInlcude = index + importedLines.Count;
+                        positionToExpectNextInlcude +=  importedLines.Count+1;
 
                         index--;
                         continue;

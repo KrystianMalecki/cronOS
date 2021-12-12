@@ -373,7 +373,7 @@ public class FileEditor : EditorWindow
             if (GUILayout.Button("Paste file"))
             {
                 if (EditorUtility.DisplayDialog("Paste file?",
-                    $"do you want to paste file with parent id?", "With", "Without"))
+                    $"Do you want to override current file with file from clipboard?", "Yes", "No"))
                 {
                     File copiedFile = null;
                     try
@@ -387,12 +387,12 @@ public class FileEditor : EditorWindow
 
                     currentFile.name = copiedFile.name;
                     currentFile.data = copiedFile.data;
-                    currentFile.Parent = copiedFile.Parent;
                     currentFileSO.Update();
                     DisplayCurrentFile(currentFile, FindPropertyOfFile(currentFile), currentWindow, currentFileSO);
                 }
                 else
                 {
+                   
                 }
             }
 
