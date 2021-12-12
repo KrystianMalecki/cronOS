@@ -50,7 +50,7 @@ public class NativeTest : MonoBehaviour
         Debug.Log(st2.array.ToFormatedString());
         byte[] data2 = st2.ToData();
         Debug.Log(data2.ToFormatedString());
-
+Debug.Log(default(SystemColor).value);
 
 
         // FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");

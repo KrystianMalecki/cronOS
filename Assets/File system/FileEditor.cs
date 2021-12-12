@@ -3,6 +3,7 @@ using Libraries.system.file_system;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,12 +39,14 @@ public class FileEditor : EditorWindow
     float windowWidth = 0;
     float boxWidth = 28;
 
+
+
     bool toggleTopFields = true;
     bool toggleData = false;
     bool toggleChildren = false;
     bool toggleTextDataField = false;
     bool toggleTree = true;
-
+    bool toggleAutoChangeParent = false;
     List<File> children = null;
     int childrenInLine = 5;
 
@@ -79,6 +82,7 @@ public class FileEditor : EditorWindow
         SerializedObject serializedObject = null)
     {
         FileEditor currentWindow = EditorWindow.CreateWindow<FileEditor>(typeof(FileEditor));
+        currentWindow.LoadTogglesFromEditorPrefs();
         currentWindow.currentWindow = currentWindow;
         currentWindow.currentFileSO = serializedObject;
         currentWindow.currentFileSP = serializedProperty;
@@ -98,8 +102,12 @@ public class FileEditor : EditorWindow
         toggleTopFields = true;
         SetValues(true);
         canEditIds = false;
+        
         SetupDrive();
         SetupChildren(true);
+        treeRoot = toggleAutoChangeParent ? currentFile.Parent : currentFile.GetDrive().GetRoot();
+
+        treeRoot??= currentFile;
 
         SetupPath(true);
 
@@ -122,6 +130,29 @@ public class FileEditor : EditorWindow
         }
     }
 
+    private void OnDestroy()
+    {
+        currentWindow.SaveTogglesToEditorPrefs();
+    }
+
+    void SaveTogglesToEditorPrefs()
+    {
+        EditorPrefs.SetBool("toggleTopFields", toggleTopFields);
+        EditorPrefs.SetBool("toggleData", toggleData);
+        EditorPrefs.SetBool("toggleChildren", toggleChildren);
+        EditorPrefs.SetBool("toggleTextDataField", toggleTextDataField);
+        EditorPrefs.SetBool("toggleTree", toggleTree);
+        EditorPrefs.SetBool("toggleAutoChangeParent", toggleAutoChangeParent);
+    }
+    void LoadTogglesFromEditorPrefs()
+    {
+        toggleTopFields = EditorPrefs.GetBool("toggleTopFields", true);
+        toggleData = EditorPrefs.GetBool("toggleData", false);
+        toggleChildren = EditorPrefs.GetBool("toggleChildren", false);
+        toggleTextDataField = EditorPrefs.GetBool("toggleTextDataField", false);
+        toggleTree = EditorPrefs.GetBool("toggleTree", true);
+        toggleAutoChangeParent = EditorPrefs.GetBool("toggleAutoChangeParent", false);
+    }
     void UpdateDrive()
     {
         if (drive == null)
@@ -207,6 +238,7 @@ public class FileEditor : EditorWindow
         }
     }
 
+    File treeRoot = null;
     void OnGUI()
     {
         if (currentFile == null || currentWindow == null)
@@ -237,7 +269,7 @@ public class FileEditor : EditorWindow
 
         windowWidth = position.width - 10;
 
-        
+
         EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
 
@@ -247,9 +279,9 @@ public class FileEditor : EditorWindow
 
         if (toggleTopFields)
         {
-            DrawTopGoersBar();
+           // DrawTopGoersBar();
 
-            GUILayout.Space(EditorGUIUtility.singleLineHeight);
+           // GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
             GUILayout.BeginHorizontal();
             //name
@@ -373,19 +405,27 @@ public class FileEditor : EditorWindow
 
         //children
 
+        if (false)
+        {
+            EditorGUILayout.BeginVertical();
+            toggleChildren = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleChildren, "Children:"));
+            DrawChildren();
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.EndVertical();
+        }
 
         EditorGUILayout.BeginVertical();
-        toggleChildren = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleChildren, "Children:"));
-        DrawChildren();
-        EditorGUILayout.EndFoldoutHeaderGroup();
-        EditorGUILayout.EndVertical();
-        
-        EditorGUILayout.BeginVertical();
         toggleTree = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleTree, "Tree view:"));
-        File f = currentFile.Parent;
-        f ??= currentFile;
-        DrawFileBranch(0,f,true);
+        bool toggleBefore = toggleAutoChangeParent;
+        toggleAutoChangeParent = EditorGUILayout.Toggle("Auto change parent", toggleAutoChangeParent);
         
+        if (toggleAutoChangeParent!=toggleBefore)
+        {
+            treeRoot = currentFile.GetDrive().GetRoot();
+        }
+
+        DrawFileBranch(0, treeRoot, true, true);
+
         EditorGUILayout.EndFoldoutHeaderGroup();
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
@@ -472,8 +512,6 @@ public class FileEditor : EditorWindow
 
             EditorGUILayout.EndHorizontal();
         }
-
-        
     }
 
     bool DrawChild(File child)
@@ -840,7 +878,7 @@ public class FileEditor : EditorWindow
         this.expanded[position] = value;
     }
 
-    void DrawFileBranch(int offset, File file, bool last = false)
+    void DrawFileBranch(int offset, File file, bool last = false, bool makeUnCollapsable = false)
     {
         if (toggleTree)
         {
@@ -851,19 +889,34 @@ public class FileEditor : EditorWindow
 
             EditorGUILayout.LabelField(last ? "└" : "├", GUILayout.Width(15));
             bool toggled = false;
-            if (file.children?.Count > 0)
+            if (file.children?.Count > 0 && !makeUnCollapsable)
             {
-                toggled=  EditorGUILayout.Toggle(GetExpanded(file.FileID), GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                toggled = EditorGUILayout.Toggle(GetExpanded(file.FileID),
+                    GUILayout.Width(EditorGUIUtility.singleLineHeight));
             }
 
             SetExpanded(file.FileID, toggled);
+
+            GUI.enabled = file != currentFile;
+
             if (GUILayout.Button(file.name))
             {
                 FileEditor.DisplayCurrentFile(file, FindPropertyOfFile(file), currentWindow, currentFileSO);
             }
 
+            GUI.enabled = true;
+            if (GUILayout.Button("+", GUILayout.Width(EditorGUIUtility.singleLineHeight)))
+            {
+                File f = file.AddChild(Drive.MakeFile($"new File ("));
+                SetupChildren(true);
+
+                f.name += f.FileID + ")";
+                currentFileSO.Update();
+                UpdateWindow();
+            }
+
             EditorGUILayout.EndHorizontal();
-            if (toggled)
+            if (toggled || makeUnCollapsable)
             {
                 for (int i = 0; i < file.children?.Count; i++)
                 {

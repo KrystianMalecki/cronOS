@@ -526,6 +526,54 @@ public class test : native_ue.MonoBehaviour
     }
 
     }
+
+    void fontLibrary()
+    {
+        File fontFile = FileSystem.GetFileByPath("/System/defaultFontMask");
+        MaskTexture fontTexture = MaskTexture.FromData(fontFile.data);
+        void DrawColoredCharAt(SystemScreenBuffer systemScreenBuffer,int x, int y, char character, SystemColor foreground, SystemColor background)
+        {
+            int index = Runtime.CharToByte(character);
+            int posx = index % 16;
+            int posy = index / 16;
+            systemScreenBuffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8).Convert<SystemColor>
+                    (o=>o? foreground:background),
+                fontTexture.transparencyFlag);
+        }
+        void DrawColoredStringAt(SystemScreenBuffer systemScreenBuffer,int x, int y, string text, SystemColor foreground, SystemColor background)
+        {
+            int posX = x;
+            int posY = y;
+            char[] charText = text.ToCharArray();
+            for (int i = 0; i < text.Length; i++)
+            {
+                char character = charText[i];
+                if (character == '\r')
+                {
+                    posX = x;
+                    continue;
+                }
+                if (character == '\n')
+                {
+                    posX = x;
+                    posY += 8;
+                    continue;
+                }
+                DrawColoredCharAt(systemScreenBuffer,posX, posY, character, foreground, background);
+                posX += 8;
+            }
+        }
+
+        void DrawCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character)
+        {
+            DrawColoredCharAt(systemScreenBuffer, x, y, character, SystemColor.white, SystemColor.black);
+        }
+        void DrawStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text)
+        {
+            DrawColoredStringAt(systemScreenBuffer, x, y, text, SystemColor.white, SystemColor.black);
+        }
+        
+    }
 }
 
 

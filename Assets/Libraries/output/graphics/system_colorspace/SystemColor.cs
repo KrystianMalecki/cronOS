@@ -76,7 +76,10 @@ namespace Libraries.system.output.graphics
             {
                 return new SystemColor(val);
             }
-
+            public static implicit operator SystemColor(int val)
+            {
+                return new SystemColor((byte)val);
+            }
             public static implicit operator byte(SystemColor val)
             {
                 return val.value;
@@ -131,22 +134,22 @@ namespace Libraries.system.output.graphics
 
             public const float sizeOf = 1f * sizeof(byte) / 1;
 
-            public static readonly SystemColor black = new SystemColor(0);
-            public static readonly SystemColor blue = new SystemColor(1);
-            public static readonly SystemColor green = new SystemColor(2);
-            public static readonly SystemColor cyan = new SystemColor(3);
-            public static readonly SystemColor red = new SystemColor(4);
-            public static readonly SystemColor magenta = new SystemColor(5);
-            public static readonly SystemColor brown = new SystemColor(6);
-            public static readonly SystemColor light_gray = new SystemColor(7);
-            public static readonly SystemColor dark_gray = new SystemColor(8);
-            public static readonly SystemColor light_blue = new SystemColor(9);
-            public static readonly SystemColor light_green = new SystemColor(10);
-            public static readonly SystemColor light_cyan = new SystemColor(11);
-            public static readonly SystemColor light_red = new SystemColor(12);
-            public static readonly SystemColor light_magenta = new SystemColor(13);
-            public static readonly SystemColor yellow = new SystemColor(14);
-            public static readonly SystemColor white = new SystemColor(15);
+            public static readonly SystemColor black =  (0);
+            public static readonly SystemColor blue =  (1);
+            public static readonly SystemColor green =  (2);
+            public static readonly SystemColor cyan =  (3);
+            public static readonly SystemColor red =  (4);
+            public static readonly SystemColor magenta =  (5);
+            public static readonly SystemColor brown =  (6);
+            public static readonly SystemColor light_gray =  (7);
+            public static readonly SystemColor dark_gray =  (8);
+            public static readonly SystemColor light_blue =  (9);
+            public static readonly SystemColor light_green = (10);
+            public static readonly SystemColor light_cyan = (11);
+            public static readonly SystemColor light_red = (12);
+            public static readonly SystemColor light_magenta = (13);
+            public static readonly SystemColor yellow = (14);
+            public static readonly SystemColor white = (15);
             public Color32 ToColor32() => ColorConstants.SystemColors[value];
         }
     }
