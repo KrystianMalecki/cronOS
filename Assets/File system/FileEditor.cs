@@ -53,6 +53,7 @@ public class FileEditor : EditorWindow
 
     int idBuffer;
     int parentIDBuffer;
+    string sizeBuffer;
 
     bool canEditIds = false;
 
@@ -102,7 +103,6 @@ public class FileEditor : EditorWindow
         toggleTopFields = true;
         SetValues(true);
         canEditIds = false;
-        
         SetupDrive();
         SetupChildren(true);
         treeRoot = toggleAutoChangeParent ? currentFile.Parent : currentFile.GetDrive().GetRoot();
@@ -183,7 +183,7 @@ public class FileEditor : EditorWindow
 
         permissionsSP = currentFileSP.FindPropertyRelative("permissions");
         dataSP = currentFileSP.FindPropertyRelative("data");
-
+        sizeBuffer = currentFile.GetByteSize();
         dataArraySize = currentFile.GetDataArraySize();
     }
 
@@ -292,7 +292,7 @@ public class FileEditor : EditorWindow
             {
                 currentFileSO.Update();
             }
-
+            GUILayout.Label("Size: " + sizeBuffer);
             GUILayout.EndHorizontal();
 
 
@@ -715,7 +715,7 @@ public class FileEditor : EditorWindow
     {
         GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
         GUILayout.Label("As Text Input:", GUILayout.Width(90));
-        if (string.IsNullOrEmpty(dataAsString))
+        if (/*string.IsNullOrEmpty(dataAsString)*/dataAsString==null)
         {
             dataAsString = currentFile.data.ToEncodedString();
         }
@@ -730,6 +730,7 @@ public class FileEditor : EditorWindow
 
         if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
         {
+            Debug.Log($"str{dataAsString}byt{dataAsString.ToBytes().ToFormatedString()}");
             currentFile.data = dataAsString.ToBytes();
             currentFileSO.Update();
             UpdateWindow();

@@ -92,6 +92,10 @@ public static class StaticHelper
     }
     public static byte[] ToBytes(this string variable)
     {
+        if (string.IsNullOrEmpty(variable))
+        {
+            return Array.Empty<byte>();
+        }
         return ProcessorManager.mainEncoding.GetBytes(variable);
     }
     public static string ToEncodedString(this byte[] variable)

@@ -109,7 +109,7 @@ public class CodeTask
             }
         }
         Debug.Log("end");
-
+Destroy();
 
     }
     (int line, int column) GetLineAndColumnFromExceptionMessage(string message)

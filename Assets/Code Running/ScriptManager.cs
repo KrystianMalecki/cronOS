@@ -45,9 +45,14 @@ public class ScriptManager : MonoBehaviour
         typeof(Libraries.system.mathematics.Vector2),
             typeof(Libraries.system.input.KeyHandler),typeof(Libraries.system.input.MouseHander),
             typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
-                        typeof(System.Collections.Generic.Dictionary<string,string>),
-            typeof(System.Linq.Enumerable),typeof(helper.GlobalHelper),
-
+            
+           
+            typeof(System.Text.RegularExpressions.Regex),
+            typeof(helper.GlobalHelper),
+            typeof(System.Collections.Generic.Dictionary<int,int>), 
+                       
+            
+            typeof(System.Linq.Enumerable),
 
 
     };
@@ -68,10 +73,13 @@ public class ScriptManager : MonoBehaviour
         scriptOptionsBuffer = ScriptOptions.Default/*.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Release)*/;
 
         scriptOptionsBuffer = scriptOptionsBuffer.AddReferences(
-             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly
+             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly/*,
+        typeof(System.Text.RegularExpressions.Regex).GetTypeInfo().Assembly,
+             typeof(helper.GlobalHelper).GetTypeInfo().Assembly,
+             typeof(System.Collections.Generic.Dictionary<int,int>).GetTypeInfo().Assembly
             //,typeof(System.Exception).GetTypeInfo().Assembly
 
-
+*/
             );
 
         scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
@@ -268,7 +276,7 @@ public class ScriptManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
+                  //  Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
                     checkIncludes = false;
                 }
             }

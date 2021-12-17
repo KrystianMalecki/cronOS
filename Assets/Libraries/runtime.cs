@@ -62,5 +62,17 @@ namespace Libraries.system
             ProcessorManager.mainEncoding.GetChars(&character, 1, &b, 1);
             return b;
         }
+
+        public  static byte HexToByte(string value)
+        {
+            byte result = 0;
+            byte.TryParse(value, System.Globalization.NumberStyles.HexNumber, null, out result);
+            return result;
+        }
+
+        public static string ByteToHex(byte value,bool makeIt2)
+        {
+            return value.ToString("X"+(makeIt2?2:1));
+        }
     }
 }

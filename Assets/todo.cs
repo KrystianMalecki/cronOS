@@ -6,6 +6,8 @@
 //todo 0 add todos here
 
 
+//todo-future add lolcat command and CT
+//todo-future add texture tinting
 
 //todo 9 fixes needed
 //- mouse to screen is not working on build
@@ -14,7 +16,7 @@
 
 
 
-
+//todo 1 think about adding static data to some libraries to optimize data usage, link 1
 
 
 
@@ -27,8 +29,7 @@
 
 
 
-//todo-future add lolcat command and CT
-//todo-future add texture tinting
+
 
 //todo-future rethink graphical interface. Maybe it should be more C like?
 
