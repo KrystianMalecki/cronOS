@@ -16,6 +16,8 @@ using Libraries.system.shell;
 using JetBrains.Annotations;
 using helper;
 using System.Linq;
+using Libraries.system.output.graphics.mask_texture;
+using System.Text.RegularExpressions;
 
 
 
@@ -644,4 +646,10 @@ public class SimpleShell : UnityEngine.MonoBehaviour
         }
         return output;
     }
+    //# include "/System/libraries/programsLibrary.ll"
+
+    //# include "/System/libraries/fontLibrary.ll"
+   
 }
+
+

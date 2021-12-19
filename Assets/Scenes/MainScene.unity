@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: "\r\n    {\r\n        string charInfo = \"\";\r\n\r\n\r\n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
@@ -244,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: "File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
     SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n       
     MaskTexture mask = new MaskTexture(fontTexture.width,fontTexture.height);\r\n       
@@ -298,6 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: "# include \"/System/libraries/fontLibrary.ll\"\r\n\r\n\r\n            const
     string help = \"Press mouse to move to mouse\\n\"\r\n                       +
     \"Arrows to move\\n\"\r\n                       + \"Keypad +/- to change speed\\n\"\r\n                      
@@ -337,9 +340,10 @@ MonoBehaviour:
     Console.Debug(ks);\r\n                CheckMovement(ks);\r\n                if
     (ks.ReadKey(Key.Mouse0))\r\n                {\r\n                    mousePos
     = MouseHander.GetScreenPosition();\r\n                }\r\n                ClampPositionToFrame();\r\n           
-    }\r\n            while (true)\r\n            {\r\n                buffer.FillAll(SystemColor.black);\r\n\r\n               
-    Draw();\r\n                ProcessInput();\r\n\r\n                Runtime.Wait(1);\r\n           
-    }\r\n        "
+    }\r\nbyte counter=1;\n            while (true)\r\n            {\r\n               
+    buffer.FillAll(SystemColor.black);\r\n\rbuffer.TintAll(counter);\n               
+    Draw();\r\n\n                ProcessInput();\r\ncounter++;\nif(counter>15){counter=0;}\r\n               
+    Runtime.Wait(1);\r\n\n            }"
 --- !u!1 &358341496
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,6 +863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: '#include "/System/programs/testLibrary"
 
     Console.Debug("This debug is
@@ -1238,6 +1243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: '#redefine h Console.Debug(__LINE__);
 
     h
@@ -17903,6 +17909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: '#redefine lol(x) to Console.Debug(x)
 
     #redefine loler(x,y) to Console.Debug(x+"--"+y)
@@ -17955,6 +17962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: Console.Debug(ls.instance.Run("-wd /System -r"));
 --- !u!1 &1081877136
 GameObject:
@@ -18045,6 +18053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: "#include \"/System/libraries/fontLibrary.ll\"\n   \n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n   \rstring tzt =\"\"+Runtime.ByteToChar(176)+Runtime.ByteToChar(177)+Runtime.ByteToChar(178);\n       
@@ -18139,6 +18148,7 @@ Transform:
   - {fileID: 1640294208}
   - {fileID: 343881319}
   - {fileID: 1247786007}
+  - {fileID: 1522824866}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18266,6 +18276,60 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1522824865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1522824866}
+  - component: {fileID: 1522824867}
+  m_Layer: 0
+  m_Name: color CT (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1522824866
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522824865}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1522824867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522824865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 11500000, guid: 6ab6fbe85f93479469afa08b2dc543d1, type: 3}
+  code: "#include \"/System/libraries/fontLibrary.ll\"\n   \n        SystemScreenBuffer
+    buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
+    Screen.InitScreenBuffer(buffer);\r\n   \rstring tzt =\"\"+Runtime.ByteToChar(176)+Runtime.ByteToChar(177)+Runtime.ByteToChar(178);\n       
+    for (byte i = 0; i < 16; i++)\r\n        {\r\n            string combine = \"\";\r\n           
+    for (byte j = 0; j < 16; j++)\r\n            {\r\n                combine +=\r\n$\"<color={Runtime.ByteToHex(i,
+    false)}><backgroundcolor={Runtime.ByteToHex(j, false)}>{tzt}\";\r\n\r\n           
+    }\r\n            DrawColoredStringAt(buffer, 0, i * 8,combine,\r\n               
+    SystemColor.white, SystemColor.black);\r\n        }\r\n\r\n        AsyncScreen.SetScreenBuffer(buffer);\r\n  "
 --- !u!1 &1640294207
 GameObject:
   m_ObjectHideFlags: 0
@@ -18311,6 +18375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: "{\r\n        string charInfo = \"\";\r\n\r\n\r\n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontMask\");\r\n       
@@ -18438,6 +18503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
+  codeFile: {fileID: 0}
   code: "# redefine //# #\r\n        //# include \"/System/test_library\"\r\n       
     //commnet\r\n\r\n        Console.Debug();\r\n        const string help = \"Press
     mouse to move to mouse\\n\"\r\n                   + \"Arrows to move\\n\"\r\n                  
@@ -18523,72 +18589,70 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  code: "# include \"/System/libraries/programsLibrary.ll\"\r\n\r# include \"/System/libraries/fontLibrary.ll\"\n       
-    string prefix = \"\";\r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n       
-    string console = \"\";\r\n        string bufferedText = \"\";\r\n        int
-    historyPointer = 0;\r\n        List<string> history = new List<string>();\r\n       
-    SystemScreenBuffer buffer = new SystemScreenBuffer();\r\n        Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n       
+  codeFile: {fileID: 0}
+  code: "# include \"/System/libraries/programsLibrary.ll\"\r\n\r# include \"/System/libraries/fontLibrary.ll\"\npublic
+    class Shell\r\n    {\r\n        \r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n\r\n       
+    SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n        KeyHandler
+    keyHandler = new KeyHandler();\r\n        KeySequence bufferKeySequence = null;\r\n\r\n\r\n\r\n\r\n       
+    string prefix = \"\";\r\n        string inputText = \"\";\r\n        string bufferInput
+    = \"\";\r\n        string consoleText = \"\";\r\n\r\n\r\n        int historyPointer
+    = 0;\r\n        List<string> history = new List<string>();\r\n\r\n\r\n       
     void UpdatePrefix()\r\n        {\r\n            prefix = currentFile.GetFullPath()
-    + \">\";\r\n        }\r\n\r\n\r\n\r\n\r\n        string text = \"\";\r\n\r\n\r\n\r\n       
-    int CountEncounters(string input, params char[] toFind)\r\n        {\r\n           
-    int counter = 0;\r\n            foreach (char c in input)\r\n            {\r\n               
-    foreach (char compareTo in toFind)\r\n                {\r\n                   
-    if (compareTo == c)\r\n                    {\r\n                        counter++;\r\n                       
-    break;\r\n                    }\r\n                }\r\n\r\n            }\r\n           
-    return counter;\r\n        }\r\n\r\n\r\n        void Draw()\r\n        {\r\n           
-    DrawStringAt(buffer,0, 0, console);\r\n            int consoleY = CountEncounters(console,
-    '\\r', '\\n') + 1;\r\n            DrawStringAt(buffer,0, consoleY * 8, prefix);\r\n\r\n\r\n           
-    DrawStringAt(buffer,prefix.Length * 8, consoleY * 8, text);\r\n            AsyncScreen.SetScreenBuffer(buffer);\r\n       
-    }\r\n        KeyHandler kh = new KeyHandler();\r\n        KeySequence ks = null;\r\n       
-    void ProcessInput()\r\n        {\r\n            ks = kh.WaitForInput();\r\n           
-    string input = KeyHandler.GetInputAsString();\r\n            bool shift = ks.ReadAnyShift();\r\n           
-    foreach (char c in input)\r\n            {\r\n                if (c == '\\b')
-    // has backspace/delete been pressed?\r\n                {\r\n                   
-    if (text.Length != 0)\r\n                    {\r\n                        text
-    = text.Substring(0, text.Length - 1);\r\n                        bufferedText
-    = text;\r\n                    }\r\n                }\r\n                else
-    if ((c == '\\n') || (c == '\\r')) // enter/return\r\n                {\r\n                   
-    console += '\\n' + prefix + text;\r\n                    string output = PraseCommand(text);\r\n                   
+    + \">\";\r\n        }\r\n        int CountEncounters(string input, params char[]
+    toFind)\r\n        {\r\n            int counter = 0;\r\n            foreach (char
+    c in input)\r\n            {\r\n                foreach (char compareTo in toFind)\r\n               
+    {\r\n                    if (compareTo == c)\r\n                    {\r\n                       
+    counter++;\r\n                        break;\r\n                    }\r\n               
+    }\r\n\r\n            }\r\n            return counter;\r\n        }\r\n       
+    void Draw()\r\n        {\r\n            DrawStringAt(screenBuffer, 0, 0, consoleText);\r\n           
+    int consoleY = CountEncounters(consoleText, '\\n') + 1;\r\n            DrawStringAt(screenBuffer,
+    0, consoleY * 8, prefix);\r\n            DrawStringAt(screenBuffer, prefix.Length
+    * 8, consoleY * 8, inputText);\r\n            AsyncScreen.SetScreenBuffer(screenBuffer);\r\n       
+    }\r\n        void ProcessInput()\r\n        {\r\n            bufferKeySequence
+    = keyHandler.WaitForInput();\r\n            string input = KeyHandler.GetInputAsString();\r\n           
+    bool shift = bufferKeySequence.ReadAnyShift();\r\n            foreach (char c
+    in input)\r\n            {\r\n                if (c == '\\b') // has backspace/delete
+    been pressed?\r\n                {\r\n                    if (inputText.Length
+    != 0)\r\n                    {\r\n                        inputText = inputText.Substring(0,
+    inputText.Length - 1);\r\n                        bufferInput = inputText;\r\n                   
+    }\r\n                }\r\n                else if ((c == '\\n') || (c == '\\r'))
+    // enter/return\r\n                {\r\n                    consoleText += '\\n'
+    + prefix + inputText;\r\n                    string output = PraseCommand(inputText);\r\n                   
     if (!string.IsNullOrEmpty(output))\r\n                    {\r\n                       
-    console += '\\n' + output;\r\n                    }\r\n                    text
-    = \"\";\r\n                    bufferedText = \"\";\r\n                }\r\n               
-    else\r\n                {\r\n                    text += (shift ? ((c + \"\").ToUpperInvariant())
-    : c);\r\n                    bufferedText = text;\r\n                }\r\n           
-    }\r\n\r\n            if (ks.ReadKey(Key.UpArrow))\r\n            {\r\n               
-    historyPointer--;\r\n                if (historyPointer < 0)\r\n               
+    consoleText += '\\n' + output;\r\n                    }\r\n                   
+    inputText = \"\";\r\n                    bufferInput = \"\";\r\n               
+    }\r\n                else\r\n                {\r\n                    inputText
+    += (shift ? ((c + \"\").ToUpperInvariant()) : c);\r\n                    bufferInput
+    = inputText;\r\n                }\r\n            }\r\n            if (bufferKeySequence.ReadKey(Key.UpArrow))\r\n           
+    {\r\n                historyPointer--;\r\n                if (historyPointer
+    < 0)\r\n                {\r\n                    historyPointer = 0;\r\n               
+    }\r\n                if (historyPointer > history.Count)\r\n                {\r\n                   
+    historyPointer = history.Count;\r\n                }\r\n                if (historyPointer
+    == history.Count)\r\n                {\r\n                    inputText = bufferInput;\r\n               
+    }\r\n                else\r\n                {\r\n                    inputText
+    = history[historyPointer];\r\n                }\r\n            } else\r\n           
+    if (bufferKeySequence.ReadKey(Key.DownArrow))\r\n            {\r\n               
+    historyPointer++;\r\n                if (historyPointer < 0)\r\n               
     {\r\n                    historyPointer = 0;\r\n                }\r\n               
     if (historyPointer > history.Count)\r\n                {\r\n                   
     historyPointer = history.Count;\r\n                }\r\n                if (historyPointer
-    == history.Count)\r\n                {\r\n                    text = bufferedText;\r\n               
-    }\r\n                else\r\n                {\r\n                    text =
-    history[historyPointer];\r\n                }\r\n            }\r\n           
-    if (ks.ReadKey(Key.DownArrow))\r\n            {\r\n                historyPointer++;\r\n               
-    if (historyPointer < 0)\r\n                {\r\n                    historyPointer
-    = 0;\r\n                }\r\n                if (historyPointer > history.Count)\r\n               
-    {\r\n                    historyPointer = history.Count;\r\n                }\r\n               
-    if (historyPointer == history.Count)\r\n                {\r\n                   
-    text = bufferedText;\r\n                }\r\n                else\r\n               
-    {\r\n                    text = history[historyPointer];\r\n                }\r\n           
-    }\r\n        }\r\n        string PraseCommand(string input)\r\n        {\r\n           
-    history.Add(input);\r\n            historyPointer++;\r\n            string[]
-    parts = input.Split(' ');\r\n            if (parts[0] == \"cd\")\r\n           
-    {\r\n                File f = FileSystem.GetFileByPath(parts[1], currentFile);\r\n               
-    if (f == null)\r\n                {\r\n                    return $\"Couldn't
-    find file {parts[1]}!\";\r\n                }\r\n                currentFile
-    = f;\r\n                UpdatePrefix();\r\n                return \"\";\r\n           
-    }\r\n            else\r\n            {\r\n                return FindAndExecuteCommand(input
-    + \" -wd \" + currentFile.GetFullPath());\r\n            }\r\n            return
-    $\"Couldn't find command `{parts[0]}`.\";\r\n        }\r\n\r\n\r\n        string
-    GetChildren(string indent, File file, string prefix, bool recursive = false)\r\n       
-    {\r\n            string str = $\"{indent}{prefix}{file.name}:{file.GetByteSize()}\\n\";\r\n           
-    if (recursive)\r\n            {\r\n                for (int i = 0; i < file.children.Count;
-    i++)\r\n                {\r\n                    File child = file.children[i];\r\n                   
-    str += GetChildren(indent + \" \", child, $\"{((i + 1) == file.children.Count
-    ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))} \", recursive);\r\n\r\n               
-    }\r\n            }\r\n            return str;\r\n        }\r\n\r\n        UpdatePrefix();\r\n       
-    while (true)\r\n        {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n\r\n           
-    Draw();\r\n            ProcessInput();\r\n\r\n            Runtime.Wait();\r\n       
-    }\r\n\r\n"
+    == history.Count)\r\n                {\r\n                    inputText = bufferInput;\r\n               
+    }\r\n                else\r\n                {\r\n                    inputText
+    = history[historyPointer];\r\n                }\r\n            }\r\n        }\r\n       
+    string PraseCommand(string input)\r\n        {\r\n            history.Add(input);\r\n           
+    historyPointer++;\r\n            string[] parts = input.Split(' ');\r\n           
+    if (parts[0] == \"cd\")\r\n            {\r\n                File f = FileSystem.GetFileByPath(parts[1],
+    currentFile);\r\n                if (f == null)\r\n                {\r\n                   
+    return $\"Couldn't find file {parts[1]}!\";\r\n                }\r\n               
+    currentFile = f;\r\n                UpdatePrefix();\r\n                return
+    \"\";\r\n            }\r\n            else\r\n            {\r\n               
+    return FindAndExecuteCommand(input + \" -wd \" + currentFile.GetFullPath());\r\n           
+    }\r\n            return $\"Couldn't find command `{parts[0]}`.\";\r\n       
+    }\r\n        public void Run()\r\n        {\r\n            Screen.InitScreenBuffer(screenBuffer);\r\n           
+    UpdatePrefix();\r\n            while (true)\r\n            {\r\n               
+    screenBuffer.FillAll(SystemColor.black);\r\n                Draw();\r\n               
+    ProcessInput();\r\n                Runtime.Wait();\r\n            }\r\n       
+    }\r\n    }\nGlobals.shell = new Shell();\nGlobals.shell.Run();"
 --- !u!114 &2108374106
 MonoBehaviour:
   m_ObjectHideFlags: 0

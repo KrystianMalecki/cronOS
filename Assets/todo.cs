@@ -1,13 +1,21 @@
 
-//last thing: Mask texturing done, BW texture, compressing files/textures, keyboard input 
-
-
+//last thing: Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
 
 //todo 0 add todos here
 
+//todo -2 think and make better workflow for files.
+//todo -1 make plugin for #?
+
+
+
+//todo 0 plan Globals as PC settings or something
+
+//todo 1 think about adding static data to some libraries to optimize data usage, link 1
+//todo 1 add better texture tinting: light->dark, dark->light
+
+//todo 5 go back to sounds
 
 //todo-future add lolcat command and CT
-//todo-future add texture tinting
 
 //todo 9 fixes needed
 //- mouse to screen is not working on build
@@ -16,7 +24,6 @@
 
 
 
-//todo 1 think about adding static data to some libraries to optimize data usage, link 1
 
 
 

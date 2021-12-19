@@ -286,17 +286,17 @@ public class test : native_ue.MonoBehaviour
     {
         #region fontLibrary.ll
         File fontFile = FileSystem.GetFileByPath("/System/defaultFontMask");
-        MaskTexture fontTexture = MaskTexture.FromData(fontFile.data);
+         MaskTexture fontTexture = MaskTexture.FromData(fontFile.data);
 
         //todo-link 1
-        Regex colorTagRegex = new Regex(@"^(\s*?((color)|(c)|(col))\s*?=\s*?.+?)|(\s*?\/((color)|(c)|(col)))");
-        Regex backgroundColorTagRegex = new Regex(@"^(((\s*?)|(\/))((backgroundcolor)|(bgc)|(bgcol)|(bc))\s*?=.+?)|(\s*?\/((backgroundcolor)|(bgc)|(bgcol)|(bc)))");
-        Regex nonParseTagRegex = new Regex(@"^(\s*?\/?((raw)|(no-parsing)|(np)))");
+         Regex colorTagRegex = new Regex(@"^(\s*?((color)|(c)|(col))\s*?=\s*?.+?)|(\s*?\/((color)|(c)|(col)))");
+         Regex backgroundColorTagRegex = new Regex(@"^(((\s*?)|(\/))((backgroundcolor)|(bgc)|(bgcol)|(bc))\s*?=.+?)|(\s*?\/((backgroundcolor)|(bgc)|(bgcol)|(bc)))");
+         Regex nonParseTagRegex = new Regex(@"^(\s*?\/?((raw)|(no-parsing)|(np)))");
 
 
 
-        void DrawColoredCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character,
-            SystemColor foreground, SystemColor background)
+         void DrawColoredCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character,
+            SystemColor foreground, SystemColor background )
         {
             if (systemScreenBuffer == null)
             {
@@ -314,7 +314,7 @@ public class test : native_ue.MonoBehaviour
                 fontTexture.transparencyFlag);
         }
 
-        void DrawColoredStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text,
+         void DrawColoredStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text,
             SystemColor foreground, SystemColor background, bool enableTags = true)
         {
             SystemColor currentForeground = foreground, currentBackground = background;
@@ -414,21 +414,21 @@ public class test : native_ue.MonoBehaviour
             }
         }
 
-        void DrawCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character)
+         void DrawCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character)
         {
             DrawColoredCharAt(systemScreenBuffer, x, y, character, SystemColor.white, SystemColor.black);
         }
 
-        void DrawStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text, bool enableTags = true)
+         void DrawStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text, bool enableTags = true)
         {
             DrawColoredStringAt(systemScreenBuffer, x, y, text, SystemColor.white, SystemColor.black, enableTags);
         }
 
-        string GetColorTag(SystemColor color)
+         string GetColorTag(SystemColor color)
         {
             return $"<color={Runtime.ByteToHex(color, false)}>";
         }
-        string GetBackgroundColorTag(SystemColor color)
+         string GetBackgroundColorTag(SystemColor color)
         {
             return $"<color={Runtime.ByteToHex(color, false)}>";
         }

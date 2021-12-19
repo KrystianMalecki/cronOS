@@ -45,15 +45,15 @@ public class ScriptManager : MonoBehaviour
         typeof(Libraries.system.mathematics.Vector2),
             typeof(Libraries.system.input.KeyHandler),typeof(Libraries.system.input.MouseHander),
             typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
-            
-           
+
+
             typeof(System.Text.RegularExpressions.Regex),
             typeof(helper.GlobalHelper),
-            typeof(System.Collections.Generic.Dictionary<int,int>), 
-                       
-            
-            typeof(System.Linq.Enumerable),
+            typeof(System.Collections.Generic.Dictionary<int,int>),
 
+
+            typeof(System.Linq.Enumerable),
+            typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)
 
     };
     public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => x.ToLibraryData());
@@ -64,14 +64,17 @@ public class ScriptManager : MonoBehaviour
 
     public List<CodeTask> scriptsRunning = new List<CodeTask>();
 
+
+    public static Globals globals = new Globals();
     public void TryToInitScriptOptions()
     {
         if (scriptOptionsBuffer != null)
         {
             return;
         }
+        
         scriptOptionsBuffer = ScriptOptions.Default/*.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Release)*/;
-
+        
         scriptOptionsBuffer = scriptOptionsBuffer.AddReferences(
              typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly/*,
         typeof(System.Text.RegularExpressions.Regex).GetTypeInfo().Assembly,
@@ -209,6 +212,10 @@ public class ScriptManager : MonoBehaviour
 
 
     }
+
+
+
+
     static Regex includeRegex = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*");
     static Regex includeRegex2 = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*;*");
 
@@ -276,7 +283,7 @@ public class ScriptManager : MonoBehaviour
                 }
                 else
                 {
-                  //  Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
+                    //  Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
                     checkIncludes = false;
                 }
             }
@@ -301,7 +308,7 @@ public class ScriptManager : MonoBehaviour
                             continue;
                         }
                     }
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex-1).ToArray()).TrimStart();
+                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex - 1).ToArray()).TrimStart();
 
                     if (definition == null || definitionReplacor == null)
                     {
@@ -350,7 +357,7 @@ public class ScriptManager : MonoBehaviour
                         }
                         List<string> importedLines = new List<string>(f.data.ToEncodedString().Split('\n'));
                         buffer = "//imported: " + between;
-                            
+
                         lines[index] = buffer;
                         for (int iL = 0; iL < importedLines.Count; iL++)
                         {
@@ -359,7 +366,7 @@ public class ScriptManager : MonoBehaviour
 
 
                         }
-                        positionToExpectNextInlcude +=  importedLines.Count+1;
+                        positionToExpectNextInlcude += importedLines.Count + 1;
 
                         index--;
                         continue;

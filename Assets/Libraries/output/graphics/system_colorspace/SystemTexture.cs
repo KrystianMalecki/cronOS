@@ -67,7 +67,23 @@ namespace Libraries.system.output.graphics
 
                 return Array.Empty<byte>();
             }
+            public void TintAll(SystemColor color, bool preserveTransparency=true)
+            {
+              //  Console.Debug($"{transparencyFlag } && {preserveTransparency}");
 
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (transparencyFlag == array[i] && preserveTransparency)
+                    {
+                        Console.Debug("trans");
+                        continue;
+                    }
+                  //  Console.Debug(array[i]);
+                    array[i] += color;
+                 //   Console.Debug(array[i]);
+
+                }
+            }
             public static SystemTexture FromData(byte[] data)
             {
                 SystemTexture texture = new SystemTexture(RectArray<SystemColor>.FromData(

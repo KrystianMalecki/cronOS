@@ -15,14 +15,17 @@ public class DebugCodeRunner : MonoBehaviour
 {
 
     public bool runOnStart;
+    public TextAsset codeFile;
+    [ShowIf("noCodeFile")]
     [Foldout("Code")]
     [ResizableTextArea] public string code;
+    bool noCodeFile => codeFile == null;
     public void Start()
     {
+
         if (runOnStart)
         {
             RunCode();
-
         }
     }
 
@@ -30,7 +33,7 @@ public class DebugCodeRunner : MonoBehaviour
     void RunCode()
     {
 
-        ScriptManager.instance.RunCode(new CodeObject(code, ScriptManager.allLibraryDatas));
+        ScriptManager.instance.RunCode(new CodeObject(noCodeFile ? code : codeFile.text.Replace("false//changeToTrue","true"), ScriptManager.allLibraryDatas));
 
     }
 

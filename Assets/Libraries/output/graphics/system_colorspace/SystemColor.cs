@@ -53,20 +53,103 @@ namespace Libraries.system.output.graphics
                 }
                 set
                 {
-                    if (value < 0)
-                    {
-                        value = 15;
-                    }
-
-                    if (value > 15)
-                    {
-                        value = 0;
-                    }
+                    ClampToRange(ref value);
 
                     this._value = value;
                 }
             }
+            //todo 0 optimize
+            public void ClampToRange(ref sbyte value, bool canBeNegative = false)
+            {
+                if (value < 0)
+                {
+                    if (canBeNegative)
+                    {
+                        if (value < -15)
+                        {
+                            value = 0;
+                        }
+                    }
+                    else
+                    {
+                        value = 15;
+                    }
+                }
+                else
+                if (value > 15)
+                {
+                    value = 0;
+                }
+            }
+            public void ClampToRange(ref byte value)
+            {
+                if (value < 0)
+                {
 
+                    value = 15;
+
+                }
+                else if (value > 15)
+                {
+                    value = 0;
+                }
+            }
+            public void Add(sbyte valueToAdd)
+            {
+                ClampToRange(ref valueToAdd);
+                sbyte v = (sbyte)(value + valueToAdd);
+                if (v < 0)
+                {
+                    v += 16;
+                }
+                else if (v > 15)
+                {
+                    v -= 16;
+                }
+                value = (byte)v;
+            }
+            public void Add(byte valueToAdd)
+            {
+                ClampToRange(ref valueToAdd);
+                sbyte v = (sbyte)(value + valueToAdd);
+                if (v < 0)
+                {
+                    v += 16;
+                }
+                else if (v > 15)
+                {
+                    v -= 16;
+                }
+                value = (byte)v;
+            }
+            public void Multiply(sbyte valueToMultiply)
+            {
+                ClampToRange(ref valueToMultiply);
+                ushort v = (ushort)(value * valueToMultiply);
+                if (v < 0)
+                {
+                    v += 16;
+                }
+                else if (v > 15)
+                {
+                    v -= 16;
+                }
+                value = (byte)v;
+            }
+            public void Divide(sbyte valueToMultiply)
+            {
+                ClampToRange(ref valueToMultiply);
+                ushort v = (ushort)(value / valueToMultiply);
+                if (v < 0)
+                {
+                    v += 16;
+                }
+                else if (v > 15)
+                {
+                    v -= 16;
+                }
+                value = (byte)v;
+            }
             public SystemColor(byte value)
             {
                 this._value = value;
@@ -87,13 +170,14 @@ namespace Libraries.system.output.graphics
 
             public static SystemColor operator ++(SystemColor sc)
             {
-                sc.value += 1;
+                sc.Add(1);
                 return sc;
             }
 
             public static SystemColor operator --(SystemColor sc)
             {
-                sc.value -= 1;
+                sc.Add(-1);
+                SystemColor val = SystemColor.red + SystemColor.green;
                 return sc;
             }
 
@@ -106,7 +190,30 @@ namespace Libraries.system.output.graphics
             {
                 return !(sc == sc2);
             }
-
+            public static byte operator +(SystemColor sc, SystemColor sc2)
+            {
+                SystemColor ret = sc.Copy();
+                ret.Add(sc2.value);
+                return ret;
+            }
+            public static byte operator -(SystemColor sc, SystemColor sc2)
+            {
+                SystemColor ret = sc.Copy();
+                ret.Add((sbyte)-sc2.value);
+                return ret;
+            }
+            public static byte operator *(SystemColor sc, SystemColor sc2)
+            {
+                SystemColor ret = sc.Copy();
+                ret.Multiply((sbyte)sc2.value);
+                return ret;
+            }
+            public static byte operator /(SystemColor sc, SystemColor sc2)
+            {
+                SystemColor ret = sc.Copy();
+                ret.Divide((sbyte)sc2.value);
+                return ret;
+            }
             public override string ToString()
             {
                 switch (value)
@@ -131,19 +238,22 @@ namespace Libraries.system.output.graphics
 
                 return "unknown";
             }
-
+            public  SystemColor Copy()
+            {
+                return new SystemColor(value);
+            }
             public const float sizeOf = 1f * sizeof(byte) / 1;
 
-            public static readonly SystemColor black =  (0);
-            public static readonly SystemColor blue =  (1);
-            public static readonly SystemColor green =  (2);
-            public static readonly SystemColor cyan =  (3);
-            public static readonly SystemColor red =  (4);
-            public static readonly SystemColor magenta =  (5);
-            public static readonly SystemColor brown =  (6);
-            public static readonly SystemColor light_gray =  (7);
-            public static readonly SystemColor dark_gray =  (8);
-            public static readonly SystemColor light_blue =  (9);
+            public static readonly SystemColor black = (0);
+            public static readonly SystemColor blue = (1);
+            public static readonly SystemColor green = (2);
+            public static readonly SystemColor cyan = (3);
+            public static readonly SystemColor red = (4);
+            public static readonly SystemColor magenta = (5);
+            public static readonly SystemColor brown = (6);
+            public static readonly SystemColor light_gray = (7);
+            public static readonly SystemColor dark_gray = (8);
+            public static readonly SystemColor light_blue = (9);
             public static readonly SystemColor light_green = (10);
             public static readonly SystemColor light_cyan = (11);
             public static readonly SystemColor light_red = (12);

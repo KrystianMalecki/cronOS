@@ -51,7 +51,7 @@ public class CodeTask
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
                 .WithFilePath("debugpath/")
-
+                ,ScriptManager.globals, ScriptManager.globals.GetType()
                 );
 
 
