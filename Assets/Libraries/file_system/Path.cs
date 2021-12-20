@@ -13,19 +13,18 @@ namespace Libraries.system
             public List<string> parts = new List<string>();
             public List<File> fileparts = new List<File>();
 
-            public Path(string rawPath, File parent = null, File root = null)
+            public Path(string rawPath, File root = null, File parent = null)
             {
                 rawPath ??= "";
 
-                //todo -6 add check before
-                //  parent ??= root == null ? FileSystemInternal.instance.mainDrive.GetRoot() : root;
+                parent ??= root;
 
                 rawPath = rawPath.StartsWith("./") ? (parent.GetFullPath() + rawPath.Substring(1)) : rawPath;
                 parts = rawPath.Split(FileSystem.catalogSymbol).ToList();
 
                 File currentFile = root;
                 //todo -6 add check before
-                // currentFile ??= FileSystemInternal.instance.mainDrive.GetRoot();
+
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)
                 {

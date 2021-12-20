@@ -8,7 +8,6 @@
 
 
 
-//todo 0 plan Globals as PC settings or something
 
 //todo 1 think about adding static data to some libraries to optimize data usage, link 1
 //todo 1 add better texture tinting: light->dark, dark->light

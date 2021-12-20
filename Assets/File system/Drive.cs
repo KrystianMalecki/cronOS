@@ -24,6 +24,8 @@ public class Drive : ScriptableObject
 
     [NonSerialized]
     public bool cached = false;
+    [NonSerialized]
+    public File root = null;
     // [Header("DO NOT USE +")]
     [SerializeField]
     public ThreadSafeList<File> files = new ThreadSafeList<File>();
@@ -43,20 +45,19 @@ public class Drive : ScriptableObject
 
     public File GetRoot()
     {
-        File root = GetFileByID(1);
-        root ??= GetFileByPath("");
+        //  root ??= GetFileByID(1);
+        //  root ??= GetFileByPath("");
         return root;
     }
     [Button]
     public void GenerateCacheData()
     {
         cached = true;
+        Debug.Log("cashing");
         for (int i = 0; i < files.Count; i++)
         {
             if (files[i].children != null)
             {
-
-
                 files[i].children.Clear();
             }
         }
@@ -73,6 +74,8 @@ public class Drive : ScriptableObject
             file.Parent = parent;
             parent?.AddChild(file);
         }
+        root ??= GetFileByID(1);
+        root ??= GetFileByPath("");
     }
     public File GetFileByID(int id)
     {
@@ -126,7 +129,7 @@ public class Drive : ScriptableObject
 
     public Path GetPath(string rawPath, File parent = null)
     {
-        return new Path(rawPath, parent);
+        return new Path(rawPath, GetRoot(), parent);
     }
 
     public bool RemoveFile(string path)

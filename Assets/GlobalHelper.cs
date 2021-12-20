@@ -15,7 +15,7 @@ namespace helper
 {
     public static class GlobalHelper
     {
-        static Regex spaceQArgsRegex = new Regex(@"( +)|([\\(\\),])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
+        static Regex spaceQArgsRegex = new Regex(@"( +)|([\\(\\),;])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
         static Regex spaceAndQRegex = new Regex(@"( +)|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
 
         public static List<string> SplitSpaceQ(this string input)
@@ -24,15 +24,19 @@ namespace helper
         }
         public static List<string> SplitSpaceQCustom(this string input, string custom)
         {
-            return new Regex(@"( +)|(["+custom+@"])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))").Split(input).ToList();
+            return new Regex(@"( +)|([" + custom + @"])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))").Split(input).ToList();
         }
         public static List<string> SplitSpaceQArgs(this string input)
         {
             return spaceQArgsRegex.Split(input).ToList();
         }
-        public static List<string> SplitSpaceQArgsCustom(this string input,string custom)
+        public static List<string> SplitSpaceQArgsCustom(this string input, string custom)
         {
-            return new Regex(@"( +)|([\\(\\),"+custom+@"])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))").Split(input).ToList();
+            return new Regex(@"( +)|([\\(\\)," + custom + @"])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))").Split(input).ToList();
+        }
+        public static string[] SplitNewLine(this string input)
+        {
+            return input.Split('\n', '\r');
         }
         public static string ChangeToPrefixedValue(this int num)
         {

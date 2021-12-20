@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "\r\n    {\r\n        string charInfo = \"\";\r\n\r\n\r\n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontAtlas\");\r\n       
     SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);\r\n       
     MaskTexture mask = new MaskTexture(fontTexture.width,fontTexture.height);\r\n       
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "# include \"/System/libraries/fontLibrary.ll\"\r\n\r\n\r\n            const
     string help = \"Press mouse to move to mouse\\n\"\r\n                       +
     \"Arrows to move\\n\"\r\n                       + \"Keypad +/- to change speed\\n\"\r\n                      
@@ -392,6 +392,103 @@ Transform:
   m_Father: {fileID: 624103657}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &366580919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 366580920}
+  - component: {fileID: 366580923}
+  - component: {fileID: 366580922}
+  - component: {fileID: 366580921}
+  m_Layer: 0
+  m_Name: Cube (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &366580920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366580919}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44640726, y: -10.426058, z: -0.40711358}
+  m_LocalScale: {x: 0.042386934, y: 20.579405, z: 0.074728206}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1905319705}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &366580921
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366580919}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &366580922
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366580919}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 20c481fea0d0b7f448bddf261b766909, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &366580923
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366580919}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &434435441
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +572,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &434435445
 MonoBehaviour:
@@ -606,13 +703,110 @@ RectTransform:
   - {fileID: 1446994156}
   - {fileID: 512668658}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &498076986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 498076987}
+  - component: {fileID: 498076990}
+  - component: {fileID: 498076989}
+  - component: {fileID: 498076988}
+  m_Layer: 0
+  m_Name: Cube (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &498076987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498076986}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.44640726, y: -10.426058, z: 0.40606585}
+  m_LocalScale: {x: 0.042386934, y: 20.579405, z: 0.074728206}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1905319705}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &498076988
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498076986}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &498076989
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498076986}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 20c481fea0d0b7f448bddf261b766909, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &498076990
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498076986}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &512668657
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,7 +876,6 @@ GameObject:
   - component: {fileID: 544366081}
   - component: {fileID: 544366080}
   - component: {fileID: 544366079}
-  - component: {fileID: 544366082}
   m_Layer: 0
   m_Name: Screen
   m_TagString: Untagged
@@ -748,32 +941,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544366077}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.02, y: 0, z: -0.4}
+  m_LocalPosition: {x: -0.02, y: 0, z: -0.515}
   m_LocalScale: {x: 0.7388571, y: 0.776, z: 1.94}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 624103657}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &544366082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 544366077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea2b378eff26c8845b7f655e174127e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hardware:
-    mainDrive: {fileID: 11400000, guid: a96cb9c30cd782444998606b6ccbcd40, type: 2}
-    inputManager: {fileID: 0}
-    screenManager: {fileID: 0}
-    stackExecutor: {fileID: 0}
-    scriptsRunning: []
-  isDefault: 0
 --- !u!1 &605339139
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,7 +995,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &605426658
 GameObject:
@@ -868,7 +1042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: '#include "/System/programs/testLibrary"
 
     Console.Debug("This debug is
@@ -1125,8 +1299,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624103653}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.07, y: 1, z: -7.6}
-  m_LocalScale: {x: 3.5, y: 2.5, z: 1}
+  m_LocalPosition: {x: -2.7289643, y: 0.79, z: -1.0879827}
+  m_LocalScale: {x: 3.5, y: 2.5, z: 2.18}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 544366081}
@@ -1134,7 +1308,7 @@ Transform:
   - {fileID: 1255072401}
   - {fileID: 1081877137}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &624103658
 MonoBehaviour:
@@ -1149,11 +1323,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hardware:
-    mainDrive: {fileID: 11400000, guid: a96cb9c30cd782444998606b6ccbcd40, type: 2}
-    inputManager: {fileID: 1081877138}
-    screenManager: {fileID: 358341497}
-    stackExecutor: {fileID: 1255072402}
-    scriptsRunning: []
+    hardwareInternal:
+      mainDrive: {fileID: 11400000, guid: a96cb9c30cd782444998606b6ccbcd40, type: 2}
+      inputManager: {fileID: 1081877138}
+      screenManager: {fileID: 358341497}
+      stackExecutor: {fileID: 1255072402}
+      FPSCap: 60
+      WaitRefreshRate: 16
+      TasksPerCPULoop: -1
+      scriptsRunning: []
   isDefault: 1
 --- !u!1 &632187779
 GameObject:
@@ -1258,7 +1436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: '#redefine h Console.Debug(__LINE__);
 
     h
@@ -1317,7 +1495,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &774406597
 GameObject:
@@ -17834,6 +18012,121 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   l: j
+--- !u!1 &782950532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782950535}
+  - component: {fileID: 782950534}
+  - component: {fileID: 782950533}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &782950533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782950532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+--- !u!108 &782950534
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782950532}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 1
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!4 &782950535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782950532}
+  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalPosition: {x: 1.1889644, y: 1.2381891, z: -5.322017}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &851211590
 GameObject:
   m_ObjectHideFlags: 0
@@ -17879,7 +18172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: '#redefine lol(x) to Console.Debug(x)
 
     #redefine loler(x,y) to Console.Debug(x+"--"+y)
@@ -17887,6 +18180,103 @@ MonoBehaviour:
     lol("yes");
 
     loler("yes","mp");'
+--- !u!1 &862908942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 862908943}
+  - component: {fileID: 862908946}
+  - component: {fileID: 862908945}
+  - component: {fileID: 862908944}
+  m_Layer: 0
+  m_Name: Cube (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &862908943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862908942}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.45118195, y: -10.426058, z: -0.40711358}
+  m_LocalScale: {x: 0.042386934, y: 20.579405, z: 0.074728206}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1905319705}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &862908944
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862908942}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &862908945
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862908942}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 20c481fea0d0b7f448bddf261b766909, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &862908946
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862908942}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1032443449
 GameObject:
   m_ObjectHideFlags: 0
@@ -17932,7 +18322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: Console.Debug(ls.instance.Run("-wd /System -r"));
 --- !u!1 &1081877136
 GameObject:
@@ -17979,6 +18369,103 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentlyEnabled: 1
+--- !u!1 &1156703730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1156703731}
+  - component: {fileID: 1156703734}
+  - component: {fileID: 1156703733}
+  - component: {fileID: 1156703732}
+  m_Layer: 0
+  m_Name: Cube (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1156703731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156703730}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.45118195, y: -10.426058, z: 0.40606585}
+  m_LocalScale: {x: 0.042386934, y: 20.579405, z: 0.074728206}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1905319705}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1156703732
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156703730}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1156703733
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156703730}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 20c481fea0d0b7f448bddf261b766909, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1156703734
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156703730}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1247786006
 GameObject:
   m_ObjectHideFlags: 0
@@ -18024,7 +18511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "#include \"/System/libraries/fontLibrary.ll\"\n   \n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n   \rstring tzt =\"\"+Runtime.ByteToChar(176)+Runtime.ByteToChar(177)+Runtime.ByteToChar(178);\n       
@@ -18077,12 +18564,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 472b6fdef83593449aaddcebd3a03993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  system:
-    mainDrive: {fileID: 0}
-    inputManager: {fileID: 0}
-    screenManager: {fileID: 0}
-    stackExecutor: {fileID: 0}
-    scriptsRunning: []
 --- !u!1 &1296099127
 GameObject:
   m_ObjectHideFlags: 0
@@ -18125,9 +18606,99 @@ Transform:
   - {fileID: 343881319}
   - {fileID: 1247786007}
   - {fileID: 1522824866}
+  - {fileID: 1343489310}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1343489309
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1343489310}
+  - component: {fileID: 1343489311}
+  m_Layer: 0
+  m_Name: advanced CT (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1343489310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343489309}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1343489311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343489309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: "# include \"/System/libraries/fontLibrary.ll\"\r\n\r\n\r\n            const
+    string help = \"Press mouse to move to mouse\\n\"\r\n                       +
+    \"Arrows to move\\n\"\r\n                       + \"Keypad +/- to change speed\\n\"\r\n                      
+    + \"Type to type\u263B\";\r\n            SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth,
+    Screen.screenHeight);\r\n            hardware.screen.InitScreenBuffer(buffer);\r\n\r\n\r\n\r\n\r\n           
+    Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);\r\n           
+    Vector2Int mousePos = new Vector2Int(0, 0);\r\n\r\n            string position
+    = \"\";\r\n            string text = \"\";\r\n            int speed = 1;\r\n           
+    KeySequence ks = null;\r\n            bool flasher = false;\r\n\r\n           
+    void CheckMovement(KeySequence ks)\r\n            {\r\n                if (ks.ReadKey(Key.UpArrow))\r\n               
+    {\r\n                    orbPos.y -= speed;\r\n                }\r\n               
+    if (ks.ReadKey(Key.DownArrow))\r\n                {\r\n                    orbPos.y
+    += speed;\r\n                }\r\n                if (ks.ReadKey(Key.LeftArrow))\r\n               
+    {\r\n                    orbPos.x -= speed;\r\n                }\r\n               
+    if (ks.ReadKey(Key.RightArrow))\r\n                {\r\n                    orbPos.x
+    += speed;\r\n                }\r\n                if (ks.ReadKey(Key.KeypadPlus))\r\n               
+    {\r\n                    speed++;\r\n                }\r\n                if
+    (ks.ReadKey(Key.KeypadMinus))\r\n                {\r\n                    speed--;\r\n               
+    }\r\n            }\r\n\r\n\r\n            void ClampPositionToFrame()\r\n           
+    {\r\n                if (orbPos.x > buffer.width - 1)\r\n                {\r\n                   
+    orbPos.x = buffer.width - 1;\r\n                }\r\n                if (orbPos.x
+    < 0)\r\n                {\r\n                    orbPos.x = 0;\r\n               
+    }\r\n                if (orbPos.y > buffer.height - 1)\r\n                {\r\n                   
+    orbPos.y = buffer.height - 1;\r\n                }\r\n                if (orbPos.y
+    < 0)\r\n                {\r\n                    orbPos.y = 0;\r\n               
+    }\r\n            }\r\n            void Draw()\r\n            {\r\n               
+    DrawStringAt(buffer, 8, 0, help);\r\n\r\n                position = $\"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}\";\r\n\r\n               
+    DrawStringAt(buffer, 0, 4 * 8, position);\r\n                buffer.DrawLine(mousePos.x,
+    mousePos.y, orbPos.x, orbPos.y, SystemColor.white);\r\n                buffer.SetAt(orbPos.x,
+    orbPos.y, SystemColor.yellow);\r\n                DrawStringAt(buffer, 0, 5 *
+    8, text);\r\n                buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red
+    : SystemColor.blue);\r\n                flasher = !flasher;\r\n               
+    hardware.screen.SetScreenBuffer(buffer);\r\n            }\r\n            void
+    ProcessInput()\r\n            {\r\n                ks = hardware.keyHandler.WaitForInput();\r\n               
+    string input = hardware.keyHandler.GetInputAsString();\r\n                text
+    += hardware.keyHandler.TryGetCombinedSymbol(ref ks);\r\n                text
+    = text.AddInputSpecial(input, ks);\r\n\r\n\n                CheckMovement(ks);\r\n               
+    if (ks.ReadKey(Key.Mouse0))\r\n                {\r\n                    mousePos
+    = hardware.mouseHandler.GetScreenPosition();\r\n                }\r\n               
+    ClampPositionToFrame();\r\n            }\r\nbyte counter=1;\n            while
+    (true)\r\n            {\r\n                buffer.FillAll(SystemColor.black);\r\n\rbuffer.TintAll(counter);\n               
+    Draw();\r\n\n                ProcessInput();\r\ncounter++;\nif(counter>15){counter=0;}\r\n               
+    hardware.runtime.Wait(1);\r\n\n            }"
 --- !u!1 &1446994155
 GameObject:
   m_ObjectHideFlags: 0
@@ -18245,7 +18816,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1522824865
 GameObject:
@@ -18292,7 +18863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 11500000, guid: 6ab6fbe85f93479469afa08b2dc543d1, type: 3}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "#include \"/System/libraries/fontLibrary.ll\"\n   \n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n   \rstring tzt =\"\"+Runtime.ByteToChar(176)+Runtime.ByteToChar(177)+Runtime.ByteToChar(178);\n       
@@ -18346,7 +18917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "{\r\n        string charInfo = \"\";\r\n\r\n\r\n        SystemScreenBuffer
     buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
     Screen.InitScreenBuffer(buffer);\r\n\r\n\r\n        File fontAtlas = FileSystem.GetFileByPath(\"/System/defaultFontMask\");\r\n       
@@ -18380,6 +18951,107 @@ MonoBehaviour:
     + posy * 16))}\";\r\n            }\r\n        }\r\n        while (true)\r\n       
     {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n            Draw();\r\n           
     ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n        }\r\n    }"
+--- !u!1 &1905319701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1905319705}
+  - component: {fileID: 1905319704}
+  - component: {fileID: 1905319703}
+  - component: {fileID: 1905319702}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1905319702
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905319701}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1905319703
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905319701}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 20c481fea0d0b7f448bddf261b766909, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1905319704
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905319701}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1905319705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905319701}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.07, y: -0.69, z: -1.87}
+  m_LocalScale: {x: 10.038, y: 0.25513, z: 5.6937}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 862908943}
+  - {fileID: 1156703731}
+  - {fileID: 366580920}
+  - {fileID: 498076987}
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1941482588
 GameObject:
   m_ObjectHideFlags: 0
@@ -18425,7 +19097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "# redefine //# #\r\n        //# include \"/System/test_library\"\r\n       
     //commnet\r\n\r\n        Console.Debug();\r\n        const string help = \"Press
     mouse to move to mouse\\n\"\r\n                   + \"Arrows to move\\n\"\r\n                  
@@ -18511,7 +19183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 0}
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "# include \"/System/libraries/programsLibrary.ll\"\r\n\r# include \"/System/libraries/fontLibrary.ll\"\npublic
     class Shell\r\n    {\r\n        \r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n\r\n       
     SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n        KeyHandler

@@ -41,12 +41,12 @@ namespace Libraries.system
                   }
 
                   return false;*/
-                hardware.AddDelegateToStack(CheckKeys, true);
+                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
                 if (pressedDownKeys.Contains(key))
                 {
                     pressedDownKeys.Remove(key);
                     cooldownKeys.Add(key);
-                    hardware.AddDelegateToStack(CheckKeys, true);
+                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
                     return true;
                 }
 
@@ -55,11 +55,11 @@ namespace Libraries.system
 
             public KeySequence WaitForInput()
             {
-                hardware.AddDelegateToStack(CheckKeys, true);
+                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
                 while (pressedDownKeys.Count <= 0)
                 {
-                  //  Runtime.Wait();//todo -1 wth how to do this?
-                    hardware.AddDelegateToStack(CheckKeys, true);
+                    hardware.runtime.Wait();
+                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
                 }
 
                 return new KeySequence(pressedDownKeys);
@@ -67,12 +67,12 @@ namespace Libraries.system
 
             public KeySequence WaitForInputDown()
             {
-                hardware.AddDelegateToStack(CheckKeys, true);
+                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
 
                 while (pressedDownKeys.Count <= 0)
                 {
-                  //  Runtime.Wait();//todo -1 wth how to do this?
-                    hardware.AddDelegateToStack(CheckKeys, true);
+                    //  Runtime.Wait();//todo -1 wth how to do this?
+                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
                 }
 
                 cooldownKeys.UnionWith(pressedDownKeys);
@@ -82,7 +82,7 @@ namespace Libraries.system
             public string GetInputAsString()
             {
                 return
-                    hardware.inputManager
+                    hardware.hardwareInternal.inputManager
                         .GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
             }
 
@@ -91,8 +91,8 @@ namespace Libraries.system
                 string buffer = "";
                 while (String.IsNullOrEmpty(buffer))
                 {
-                    buffer = hardware.inputManager.GetInput();
-                   // Runtime.Wait();//todo -1 wth how to do this?
+                    buffer = hardware.hardwareInternal.inputManager.GetInput();
+                    // Runtime.Wait();//todo -1 wth how to do this?
                 }
 
                 return buffer;

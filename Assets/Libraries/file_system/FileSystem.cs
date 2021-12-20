@@ -10,14 +10,14 @@ namespace Libraries.system.file_system
         public const char catalogSymbol = '/';
         public File GetFileByPath(string path, File parent = null)
         {
-            return hardware.mainDrive.GetFileByPath(path, parent);
+            return hardware.hardwareInternal.mainDrive.GetFileByPath(path, parent);
         }
 
         public File MakeFile(string path, string name, FilePermission filePermission, byte[] data = null)
         {
             File file = Drive.MakeFile(name, data);
             file.permissions = filePermission;
-            File parent = hardware.mainDrive.GetFileByPath(path);
+            File parent = hardware.hardwareInternal.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
         }
@@ -26,7 +26,7 @@ namespace Libraries.system.file_system
         {
             string[] path = rawPath.Split(catalogSymbol);
 
-            File currentFile = hardware.mainDrive.GetRoot();
+            File currentFile = hardware.hardwareInternal.mainDrive.GetRoot();
             for (int i = 0; i < path.Length; i++)
             {
                 File newFile = GetFileByPath("./" + path[i], currentFile);
@@ -44,14 +44,14 @@ namespace Libraries.system.file_system
         public File MakeFolder(string path, string name)
         {
             File file = Drive.MakeFolder(name);
-            File parent = hardware.mainDrive.GetFileByPath(path);
+            File parent = hardware.hardwareInternal.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
         }
 
         public bool RemoveFile(string path)
         {
-            return hardware.mainDrive.RemoveFile(path);
+            return hardware.hardwareInternal.mainDrive.RemoveFile(path);
         }
     }
 }

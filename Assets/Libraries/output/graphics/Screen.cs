@@ -21,12 +21,12 @@ namespace Libraries.system.output.graphics
 
         public void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            hardware.AddDelegateToStack(() => { hardware.screenManager.InitScreenBuffer(screenBuffer); });
+            hardware.hardwareInternal.stackExecutor.AddDelegateToStack(() => { hardware.hardwareInternal.screenManager.InitScreenBuffer(screenBuffer); });
         }
 
         public void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            hardware.AddDelegateToStack(() => { hardware.screenManager.SetScreenBuffer(screenBuffer); }, sync
+            hardware.hardwareInternal.stackExecutor.AddDelegateToStack(() => { hardware.hardwareInternal.screenManager.SetScreenBuffer(screenBuffer); }, sync
             );
         }
     }

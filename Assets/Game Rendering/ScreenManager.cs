@@ -22,13 +22,15 @@ public class ScreenManager : MonoBehaviour
 
     public void InitScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
+        Debug.Log("in status 1");
         bufferTexture = new Texture2D(screenBuffer.GetWidth(), screenBuffer.GetHeight());
         pixelWidth = screenBuffer.GetWidth();
         pixelHeight = screenBuffer.GetHeight();
-
+        Debug.Log("in status 2");
         bufferTexture.filterMode = FilterMode.Point;
-      //  rawImage.texture = bufferTexture;
+        //  rawImage.texture = bufferTexture;
         mat.SetTexture("_MainTex", bufferTexture);
+        Debug.Log("in status 3");
     }
     public void SetScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
@@ -44,7 +46,7 @@ public class ScreenManager : MonoBehaviour
         bufferTexture.Apply();
 
 
-      //  rawImage.SetAllDirty();
+        //  rawImage.SetAllDirty();
 
 
     }

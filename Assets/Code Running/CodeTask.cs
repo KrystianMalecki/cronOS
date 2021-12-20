@@ -12,6 +12,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Libraries.system;
+using helper;
 
 [Serializable]
 public class CodeTask
@@ -47,7 +48,7 @@ public class CodeTask
 
 
             await CSharpScript.EvaluateAsync(codeObject.code
-                 , Hardware.scriptOptionsBuffer
+                 , HardwareInternal.scriptOptionsBuffer
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
                 .WithFilePath("debugpath/")
@@ -94,7 +95,7 @@ public class CodeTask
                 }
                 try
                 {
-                    string[] lines = codeObject.code.Split('\n');
+                    string[] lines = codeObject.code.SplitNewLine();
 
                     line = lines[linePos - 1] + "\n" + lines[linePos] + "\n" + lines[linePos + 1] + "\n" + lines[linePos + 2];
                 }
@@ -137,7 +138,7 @@ public class CodeTask
     public void Destroy()
     {
         Debug.LogWarning("Destroying CodeTask");
-        hardware.RemoveCodeTask(this);
+        hardware.hardwareInternal.RemoveCodeTask(this);
         if (thread != null)
         {
             thread.Abort();

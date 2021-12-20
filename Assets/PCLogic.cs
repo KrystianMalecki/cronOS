@@ -9,7 +9,7 @@ public class PCLogic : MonoBehaviour
     public Hardware hardware;
     public bool isDefault = false;
     public static PCLogic defaultInstance;
-    [Button]
+    [Button, ExecuteInEditMode]
     public void SetDefault()
     {
         if (defaultInstance != null)
@@ -19,5 +19,13 @@ public class PCLogic : MonoBehaviour
         defaultInstance = this;
         defaultInstance.isDefault = true;
     }
+    public void Awake()
+    {
+        hardware.Init();
 
+        if (isDefault)
+        {
+            SetDefault();
+        }
+    }
 }

@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class StackExecutor : MonoBehaviour
 {
-    public Hardware system;
+    [NonSerialized]
+    public Hardware hardware;
     public void Update()
     {
         ExecuteFromQueue();
@@ -18,7 +19,7 @@ public class StackExecutor : MonoBehaviour
     private ConcurrentQueue<ITryToRun> actionQueue = new ConcurrentQueue<ITryToRun>();
     private void ExecuteFromQueue()
     {
-        _maxTasksBuffer = system.TasksPerCPULoop == -1 ? actionQueue.Count : system.TasksPerCPULoop;
+        _maxTasksBuffer = hardware.hardwareInternal.TasksPerCPULoop == -1 ? actionQueue.Count : hardware.hardwareInternal.TasksPerCPULoop;
         for (int i = 0; (i < _maxTasksBuffer); i++)
         {
             if (actionQueue.Count > 0)
@@ -72,24 +73,47 @@ public class StackExecutor : MonoBehaviour
 
         }
     }
-    [Button]
 
+    internal T AddDelegateToStack<T>(MainThreadDelegate<T>.MTDFunction action, bool sync = true)
+    {
+
+        return AddDelegateToStack(new MainThreadDelegate<T>(action, hardware.hardwareInternal.WaitRefreshRate), sync);
+
+    }
+    internal T AddDelegateToStack<T>(MainThreadDelegate<T> mtf, bool sync = true)
+    {
+        actionQueue.Enqueue(mtf);
+
+        if (sync)
+        {
+            return mtf.WaitForReturn();
+        }
+        return default(T);
+    }
+    internal void AddDelegateToStack(Action action, bool sync = true)
+    {
+        AddDelegateToStack((ref bool done, ref object returnValue) =>
+        {
+            action.Invoke();
+        }, sync);
+    }
+    [Button]
     internal void CheackThreads()
     {
-        system.CheackThreads();
+        hardware.hardwareInternal.CheackThreads();
     }
 
     [Button]
     internal void KillAll()
     {
-        system.KillAll();
+        hardware.hardwareInternal.KillAll();
     }
     public void OnDestroy()
     {
-        system.KillAll();
+        KillAll();
     }
     public void OnApplicationQuit()
     {
-        system.KillAll();
+        KillAll();
     }
 }
