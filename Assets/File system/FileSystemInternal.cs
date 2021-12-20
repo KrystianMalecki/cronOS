@@ -8,26 +8,8 @@ using NaughtyAttributes;
 
 public class FileSystemInternal : MonoBehaviour
 {
-    #region singleton logic
-    public static FileSystemInternal instance;
-    public void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-        mainDrive.GenerateCacheData();
+  
 
-    }
-    #endregion
-
-    public Drive mainDrive;
-
-    public static readonly char catalogSymbol = '/';
 
 
 }

@@ -11,17 +11,19 @@ public class MainThreadDelegate<T> : ITryToRun
 
     public volatile bool done = false;
     public MTDFunction function;
+    public int waitRefreshRate;
     public T WaitForReturn()
     {
         while (!done)
         {
-            Thread.Sleep(ProcessorManager.instance.WaitRefreshRate);
+            Thread.Sleep(waitRefreshRate);
+
         }
         return returnValue;
     }
     ~MainThreadDelegate()
     {
-      //  Debug.Log( "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToFormatedString());
+        //  Debug.Log( "Destructed" + function.Method.GetMethodBody().GetILAsByteArray().ToFormatedString());
 
     }
     public void Speak()
@@ -33,7 +35,7 @@ public class MainThreadDelegate<T> : ITryToRun
     {
         if (done)
         {
-            Debug.Log( "it is now done");
+            Debug.Log("it is now done");
             Speak();
             return done;
         }
@@ -44,9 +46,10 @@ public class MainThreadDelegate<T> : ITryToRun
     }
 
 
-    public MainThreadDelegate(MTDFunction fd)
+    public MainThreadDelegate(MTDFunction fd, int waitRefreshRate)
     {
         function = fd;
+        this.waitRefreshRate = waitRefreshRate;
         // FlagLogger.Log(LogFlags.DebugInfo, "Made from" + fd.Method.GetMethodBody().GetILAsByteArray().ToArrayString());
 
     }

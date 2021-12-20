@@ -16,12 +16,16 @@ namespace Libraries.system
             public Path(string rawPath, File parent = null, File root = null)
             {
                 rawPath ??= "";
-                parent ??= root == null ? FileSystemInternal.instance.mainDrive.GetRoot() : root;
+
+                //todo -6 add check before
+                //  parent ??= root == null ? FileSystemInternal.instance.mainDrive.GetRoot() : root;
 
                 rawPath = rawPath.StartsWith("./") ? (parent.GetFullPath() + rawPath.Substring(1)) : rawPath;
-                parts = rawPath.Split(FileSystemInternal.catalogSymbol).ToList();
+                parts = rawPath.Split(FileSystem.catalogSymbol).ToList();
 
-                File currentFile = root == null ? FileSystemInternal.instance.mainDrive.GetRoot() : root;
+                File currentFile = root;
+                //todo -6 add check before
+                // currentFile ??= FileSystemInternal.instance.mainDrive.GetRoot();
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)
                 {

@@ -1,5 +1,6 @@
 // Based on https://www.shadertoy.com/view/Ms23DR
-Shader "Custom/NewImageEffectShader"
+// todo 2 make it use screen resolution. Is too small on bigger resolutions
+Shader "Custom/ScreenMaterial"
 {
 	Properties
 	{

@@ -23,10 +23,10 @@ public class CodeTask
     public Thread thread;
     public CodeObject codeObject;
     private static FieldInfo fieldInfoOfStackTrace = typeof(Exception).GetField("captured_traces", BindingFlags.NonPublic | BindingFlags.Instance);
-
-    public CodeTask()
+    public Cronos.System system;
+    public CodeTask(Cronos.System system)
     {
-        // Debug.LogError("Creation of code task");
+        this.system = system;
     }
     public void RunCode(CodeObject codeObject)
     {
@@ -47,11 +47,11 @@ public class CodeTask
 
 
             await CSharpScript.EvaluateAsync(codeObject.code
-                 , ScriptManager.instance.scriptOptionsBuffer
+                 , ScriptManager.scriptOptionsBuffer
                 .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                 .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
                 .WithFilePath("debugpath/")
-                ,ScriptManager.globals, ScriptManager.globals.GetType()
+                , system, system.GetType()
                 );
 
 
@@ -109,7 +109,7 @@ public class CodeTask
             }
         }
         Debug.Log("end");
-Destroy();
+        Destroy();
 
     }
     (int line, int column) GetLineAndColumnFromExceptionMessage(string message)
@@ -137,7 +137,7 @@ Destroy();
     public void Destroy()
     {
         Debug.LogWarning("Destroying CodeTask");
-        ScriptManager.instance.RemoveCodeTask(this);
+        system.RemoveCodeTask(this);
         if (thread != null)
         {
             thread.Abort();

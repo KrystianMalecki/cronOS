@@ -32,14 +32,13 @@ public class DebugCodeRunner : MonoBehaviour
     [Button("Run code", EButtonEnableMode.Playmode)]
     void RunCode()
     {
-
-        ScriptManager.instance.RunCode(new CodeObject(noCodeFile ? code : codeFile.text.Replace("false//changeToTrue","true"), ScriptManager.allLibraryDatas));
+        PCLogic.defaultInstance.system.RunCode(new CodeObject(noCodeFile ? code : codeFile.text.Replace("false//changeToTrue","true"), ScriptManager.allLibraryDatas));
 
     }
 
     void KillAll()
     {
-        ScriptManager.instance.KillAll();
+        PCLogic.defaultInstance.system.KillAll();
     }
 
 

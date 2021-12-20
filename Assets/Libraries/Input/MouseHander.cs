@@ -7,11 +7,16 @@ namespace Libraries.system
     {
         public class MouseHander : BaseLibrary
         {
-            public static Vector2Int GetScreenPosition()
+            private ScreenManager screenManager;
+            public void Init(ScreenManager screenManager)
+            {
+                this.screenManager = screenManager;
+            }
+            public Vector2Int GetScreenPosition()
             {
                 return ScriptManager.AddDelegateToStack((ref bool done, ref Vector2Int outer) =>
                 {
-                    outer = ScreenManager.instance.GetMousePos();
+                    outer = screenManager.GetMousePos();
                 });
             }
         }

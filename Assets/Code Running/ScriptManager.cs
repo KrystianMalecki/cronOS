@@ -12,29 +12,24 @@ using System.Text.RegularExpressions;
 using helper;
 using System.Xml;
 
-public class ScriptManager : MonoBehaviour
+public class ScriptManager
 {
-    #region singleton logic
-    public static ScriptManager instance;
-    public void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-        TryToInitScriptOptions();
-    }
-    #endregion
     private const string LINE_NUMBER_PREPROCESSOR_CODE = "__LINE__";
 
     private const string FILE_NUMBER_PREPROCESSOR_CODE = "__FILE__";
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
-    public ScriptOptions scriptOptionsBuffer = null;
+    public static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default.AddReferences(
+             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly/*,
+        typeof(System.Text.RegularExpressions.Regex).GetTypeInfo().Assembly,
+             typeof(helper.GlobalHelper).GetTypeInfo().Assembly,
+             typeof(System.Collections.Generic.Dictionary<int,int>).GetTypeInfo().Assembly
+            //,typeof(System.Exception).GetTypeInfo().Assembly
+*/
+            ).AddImports(
+          // "UnityEngine", "System"
+          ).WithEmitDebugInformation(true)
+            .WithFileEncoding(Cronos.System.mainEncoding);
 
     public static readonly List<Type> allLibraries = new List<Type>() { typeof(Libraries.system.output.Console),typeof(Libraries.system.Runtime),
     typeof(Libraries.system.output.graphics.Screen),
@@ -65,34 +60,9 @@ public class ScriptManager : MonoBehaviour
     public List<CodeTask> scriptsRunning = new List<CodeTask>();
 
 
-    public static Globals globals = new Globals();
-    public void TryToInitScriptOptions()
-    {
-        if (scriptOptionsBuffer != null)
-        {
-            return;
-        }
-        
-        scriptOptionsBuffer = ScriptOptions.Default/*.WithOptimizationLevel(Microsoft.CodeAnalysis.OptimizationLevel.Release)*/;
-        
-        scriptOptionsBuffer = scriptOptionsBuffer.AddReferences(
-             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly/*,
-        typeof(System.Text.RegularExpressions.Regex).GetTypeInfo().Assembly,
-             typeof(helper.GlobalHelper).GetTypeInfo().Assembly,
-             typeof(System.Collections.Generic.Dictionary<int,int>).GetTypeInfo().Assembly
-            //,typeof(System.Exception).GetTypeInfo().Assembly
+    public Cronos.System system;
 
-*/
-            );
 
-        scriptOptionsBuffer = scriptOptionsBuffer.AddImports(
-          // "UnityEngine", "System"
-          );
-        scriptOptionsBuffer = scriptOptionsBuffer
-            .WithEmitDebugInformation(true)
-            .WithFileEncoding(ProcessorManager.mainEncoding);
-
-    }
     public void RemoveCodeTask(CodeTask codeTask)
     {
         scriptsRunning.Remove(codeTask);
@@ -167,7 +137,7 @@ public class ScriptManager : MonoBehaviour
     private int _maxTasksBuffer;
     private void ExecuteFromQueue()
     {
-        _maxTasksBuffer = ProcessorManager.instance.TasksPerCPULoop == -1 ? actionQueue.Count : ProcessorManager.instance.TasksPerCPULoop;
+        _maxTasksBuffer = pcLogic.system.processorManager.TasksPerCPULoop == -1 ? actionQueue.Count : ProcessorManager.instance.TasksPerCPULoop;
         for (int i = 0; (i < _maxTasksBuffer); i++)
         {
             if (actionQueue.Count > 0)
@@ -413,15 +383,5 @@ public class ScriptManager : MonoBehaviour
             action.Invoke();
         }, sync);
     }
-    public struct RedefineGroup
-    {
-        public string replacor;
-        public string[] arguments;
-
-        public RedefineGroup(string replacor, string[] arguments)
-        {
-            this.replacor = replacor;
-            this.arguments = arguments;
-        }
-    }
+   
 }

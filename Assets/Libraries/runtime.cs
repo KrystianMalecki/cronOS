@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace Libraries.system
 {
-    public class Runtime
+    public class Runtime : BaseLibrary
     {
-        public static void Wait(int time)
+        public void Wait(int time)
         {
             // Task.Delay(time).Wait();
-            Thread.Sleep(System.Math.Max(time, ProcessorManager.instance.WaitRefreshRate));
+            Thread.Sleep(System.Math.Max(time, system.WaitRefreshRate));
 
             // test.instance.count1++;
         }
 
-        public static void WaitUnitl(Func<bool> action)
+        public void WaitUnitl(Func<bool> action)
         {
             while (action.Invoke())
             {
@@ -27,9 +27,9 @@ namespace Libraries.system
             }
         }
 
-        public static void Wait()
+        public void Wait()
         {
-            Thread.Sleep(ProcessorManager.instance.WaitRefreshRate);
+            Thread.Sleep(system.WaitRefreshRate);
         }
 
         public static readonly char[] asciiMap =
@@ -52,27 +52,27 @@ namespace Libraries.system
         public unsafe static byte CharToByte(char character)
         {
             byte b = 0;
-            ProcessorManager.mainEncoding.GetBytes(&character, 1, &b, 1);
+            Cronos.System.mainEncoding.GetBytes(&character, 1, &b, 1);
             return b;
         }
 
         public unsafe static char ByteToChar(byte character)
         {
             char b = 'l';
-            ProcessorManager.mainEncoding.GetChars(&character, 1, &b, 1);
+            Cronos.System.mainEncoding.GetChars(&character, 1, &b, 1);
             return b;
         }
 
-        public  static byte HexToByte(string value)
+        public static byte HexToByte(string value)
         {
             byte result = 0;
             byte.TryParse(value, System.Globalization.NumberStyles.HexNumber, null, out result);
             return result;
         }
 
-        public static string ByteToHex(byte value,bool makeIt2)
+        public static string ByteToHex(byte value, bool makeIt2)
         {
-            return value.ToString("X"+(makeIt2?2:1));
+            return value.ToString("X" + (makeIt2 ? 2 : 1));
         }
     }
 }

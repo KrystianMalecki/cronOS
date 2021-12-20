@@ -11,7 +11,6 @@ using System.Text;
 
 public class ScreenManager : MonoBehaviour
 {
-    public static ScreenManager instance;
     [NaughtyAttributes.ReadOnly]
     public Texture2D bufferTexture;
     public Transform localTransform;
@@ -20,20 +19,6 @@ public class ScreenManager : MonoBehaviour
     private int pixelWidth;
     private int pixelHeight;
     public static readonly string asciiMap = " ☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀ɑϐᴦᴨ∑ơµᴛɸϴΩẟ∞∅∈∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
-
-    public void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-
 
     public void InitScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {

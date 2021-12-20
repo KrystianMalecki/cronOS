@@ -6,25 +6,27 @@ namespace Libraries.system.file_system
 {
     public class FileSystem : BaseLibrary
     {
-        public static File GetFileByPath(string path, File parent = null)
+
+        public const char catalogSymbol = '/';
+        public File GetFileByPath(string path, File parent = null)
         {
-            return FileSystemInternal.instance.mainDrive.GetFileByPath(path, parent);
+            return system.mainDrive.GetFileByPath(path, parent);
         }
 
-        public static File MakeFile(string path, string name, FilePermission filePermission, byte[] data = null)
+        public File MakeFile(string path, string name, FilePermission filePermission, byte[] data = null)
         {
             File file = Drive.MakeFile(name, data);
             file.permissions = filePermission;
-            File parent = FileSystemInternal.instance.mainDrive.GetFileByPath(path);
+            File parent = system.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
         }
 
-        public static File MakeFile(string rawPath)
+        public File MakeFile(string rawPath)
         {
-            string[] path = rawPath.Split(FileSystemInternal.catalogSymbol);
+            string[] path = rawPath.Split(catalogSymbol);
 
-            File currentFile = FileSystemInternal.instance.mainDrive.GetRoot();
+            File currentFile = system.mainDrive.GetRoot();
             for (int i = 0; i < path.Length; i++)
             {
                 File newFile = GetFileByPath("./" + path[i], currentFile);
@@ -39,17 +41,17 @@ namespace Libraries.system.file_system
             return currentFile;
         }
 
-        public static File MakeFolder(string path, string name)
+        public File MakeFolder(string path, string name)
         {
             File file = Drive.MakeFolder(name);
-            File parent = FileSystemInternal.instance.mainDrive.GetFileByPath(path);
+            File parent = system.mainDrive.GetFileByPath(path);
             parent.AddChild(file);
             return file;
         }
 
-        public static bool RemoveFile(string path)
+        public bool RemoveFile(string path)
         {
-            return FileSystemInternal.instance.mainDrive.RemoveFile(path);
+            return system.mainDrive.RemoveFile(path);
         }
     }
 }
