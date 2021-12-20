@@ -58,7 +58,7 @@ namespace Libraries.system
                 hardware.AddDelegateToStack(CheckKeys, true);
                 while (pressedDownKeys.Count <= 0)
                 {
-                    Runtime.Wait();//todo -1 wth how to do this?
+                  //  Runtime.Wait();//todo -1 wth how to do this?
                     hardware.AddDelegateToStack(CheckKeys, true);
                 }
 
@@ -71,7 +71,7 @@ namespace Libraries.system
 
                 while (pressedDownKeys.Count <= 0)
                 {
-                    Runtime.Wait();//todo -1 wth how to do this?
+                  //  Runtime.Wait();//todo -1 wth how to do this?
                     hardware.AddDelegateToStack(CheckKeys, true);
                 }
 
@@ -92,7 +92,7 @@ namespace Libraries.system
                 while (String.IsNullOrEmpty(buffer))
                 {
                     buffer = hardware.inputManager.GetInput();
-                    Runtime.Wait();//todo -1 wth how to do this?
+                   // Runtime.Wait();//todo -1 wth how to do this?
                 }
 
                 return buffer;
