@@ -23,7 +23,6 @@ namespace Libraries.system
                 parts = rawPath.Split(FileSystem.catalogSymbol).ToList();
 
                 File currentFile = root;
-                //todo -6 add check before
 
                 fileparts.Add(currentFile);
                 for (int i = 1; i < parts.Count; i++)

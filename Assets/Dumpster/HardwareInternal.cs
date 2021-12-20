@@ -39,7 +39,7 @@ public class HardwareInternal
     public int WaitRefreshRate = 100;
     [SerializeField]
     internal int TasksPerCPULoop = -1;
-    internal bool ignoreSomeErrors = true;//todo -9 remove
+    internal bool ignoreSomeErrors = true;//todo 86 remove
     internal static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
 
     void UpdateWRR()

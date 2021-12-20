@@ -19,6 +19,9 @@ public class ScreenManager : MonoBehaviour
     private int pixelWidth;
     private int pixelHeight;
     public static readonly string asciiMap = " ☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀ɑϐᴦᴨ∑ơµᴛɸϴΩẟ∞∅∈∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
+    float minX, minY, maxX, maxY;
+    int layerMask = 1 << 6;
+    public MeshFilter mesh;
 
     public void InitScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
@@ -46,14 +49,40 @@ public class ScreenManager : MonoBehaviour
         bufferTexture.Apply();
 
 
-        //  rawImage.SetAllDirty();
 
 
     }
+    public libs.mathematics.Vector2Int GetMousePostion()
+    {
+        Vector2 v2out = new Vector2(0, 0);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit info, 20, layerMask))
+        {
+            v2out.x = info.point.x;
+            v2out.y = info.point.y;
+            v2out.x = Mathf.InverseLerp(minX, maxX, v2out.x);
+            v2out.y = Mathf.InverseLerp(minY, maxY, v2out.y);
 
+           // Debug.Log($"x{minX}-{maxX} y{minY}-{maxY} pos{v2out}");
 
+        }
+        v2out.y = 1 - v2out.y;
+        v2out.y = Mathf.Clamp(v2out.y, 0f, 1f);
+        v2out.x = Mathf.Clamp(v2out.x, 0f, 1f);
+        libs.mathematics.Vector2Int intOut = new libs.mathematics.Vector2Int((int)(v2out.x * pixelWidth), (int)(v2out.y * pixelHeight));
+        return intOut;
+    }
+    public void Awake()
+    {
+        minX = transform.TransformPoint(mesh.sharedMesh.vertices[0]).x;
+        minY = transform.TransformPoint(mesh.sharedMesh.vertices[0]).y;
+        maxX = transform.TransformPoint(mesh.sharedMesh.vertices[3]).x;
+        maxY = transform.TransformPoint(mesh.sharedMesh.vertices[3]).y;
+
+    }
     public libs.mathematics.Vector2Int GetMousePos()
     {
+        return GetMousePostion();
         Vector2 v2out;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition.ToVector2(), Camera.main, out v2out);
 

@@ -17,11 +17,25 @@ using System.Linq;
 using helper;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.mask_texture;
+using Cinemachine.Utility;
 
 public class NativeTest : MonoBehaviour
 {
+
+
+
     public void Start()
     {
+
+
+
+
+
+
+
+
+
+
         /*  Debug.Log(ProcessorManager.mainEncoding.GetType().Assembly.Location);
           Debug.Log("  # define   lol(x,y)   Cosnole.Log($\"lol {x} {y}\")".SplitSpaceQ().ToFormatedString("-"));
           Debug.Log(new Path("./..", FileSystem.GetFileByPath("/")));
@@ -36,21 +50,21 @@ public class NativeTest : MonoBehaviour
           Debug.Log(new Path("./../../programs", FileSystem.GetFileByPath("/System/programs/ls")));
           Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
         */
-       /* Debug.Log(SystemColor.sizeOf);
-        MaskTexture st = new MaskTexture(2, 2);
-        st.SetAt(0, 0, true);
-        st.SetAt(0, 1, false);
-        st.SetAt(1, 0, true);
-        st.SetAt(1, 1, false);
-        Debug.Log(st.array.ToFormatedString());
+        /* Debug.Log(SystemColor.sizeOf);
+         MaskTexture st = new MaskTexture(2, 2);
+         st.SetAt(0, 0, true);
+         st.SetAt(0, 1, false);
+         st.SetAt(1, 0, true);
+         st.SetAt(1, 1, false);
+         Debug.Log(st.array.ToFormatedString());
 
-        byte[] data = st.ToData();
-        Debug.Log(data.ToFormatedString());
-        MaskTexture st2 = MaskTexture.FromData(data);
-        Debug.Log(st2.array.ToFormatedString());
-        byte[] data2 = st2.ToData();
-        Debug.Log(data2.ToFormatedString());
-Debug.Log(default(SystemColor).value);*/
+         byte[] data = st.ToData();
+         Debug.Log(data.ToFormatedString());
+         MaskTexture st2 = MaskTexture.FromData(data);
+         Debug.Log(st2.array.ToFormatedString());
+         byte[] data2 = st2.ToData();
+         Debug.Log(data2.ToFormatedString());
+ Debug.Log(default(SystemColor).value);*/
 
 
         // FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");
