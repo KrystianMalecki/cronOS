@@ -30,11 +30,11 @@ namespace Libraries.system.output.graphics
             {
                 return GetAt(x, y).ToColor32();
             }
-
+            bool ignoreSomeErrors = true;//todo 9 remove
             public void DrawTexture(int x, int y, RectArray<SystemColor> texture, byte transparencyFlag = 0xff,
                 bool drawPartialy = true)
             {
-                if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors &&
+                if (!IsBoxInRange(x, y, texture.width, texture.height) && ignoreSomeErrors &&
                     !drawPartialy)
                 {
                     return; //todo-future add error
@@ -44,7 +44,7 @@ namespace Libraries.system.output.graphics
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
-                        if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                        if (!IsPointInRange(x, y) && ignoreSomeErrors)
                         {
                             return; //todo-future add error
                         }

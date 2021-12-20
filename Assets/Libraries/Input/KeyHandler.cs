@@ -8,7 +8,7 @@ namespace Libraries.system
 {
     namespace input
     {
-        public class KeyHandler
+        public class KeyHandler : BaseLibrary
         {
             public HashSet<Key> pressedDownKeys = new HashSet<Key>();
             public HashSet<Key> cooldownKeys = new HashSet<Key>();
@@ -41,12 +41,12 @@ namespace Libraries.system
                   }
 
                   return false;*/
-                ScriptManager.AddDelegateToStack(CheckKeys, true);
+                hardware.AddDelegateToStack(CheckKeys, true);
                 if (pressedDownKeys.Contains(key))
                 {
                     pressedDownKeys.Remove(key);
                     cooldownKeys.Add(key);
-                    ScriptManager.AddDelegateToStack(CheckKeys, true);
+                    hardware.AddDelegateToStack(CheckKeys, true);
                     return true;
                 }
 
@@ -55,11 +55,11 @@ namespace Libraries.system
 
             public KeySequence WaitForInput()
             {
-                ScriptManager.AddDelegateToStack(CheckKeys, true);
+                hardware.AddDelegateToStack(CheckKeys, true);
                 while (pressedDownKeys.Count <= 0)
                 {
-                    Runtime.Wait();
-                    ScriptManager.AddDelegateToStack(CheckKeys, true);
+                    Runtime.Wait();//todo -1 wth how to do this?
+                    hardware.AddDelegateToStack(CheckKeys, true);
                 }
 
                 return new KeySequence(pressedDownKeys);
@@ -67,32 +67,32 @@ namespace Libraries.system
 
             public KeySequence WaitForInputDown()
             {
-                ScriptManager.AddDelegateToStack(CheckKeys, true);
+                hardware.AddDelegateToStack(CheckKeys, true);
 
                 while (pressedDownKeys.Count <= 0)
                 {
-                    Runtime.Wait();
-                    ScriptManager.AddDelegateToStack(CheckKeys, true);
+                    Runtime.Wait();//todo -1 wth how to do this?
+                    hardware.AddDelegateToStack(CheckKeys, true);
                 }
 
                 cooldownKeys.UnionWith(pressedDownKeys);
                 return new KeySequence(pressedDownKeys);
             }
 
-            public static string GetInputAsString()
+            public string GetInputAsString()
             {
                 return
-                    InputManager
+                    hardware.inputManager
                         .GetInput(); //ScriptManager.AddDelegateToStack((ref bool done, ref string ret) => { ret = Input.inputString; }, true);
             }
 
-            public static string WaitForStringInput()
+            public string WaitForStringInput()
             {
                 string buffer = "";
                 while (String.IsNullOrEmpty(buffer))
                 {
-                    buffer = InputManager.GetInput();
-                    Runtime.Wait();
+                    buffer = hardware.inputManager.GetInput();
+                    Runtime.Wait();//todo -1 wth how to do this?
                 }
 
                 return buffer;

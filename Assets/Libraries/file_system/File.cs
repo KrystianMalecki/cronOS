@@ -129,7 +129,7 @@ namespace Libraries.system
 
             public string ReturnDataAsString()
             {
-                return ProcessorManager.mainEncoding.GetString(data);
+                return Hardware.mainEncoding.GetString(data);
             }
 
             public File GetChildByName(string name)

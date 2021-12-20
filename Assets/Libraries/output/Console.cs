@@ -16,7 +16,7 @@ namespace Libraries.system
     {
         public class Console : BaseLibrary
         {
-          
+
             public static void Debug(params object[] obj)
             {
                 UnityEngine.Debug.Log(obj.ToFormatedString());
@@ -33,12 +33,9 @@ namespace Libraries.system
             {
                 UnityEngine.Debug.Log(line);
             }
-            
+
         }
 
-        public class AsyncConsole : Console
-        {
-            public static bool sync => no;
-        }
+
     }
 }

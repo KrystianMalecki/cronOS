@@ -96,7 +96,7 @@ public static class StaticHelper
         {
             return Array.Empty<byte>();
         }
-        return Cronos.System.mainEncoding.GetBytes(variable);
+        return Hardware.mainEncoding.GetBytes(variable);
     }
     public static string ToEncodedString(this byte[] variable)
     {
@@ -104,7 +104,7 @@ public static class StaticHelper
         {
             return "";
         }
-        return Cronos.System.mainEncoding.GetString(variable);
+        return Hardware.mainEncoding.GetString(variable);
     }
     /*  public static byte[] GetRange(this byte[] variable, int start, int length)
       {

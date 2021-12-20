@@ -14,7 +14,7 @@ namespace Libraries.system
             }
             public Vector2Int GetScreenPosition()
             {
-                return ScriptManager.AddDelegateToStack((ref bool done, ref Vector2Int outer) =>
+                return hardware.AddDelegateToStack((ref bool done, ref Vector2Int outer) =>
                 {
                     outer = screenManager.GetMousePos();
                 });

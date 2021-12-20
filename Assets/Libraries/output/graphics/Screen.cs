@@ -19,20 +19,17 @@ namespace Libraries.system.output.graphics
         public static int screenWidth = 640;
         public static int screenHeight = 480;
 
-        public static void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
+        public void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            ScriptManager.AddDelegateToStack(() => { ScreenManager.instance.InitScreenBuffer(screenBuffer); });
+            hardware.AddDelegateToStack(() => { hardware.screenManager.InitScreenBuffer(screenBuffer); });
         }
 
-        public static void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
+        public void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            ScriptManager.AddDelegateToStack(() => { ScreenManager.instance.SetScreenBuffer(screenBuffer); }, sync
+            hardware.AddDelegateToStack(() => { hardware.screenManager.SetScreenBuffer(screenBuffer); }, sync
             );
         }
     }
 
-    public class AsyncScreen : Screen
-    {
-        public static bool sync => no;
-    }
+
 }

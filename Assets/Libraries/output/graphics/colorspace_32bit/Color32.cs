@@ -115,11 +115,12 @@ namespace Libraries.system.output.graphics
                 return redDifference * redDifference + greenDifference * greenDifference +
                        blueDifference * blueDifference;
             }
+            static bool ignoreSomeErrors = true;//todo 9 remove
 
             public static Color32 FindNearest(Color32[] colors, Color32 input)
             {
                 int id = FindNearestID(colors, input);
-                if (id == -1 && ProcessorManager.instance.ignoreSomeErrors)
+                if (id == -1 && ignoreSomeErrors)
                 {
                     return default(Color32); //todo-future add error
                 }

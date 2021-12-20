@@ -6,11 +6,12 @@ using UnityEngine;
 
 public class PCLogic : MonoBehaviour
 {
-    public Cronos.System system;
+    public Hardware hardware;
     public bool isDefault = false;
     public static PCLogic defaultInstance;
     [Button]
-    public void SetDefault() {
+    public void SetDefault()
+    {
         if (defaultInstance != null)
         {
             defaultInstance.isDefault = false;

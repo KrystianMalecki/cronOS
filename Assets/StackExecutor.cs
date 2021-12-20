@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 public class StackExecutor : MonoBehaviour
 {
-    public Cronos.System system;
+    public Hardware system;
     public void Update()
     {
         ExecuteFromQueue();
@@ -50,5 +51,45 @@ public class StackExecutor : MonoBehaviour
                 break;
             }
         }
+    }
+    [Button("Display stack")]
+    void DisplayStack()
+    {
+        try
+        {
+            foreach (ITryToRun runTry in actionQueue)
+            {
+                //   Debug.Log(runTry.function.ToString());
+                runTry.Speak();
+            }
+            if (actionQueue.Count == 0)
+            {
+                Debug.Log("actionStack is empty");
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+    [Button]
+
+    internal void CheackThreads()
+    {
+        system.CheackThreads();
+    }
+
+    [Button]
+    internal void KillAll()
+    {
+        system.KillAll();
+    }
+    public void OnDestroy()
+    {
+        system.KillAll();
+    }
+    public void OnApplicationQuit()
+    {
+        system.KillAll();
     }
 }

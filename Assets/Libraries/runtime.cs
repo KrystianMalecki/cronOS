@@ -14,7 +14,7 @@ namespace Libraries.system
         public void Wait(int time)
         {
             // Task.Delay(time).Wait();
-            Thread.Sleep(System.Math.Max(time, system.WaitRefreshRate));
+            Thread.Sleep(System.Math.Max(time, hardware.WaitRefreshRate));
 
             // test.instance.count1++;
         }
@@ -29,7 +29,7 @@ namespace Libraries.system
 
         public void Wait()
         {
-            Thread.Sleep(system.WaitRefreshRate);
+            Thread.Sleep(hardware.WaitRefreshRate);
         }
 
         public static readonly char[] asciiMap =
@@ -52,14 +52,14 @@ namespace Libraries.system
         public unsafe static byte CharToByte(char character)
         {
             byte b = 0;
-            Cronos.System.mainEncoding.GetBytes(&character, 1, &b, 1);
+            Hardware.mainEncoding.GetBytes(&character, 1, &b, 1);
             return b;
         }
 
         public unsafe static char ByteToChar(byte character)
         {
             char b = 'l';
-            Cronos.System.mainEncoding.GetChars(&character, 1, &b, 1);
+            Hardware.mainEncoding.GetChars(&character, 1, &b, 1);
             return b;
         }
 

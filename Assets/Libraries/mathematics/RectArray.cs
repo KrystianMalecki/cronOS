@@ -19,10 +19,12 @@ namespace Libraries.system
         {
             [SerializeField] public T[] array;
 
-            [SerializeField] [AllowNesting, ReadOnly]
+            [SerializeField]
+            [AllowNesting, ReadOnly]
             public int width;
 
-            [SerializeField] [AllowNesting, ReadOnly]
+            [SerializeField]
+            [AllowNesting, ReadOnly]
             public int height;
 
             public int size
@@ -55,10 +57,10 @@ namespace Libraries.system
                 Array.Copy(array.array, 0, this.array, 0, array.size);
             }
 
-
+            bool ignoreSomeErrors = true;//todo 9 remove
             public void SetAt(int x, int y, T value)
             {
-                if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                if (!IsPointInRange(x, y) && ignoreSomeErrors)
                 {
                     return;
                 }
@@ -68,7 +70,7 @@ namespace Libraries.system
 
             public void Fill(int x, int y, int width, int height, T value)
             {
-                if (!IsBoxInRange(x, y, width, height) && ProcessorManager.instance.ignoreSomeErrors)
+                if (!IsBoxInRange(x, y, width, height) && ignoreSomeErrors)
                 {
                     return;
                 }
@@ -84,7 +86,7 @@ namespace Libraries.system
 
             public T GetAt(int x, int y)
             {
-                if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                if (!IsPointInRange(x, y) && ignoreSomeErrors)
                 {
                     return default(T);
                 }
@@ -95,8 +97,8 @@ namespace Libraries.system
             public void FillAll(T value)
             {
                 Fill(0, 0, width, height, value);
-              //  Func<int, int> f = null;
-               // Func<int,out int,out int> ff = null;
+                //  Func<int, int> f = null;
+                // Func<int,out int,out int> ff = null;
             }
 
             //todo 0 think about making another function that will use byte instead of byte[] cuz new byte[]{}; impossible, can't make something like null byte. Ok `out`? delegates? Make it return byte and bool isNull
@@ -121,9 +123,9 @@ namespace Libraries.system
 
                     for (int j = 0; j < output.Length; j++)
                     {
-                       
 
-                       // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
+
+                        // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
                         __bytes[__counter] = output[j];
                         __counter += 1;
                     }

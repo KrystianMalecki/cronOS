@@ -8,9 +8,9 @@ public class BaseLibrary
 {
     public bool sync = false;
 
-    protected Cronos.System system;
-    public void Init(Cronos.System system)
+    protected Hardware hardware;
+    public void Init(Hardware hardware)
     {
-        this.system = system;
+        this.hardware = hardware;
     }
 }
