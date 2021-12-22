@@ -12,13 +12,13 @@ public class InputManager : MonoBehaviour
 
     public StringBuilder inputBuffer = new StringBuilder();
 
-    private ConcurrentHashSet<Key> keys = new();
+    public ConcurrentHashSet<Key> currentlyPressedKeys = new();
 
     public void Update()
     {
-        AddKeys();
         if (hardware.currentlySelected && Input.anyKey)
         {
+            AddKeys();
             if (!string.IsNullOrEmpty(Input.inputString))
             {
                 lock (lockObj)
@@ -27,13 +27,25 @@ public class InputManager : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            lock (lockObj)
+            {
+                if (currentlyPressedKeys.Count != 0)
+                {
+                    currentlyPressedKeys.Clear();
+                }
+            }
+        }
     }
 
     public void AddKeys()
     {
-        keys.UnionWith(KeyboardInputHelper.GetCurrentKeysWrapped());
-
-        Debug.Log(keys.ToFormatedString());
+        lock (lockObj)
+        {
+            currentlyPressedKeys.Clear();
+            currentlyPressedKeys.UnionWith(KeyboardInputHelper.GetCurrentKeysWrapped());
+        }
     }
 
     public string GetInput()

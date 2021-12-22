@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.Linq;
 using libs = Libraries.system;
 using System.Text;
+using System.Threading.Tasks;
 
 public class ScreenManager : MonoBehaviour
 {
@@ -38,13 +39,39 @@ public class ScreenManager : MonoBehaviour
 
     public void SetScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
-        for (int y = 0; y < screenBuffer.GetHeight(); y++)
+        if (true) //fastest!
         {
-            for (int x = 0; x < screenBuffer.GetWidth(); x++)
+            Parallel.For(0, screenBuffer.GetHeight(),
+                y =>
+                {
+                    if (false)
+                    {
+                        Parallel.For(0, screenBuffer.GetWidth(),
+                            x =>
+                            {
+                                array.SetAt(x, screenBuffer.GetHeight() - y - 1, screenBuffer.GetUnityColorAt(x, y));
+                            });
+                    }
+                    else
+                    {
+                        for (int x = 0; x < screenBuffer.GetWidth(); x++)
+                        {
+                            array.SetAt(x, screenBuffer.GetHeight() - y - 1, screenBuffer.GetUnityColorAt(x, y));
+                        }
+                    }
+                });
+        }
+        else
+        {
+            for (int y = 0; y < screenBuffer.GetHeight(); y++)
             {
-                array.SetAt(x, screenBuffer.GetHeight() - y - 1, screenBuffer.GetUnityColorAt(x, y));
+                for (int x = 0; x < screenBuffer.GetWidth(); x++)
+                {
+                    array.SetAt(x, screenBuffer.GetHeight() - y - 1, screenBuffer.GetUnityColorAt(x, y));
+                }
             }
         }
+
 
         bufferTexture.SetPixels32(array.array);
         bufferTexture.Apply();

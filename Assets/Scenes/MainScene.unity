@@ -1396,8 +1396,8 @@ MonoBehaviour:
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 1000
-      WaitRefreshRate: 1
+      FPSCap: 60
+      WaitRefreshRate: 16
       TasksPerCPULoop: -1
       scriptsRunning: []
 --- !u!65 &624103659
@@ -18727,7 +18727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 0
+  runOnStart: 1
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "# include \"/System/libraries/fontLibrary.ll\"\r\n\r\n\r\n            const
     string help = \"Press mouse to move to mouse\\n\"\r\n                       +
