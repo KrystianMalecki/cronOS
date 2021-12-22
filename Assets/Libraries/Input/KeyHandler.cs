@@ -51,9 +51,21 @@ namespace Libraries.system
 
             private void AddKeys(ConcurrentHashSet<Key> pressedNow)
             {
-                cooldownKeys.IntersectWith(pressedNow);
-                pressedDownKeys.Clear();
-                pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys));
+                lock (locker)
+                {
+                    try
+                    {
+                        cooldownKeys.IntersectWith(pressedNow);
+                        pressedDownKeys.Clear();
+
+
+                        pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys));
+                    }
+                    catch (Exception)
+                    {
+                        // no error here :)
+                    }
+                }
             }
 
             private void AddKeysFromInput()

@@ -72,7 +72,6 @@ public class ScreenManager : MonoBehaviour
             }
         }
 
-
         bufferTexture.SetPixels32(array.array);
         bufferTexture.Apply();
     }

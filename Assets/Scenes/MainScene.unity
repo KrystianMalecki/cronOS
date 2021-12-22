@@ -1396,8 +1396,8 @@ MonoBehaviour:
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 60
-      WaitRefreshRate: 16
+      FPSCap: 1000
+      WaitRefreshRate: 1
       TasksPerCPULoop: -1
       scriptsRunning: []
 --- !u!65 &624103659
@@ -18680,6 +18680,7 @@ Transform:
   - {fileID: 1247786007}
   - {fileID: 1522824866}
   - {fileID: 1343489310}
+  - {fileID: 1776797797}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18727,7 +18728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 1
+  runOnStart: 0
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "# include \"/System/libraries/fontLibrary.ll\"\r\n\r\n\r\n            const
     string help = \"Press mouse to move to mouse\\n\"\r\n                       +
@@ -18768,7 +18769,7 @@ MonoBehaviour:
     if (ks.ReadKey(Key.Mouse0))\r\n                {\r\n                    mousePos
     = hardware.mouseHandler.GetScreenPosition();\r\n                }\r\n               
     ClampPositionToFrame();\r\n            }\r\nbyte counter=1;\n            while
-    (true)\r\n            {\r\n                buffer.FillAll(SystemColor.black);\r\n\rbuffer.TintAll(counter);\n               
+    (true)\r\n            {\r\n              //  buffer.FillAll(SystemColor.black);\r\n\r//buffer.TintAll(counter);\n               
     Draw();\r\n\n                ProcessInput();\r\n//counter++;\nif(counter>15){counter=0;}\r\n               
     hardware.runtime.Wait(1);\r\n\n            }"
 --- !u!1 &1446994155
@@ -19023,6 +19024,55 @@ MonoBehaviour:
     + posy * 16))}\";\r\n            }\r\n        }\r\n        while (true)\r\n       
     {\r\n            buffer.FillAll(SystemColor.black);\r\n\r\n            Draw();\r\n           
     ProcessInput();\r\n\r\n            Runtime.Wait(1);\r\n        }\r\n    }"
+--- !u!1 &1776797796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1776797797}
+  - component: {fileID: 1776797798}
+  m_Layer: 0
+  m_Name: advanced CT (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1776797797
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776797796}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1776797798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776797796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 11500000, guid: b723bc1b33b0e1642ae5d7f1b6245c1e, type: 3}
+  code: "# include \"/System/libraries/fontLibrary.ll\"\r\nSystemScreenBuffer buffer
+    = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n\nbuffer.FillAll(SystemColor.black);\nDrawStringAt(buffer,
+    0, 0, \"Hello, world!\");\nhardware.screen.SetScreenBuffer(buffer);\r"
 --- !u!1 &1905319701
 GameObject:
   m_ObjectHideFlags: 0
@@ -19264,7 +19314,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2108374107}
-  - component: {fileID: 2108374106}
   - component: {fileID: 2108374105}
   m_Layer: 0
   m_Name: shell CT
@@ -19288,25 +19337,25 @@ MonoBehaviour:
   runOnStart: 0
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "# include \"/System/libraries/programsLibrary.ll\"\r\n\r# include \"/System/libraries/fontLibrary.ll\"\npublic
-    class Shell\r\n    {\r\n        \r\n        File currentFile = FileSystem.GetFileByPath(\"/System\");\r\n\r\n       
-    SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n        KeyHandler
-    keyHandler = new KeyHandler();\r\n        KeySequence bufferKeySequence = null;\r\n\r\n\r\n\r\n\r\n       
-    string prefix = \"\";\r\n        string inputText = \"\";\r\n        string bufferInput
-    = \"\";\r\n        string consoleText = \"\";\r\n\r\n\r\n        int historyPointer
-    = 0;\r\n        List<string> history = new List<string>();\r\n\r\n\r\n       
-    void UpdatePrefix()\r\n        {\r\n            prefix = currentFile.GetFullPath()
-    + \">\";\r\n        }\r\n        int CountEncounters(string input, params char[]
-    toFind)\r\n        {\r\n            int counter = 0;\r\n            foreach (char
-    c in input)\r\n            {\r\n                foreach (char compareTo in toFind)\r\n               
-    {\r\n                    if (compareTo == c)\r\n                    {\r\n                       
-    counter++;\r\n                        break;\r\n                    }\r\n               
-    }\r\n\r\n            }\r\n            return counter;\r\n        }\r\n       
-    void Draw()\r\n        {\r\n            DrawStringAt(screenBuffer, 0, 0, consoleText);\r\n           
-    int consoleY = CountEncounters(consoleText, '\\n') + 1;\r\n            DrawStringAt(screenBuffer,
+    class Shell\r\n    {\r\n        \r\n        File currentFile = Hardware.hardware.fileSystem.GetFileByPath(\"/System\");\r\n\r\n       
+    SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n        KeySequence
+    bufferKeySequence = null;\r\n\r\n\r\n\r\n\r\n        string prefix = \"\";\r\n       
+    string inputText = \"\";\r\n        string bufferInput = \"\";\r\n        string
+    consoleText = \"\";\r\n\r\n\r\n        int historyPointer = 0;\r\n        List<string>
+    history = new List<string>();\r\n\r\n\r\n        void UpdatePrefix()\r\n       
+    {\r\n            prefix = currentFile.GetFullPath() + \">\";\r\n        }\r\n       
+    int CountEncounters(string input, params char[] toFind)\r\n        {\r\n           
+    int counter = 0;\r\n            foreach (char c in input)\r\n            {\r\n               
+    foreach (char compareTo in toFind)\r\n                {\r\n                   
+    if (compareTo == c)\r\n                    {\r\n                        counter++;\r\n                       
+    break;\r\n                    }\r\n                }\r\n\r\n            }\r\n           
+    return counter;\r\n        }\r\n        void Draw()\r\n        {\r\n           
+    DrawStringAt(screenBuffer, 0, 0, consoleText);\r\n            int consoleY =
+    CountEncounters(consoleText, '\\n') + 1;\r\n            DrawStringAt(screenBuffer,
     0, consoleY * 8, prefix);\r\n            DrawStringAt(screenBuffer, prefix.Length
-    * 8, consoleY * 8, inputText);\r\n            AsyncScreen.SetScreenBuffer(screenBuffer);\r\n       
+    * 8, consoleY * 8, inputText);\r\n            hardware.screen.SetScreenBuffer(screenBuffer);\r\n       
     }\r\n        void ProcessInput()\r\n        {\r\n            bufferKeySequence
-    = keyHandler.WaitForInput();\r\n            string input = KeyHandler.GetInputAsString();\r\n           
+    = hardwarekeyHandler.WaitForInput();\r\n            string input = hardware.keyHandler.GetInputAsString();\r\n           
     bool shift = bufferKeySequence.ReadAnyShift();\r\n            foreach (char c
     in input)\r\n            {\r\n                if (c == '\\b') // has backspace/delete
     been pressed?\r\n                {\r\n                    if (inputText.Length
@@ -19338,30 +19387,18 @@ MonoBehaviour:
     = history[historyPointer];\r\n                }\r\n            }\r\n        }\r\n       
     string PraseCommand(string input)\r\n        {\r\n            history.Add(input);\r\n           
     historyPointer++;\r\n            string[] parts = input.Split(' ');\r\n           
-    if (parts[0] == \"cd\")\r\n            {\r\n                File f = FileSystem.GetFileByPath(parts[1],
+    if (parts[0] == \"cd\")\r\n            {\r\n                File f = hardware.fileSystem.GetFileByPath(parts[1],
     currentFile);\r\n                if (f == null)\r\n                {\r\n                   
     return $\"Couldn't find file {parts[1]}!\";\r\n                }\r\n               
     currentFile = f;\r\n                UpdatePrefix();\r\n                return
     \"\";\r\n            }\r\n            else\r\n            {\r\n               
     return FindAndExecuteCommand(input + \" -wd \" + currentFile.GetFullPath());\r\n           
     }\r\n            return $\"Couldn't find command `{parts[0]}`.\";\r\n       
-    }\r\n        public void Run()\r\n        {\r\n            Screen.InitScreenBuffer(screenBuffer);\r\n           
+    }\r\n        public void Run()\r\n        {\r\n            hardware.screen.InitScreenBuffer(screenBuffer);\r\n           
     UpdatePrefix();\r\n            while (true)\r\n            {\r\n               
     screenBuffer.FillAll(SystemColor.black);\r\n                Draw();\r\n               
-    ProcessInput();\r\n                Runtime.Wait();\r\n            }\r\n       
-    }\r\n    }\nGlobals.shell = new Shell();\nGlobals.shell.Run();"
---- !u!114 &2108374106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2108374104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fa5cec9aef6ab24c8cfb13077c5237c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    ProcessInput();\r\n                hardware.runtime.Wait();\r\n            }\r\n       
+    }\r\n    }\nhardware.shell = new Shell();\nhardware.shell.Run();"
 --- !u!4 &2108374107
 Transform:
   m_ObjectHideFlags: 0

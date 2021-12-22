@@ -1,9 +1,9 @@
 
-//last thing:Fixed mouse,thinking how to implement Hardware class correctly, singleton purge,   Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
+//last thing:fixed exceptions when pressing keys on high fps, fixed lag, made screen rendering kinda parallel,   Fixed mouse,thinking how to implement Hardware class correctly, singleton purge,   Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
 //todo -0                                                           ^still idk
 //todo 0 add todos here
-
-
+//todo 1 implement IShell and fix shell
+//todo -0 add: Hardware hardware = hardware.hardware;
 
 
 
