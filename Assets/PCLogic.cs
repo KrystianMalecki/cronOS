@@ -7,25 +7,39 @@ using UnityEngine;
 public class PCLogic : MonoBehaviour
 {
     public Hardware hardware;
-    public bool isDefault = false;
     public static PCLogic defaultInstance;
-    [Button, ExecuteInEditMode]
-    public void SetDefault()
+
+    public void SetDefault(PCLogic logic)
     {
         if (defaultInstance != null)
         {
-            defaultInstance.isDefault = false;
+            defaultInstance.hardware.currentlySelected = false;
         }
-        defaultInstance = this;
-        defaultInstance.isDefault = true;
+        defaultInstance = logic;
+        defaultInstance.hardware.currentlySelected = true;
+    }
+    [Button]
+    void SetThisDefault()
+    {
+        SetDefault(this);
+
     }
     public void Awake()
     {
         hardware.Init();
 
-        if (isDefault)
+
+        if (hardware.currentlySelected)
         {
-            SetDefault();
+            SetThisDefault();
         }
+    }
+    private void OnMouseEnter()
+    {
+        SetThisDefault();
+    }
+    private void OnMouseExit()
+    {
+      //  SetDefault(null);
     }
 }

@@ -29,6 +29,8 @@ public class Hardware
 
     public Hardware hardware => this;
     [UnityEngine.SerializeField]
+    internal bool currentlySelected;
+    [UnityEngine.SerializeField]
 
     internal HardwareInternal hardwareInternal = new HardwareInternal();
 
@@ -38,6 +40,7 @@ public class Hardware
 
         hardwareInternal.hardware = this;
         hardwareInternal.stackExecutor.hardware = this;
+        hardwareInternal.inputManager.hardware = this;
         runtime.Init(hardware);
         fileSystem.Init(hardware);
         keyHandler.Init(hardware);

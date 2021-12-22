@@ -5,7 +5,6 @@
 
 
 
-//todo 1 make mouse and keyboard input only trigger when pc is selected 
 
 
 //todo 5 think and make better workflow for files.

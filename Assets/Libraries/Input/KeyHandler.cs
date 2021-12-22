@@ -12,24 +12,62 @@ namespace Libraries.system
         {
             public HashSet<Key> pressedDownKeys = new HashSet<Key>();
             public HashSet<Key> cooldownKeys = new HashSet<Key>();
+            public static MainThreadDelegate<bool>.MTDFunction waitForcheckKeysDelegate = null;
+            public static MainThreadDelegate<bool>.MTDFunction justCheckKeysDelegate = null;
 
-            private void CheckKeys()
+            public override void Init(Hardware hardware)
             {
+                base.Init(hardware);
+                waitForcheckKeysDelegate = WaitForCheckKeysChange;
+                justCheckKeysDelegate = JustCheckKeys;
+            }
+
+            private bool CheckKeys()
+            {
+                if (!hardware.currentlySelected)
+                {
+                    return false;
+                }
+
                 try
                 {
                     IEnumerable<Key> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
                     cooldownKeys.IntersectWith(pressedNow);
                     pressedDownKeys.Clear();
                     pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys));
+                    return true;
                 }
                 catch (Exception e)
                 {
                     Debug.Log(" error" + e);
+                    return false;
                 }
+
+                return true;
+            }
+
+            private void WaitForCheckKeysChange(ref bool done, ref bool result)
+            {
+                done = false;
+                if (CheckKeys())
+                {
+                    done = true;
+                }
+            }
+
+            private void JustCheckKeys(ref bool done, ref bool result)
+            {
+                CheckKeys();
+                done = true;
             }
 
             public bool GetKeyDown(Key key)
             {
+                if (!hardware.currentlySelected)
+                {
+                    return false;
+                }
+
                 //test.instance.count5++;
                 /*  if (pressedDownKeys.Contains(key))
                   {
@@ -41,12 +79,12 @@ namespace Libraries.system
                   }
 
                   return false;*/
-                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
+                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(justCheckKeysDelegate, true);
                 if (pressedDownKeys.Contains(key))
                 {
                     pressedDownKeys.Remove(key);
                     cooldownKeys.Add(key);
-                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
+                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(justCheckKeysDelegate, true);
                     return true;
                 }
 
@@ -55,25 +93,27 @@ namespace Libraries.system
 
             public KeySequence WaitForInput()
             {
-                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
-                while (pressedDownKeys.Count <= 0)
-                {
-                    hardware.runtime.Wait();
-                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
-                }
+                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(waitForcheckKeysDelegate, true);
+                /* while (pressedDownKeys.Count <= 0)
+                 {
+                     hardware.runtime.Wait();
+                     hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
+                 }*/
 
                 return new KeySequence(pressedDownKeys);
             }
 
             public KeySequence WaitForInputDown()
             {
-                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
+                hardware.hardwareInternal.stackExecutor.AddDelegateToStack(waitForcheckKeysDelegate, true);
 
-                while (pressedDownKeys.Count <= 0)
-                {
-                    //  Runtime.Wait();//todo -1 wth how to do this?
-                    hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
-                }
+                /* while (pressedDownKeys.Count <= 0)
+                 {
+                     //  Runtime.Wait();//todo -1 wth how to do this?
+                     hardware.runtime.Wait();
+ 
+                     hardware.hardwareInternal.stackExecutor.AddDelegateToStack(CheckKeys, true);
+                 }*/
 
                 cooldownKeys.UnionWith(pressedDownKeys);
                 return new KeySequence(pressedDownKeys);

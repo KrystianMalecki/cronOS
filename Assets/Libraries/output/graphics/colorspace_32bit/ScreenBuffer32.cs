@@ -83,6 +83,14 @@ namespace Libraries.system.output.graphics
                     i = i + 1;
                 }
             }
+            public void DrawLine(Vector2Int start, Vector2Int end, Color32 color)
+            {
+                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
+                {
+                    return;
+                }
+                DrawLine(start.x, start.y, end.x, end.y, color);
+            }
         }
     }
 }

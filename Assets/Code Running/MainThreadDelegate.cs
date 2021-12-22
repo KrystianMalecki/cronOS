@@ -30,9 +30,9 @@ public class MainThreadDelegate<T> : ITryToRun
     {
         Debug.Log("I'm a: " + function.Method.GetMethodBody().GetILAsByteArray().ToFormatedString());
     }
-
     public bool TryToRun()
     {
+       
         if (done)
         {
             Debug.Log("it is now done");
@@ -40,8 +40,13 @@ public class MainThreadDelegate<T> : ITryToRun
             return done;
         }
         bool buffer = true;
+
+      
         function.Invoke(ref buffer, ref returnValue);
+      
+
         done = buffer;
+    
         return done;
     }
 

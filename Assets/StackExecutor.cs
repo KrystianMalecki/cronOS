@@ -9,48 +9,68 @@ public class StackExecutor : MonoBehaviour
 {
     [NonSerialized]
     public Hardware hardware;
-    public void Update()
+    public object locker = new object();
+    public void Start()
     {
-        ExecuteFromQueue();
+        UpdateMaxTask();
+        StartCoroutine(ExecuteFromQueue());
     }
+    /*  public void Update()
+      {
+          ExecuteFromQueue();
+      }*/
     private ITryToRun _delegateBuffer = null;
     private int _maxTasksBuffer;
     [SerializeField]
     private ConcurrentQueue<ITryToRun> actionQueue = new ConcurrentQueue<ITryToRun>();
-    private void ExecuteFromQueue()
+    public void UpdateMaxTask()
     {
-        _maxTasksBuffer = hardware.hardwareInternal.TasksPerCPULoop == -1 ? actionQueue.Count : hardware.hardwareInternal.TasksPerCPULoop;
-        for (int i = 0; (i < _maxTasksBuffer); i++)
+        _maxTasksBuffer = hardware.hardwareInternal.TasksPerCPULoop == -1 ? 100 : hardware.hardwareInternal.TasksPerCPULoop;
+       // _maxTasksBuffer = 1;
+    }
+    private IEnumerator ExecuteFromQueue()
+    {
+        while (true)
         {
-            if (actionQueue.Count > 0)
+            for (int i = 0; (i < _maxTasksBuffer); i++)
             {
-                try
+                if (actionQueue.Count > 0)
                 {
-                    if (actionQueue.TryDequeue(out _delegateBuffer))
+                    /*try
+                    {*/
+                    if (true)
                     {
+                        if (actionQueue.TryDequeue(out _delegateBuffer))
+                        {
 
-                        if (_delegateBuffer != null && !_delegateBuffer.TryToRun())
-                        {
-                            actionQueue.Enqueue(_delegateBuffer);
+                            if (_delegateBuffer != null && !_delegateBuffer.TryToRun())
+                            {
+                                actionQueue.Enqueue(_delegateBuffer);
+                            }
+                            else
+                            {
+                                //  Debug.Log("killing null:");
+                                //_delegateBuffer.Speak();
+                            }
                         }
-                        else
-                        {
-                            //  Debug.Log("killing null:");
-                            //_delegateBuffer.Speak();
-                        }
+                        //_delegateBuffer = null;
                     }
-                    _delegateBuffer = null;
-                }
-                catch (Exception e)
-                {
-                    Debug.Log($"{e.StackTrace}");
 
+                    /* }
+                     catch (Exception e)
+                     {
+                         Debug.Log(e);
+
+                     }*/
+                    yield return null;
+                }
+                else
+                {
+                    break;
                 }
             }
-            else
-            {
-                break;
-            }
+
+            yield return null;
         }
     }
     [Button("Display stack")]
