@@ -6,8 +6,8 @@ namespace Libraries.system.file_system
 {
     public class FileSystem : BaseLibrary
     {
-
         public const char catalogSymbol = '/';
+
         public File GetFileByPath(string path, File parent = null)
         {
             return hardware.hardwareInternal.mainDrive.GetFileByPath(path, parent);

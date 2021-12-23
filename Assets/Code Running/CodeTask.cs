@@ -23,12 +23,17 @@ public class CodeTask
 
     public Thread thread;
     public CodeObject codeObject;
-    private static FieldInfo fieldInfoOfStackTrace = typeof(Exception).GetField("captured_traces", BindingFlags.NonPublic | BindingFlags.Instance);
-    public Hardware hardware;
+
+    private static FieldInfo fieldInfoOfStackTrace =
+        typeof(Exception).GetField("captured_traces", BindingFlags.NonPublic | BindingFlags.Instance);
+
+    [SerializeReference] public Hardware hardware;
+
     public CodeTask(Hardware system)
     {
         this.hardware = system;
     }
+
     public void RunCode(CodeObject codeObject)
     {
         this.codeObject = codeObject;
@@ -37,25 +42,24 @@ public class CodeTask
         thread.IsBackground = true;
 
 
-
-
         thread.Start();
     }
+
     private async void RunAsync()
     {
         try
         {
+            /*var script = CSharpScript.Create(codeObject.code,
+                ScriptOptions.Default.WithReferences(Assembly.GetExecutingAssembly()));*/
 
 
             await CSharpScript.EvaluateAsync(codeObject.code
-                 , HardwareInternal.scriptOptionsBuffer
-                .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
-                .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
-                .WithFilePath("debugpath/")
+                , HardwareInternal.scriptOptionsBuffer
+                    .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
+                    .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
+                    .WithFilePath("debugpath/")
                 , hardware, hardware.GetType()
-                );
-
-
+            );
         }
         catch (ThreadAbortException tae)
         {
@@ -63,11 +67,8 @@ public class CodeTask
         }
         catch (Exception e)
         {
-
             try
             {
-
-
                 string line = "";
                 string file = "";
                 int linePos = 0;
@@ -86,33 +87,39 @@ public class CodeTask
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.StackFrame frame = ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
+                    System.Diagnostics.StackFrame frame =
+                        ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
                     linePos = frame.GetFileLineNumber();
                     columnPos = frame.GetFileColumnNumber();
                     file = frame.GetFileName();
                     reason = e.Message;
                     Debug.Log("CheatedException");
                 }
+
                 try
                 {
                     string[] lines = codeObject.code.SplitNewLine();
 
-                    line = lines[linePos - 1] + "\n" + lines[linePos] + "\n" + lines[linePos + 1] + "\n" + lines[linePos + 2];
+                    line = lines[linePos - 1] + "\n" + lines[linePos] + "\n" + lines[linePos + 1] + "\n" +
+                           lines[linePos + 2];
                 }
                 catch (Exception ex)
-                { }
-                Debug.Log($"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");
+                {
+                }
 
+                Debug.Log(
+                    $"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");
             }
             catch (Exception ee)
             {
                 Debug.LogException(ee);
             }
         }
+
         Debug.Log("end");
         Destroy();
-
     }
+
     (int line, int column) GetLineAndColumnFromExceptionMessage(string message)
     {
         int line = 0;
@@ -122,19 +129,20 @@ public class CodeTask
 
         line = int.Parse(
             message.Substring(message.IndexOf("(") + 1, commaLocation - message.IndexOf("(") - 1)
-            );
+        );
         column = int.Parse(
             message.Substring(commaLocation + 1, message.IndexOf(")") - commaLocation - 1)
-            );
+        );
 
 
         return (line, column);
     }
+
     ~CodeTask()
     {
-
         Destroy();
     }
+
     public void Destroy()
     {
         Debug.LogWarning("Destroying CodeTask");
@@ -142,15 +150,12 @@ public class CodeTask
         if (thread != null)
         {
             thread.Abort();
-            thread.Join();//todo-maybe fix
+            thread.Join(); //todo-maybe fix
             thread = null;
-
         }
         else
         {
             Debug.LogWarning("thread was null");
-
         }
     }
-
 }

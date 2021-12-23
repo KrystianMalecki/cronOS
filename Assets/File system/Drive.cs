@@ -8,7 +8,6 @@ using System;
 using System.Collections.Concurrent;
 
 [CreateAssetMenu(fileName = "Drive", menuName = "ScriptableObjects/Drive")]
-
 [Serializable]
 public class Drive : ScriptableObject
 {
@@ -22,15 +21,13 @@ public class Drive : ScriptableObject
         }
     }*/
 
-    [NonSerialized]
-    public bool cached = false;
-    [NonSerialized]
-    public File root = null;
+    [NonSerialized] public bool cached = false;
+
+    [NonSerialized] public File root = null;
+
     // [Header("DO NOT USE +")]
-    [SerializeField]
-    public ThreadSafeList<File> files = new ThreadSafeList<File>();
-    [SerializeField]
-    public ThreadSafeList<int> freeSpaces = new ThreadSafeList<int>();
+    [SerializeField] public ThreadSafeList<File> files = new ThreadSafeList<File>();
+    [SerializeField] public ThreadSafeList<int> freeSpaces = new ThreadSafeList<int>();
 
     [NaughtyAttributes.Button]
     public void OpenEditor()
@@ -49,6 +46,7 @@ public class Drive : ScriptableObject
         //  root ??= GetFileByPath("");
         return root;
     }
+
     [Button]
     public void GenerateCacheData()
     {
@@ -61,6 +59,7 @@ public class Drive : ScriptableObject
                 files[i].children.Clear();
             }
         }
+
         for (int i = 0; i < files.Count; i++)
         {
             File file = files[i];
@@ -70,13 +69,16 @@ public class Drive : ScriptableObject
             {
                 Debug.Log("FUCK UNITY");
             }
+
             File parent = GetFileByID(file.ParentID);
             file.Parent = parent;
             parent?.AddChild(file);
         }
+
         root ??= GetFileByID(1);
         root ??= GetFileByPath("");
     }
+
     public File GetFileByID(int id)
     {
         try
@@ -85,6 +87,7 @@ public class Drive : ScriptableObject
             {
                 return null;
             }
+
             if (id < 0)
             {
                 return null;
@@ -93,6 +96,7 @@ public class Drive : ScriptableObject
             {
                 return null;
             }
+
             return files[id];
         }
         catch (Exception e)
@@ -139,12 +143,14 @@ public class Drive : ScriptableObject
 
         return RemoveFile(file);
     }
+
     public bool RemoveFile(File file)
     {
         //todo-future add errors
         file.Parent.RemoveChild(file);
         return true;
     }
+
     /**
      <summary> 
     This doesn't add <see cref="File"/> of type folder to <see cref="DriveSO"/>
@@ -159,6 +165,7 @@ public class Drive : ScriptableObject
 
         return newFile;
     }
+
     /**
      <summary> 
     This doesn't add <see cref="File"/> to <see cref="DriveSO"/>
@@ -175,6 +182,7 @@ public class Drive : ScriptableObject
 
         return newFile;
     }
+
     public int GetFreeID()
     {
         if (freeSpaces.Count > 0)
@@ -184,12 +192,11 @@ public class Drive : ScriptableObject
             Debug.Log(freeSpaces.ToFormatedString());
             freeSpaces.RemoveAt(0);
             return result;
-
         }
 
         return files.Count;
-
     }
+
     private int SetAt(int pos, File file)
     {
         if (files.Count <= pos)
@@ -202,14 +209,17 @@ public class Drive : ScriptableObject
         {
             files[pos] = file;
         }
+
         return pos;
     }
+
     public void AddFileToDrive(File file)
     {
         file.SetDrive(this);
         file.FileID = GetFreeID();
         SetAt(file.FileID, file);
     }
+
     public void RemoveFileFromDrive(File file)
     {
         //  files.RemoveAt(file.FileID); //why? cuz now you can still retrive it
@@ -221,7 +231,7 @@ public class Drive : ScriptableObject
                 RemoveFileFromDrive(file.children[i]);
             }
         }
-        Debug.Log(freeSpaces.ToFormatedString());
 
+        Debug.Log(freeSpaces.ToFormatedString());
     }
 }

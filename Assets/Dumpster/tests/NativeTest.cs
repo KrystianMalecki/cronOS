@@ -1,13 +1,14 @@
-using BigGustave;
+/*using BigGustave;
 
 using NaughtyAttributes;
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic;*/
 
+using Libraries.system.output;
 using UnityEngine;
 using sio = System.IO;
-using System.Text;
+/*using System.Text;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using System.Reflection;
@@ -17,23 +18,36 @@ using System.Linq;
 using helper;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.mask_texture;
-using Cinemachine.Utility;
+using Cinemachine.Utility;*/
 
+using static HardwareBox;
+public class HardwareBox
+{
+    public static Hardware hardware;
+}
+//HardwareBox.hardware = hardware;
+public class C{
+    public void add(){
+        hardware.number++;
+        say();
+    }
+    public void say(){
+
+        Console.Debug(hardware.number);
+    }
+    public void run(){
+        while(true){
+            add();
+            hardware.runtime.Wait(100);
+        }
+    }
+}
+/*C c = new C();
+c.run();*/
 public class NativeTest : MonoBehaviour
 {
-
-
-
     public void Start()
     {
-
-      
-
-
-
-
-
-
 
 
         /*  Debug.Log(ProcessorManager.mainEncoding.GetType().Assembly.Location);
@@ -68,11 +82,10 @@ public class NativeTest : MonoBehaviour
 
 
         // FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");
-
     }
     /*  public static string GetPath(string rawPath, File workingDirectory)
       {
 
       }*/
-
+    
 }

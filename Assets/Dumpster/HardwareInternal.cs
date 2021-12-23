@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using Libraries.system.file_system;
 using System.Text;
@@ -12,34 +11,30 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Libraries.system;
 using NaughtyAttributes;
+
 [Serializable]
 public class HardwareInternal
 {
+    [NonSerialized] internal Hardware hardware;
 
 
-    [NonSerialized]
-    internal Hardware hardware;
+    [SerializeField] internal Drive mainDrive;
+    [SerializeField] internal InputManager inputManager;
+    [SerializeField] internal ScreenManager screenManager;
+    [SerializeField] internal StackExecutor stackExecutor;
 
-
-
-    [SerializeField]
-    internal Drive mainDrive;
-    [SerializeField]
-    internal InputManager inputManager;
-    [SerializeField]
-    internal ScreenManager screenManager;
-    [SerializeField]
-    internal StackExecutor stackExecutor;
     #region Processor
+
     //  [SerializeField]
     [AllowNesting, OnValueChanged("UpdateWRR")]
     public float FPSCap = 100;
+
     //  [SerializeField]
     [AllowNesting, OnValueChanged("UpdateFPSC")]
     public int WaitRefreshRate = 100;
-    [SerializeField]
-    internal int TasksPerCPULoop = -1;
-    internal bool ignoreSomeErrors = true;//todo 86 remove
+
+    [SerializeField] internal int TasksPerCPULoop = -1;
+    internal bool ignoreSomeErrors = true; //todo 86 remove
     internal static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
 
     void UpdateWRR()
@@ -47,68 +42,74 @@ public class HardwareInternal
         WaitRefreshRate = (int)((1f / FPSCap) * 1000f);
         Debug.Log($"WaitRefreshRate:{WaitRefreshRate} FPSCap:{FPSCap}");
     }
+
     void UpdateFPSC()
     {
         FPSCap = ((1f / WaitRefreshRate) * 1000f);
         Debug.Log($"WaitRefreshRate:{WaitRefreshRate} FPSCap:{FPSCap}");
-
     }
+
     #endregion
+
     #region Script running management
+
     #region static data
+
     private const string LINE_NUMBER_PREPROCESSOR_CODE = "__LINE__";
 
     private const string FILE_NUMBER_PREPROCESSOR_CODE = "__FILE__";
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
+
     public static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default.AddReferences(
-             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly/*,
+            typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly /*,
         typeof(System.Text.RegularExpressions.Regex).GetTypeInfo().Assembly,
              typeof(helper.GlobalHelper).GetTypeInfo().Assembly,
              typeof(System.Collections.Generic.Dictionary<int,int>).GetTypeInfo().Assembly
             //,typeof(System.Exception).GetTypeInfo().Assembly
 */
-            ).AddImports(
-          // "UnityEngine", "System"
-          ).WithEmitDebugInformation(true)
-            .WithFileEncoding(HardwareInternal.mainEncoding);
+        ).AddImports(
+            // "UnityEngine", "System"
+        ).WithEmitDebugInformation(true)
+        .WithFileEncoding(HardwareInternal.mainEncoding);
 
-    public static readonly List<Type> allLibraries = new List<Type>() {
-            typeof(Libraries.system.output.Console),
-            typeof(Libraries.system.Runtime),
-            typeof(Libraries.system.output.graphics.Screen),
-            typeof(Libraries.system.output.graphics.texture32.Texture32),
-            typeof(Libraries.system.output.graphics.system_texture.SystemTexture),
-            typeof(Libraries.system.output.graphics.color32.Color32),
-            typeof(Libraries.system.output.graphics.system_colorspace.ColorConstants),
-            typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),
-            typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
-            typeof(Libraries.system.file_system.File),
-            typeof(Libraries.system.shell.IShellProgram),
-            typeof(Libraries.system.mathematics.Vector2),
-            typeof(Libraries.system.input.KeyHandler),
-            typeof(Libraries.system.input.MouseHandler),
-            typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
-
-
-            typeof(System.Text.RegularExpressions.Regex),
-            typeof(helper.GlobalHelper),
-            typeof(System.Collections.Generic.Dictionary<int,int>),
+    public static readonly List<Type> allLibraries = new List<Type>()
+    {
+        typeof(Libraries.system.output.Console),
+        typeof(Libraries.system.Runtime),
+        typeof(Libraries.system.output.graphics.Screen),
+        typeof(Libraries.system.output.graphics.texture32.Texture32),
+        typeof(Libraries.system.output.graphics.system_texture.SystemTexture),
+        typeof(Libraries.system.output.graphics.color32.Color32),
+        typeof(Libraries.system.output.graphics.system_colorspace.ColorConstants),
+        typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),
+        typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
+        typeof(Libraries.system.file_system.File),
+        typeof(Libraries.system.shell.IShellProgram),
+        typeof(Libraries.system.mathematics.Vector2),
+        typeof(Libraries.system.input.KeyHandler),
+        typeof(Libraries.system.input.MouseHandler),
+        typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
 
 
-            typeof(System.Linq.Enumerable),
-            typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)
+        typeof(System.Text.RegularExpressions.Regex),
+        typeof(helper.GlobalHelper),
+        typeof(System.Collections.Generic.Dictionary<int, int>),
 
+
+        typeof(System.Linq.Enumerable),
+        typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)
     };
+
     public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => x.ToLibraryData());
+
     #endregion
 
 
-    [SerializeField]
-
-    internal List<CodeTask> scriptsRunning = new List<CodeTask>();
+    [SerializeField] internal List<CodeTask> scriptsRunning = new List<CodeTask>();
 
     #region code Parsing
+
     static Regex includeRegex = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*");
     static Regex includeRegex2 = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*;*");
 
@@ -116,6 +117,7 @@ public class HardwareInternal
 
     static Regex undefineRegex = new Regex("^\\s*#\\s*undefine\\s*.*\\s*");
     static Regex undefineRegexOld = new Regex("^\\s*#\\s*undefine\\s*.*\\s*.*;*");
+
     internal void RunCode(CodeObject codeObject)
     {
         Debug.Log("Making new codeTask");
@@ -124,9 +126,8 @@ public class HardwareInternal
         CodeParser(ref codeObject);
         codeTask.RunCode(codeObject);
         Debug.Log("After running code");
-
-
     }
+
     internal void RemoveCodeTask(CodeTask codeTask)
     {
         scriptsRunning.Remove(codeTask);
@@ -134,7 +135,6 @@ public class HardwareInternal
 
     internal void CheackThreads()
     {
-
         foreach (CodeTask ct in scriptsRunning)
         {
             Debug.Log("thread null?" + (ct.thread == null ? "yes" : "no") + ct.thread);
@@ -155,17 +155,26 @@ public class HardwareInternal
             {
                 scriptsRunning.Remove(ct);
             }
+
             i--;
         }
 
         //  scriptOptionsBuffer = null;
 
         GC.Collect();
-
-
     }
+
     internal void CodeParser(ref CodeObject codeObject)
     {
+        /* codeObject.code = @"using static HardwareBox;
+ public class HardwareBox
+ {
+     public static Hardware hardware;
+ }
+ HardwareBox.hardware = ownPointer;
+ " + codeObject.code;*/
+        codeObject.code = @"static Runtime runtime = null;runtime=ownPointer.runtime;
+" + codeObject.code;
         List<string> lines = new List<string>(codeObject.code.SplitNewLine());
 
         List<string> importedLibraries = new List<string>();
@@ -175,13 +184,11 @@ public class HardwareInternal
         bool checkIncludes = true;
         bool checkRedefines = true;
         bool checkUndefines = true;
-        Debug.Log(lines.ToFormatedString("\n"));
         for (int index = 0; index < lines.Count; index++)
         {
             string buffer = lines[index];
             if (currentRedefines.Count > 0)
             {
-
                 List<string> parts = buffer.SplitSpaceQArgs();
                 foreach (var item in currentRedefines)
                 {
@@ -190,28 +197,23 @@ public class HardwareInternal
                     //todo-z no replace args with values. Impossible #redefine "lol($x,$y)" "Console.Debug($x+"--"+$y)";
                     for (int i = 0; i < parts.Count; i++)
                     {
-
-
-
                         string part = parts[i];
                         if (part.Contains(item.Key))
                         {
-
                         }
+
                         if (part == item.Key)
                         {
-
                             string replacor = item.Value;
 
-                            parts[i] = part.Replace(item.Key, replacor).Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString()).Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
-
+                            parts[i] = part.Replace(item.Key, replacor)
+                                .Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString())
+                                .Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
                         }
-
                     }
-
                 }
-                buffer = string.Join("", parts);
 
+                buffer = string.Join("", parts);
             }
 
 
@@ -233,13 +235,14 @@ public class HardwareInternal
             {
                 if (redefineRegex.IsMatch(buffer))
                 {
-
                     positionToExpectNextInlcude++;
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
-                    int definitionIndex = lineParts.FindIndex(x => x != "#" && !string.IsNullOrWhiteSpace(x) && x != "redefine");
+                    int definitionIndex =
+                        lineParts.FindIndex(x => x != "#" && !string.IsNullOrWhiteSpace(x) && x != "redefine");
                     int definitionEndIndex = lineParts.FindIndex(definitionIndex, x => string.IsNullOrWhiteSpace(x));
 
-                    string definition = string.Join("", lineParts.GetRange(definitionIndex, definitionEndIndex - definitionIndex));
+                    string definition = string.Join("",
+                        lineParts.GetRange(definitionIndex, definitionEndIndex - definitionIndex));
 
                     if (ONLY_UPPERCASE_REDEFINE)
                     {
@@ -249,17 +252,21 @@ public class HardwareInternal
                             continue;
                         }
                     }
-                    string definitionReplacor = string.Join(" ", lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex - 1).ToArray()).TrimStart();
+
+                    string definitionReplacor = string.Join(" ",
+                            lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex - 1).ToArray())
+                        .TrimStart();
 
                     if (definition == null || definitionReplacor == null)
                     {
                         continue;
                     }
+
                     buffer = "//" + buffer.Substring(1);
                     currentRedefines.Add(definition, definitionReplacor);
-
                 }
             }
+
             if (checkUndefines)
             {
                 if (undefineRegex.IsMatch(buffer))
@@ -267,21 +274,23 @@ public class HardwareInternal
                     positionToExpectNextInlcude++;
 
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
-                    int definitionIndex = lineParts.FindIndex(x => x != "#" || string.IsNullOrEmpty(x) || x != "undefine");
+                    int definitionIndex =
+                        lineParts.FindIndex(x => x != "#" || string.IsNullOrEmpty(x) || x != "undefine");
                     string definition = lineParts[definitionIndex];
                     currentRedefines.Remove(definition);
                 }
             }
+
             if (checkIncludes)
             {
                 if (includeRegex.IsMatch(buffer))
                 {
-
                     string between = buffer.GetRangeBetweenFirstLast("\"");
                     if (string.IsNullOrEmpty(between))
                     {
                         between = buffer.GetRangeBetweenFirstLast("\'");
                     }
+
                     if (!importedLibraries.Contains(between))
                     {
                         importedLibraries.Add(between);
@@ -296,6 +305,7 @@ public class HardwareInternal
                             lines[index] = $"//There would be imported \"{between}\" but it couldn't be found!";
                             continue;
                         }
+
                         List<string> importedLines = new List<string>(f.data.ToEncodedString().SplitNewLine());
                         buffer = "//imported: " + between;
 
@@ -304,9 +314,8 @@ public class HardwareInternal
                         {
                             string importedLine = importedLines[iL];
                             lines.Insert(index + iL + 1, importedLine);
-
-
                         }
+
                         positionToExpectNextInlcude += importedLines.Count + 1;
 
                         index--;
@@ -318,17 +327,16 @@ public class HardwareInternal
 
                         //todo-future add compilation error
                     }
-
-
                 }
             }
+
             lines[index] = buffer;
-
-
         }
-        Debug.Log(lines.ToFormatedString("\n"));
+
         codeObject.code = string.Join("\n", lines);
     }
+
     #endregion
+
     #endregion
 }
