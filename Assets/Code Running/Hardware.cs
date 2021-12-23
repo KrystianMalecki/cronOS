@@ -44,3 +44,4 @@ public class Hardware
         screen.Init(ownPointer);
     }
 }
+

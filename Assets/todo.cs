@@ -1,16 +1,12 @@
-
 //last thing:fixed exceptions when pressing keys on high fps, fixed lag, made screen rendering kinda parallel,   Fixed mouse,thinking how to implement Hardware class correctly, singleton purge,   Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
 //todo -0                                                           ^still idk
 //todo 0 add todos here
 //todo 1 implement IShell and fix shell
-//todo -0 add: Hardware hardware = hardware.hardware;
-
+//todo 0 readd for the 3rd time fixes from NewBehaviourScript
 
 
 //todo 5 think and make better workflow for files.
 //todo 6 make plugin for #?
-
-
 
 
 //todo 8 think about adding static data to some libraries to optimize data usage, link 1
@@ -21,15 +17,7 @@
 //todo 99 add lolcat command and CT
 
 
-
-
-
-
 //future
-
-
-
-
 
 
 //todo-future rethink graphical interface. Maybe it should be more C like?

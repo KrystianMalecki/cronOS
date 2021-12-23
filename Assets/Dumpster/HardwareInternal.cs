@@ -110,13 +110,14 @@ public class HardwareInternal
 
     #region code Parsing
 
-    static Regex includeRegex = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*");
-    static Regex includeRegex2 = new Regex("^\\s*#\\s*include\\s*\".*\"\\s*;*");
+    static Regex includeRegex = new Regex("^\\s*?#\\s*?include\\s*?\".*\"\\s*?");
+    static Regex includeRegex2 = new Regex("^\\s*?#\\s*?include\\s*?\".*\"\\s*;*");
 
-    static Regex redefineRegex = new Regex("^\\s*#\\s*redefine\\s*.*\\s*.*");
+    static Regex redefineRegex = new Regex("^\\s*?#\\s*?redefine\\s*?.*\\s*.*");
 
-    static Regex undefineRegex = new Regex("^\\s*#\\s*undefine\\s*.*\\s*");
-    static Regex undefineRegexOld = new Regex("^\\s*#\\s*undefine\\s*.*\\s*.*;*");
+    static Regex undefineRegex = new Regex("^\\s*?#\\s*?undefine\\s*?.*\\s*");
+    static Regex undefineRegexOld = new Regex("^\\s*?#\\s*?undefine\\s*?.*\\s*.*;*");
+    static Regex usingRegex = new Regex("^\\s*?#\\s*?using\\s*?.*");
 
     internal void RunCode(CodeObject codeObject)
     {
@@ -174,6 +175,10 @@ public class HardwareInternal
  HardwareBox.hardware = ownPointer;
  " + codeObject.code;*/
         codeObject.code = @"static Runtime runtime = null;runtime=ownPointer.runtime;
+static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
+static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
+static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
+static Screen screen = null;screen=ownPointer.screen;
 " + codeObject.code;
         List<string> lines = new List<string>(codeObject.code.SplitNewLine());
 
@@ -228,6 +233,15 @@ public class HardwareInternal
                 {
                     //  Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
                     //  checkIncludes = false;
+                }
+            }
+
+            if (true)
+            {
+                if (usingRegex.IsMatch(buffer))
+                {
+                    lines.Insert(0, buffer.Replace("#", ""));
+                    buffer = "";
                 }
             }
 

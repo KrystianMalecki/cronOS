@@ -1,5 +1,6 @@
 //#include "/System/libraries/tools.ll"
 
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Libraries.system;
 using Libraries.system.file_system;
@@ -7,7 +8,11 @@ using Libraries.system.output;
 using Libraries.system.output.graphics.mask_texture;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.system_screen_buffer;
+using Libraries.system.shell;
 
+#if false
+//#include "/Syste/libraries/tools.ll"
+//#using static FontLibrary;
 public class FontLibrary
 {
     static MaskTexture fontTexture = null;
@@ -19,12 +24,11 @@ public class FontLibrary
 
     static Regex nonParseTagRegex = new Regex(@"^(\s*?\/?((raw)|(no-parsing)|(np)))");
 
-    public void Init()
+    public static void Init()
     {
-        File fontFile = hardware.fileSystem.GetFileByPath("/System/defaultFontMask");
+        File fontFile = fileSystem.GetFileByPath("/System/defaultFontMask");
         fontTexture = MaskTexture.FromData(fontFile.data);
     }
-
 
     static void DrawColoredCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character,
         SystemColor foreground, SystemColor background)
@@ -162,3 +166,105 @@ public class FontLibrary
         return $"<color={Runtime.ByteToHex(color, false)}>";
     }
 }
+
+FontLibrary.Init();
+#endif
+
+#if false
+    public class ls : ExtendedShellProgram
+    {
+        public override string GetName()
+        {
+            return "ls";
+        }
+        private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
+        new AcceptedArgument("-wd", "working directory", true),
+        new AcceptedArgument("-p", "path", true),
+        new AcceptedArgument("-r", "recursive", false),
+        new AcceptedArgument("-jn", "just names", false),
+        new AcceptedArgument("-sz", "show size", false),
+        new AcceptedArgument("-fp", "full paths instead of names", false),
+    };
+
+        protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
+
+        protected override string InternalRun(Dictionary<string, string> argPairs)
+        {
+            string wdPath = "/";
+            if (argPairs.TryGetValue("-wd", out wdPath))
+            {
+            }
+            File workingDirectory = fileSystem.GetFileByPath(wdPath);
+            string path = "/";
+            if (argPairs.TryGetValue("-p", out path))
+            {
+            }
+            File f = fileSystem.GetFileByPath(path, workingDirectory);
+            Console.Debug($"{f} {path}");
+            return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"), argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
+        }
+        string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames, bool fullPaths)
+        {
+            string str = string.Format(
+                 onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
+                  , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
+            if (recursive)
+            {
+                if (file.children != null || true)
+                {
+                    for (int i = 0; i < file.children?.Count; i++)
+                    {
+                        bool last = i + 1 == file.children.Count;
+                        File child = file.children[i];
+                        str +=
+ GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
+
+                    }
+                }
+            }
+            return str;
+        }
+    }
+
+#endif
+#if false
+public class mkf : ExtendedShellProgram
+{
+    public override string GetName()
+    {
+        return "mkf";
+    }
+    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument> {
+        new AcceptedArgument("-wd", "working directory", true),
+        new AcceptedArgument("-p", "path", true),
+        new AcceptedArgument("-d", "data", true),
+        new AcceptedArgument("-n", "name", true),
+        new AcceptedArgument("-fp", "file permissions", true),
+
+    };
+
+    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
+
+    protected override string InternalRun(Dictionary<string, string> argPairs)
+    {
+        string wdPath = argPairs.GetValueOrDefault("-wd", "/");
+        File workingDirectory = fileSystem.GetFileByPath(wdPath);
+
+        string path = argPairs.GetValueOrDefault("-p", "/");
+        File f = fileSystem.GetFileByPath(path, workingDirectory);
+
+        string name = argPairs.GetValueOrDefault("-n", "new file");
+        short fpInt;
+        if (!short.TryParse(argPairs.GetValueOrDefault("-fp", "0b0000111"), out fpInt))
+        {
+            fpInt = 0b0000111;
+        }
+        FilePermission fp = (FilePermission)fpInt;
+        File newFile = fileSystem.MakeFile(wdPath, name, fp, null);
+
+        return $"Created file {newFile.name} at {newFile.Parent.GetFullPath()}.";
+    }
+
+}
+
+#endif
