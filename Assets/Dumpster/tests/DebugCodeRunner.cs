@@ -24,7 +24,9 @@ public class DebugCodeRunner : MonoBehaviour
     {
         if (codeFile == null)
         {
+#if UNITY_EDITOR
             codeFile = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Dumpster/empty.txt");
+#endif
         }
 
         if (runOnStart)

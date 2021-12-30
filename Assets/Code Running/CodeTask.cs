@@ -36,6 +36,7 @@ public class CodeTask
 
     public void RunCode(CodeObject codeObject)
     {
+        Debug.Log(codeObject.code);
         this.codeObject = codeObject;
         thread = new Thread(RunAsync);
 

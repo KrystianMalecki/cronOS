@@ -18,6 +18,24 @@ namespace helper
         static Regex spaceQArgsRegex = new Regex(@"( +)|([\\(\\),;])|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
         static Regex spaceAndQRegex = new Regex(@"( +)|(\\\""|\""(?:\\\""|[^\""])*\""|(\\+))");
 
+        public static int CountEncounters(this string input, params char[] toFind)
+        {
+            int counter = 0;
+            foreach (char c in input)
+            {
+                foreach (char compareTo in toFind)
+                {
+                    if (compareTo == c)
+                    {
+                        counter++;
+                        break;
+                    }
+                }
+            }
+
+            return counter;
+        }
+
         public static List<string> SplitSpaceQ(this string input)
         {
             return spaceAndQRegex.Split(input).ToList();

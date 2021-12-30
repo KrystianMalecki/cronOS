@@ -117,7 +117,8 @@ public class HardwareInternal
 
     static Regex undefineRegex = new Regex("^\\s*?#\\s*?undefine\\s*?.*\\s*");
     static Regex undefineRegexOld = new Regex("^\\s*?#\\s*?undefine\\s*?.*\\s*.*;*");
-    static Regex usingRegex = new Regex("^\\s*?#\\s*?using\\s*?.*");
+    static Regex topRegex = new Regex("^\\s*?#\\s*?top\\s*?.*");
+    static Regex bottomRegex = new Regex("^\\s*?#\\s*?bottom\\s*?.*");
 
     internal void RunCode(CodeObject codeObject)
     {
@@ -238,10 +239,20 @@ static Screen screen = null;screen=ownPointer.screen;
 
             if (true)
             {
-                if (usingRegex.IsMatch(buffer))
+                if (topRegex.IsMatch(buffer))
                 {
-                    lines.Insert(0, buffer.Replace("#", ""));
-                    buffer = "";
+                    lines[index] = $"//moved '{buffer}' on top";
+
+                    lines.Insert(0, buffer.Replace("#top ", ""));
+                    continue;
+                }
+
+                if (bottomRegex.IsMatch(buffer))
+                {
+                    lines[index] = $"//moved '{buffer}' on bottom";
+
+                    lines.Insert(lines.Count, buffer.Replace("#bottom ", ""));
+                    continue;
                 }
             }
 

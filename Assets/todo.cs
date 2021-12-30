@@ -1,9 +1,9 @@
 //last thing:fixed exceptions when pressing keys on high fps, fixed lag, made screen rendering kinda parallel,   Fixed mouse,thinking how to implement Hardware class correctly, singleton purge,   Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
 //todo -0                                                           ^still idk
 //todo 0 add todos here
-//todo 1 implement IShell and fix shell
-//todo 0 readd for the 3rd time fixes from NewBehaviourScript
 
+//todo 1 check why redefine CT with l at the end doesn't work
+//todo 1 fix fontAtlas CT drawing
 
 //todo 5 think and make better workflow for files.
 //todo 6 make plugin for #?
