@@ -37,14 +37,16 @@ public class HardwareInternal
     internal bool ignoreSomeErrors = true; //todo 86 remove
     internal static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
 
-    void UpdateWRR()
+    private void UpdateWRR()
     {
+        FPSCap = Math.Clamp(FPSCap, 0.1f, 1000f);
         WaitRefreshRate = (int)((1f / FPSCap) * 1000f);
         Debug.Log($"WaitRefreshRate:{WaitRefreshRate} FPSCap:{FPSCap}");
     }
 
-    void UpdateFPSC()
+    private void UpdateFPSC()
     {
+        WaitRefreshRate = Math.Clamp(WaitRefreshRate, 1, 10000);
         FPSCap = ((1f / WaitRefreshRate) * 1000f);
         Debug.Log($"WaitRefreshRate:{WaitRefreshRate} FPSCap:{FPSCap}");
     }
@@ -56,8 +58,7 @@ public class HardwareInternal
     #region static data
 
     private const string LINE_NUMBER_PREPROCESSOR_CODE = "__LINE__";
-
-    private const string FILE_NUMBER_PREPROCESSOR_CODE = "__FILE__";
+    private const string FILE_NAME_PREPROCESSOR_CODE = "__FILE__";
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
 
@@ -135,7 +136,7 @@ public class HardwareInternal
         scriptsRunning.Remove(codeTask);
     }
 
-    internal void CheackThreads()
+    internal void CheckThreads()
     {
         foreach (CodeTask ct in scriptsRunning)
         {
@@ -214,7 +215,7 @@ static Screen screen = null;screen=ownPointer.screen;
 
                             parts[i] = part.Replace(item.Key, replacor)
                                 .Replace(LINE_NUMBER_PREPROCESSOR_CODE, (index + 1).ToString())
-                                .Replace(FILE_NUMBER_PREPROCESSOR_CODE, "unknown");
+                                .Replace(FILE_NAME_PREPROCESSOR_CODE, "unknown");
                         }
                     }
                 }
@@ -279,7 +280,7 @@ static Screen screen = null;screen=ownPointer.screen;
                     }
 
                     string definitionReplacor = string.Join(" ",
-                            lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex - 1).ToArray())
+                            lineParts.Skip(definitionEndIndex).Take(lineParts.Count - definitionEndIndex).ToArray())
                         .TrimStart();
 
                     if (definition == null || definitionReplacor == null)

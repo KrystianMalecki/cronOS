@@ -55,7 +55,7 @@ namespace Libraries.system.output.graphics
             public byte[] Converter(SystemColor x)
             {
                 buffer[0] <<= 8 / dataInByte;
-                buffer[0] += x.value;
+                buffer[0] += x.byteValue;
                 counter++;
                 if (counter == dataInByte)
                 {
@@ -67,9 +67,10 @@ namespace Libraries.system.output.graphics
 
                 return Array.Empty<byte>();
             }
-            public void TintAll(SystemColor color, bool preserveTransparency=true)
+
+            public void TintAll(SystemColor color, bool preserveTransparency = true)
             {
-              //  Console.Debug($"{transparencyFlag } && {preserveTransparency}");
+                //  Console.Debug($"{transparencyFlag } && {preserveTransparency}");
 
                 for (int i = 0; i < array.Length; i++)
                 {
@@ -78,12 +79,13 @@ namespace Libraries.system.output.graphics
                         Console.Debug("trans");
                         continue;
                     }
-                  //  Console.Debug(array[i]);
-                    array[i] += color;
-                 //   Console.Debug(array[i]);
 
+                    //  Console.Debug(array[i]);
+                    array[i] += color;
+                    //   Console.Debug(array[i]);
                 }
             }
+
             public static SystemTexture FromData(byte[] data)
             {
                 SystemTexture texture = new SystemTexture(RectArray<SystemColor>.FromData(

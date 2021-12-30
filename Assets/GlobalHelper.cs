@@ -59,7 +59,7 @@ namespace helper
 
         private static readonly string[] newLiners = new string[]
         {
-            Environment.NewLine, "\n", "\r"
+            Environment.NewLine, "\n", // "\r"
         };
 
         public static string[] SplitNewLine(this string input)

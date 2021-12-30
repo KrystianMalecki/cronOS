@@ -1204,8 +1204,8 @@ MonoBehaviour:
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 1000
-      WaitRefreshRate: 1
+      FPSCap: 60
+      WaitRefreshRate: 16
       TasksPerCPULoop: -1
       scriptsRunning: []
   references:
@@ -1405,19 +1405,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runOnStart: 0
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
-  code: '#redefine h Console.Debug(__LINE__)
+  code: '#redefine h Console.Debug(__LINE__);
 
-    h;
+    h
 
-    h;
+    h
 
-    h;
+    h
 
-    h;
+    h
 
-    h;
+    h
 
-    h;'
+    h'
 --- !u!1 &770809970
 GameObject:
   m_ObjectHideFlags: 0
@@ -18667,18 +18667,21 @@ MonoBehaviour:
     Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);\r\n           
     Vector2Int mousePos = new Vector2Int(0, 0);\r\n\r\n            string position
     = \"\";\r\n            string text = \"\";\r\n            int speed = 1;\r\n           
-    KeySequence ks = null;\r\n            bool flasher = false;\r\n\r\n           
-    void CheckMovement(KeySequence ks)\r\n            {\r\n                if (ks.ReadKey(Key.UpArrow))\r\n               
-    {\r\n                    orbPos.y -= speed;\r\n                }\r\n               
-    if (ks.ReadKey(Key.DownArrow))\r\n                {\r\n                    orbPos.y
-    += speed;\r\n                }\r\n                if (ks.ReadKey(Key.LeftArrow))\r\n               
-    {\r\n                    orbPos.x -= speed;\r\n                }\r\n               
-    if (ks.ReadKey(Key.RightArrow))\r\n                {\r\n                    orbPos.x
-    += speed;\r\n                }\r\n                if (ks.ReadKey(Key.KeypadPlus))\r\n               
-    {\r\n                    speed++;\r\n                }\r\n                if
-    (ks.ReadKey(Key.KeypadMinus))\r\n                {\r\n                    speed--;\r\n               
-    }\r\n            }\r\n\r\n\r\n            void ClampPositionToFrame()\r\n           
-    {\r\n                if (orbPos.x > buffer.width - 1)\r\n                {\r\n                   
+    KeySequence ks = null;\r\n            bool flasher = false;\r\n\tSystemColor
+    bckCol = SystemColor.red;\n\r\n            void CheckMovement(KeySequence ks)\r\n           
+    {\r\n                if (ks.ReadKey(Key.UpArrow))\r\n                {\r\n                   
+    orbPos.y -= speed;\r\n                }\r\n                if (ks.ReadKey(Key.DownArrow))\r\n               
+    {\r\n                    orbPos.y += speed;\r\n                }\r\n               
+    if (ks.ReadKey(Key.LeftArrow))\r\n                {\r\n                    orbPos.x
+    -= speed;\r\n                }\r\n                if (ks.ReadKey(Key.RightArrow))\r\n               
+    {\r\n                    orbPos.x += speed;\r\n                }\r\n               
+    if (ks.ReadKey(Key.KeypadPlus))\r\n                {\r\n                    speed++;\r\n               
+    }\r\n                if (ks.ReadKey(Key.KeypadMinus))\r\n                {\r\n                   
+    speed--;\r\n                }\r\n\tif (ks.ReadKey(Key.P))\r\n               
+    {\r\n                    bckCol.Lighten();\r\n                }\r\nif (ks.ReadKey(Key.O))\r\n               
+    {\r\n                    bckCol.Darken();\r\n                }\r\n           
+    }\r\n\r\n\r\n            void ClampPositionToFrame()\r\n            {\r\n               
+    if (orbPos.x > buffer.width - 1)\r\n                {\r\n                   
     orbPos.x = buffer.width - 1;\r\n                }\r\n                if (orbPos.x
     < 0)\r\n                {\r\n                    orbPos.x = 0;\r\n               
     }\r\n                if (orbPos.y > buffer.height - 1)\r\n                {\r\n                   
@@ -18697,7 +18700,7 @@ MonoBehaviour:
     ks);\r\n\r\n\r\n                CheckMovement(ks);\r\n                if (ks.ReadKey(Key.Mouse0))\r\n               
     {\r\n                    mousePos = mouseHandler.GetScreenPosition();\r\n               
     }\r\n                ClampPositionToFrame();\r\n            }\r\n           
-    while (true)\r\n            {\r\n                buffer.FillAll(SystemColor.black);\r\n               
+    while (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
     Draw();\r\n                ProcessInput();\r\n                runtime.Wait();\r\n\r\n           
     }"
 --- !u!1 &1446994155

@@ -7,27 +7,31 @@ using UnityEngine;
 
 public class StackExecutor : MonoBehaviour
 {
-    [NonSerialized]
-    public Hardware hardware;
+    [NonSerialized] public Hardware hardware;
     public object locker = new object();
+
     public void Start()
     {
         UpdateMaxTask();
         StartCoroutine(ExecuteFromQueue());
     }
+
     /*  public void Update()
       {
           ExecuteFromQueue();
       }*/
     private ITryToRun _delegateBuffer = null;
     private int _maxTasksBuffer;
-    [SerializeField]
-    private ConcurrentQueue<ITryToRun> actionQueue = new ConcurrentQueue<ITryToRun>();
+    [SerializeField] private ConcurrentQueue<ITryToRun> actionQueue = new ConcurrentQueue<ITryToRun>();
+
     public void UpdateMaxTask()
     {
-        _maxTasksBuffer = hardware.hardwareInternal.TasksPerCPULoop == -1 ? 100 : hardware.hardwareInternal.TasksPerCPULoop;
-       // _maxTasksBuffer = 1;
+        _maxTasksBuffer = hardware.hardwareInternal.TasksPerCPULoop == -1
+            ? 100
+            : hardware.hardwareInternal.TasksPerCPULoop;
+        // _maxTasksBuffer = 1;
     }
+
     private IEnumerator ExecuteFromQueue()
     {
         while (true)
@@ -42,7 +46,6 @@ public class StackExecutor : MonoBehaviour
                     {
                         if (actionQueue.TryDequeue(out _delegateBuffer))
                         {
-
                             if (_delegateBuffer != null && !_delegateBuffer.TryToRun())
                             {
                                 actionQueue.Enqueue(_delegateBuffer);
@@ -73,6 +76,7 @@ public class StackExecutor : MonoBehaviour
             yield return null;
         }
     }
+
     [Button("Display stack")]
     void DisplayStack()
     {
@@ -83,6 +87,7 @@ public class StackExecutor : MonoBehaviour
                 //   Debug.Log(runTry.function.ToString());
                 runTry.Speak();
             }
+
             if (actionQueue.Count == 0)
             {
                 Debug.Log("actionStack is empty");
@@ -90,16 +95,14 @@ public class StackExecutor : MonoBehaviour
         }
         catch (Exception)
         {
-
         }
     }
 
     internal T AddDelegateToStack<T>(MainThreadDelegate<T>.MTDFunction action, bool sync = true)
     {
-
         return AddDelegateToStack(new MainThreadDelegate<T>(action, hardware.hardwareInternal.WaitRefreshRate), sync);
-
     }
+
     internal T AddDelegateToStack<T>(MainThreadDelegate<T> mtf, bool sync = true)
     {
         actionQueue.Enqueue(mtf);
@@ -108,19 +111,19 @@ public class StackExecutor : MonoBehaviour
         {
             return mtf.WaitForReturn();
         }
+
         return default(T);
     }
+
     internal void AddDelegateToStack(Action action, bool sync = true)
     {
-        AddDelegateToStack((ref bool done, ref object returnValue) =>
-        {
-            action.Invoke();
-        }, sync);
+        AddDelegateToStack((ref bool done, ref object returnValue) => { action.Invoke(); }, sync);
     }
+
     [Button]
-    internal void CheackThreads()
+    internal void CheckThreads()
     {
-        hardware.hardwareInternal.CheackThreads();
+        hardware.hardwareInternal.CheckThreads();
     }
 
     [Button]
@@ -128,10 +131,12 @@ public class StackExecutor : MonoBehaviour
     {
         hardware.hardwareInternal.KillAll();
     }
+
     public void OnDestroy()
     {
         KillAll();
     }
+
     public void OnApplicationQuit()
     {
         KillAll();

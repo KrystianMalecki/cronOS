@@ -42,128 +42,116 @@ namespace Libraries.system.output.graphics
         [Serializable]
         public struct SystemColor
         {
-            [SerializeField] private byte _value;
+            [SerializeField] private sbyte _value;
 
-            public byte value
+            public byte byteValue
             {
-                get
-                {
-                    // FlagLogger.Log(_value);
-                    return _value;
-                }
+                get { return (byte)value; }
                 set
                 {
-                    ClampToRange(ref value);
+                    FixRange(ref value);
+                    this.value = (sbyte)value;
+                }
+            }
+
+            public sbyte value
+            {
+                get { return _value; }
+                set
+                {
+                    FixRange(ref value);
 
                     this._value = value;
                 }
             }
+
             //todo 0 optimize
-            public void ClampToRange(ref sbyte value, bool canBeNegative = false)
+
+
+            public const bool loop = true;
+
+            public void FixRange(ref byte value)
             {
-                if (value < 0)
+                if (loop)
                 {
-                    if (canBeNegative)
+                    value = (byte)(value % 16);
+                    if (value < 0)
                     {
-                        if (value < -15)
-                        {
-                            value = 0;
-                        }
-                    }
-                    else
-                    {
-                        value = 15;
+                        value += 16;
                     }
                 }
                 else
-                if (value > 15)
                 {
-                    value = 0;
+                    value = (byte)Math.Clamp((byte)value, (byte)0, (byte)16);
                 }
             }
-            public void ClampToRange(ref byte value)
+
+            public void FixRange(ref sbyte value)
             {
-                if (value < 0)
+                if (loop)
                 {
-
-                    value = 15;
-
+                    value = (sbyte)(value % 16);
+                    if (value < 0)
+                    {
+                        value += 16;
+                    }
                 }
-                else if (value > 15)
+                else
                 {
-                    value = 0;
+                    value = (sbyte)Math.Clamp((sbyte)value, (sbyte)0, (sbyte)16);
                 }
             }
+
             public void Add(sbyte valueToAdd)
             {
-                ClampToRange(ref valueToAdd);
-                sbyte v = (sbyte)(value + valueToAdd);
-                if (v < 0)
-                {
-                    v += 16;
-                }
-                else if (v > 15)
-                {
-                    v -= 16;
-                }
-                value = (byte)v;
+                this.value += valueToAdd;
             }
+
             public void Add(byte valueToAdd)
             {
-                ClampToRange(ref valueToAdd);
-                sbyte v = (sbyte)(value + valueToAdd);
-                if (v < 0)
-                {
-                    v += 16;
-                }
-                else if (v > 15)
-                {
-                    v -= 16;
-                }
-                value = (byte)v;
+                this.value += (sbyte)valueToAdd;
             }
+
             public void Multiply(sbyte valueToMultiply)
             {
-                ClampToRange(ref valueToMultiply);
-                ushort v = (ushort)(value * valueToMultiply);
-                if (v < 0)
-                {
-                    v += 16;
-                }
-                else if (v > 15)
-                {
-                    v -= 16;
-                }
-                value = (byte)v;
+                this.value *= valueToMultiply;
             }
+
             public void Divide(sbyte valueToMultiply)
             {
-                ClampToRange(ref valueToMultiply);
-                ushort v = (ushort)(value / valueToMultiply);
-                if (v < 0)
-                {
-                    v += 16;
-                }
-                else if (v > 15)
-                {
-                    v -= 16;
-                }
-                value = (byte)v;
+                this.value /= valueToMultiply;
             }
+
+            public SystemColor(sbyte value)
+            {
+                this._value = 0;
+                FixRange(ref value);
+                this._value = value;
+            }
+
             public SystemColor(byte value)
             {
-                this._value = value;
+                this._value = 0;
+                FixRange(ref value);
+                this._value = (sbyte)value;
+            }
+
+            public static implicit operator SystemColor(sbyte val)
+            {
+                return new SystemColor(val);
             }
 
             public static implicit operator SystemColor(byte val)
             {
                 return new SystemColor(val);
             }
+
             public static implicit operator SystemColor(int val)
             {
-                return new SystemColor((byte)val);
+                return new SystemColor((sbyte)val);
             }
-            public static implicit operator byte(SystemColor val)
+
+            public static implicit operator sbyte(SystemColor val)
             {
                 return val.value;
             }
@@ -177,7 +165,6 @@ namespace Libraries.system.output.graphics
             public static SystemColor operator --(SystemColor sc)
             {
                 sc.Add(-1);
-                SystemColor val = SystemColor.red + SystemColor.green;
                 return sc;
             }
 
@@ -190,30 +177,35 @@ namespace Libraries.system.output.graphics
             {
                 return !(sc == sc2);
             }
-            public static byte operator +(SystemColor sc, SystemColor sc2)
+
+            public static SystemColor operator +(SystemColor sc, SystemColor sc2)
             {
                 SystemColor ret = sc.Copy();
                 ret.Add(sc2.value);
                 return ret;
             }
-            public static byte operator -(SystemColor sc, SystemColor sc2)
+
+            public static SystemColor operator -(SystemColor sc, SystemColor sc2)
             {
                 SystemColor ret = sc.Copy();
                 ret.Add((sbyte)-sc2.value);
                 return ret;
             }
-            public static byte operator *(SystemColor sc, SystemColor sc2)
+
+            public static SystemColor operator *(SystemColor sc, SystemColor sc2)
             {
                 SystemColor ret = sc.Copy();
                 ret.Multiply((sbyte)sc2.value);
                 return ret;
             }
-            public static byte operator /(SystemColor sc, SystemColor sc2)
+
+            public static SystemColor operator /(SystemColor sc, SystemColor sc2)
             {
                 SystemColor ret = sc.Copy();
                 ret.Divide((sbyte)sc2.value);
                 return ret;
             }
+
             public override string ToString()
             {
                 switch (value)
@@ -237,12 +229,41 @@ namespace Libraries.system.output.graphics
                 }
 
                 return "unknown";
+                //return value.ToString();
             }
-            public  SystemColor Copy()
+
+            public SystemColor ChangeShade()
+            {
+                value -= 8;
+                return this;
+            }
+
+            public SystemColor Darken()
+            {
+                if (value >= 8)
+                {
+                    value -= 8;
+                }
+
+                return this;
+            }
+
+            public SystemColor Lighten()
+            {
+                if (value < 8)
+                {
+                    value += 8;
+                }
+
+                return this;
+            }
+
+            public SystemColor Copy()
             {
                 return new SystemColor(value);
             }
-            public const float sizeOf = 1f * sizeof(byte) / 1;
+
+            public const float sizeOf = 1f * sizeof(sbyte) / 1;
 
             public static readonly SystemColor black = (0);
             public static readonly SystemColor blue = (1);
