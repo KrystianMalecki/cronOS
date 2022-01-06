@@ -1,8 +1,12 @@
 //last thing:fixed exceptions when pressing keys on high fps, fixed lag, made screen rendering kinda parallel,   Fixed mouse,thinking how to implement Hardware class correctly, singleton purge,   Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
 //todo -0                                                           ^still idk
 //todo 0 add todos here
-
-
+/*idea:
+ -make palette texture laod data to bitArray and then compress to bytes
+ -make it load bytes to bitArray and then decompress to values
+ -dogshiot idea
+*/
+//last did: ICompressable i zmiana na stałą jednostkę sizeOFInBits
 //todo 91 go back to sounds
 
 //todo 99 add lolcat command and CT

@@ -220,89 +220,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366580919}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &373128137
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 373128141}
-  - component: {fileID: 373128140}
-  - component: {fileID: 373128139}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &373128139
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373128137}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 9eac821c87aaaf743bf48fced8783ba4, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &373128140
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373128137}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &373128141
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 373128137}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.654, y: 0.78999996, z: -2.2106826}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &434435441
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +274,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 0.9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -932,6 +849,7 @@ GameObject:
   - component: {fileID: 609799500}
   - component: {fileID: 609799499}
   - component: {fileID: 609799501}
+  - component: {fileID: 609799502}
   m_Layer: 0
   m_Name: audio tests
   m_TagString: Untagged
@@ -1096,6 +1014,71 @@ MonoBehaviour:
   note: 3
   octave: 4
   outPut: 19.445436
+--- !u!114 &609799502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609799498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4102e74f640efc643a30a55ebf4f130e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notes:
+  - note: C
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: C#
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: D
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: D#
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: E
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: F
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: F#
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: G
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: G#
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: A
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: A#
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: B
+    octave: 4
+    instrument: 0
+    length: 1
+  octave: 4
+  lsamplerate: 44100
+  audioClip: {fileID: 8300000, guid: eb7be9e2a7bdc674a8e548137e396215, type: 3}
+  textAsset: {fileID: 4900000, guid: c95d989cfcc32954daaea3f878e71fda, type: 3}
 --- !u!1 &624103653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,7 +1165,7 @@ Transform:
   - {fileID: 1255072401}
   - {fileID: 1081877137}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: -25.646, z: 0}
 --- !u!114 &624103658
 MonoBehaviour:
@@ -18080,7 +18063,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &862908942
 GameObject:
@@ -18192,7 +18175,7 @@ GameObject:
   - component: {fileID: 922628694}
   - component: {fileID: 922628693}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: FPS counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18610,6 +18593,7 @@ Transform:
   - {fileID: 1343489310}
   - {fileID: 1640294208}
   - {fileID: 1247786007}
+  - {fileID: 1985360662}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18791,37 +18775,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 2
   m_AspectRatio: 1
---- !u!1 &1501359163
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1501359164}
-  m_Layer: 0
-  m_Name: Managers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1501359164
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1501359163}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1640294207
 GameObject:
   m_ObjectHideFlags: 0
@@ -18987,8 +18940,62 @@ Transform:
   - {fileID: 366580920}
   - {fileID: 498076987}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1985360661
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1985360662}
+  - component: {fileID: 1985360663}
+  m_Layer: 0
+  m_Name: color CT (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1985360662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985360661}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1985360663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985360661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: "#include \"/sys/libs/fontLib.ll\"\n   \n        SystemScreenBuffer buffer
+    = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
+    screen.InitScreenBuffer(buffer);\r\n   \rstring tzt =\"\"+Runtime.ByteToChar(176)+Runtime.ByteToChar(177)+Runtime.ByteToChar(178);\n       
+    for (byte i = 0; i < 16; i++)\r\n        {\r\n            string combine = \"\";\r\n           
+    for (byte j = 0; j < 16; j++)\r\n            {\r\n                combine +=\r\n$\"<color={Runtime.ByteToHex(i,
+    false)}><backgroundcolor={Runtime.ByteToHex(j, false)}>{tzt}\";\r\n\r\n           
+    }\r\n            DrawColoredStringAt(buffer, 0, i * 8,combine,\r\n               
+    SystemColor.white, SystemColor.black);\r\n        }\r\n\r\n        screen.SetScreenBuffer(buffer);\r\n  "
 --- !u!1 &2108374104
 GameObject:
   m_ObjectHideFlags: 0

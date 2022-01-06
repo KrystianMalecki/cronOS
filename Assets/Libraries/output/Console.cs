@@ -19,7 +19,7 @@ namespace Libraries.system
 
             public static void Debug(params object[] obj)
             {
-                UnityEngine.Debug.Log(obj.ToFormatedString());
+                UnityEngine.Debug.Log(obj.ToFormattedString());
             }
 
             public static void Debug(object obj = null,

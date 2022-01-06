@@ -43,10 +43,10 @@ namespace Libraries.system.output.graphics
 
                 header[0] = transparencyFlag;
 
-                return header.Concat(base.ToData(SystemColor.sizeOf, Converter)).ToArray();
+                return header.Concat(base.ToData(SystemColor.sizeOfInBits, Converter)).ToArray();
             }
 
-            static byte dataInByte = (byte)Mathf.RoundToInt(1f / SystemColor.sizeOf);
+
             byte[] buffer = new byte[1];
             byte[] buffer2 = new byte[1];
 
@@ -54,10 +54,10 @@ namespace Libraries.system.output.graphics
 
             public byte[] Converter(SystemColor x)
             {
-                buffer[0] <<= 8 / dataInByte;
+                buffer[0] <<= SystemColor.sizeOfInBits;
                 buffer[0] += x.byteValue;
                 counter++;
-                if (counter == dataInByte)
+                if (counter == 8 / SystemColor.sizeOfInBits)
                 {
                     buffer2 = buffer.Clone() as byte[];
                     buffer[0] = 0;
@@ -89,15 +89,15 @@ namespace Libraries.system.output.graphics
             public static SystemTexture FromData(byte[] data)
             {
                 SystemTexture texture = new SystemTexture(RectArray<SystemColor>.FromData(
-                    data.Skip(HEADER_SIZE).ToArray(), SystemColor.sizeOf, x =>
+                    data.Skip(HEADER_SIZE).ToArray(), SystemColor.sizeOfInBits, x =>
                     {
-                        if (dataInByte > 1)
+                        if (SystemColor.sizeOfInBits > 1)
                         {
                             byte val0 = x[0];
-                            val0 >>= 8 / dataInByte;
+                            val0 >>= SystemColor.sizeOfInBits;
                             byte val1 = x[0];
-                            val1 <<= 8 / dataInByte;
-                            val1 >>= 8 / dataInByte;
+                            val1 <<= SystemColor.sizeOfInBits;
+                            val1 >>= SystemColor.sizeOfInBits;
                             return new SystemColor[] { val0, val1 };
                         }
 

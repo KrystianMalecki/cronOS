@@ -737,7 +737,7 @@ public class FileEditor : EditorWindow
 
         if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
         {
-            Debug.Log($"str{dataAsString}byt{dataAsString.ToBytes().ToFormatedString()}");
+            Debug.Log($"str{dataAsString}byt{dataAsString.ToBytes().ToFormattedString()}");
             currentFile.data = dataAsString.ToBytes();
             currentFileSO.Update();
             UpdateWindow();

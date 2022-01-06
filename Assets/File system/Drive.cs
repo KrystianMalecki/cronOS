@@ -189,7 +189,7 @@ public class Drive : ScriptableObject
         {
             int result = freeSpaces[0];
 
-            Debug.Log(freeSpaces.ToFormatedString());
+            Debug.Log(freeSpaces.ToFormattedString());
             freeSpaces.RemoveAt(0);
             return result;
         }
@@ -232,6 +232,6 @@ public class Drive : ScriptableObject
             }
         }
 
-        Debug.Log(freeSpaces.ToFormatedString());
+        Debug.Log(freeSpaces.ToFormattedString());
     }
 }

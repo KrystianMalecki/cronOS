@@ -20,12 +20,12 @@ namespace Libraries.system.output.graphics
 
             public byte[] ToData()
             {
-                return base.ToData(Color32.sizeOf, x => new byte[4] { x.r, x.g, x.b, x.a });
+                return base.ToData(Color32.sizeOfInBits, x => new byte[4] { x.r, x.g, x.b, x.a });
             }
 
             public static Texture32 FromData(byte[] data)
             {
-                return new Texture32(RectArray<Color32>.FromData(data, Color32.sizeOf,
+                return new Texture32(RectArray<Color32>.FromData(data, Color32.sizeOfInBits,
                     x => new Color32[] { new Color32(x[0], x[1], x[2], x[3]) }));
             }
         }

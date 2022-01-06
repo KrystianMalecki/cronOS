@@ -11,7 +11,7 @@ namespace Libraries.system.output.graphics
         using UnityEngine;
 
         [Serializable]
-        public class MaskTexture : RectArray<bool>
+        public class MaskTexture : RectArray<bool> //todo 0 convert to palette texture with "static" palette
         {
             private static readonly int HEADER_SIZE = 1;
             public byte transparencyFlag = 0xff;
@@ -39,10 +39,10 @@ namespace Libraries.system.output.graphics
 
                 header[0] = transparencyFlag;
 
-                return header.Concat(base.ToData(1f / dataInByte, Converter)).ToArray();
+                return header.Concat(base.ToData(sizeOfTInBits, Converter)).ToArray();
             }
 
-            static byte dataInByte = 8;
+            static byte sizeOfTInBits = 1;
             byte[] buffer = new byte[1];
 
             byte counter;
@@ -65,7 +65,7 @@ namespace Libraries.system.output.graphics
             public static MaskTexture FromData(byte[] data)
             {
                 MaskTexture texture = new MaskTexture(RectArray<bool>.FromData(data.Skip(HEADER_SIZE).ToArray(),
-                    1f / dataInByte, x =>
+                    sizeOfTInBits, x =>
                     {
                         bool[] bs = new bool[8];
                         BitArray ba = new BitArray(x);

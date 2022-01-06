@@ -36,12 +36,12 @@ public static class StaticHelper
             yield return iterator.Current;
     }
 
-    public static string ToFormatedString<T>(this IEnumerable<T> ie, string splitter = ", ")
+    public static string ToFormattedString<T>(this IEnumerable<T> ie, string splitter = ", ")
     {
         return string.Join(splitter, ie);
     }
 
-    public static string ToFormatedString(this IDictionary ie, string splitter = ", ")
+    public static string ToFormattedString(this IDictionary ie, string splitter = ", ")
     {
         string s = "";
         foreach (var v in ie.Keys)
@@ -52,9 +52,31 @@ public static class StaticHelper
         return s;
     }
 
-    public static string ToFormatedString<T>(this T[] ie, string splitter = ", ")
+    public static string ToFormattedString<T>(this T[] ie, string splitter = ", ")
     {
         return string.Join(splitter, ie);
+    }
+
+    public static string ToDisplayString(this BitArray ba, string splitter = ", ")
+    {
+        string output = "";
+        for (int i = 0; i < ba.Length; i++)
+        {
+            output += ba[i] + splitter;
+        }
+
+        return output;
+    }
+
+    public static string ToConvertedString<T>(this T[] ie, string splitter = ", ",
+        Converter<T, String> converter = null)
+    {
+        if (converter == null)
+        {
+            return string.Join(splitter, ie);
+        }
+
+        return string.Join(splitter, Array.ConvertAll(ie, x => x.ToString()));
     }
 
     public static LibraryData ToLibraryData(this Type type)
@@ -159,11 +181,7 @@ public static class StaticHelper
 
     public static byte[] SetByteValue(this byte[] array, byte[] data, int index)
     {
-        for (int i = 0; i < data.Length; i++)
-        {
-            array[i + index] = data[i];
-        }
-
+        Array.Copy(data, 0, array, index, data.Length);
         return array;
     }
 

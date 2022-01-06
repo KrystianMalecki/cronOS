@@ -263,7 +263,7 @@ namespace Libraries.system.output.graphics
                 return new SystemColor(value);
             }
 
-            public const float sizeOf = 1f * sizeof(sbyte) / 1;
+            public const int sizeOfInBits = 4;
 
             public static readonly SystemColor black = (0);
             public static readonly SystemColor blue = (1);
