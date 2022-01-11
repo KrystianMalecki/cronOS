@@ -28,13 +28,15 @@ namespace Libraries.system.output.graphics
 
             public UnityEngine.Color32 GetUnityColorAt(int x, int y)
             {
-                return GetAt(x, y).ToColor32();
+                return ((SystemColor)GetAt(x, y)).ToColor32();
             }
+
+            bool ignoreSomeErrors = true; //todo 9 remove
 
             public void DrawTexture(int x, int y, RectArray<SystemColor> texture, byte transparencyFlag = 0xff,
                 bool drawPartialy = true)
             {
-                if (!IsBoxInRange(x, y, texture.width, texture.height) && ProcessorManager.instance.ignoreSomeErrors &&
+                if (!IsBoxInRange(x, y, texture.width, texture.height) && ignoreSomeErrors &&
                     !drawPartialy)
                 {
                     return; //todo-future add error
@@ -44,7 +46,7 @@ namespace Libraries.system.output.graphics
                 {
                     for (int iterX = 0; iterX < texture.width; iterX++)
                     {
-                        if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                        if (!IsPointInRange(x, y) && ignoreSomeErrors)
                         {
                             return; //todo-future add error
                         }
@@ -86,6 +88,16 @@ namespace Libraries.system.output.graphics
                     y = y + dy;
                     i = i + 1;
                 }
+            }
+
+            public void DrawLine(Vector2Int start, Vector2Int end, SystemColor color)
+            {
+                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
+                {
+                    return;
+                }
+
+                DrawLine(start.x, start.y, end.x, end.y, color);
             }
         }
     }

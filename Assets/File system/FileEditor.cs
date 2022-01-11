@@ -40,13 +40,14 @@ public class FileEditor : EditorWindow
     float boxWidth = 28;
 
 
-
     bool toggleTopFields = true;
     bool toggleData = false;
     bool toggleChildren = false;
     bool toggleTextDataField = false;
     bool toggleTree = true;
     bool toggleAutoChangeParent = false;
+    bool toggleAutoOpenParent = true;
+
     List<File> children = null;
     int childrenInLine = 5;
 
@@ -107,7 +108,7 @@ public class FileEditor : EditorWindow
         SetupChildren(true);
         treeRoot = toggleAutoChangeParent ? currentFile.Parent : currentFile.GetDrive().GetRoot();
 
-        treeRoot??= currentFile;
+        treeRoot ??= currentFile;
 
         SetupPath(true);
 
@@ -143,7 +144,9 @@ public class FileEditor : EditorWindow
         EditorPrefs.SetBool("toggleTextDataField", toggleTextDataField);
         EditorPrefs.SetBool("toggleTree", toggleTree);
         EditorPrefs.SetBool("toggleAutoChangeParent", toggleAutoChangeParent);
+        EditorPrefs.SetBool("toggleAutoOpenParent", toggleAutoOpenParent);
     }
+
     void LoadTogglesFromEditorPrefs()
     {
         toggleTopFields = EditorPrefs.GetBool("toggleTopFields", true);
@@ -152,7 +155,9 @@ public class FileEditor : EditorWindow
         toggleTextDataField = EditorPrefs.GetBool("toggleTextDataField", false);
         toggleTree = EditorPrefs.GetBool("toggleTree", true);
         toggleAutoChangeParent = EditorPrefs.GetBool("toggleAutoChangeParent", false);
+        toggleAutoOpenParent = EditorPrefs.GetBool("toggleAutoOpenParent", true);
     }
+
     void UpdateDrive()
     {
         if (drive == null)
@@ -239,6 +244,7 @@ public class FileEditor : EditorWindow
     }
 
     File treeRoot = null;
+
     void OnGUI()
     {
         if (currentFile == null || currentWindow == null)
@@ -279,9 +285,9 @@ public class FileEditor : EditorWindow
 
         if (toggleTopFields)
         {
-           // DrawTopGoersBar();
+            // DrawTopGoersBar();
 
-           // GUILayout.Space(EditorGUIUtility.singleLineHeight);
+            // GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
             GUILayout.BeginHorizontal();
             //name
@@ -292,6 +298,7 @@ public class FileEditor : EditorWindow
             {
                 currentFileSO.Update();
             }
+
             GUILayout.Label("Size: " + sizeBuffer);
             GUILayout.EndHorizontal();
 
@@ -373,7 +380,7 @@ public class FileEditor : EditorWindow
             if (GUILayout.Button("Paste file"))
             {
                 if (EditorUtility.DisplayDialog("Paste file?",
-                    $"Do you want to override current file with file from clipboard?", "Yes", "No"))
+                        $"Do you want to override current file with file from clipboard?", "Yes", "No"))
                 {
                     File copiedFile = null;
                     try
@@ -392,7 +399,6 @@ public class FileEditor : EditorWindow
                 }
                 else
                 {
-                   
                 }
             }
 
@@ -418,8 +424,9 @@ public class FileEditor : EditorWindow
         toggleTree = (EditorGUILayout.BeginFoldoutHeaderGroup(toggleTree, "Tree view:"));
         bool toggleBefore = toggleAutoChangeParent;
         toggleAutoChangeParent = EditorGUILayout.Toggle("Auto change parent", toggleAutoChangeParent);
-        
-        if (toggleAutoChangeParent!=toggleBefore)
+        toggleAutoOpenParent = EditorGUILayout.Toggle("Auto open children", toggleAutoOpenParent);
+
+        if (toggleAutoChangeParent != toggleBefore)
         {
             treeRoot = currentFile.GetDrive().GetRoot();
         }
@@ -715,7 +722,7 @@ public class FileEditor : EditorWindow
     {
         GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
         GUILayout.Label("As Text Input:", GUILayout.Width(90));
-        if (/*string.IsNullOrEmpty(dataAsString)*/dataAsString==null)
+        if ( /*string.IsNullOrEmpty(dataAsString)*/dataAsString == null)
         {
             dataAsString = currentFile.data.ToEncodedString();
         }
@@ -730,7 +737,7 @@ public class FileEditor : EditorWindow
 
         if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
         {
-            Debug.Log($"str{dataAsString}byt{dataAsString.ToBytes().ToFormatedString()}");
+            Debug.Log($"str{dataAsString}byt{dataAsString.ToBytes().ToFormattedString()}");
             currentFile.data = dataAsString.ToBytes();
             currentFileSO.Update();
             UpdateWindow();
@@ -890,6 +897,11 @@ public class FileEditor : EditorWindow
 
             EditorGUILayout.LabelField(last ? "└" : "├", GUILayout.Width(15));
             bool toggled = false;
+            if (file == currentFile)
+            {
+                toggled = toggleAutoOpenParent;
+            }
+
             if (file.children?.Count > 0 && !makeUnCollapsable)
             {
                 toggled = EditorGUILayout.Toggle(GetExpanded(file.FileID),
@@ -902,6 +914,7 @@ public class FileEditor : EditorWindow
 
             if (GUILayout.Button(file.name))
             {
+                SetExpanded(file.FileID, true);
                 FileEditor.DisplayCurrentFile(file, FindPropertyOfFile(file), currentWindow, currentFileSO);
             }
 

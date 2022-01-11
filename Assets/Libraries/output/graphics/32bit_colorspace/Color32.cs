@@ -10,7 +10,7 @@ namespace Libraries.system.output.graphics
         {
             private UnityEngine.Color32 color;
 
-            public const float sizeOf = sizeof(int);
+            public const int sizeOfInBits = sizeof(int) * 8;
 
             public byte r
             {
@@ -40,6 +40,11 @@ namespace Libraries.system.output.graphics
             {
                 byte[] byteArray = BitConverter.GetBytes(color);
                 this.color = new UnityEngine.Color32(byteArray[0], byteArray[1], byteArray[2], byteArray[3]);
+            }
+
+            public Color32(byte[] bytes)
+            {
+                this.color = new UnityEngine.Color32(bytes[0], bytes[1], bytes[2], bytes[3]);
             }
 
             public Color32(byte r, byte g, byte b, byte a)
@@ -80,9 +85,9 @@ namespace Libraries.system.output.graphics
 
             public byte this[int index]
             {
-                get { return this[index]; }
+                get { return this.color[index]; }
 
-                set { this[index] = value; }
+                set { this.color[index] = value; }
             }
 
             public override string ToString()
@@ -116,10 +121,12 @@ namespace Libraries.system.output.graphics
                        blueDifference * blueDifference;
             }
 
+            static bool ignoreSomeErrors = true; //todo 9 remove
+
             public static Color32 FindNearest(Color32[] colors, Color32 input)
             {
                 int id = FindNearestID(colors, input);
-                if (id == -1 && ProcessorManager.instance.ignoreSomeErrors)
+                if (id == -1 && ignoreSomeErrors)
                 {
                     return default(Color32); //todo-future add error
                 }

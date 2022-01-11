@@ -39,6 +39,11 @@ namespace Libraries.system
                 return (int)(number);
             }
 
+            public static int Ceil(float number)
+            {
+                return UnityEngine.Mathf.CeilToInt(number);
+            }
+
             public static int Round(float number)
             {
                 return (int)(number);

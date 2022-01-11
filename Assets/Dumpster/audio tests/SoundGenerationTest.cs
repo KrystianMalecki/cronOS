@@ -227,7 +227,6 @@ public class SoundGenerationTest : MonoBehaviour
     private float _CalculateNoteUnoptimizedCorrect(int note, int octave)
     {
         return startNoteAValue * Mathf.Pow(2, (octave - 1) + (note + 3) / 12f);
-
     }
     public int note = 3;
     public int octave = 4;

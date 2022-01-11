@@ -5,6 +5,7 @@ using SQLitePCL;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,10 +56,19 @@ namespace Libraries.system
                 Array.Copy(array.array, 0, this.array, 0, array.size);
             }
 
+            public RectArray(int width, int height, T[] array)
+            {
+                this.width = width;
+                this.height = height;
+                this.array = new T[width * height];
+                Array.Copy(array, 0, this.array, 0, array.Length);
+            }
+
+            bool ignoreSomeErrors = true; //todo 9 remove
 
             public void SetAt(int x, int y, T value)
             {
-                if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                if (!IsPointInRange(x, y) && ignoreSomeErrors)
                 {
                     return;
                 }
@@ -68,7 +78,7 @@ namespace Libraries.system
 
             public void Fill(int x, int y, int width, int height, T value)
             {
-                if (!IsBoxInRange(x, y, width, height) && ProcessorManager.instance.ignoreSomeErrors)
+                if (!IsBoxInRange(x, y, width, height) && ignoreSomeErrors)
                 {
                     return;
                 }
@@ -84,7 +94,7 @@ namespace Libraries.system
 
             public T GetAt(int x, int y)
             {
-                if (!IsPointInRange(x, y) && ProcessorManager.instance.ignoreSomeErrors)
+                if (!IsPointInRange(x, y) && ignoreSomeErrors)
                 {
                     return default(T);
                 }
@@ -95,41 +105,64 @@ namespace Libraries.system
             public void FillAll(T value)
             {
                 Fill(0, 0, width, height, value);
-              //  Func<int, int> f = null;
-               // Func<int,out int,out int> ff = null;
+                //  Func<int, int> f = null;
+                // Func<int,out int,out int> ff = null;
             }
 
-            //todo 0 think about making another function that will use byte instead of byte[] cuz new byte[]{}; impossible, can't make something like null byte. Ok `out`? delegates? Make it return byte and bool isNull
-            protected byte[] ToData(float sizeOfT, Func<T, byte[]> converter)
+            public byte[] ToData(int sizeOfTInBits, Converter<T, byte[]> converter = null)
             {
-                int fullSize = 8 - (array.Length % 8) + array.Length;
-                byte[] __bytes = new byte[sizeof(Int32) + sizeof(Int32) + Round(sizeOfT * fullSize)];
-                int __counter = 0;
-                __bytes.SetByteValue(width.ToBytes(), __counter);
-                __counter += (sizeof(Int32));
-                __bytes.SetByteValue(height.ToBytes(), __counter);
-                __counter += (sizeof(Int32));
-                for (int i = 0; i < fullSize; i++)
+                byte[] bytes = new byte[sizeof(Int32) + sizeof(Int32) +
+                                        mathematics.Math.Ceil(1f * (sizeOfTInBits * array.Length) / 8)];
+                int pointer = 0;
+                bytes.SetByteValue(width.ToBytes(), pointer);
+                pointer += (sizeof(Int32));
+                bytes.SetByteValue(height.ToBytes(), pointer);
+                pointer += (sizeof(Int32));
+                //todo 0 better array check
+                if (array == null)
                 {
-                    T val = default(T);
-                    if (array.Length > i)
+                    return bytes;
+                }
+
+                if (sizeOfTInBits == 1)
+                {
+                    if (array is not bool[] && array is byte[] bytess)
                     {
-                        val = array[i];
+                        //convert to bool[]
+                        byte[] output = Array.ConvertAll<byte, bool>(bytess, x => x != 0).ConvertAllBoolsToBytes();
+                        Array.Copy(output, 0, bytes, pointer, output.Length);
                     }
-
-                    byte[] output = converter.Invoke(val);
-
-                    for (int j = 0; j < output.Length; j++)
+                    else
                     {
-                       
-
-                       // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
-                        __bytes[__counter] = output[j];
-                        __counter += 1;
+                        byte[] output = (array as bool[]).ConvertAllBoolsToBytes();
+                        Array.Copy(output, 0, bytes, pointer, output.Length);
+                    }
+                }
+                else if (sizeOfTInBits <= 2)
+                {
+                    byte[] output = (array as byte[]).ConvertAllDibitsToBytes();
+                    Array.Copy(output, 0, bytes, pointer, output.Length);
+                }
+                else if (sizeOfTInBits <= 4)
+                {
+                    byte[] output = (array as byte[]).ConvertAllNibblesToBytes();
+                    Array.Copy(output, 0, bytes, pointer, output.Length);
+                }
+                else if (converter == null)
+                {
+                    Array.Copy((array as byte[]), 0, bytes, pointer, array.Length);
+                }
+                else
+                {
+                    foreach (var x1 in array)
+                    {
+                        byte[] output = converter(x1);
+                        Array.Copy(output, 0, bytes, pointer, output.Length);
+                        pointer += output.Length;
                     }
                 }
 
-                return __bytes;
+                return bytes;
             }
 
             public static int Round(float f)
@@ -137,41 +170,50 @@ namespace Libraries.system
                 return Mathf.RoundToInt(f);
             }
 
-            protected static RectArray<T> FromData(byte[] data, float sizeOfT, Func<byte[], T[]> converter)
+            public static RectArray<T> FromData(byte[] data, int sizeOfTInBits, Func<byte[], T[]> converter = null)
             {
-                float __counter = 0;
-                int minSizeOfT = Round(sizeOfT);
-                minSizeOfT += minSizeOfT < 1 ? 1 : 0;
-                int width = BitConverter.ToInt32(data, Round(__counter));
-                __counter += (sizeof(Int32));
-                int height = BitConverter.ToInt32(data, Round(__counter));
-                __counter += (sizeof(Int32));
-                RectArray<T> __structure = new RectArray<T>(width, height);
-                byte[] buffers = new byte[minSizeOfT];
-                for (int k = 0; __counter < data.Length; __counter += minSizeOfT)
+                int unitSize = Math.Ceil(1f * sizeOfTInBits / 8);
+                int pointer = 0;
+                int width = BitConverter.ToInt32(data, pointer);
+                pointer += sizeof(Int32);
+                int height = BitConverter.ToInt32(data, pointer);
+                pointer += sizeof(Int32);
+                RectArray<T> structure = new RectArray<T>(width, height);
+                data = data.Skip(pointer).ToArray();
+                List<T> list = new List<T>();
+                if (sizeOfTInBits == 1)
                 {
-                    //  Debug.Log($"iter {__counter} compare to {data.Length}");
-                    Array.Copy(data, Round(__counter), buffers, 0, minSizeOfT);
-                    T[] t = converter.Invoke(buffers);
-                    for (int j = 0; j < t.Length; j++)
+                    byte[] output = Array.ConvertAll(data.ConvertBytesToBools(), x => (byte)(x ? 1 : 0));
+                    Array.Copy(output, 0, structure.array, 0, structure.array.Length);
+                }
+                else if (sizeOfTInBits <= 2)
+                {
+                    byte[] output = data.ConvertBytesToDibits();
+                    Array.Copy(output, 0, structure.array, 0, structure.array.Length);
+                }
+                else if (sizeOfTInBits <= 4)
+                {
+                    byte[] output = data.ConvertBytesToNibbles();
+                    Array.Copy(output, 0, structure.array, 0, structure.array.Length);
+                }
+                else if (converter == null)
+                {
+                    Array.Copy(data, 0, structure.array, 0, data.Length);
+                }
+                else
+                {
+                    for (int i = 0; i < data.Length; i += unitSize)
                     {
-                        if (j > k || k >= __structure.array.Length)
-                        {
-                            break;
-                        }
-
-                        // Debug.Log($"setting at {__counter} value {output[j]}. J is {j}");
-                        __structure.array[k] = t[j];
-                        k++;
+                        Debug.Log($"" +
+                                  $"{i}  {data.Length} {unitSize}  ");
+                        list.AddRange(converter(data.Skip(i).Take(unitSize).ToArray()));
                     }
-                    //   Debug.Log($"copyied from {data.ToArrayString()} at {__counter} to {buffers.ToArrayString()} at {0} with length {sizeOfT} which gave {t}");
+
+                    structure.array = list.ToArray();
                 }
 
-                /*  for (int i = 0; __counter < data.Length; __counter += sizeOfT, i++)
-                  {
-                      __structure.array[i] = converter.Invoke(data);
-                  }*/
-                return __structure;
+
+                return structure;
             }
 
             public bool IsPointInRange(int x, int y)
@@ -198,16 +240,17 @@ namespace Libraries.system
                 return newArray;
             }
 
-            public RectArray<S> Convert<S>(Func<T, S> converter)
+            public RectArray<S> Convert<S>(Converter<T, S> converter)
             {
                 RectArray<S> newArray = new RectArray<S>(width, height);
-                for (int currentY = 0; currentY < height; currentY++)
-                {
-                    for (int currentX = 0; currentX < width; currentX++)
-                    {
-                        newArray.SetAt(currentX, currentY, converter.Invoke(this.GetAt(currentX, currentY)));
-                    }
-                }
+                newArray.array = Array.ConvertAll<T, S>(array, converter);
+                /*  for (int currentY = 0; currentY < height; currentY++)
+                  {
+                      for (int currentX = 0; currentX < width; currentX++)
+                      {
+                          newArray.SetAt(currentX, currentY, converter.Invoke(this.GetAt(currentX, currentY)));
+                      }
+                  }*/
 
                 return newArray;
             }

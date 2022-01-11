@@ -118,7 +118,7 @@ namespace Libraries.system
 
             public Path GetPathClass(File root = null)
             {
-                return new Path(GetFullPath(), null, root == null ? drive?.GetRoot() : root);
+                return new Path(GetFullPath(), root == null ? drive?.GetRoot() : root);
             }
 
             public void MoveFileTo(File desitination)
@@ -129,7 +129,7 @@ namespace Libraries.system
 
             public string ReturnDataAsString()
             {
-                return ProcessorManager.mainEncoding.GetString(data);
+                return HardwareInternal.mainEncoding.GetString(data);
             }
 
             public File GetChildByName(string name)
