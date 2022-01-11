@@ -11,6 +11,7 @@ using System.ComponentModel;
 using Libraries.system.mathematics;
 using Libraries.system.output.graphics.screen_buffer32;
 using Libraries.system.output.graphics.system_colorspace;
+using Libraries.system.output.graphics.system_texture;
 using UnityEngine;
 using sio = System.IO;
 /*using System.Text;
@@ -76,22 +77,61 @@ public class NativeTest : MonoBehaviour
          PaletteTexture pt2 = new PaletteTexture();
          pt2.FromData(data);
          Debug.Log(pt2.ToData().ToFormatedString());*/
-        RectArray<long> rect = new RectArray<long>(2, 2, new long[] { 0, 1, 0, 1 });
-        var data = rect.ToData(sizeof(long) * 8, BitConverter.GetBytes);
-        Debug.Log(data.ToFormattedString());
-        RectArray<long> rect2 =
-            RectArray<long>.FromData(data, sizeof(long) * 8, x => new long[] { BitConverter.ToInt64(x) });
-        Debug.Log(rect2.ToData(sizeof(long) * 8, BitConverter.GetBytes).ToFormattedString());
+        if (false)
+        {
+            RectArray<long> rect = new RectArray<long>(2, 2, new long[] { 0, 1, 0, 1 });
+
+            var data = rect.ToData(sizeof(long) * 8, BitConverter.GetBytes);
+            Debug.Log(data.ToFormattedString());
+            RectArray<long> rect2 =
+                RectArray<long>.FromData(data, sizeof(long) * 8, x => new long[] { BitConverter.ToInt64(x) });
+            Debug.Log(rect2.ToData(sizeof(long) * 8, BitConverter.GetBytes).ToFormattedString());
+        }
+
+        Debug.Log("===========================");
+        if (true)
+        {
+            PaletteTexture pt = new PaletteTexture(2, 2,
+                new Color32[]
+                    { SystemColor.black.ToColor32(), SystemColor.red.ToColor32(), SystemColor.blue.ToColor32() });
+            pt.SetAt(0, 0, 2);
+            pt.SetAt(1, 1, 2);
+            var data2 = pt.ToData();
+            Debug.Log(data2.ToFormattedString());
+            PaletteTexture pt2 = PaletteTexture.FromDataUsingColorCount(data2, 3);
 
 
-        bool[] bools = new bool[] { true, true, true, true, true, true, true, false, true };
-        byte[] nibbles = new byte[] { 1, 8, 15 };
-        byte[] dibits = new byte[] { 3, 1, 2, 3, 1, 3, 3, 3 };
+            Debug.Log(pt2.ToData().ToFormattedString());
+        }
 
-        Debug.Log(bools.ConvertAllBoolsToBytes().ConvertBytesToBools().ToFormattedString());
-        Debug.Log(nibbles.ConvertAllNibblesToBytes().ConvertBytesToNibbles().ToFormattedString());
-        Debug.Log(dibits.ConvertAllDibitsToBytes().ConvertBytesToDibits().ToFormattedString());
+        Debug.Log("===========================");
+        if (true)
+        {
+            SystemTexture pt = new SystemTexture(2, 2);
+            pt.SetPalette(new[]
+                { SystemColor.black.ToColor32(), SystemColor.red.ToColor32(), SystemColor.blue.ToColor32() });
 
+            pt.SetAt(0, 0, 2);
+            pt.SetAt(1, 1, 2);
+            var data2 = pt.ToData();
+            Debug.Log(data2.ToFormattedString());
+            SystemTexture pt2 = SystemTexture.FromData(data2);
+
+
+            Debug.Log(pt2.ToData().ToFormattedString());
+        }
+
+        Debug.Log("===========================");
+        if (false)
+        {
+            bool[] bools = new bool[] { true, true, true, true, true, true, true, false, true };
+            byte[] nibbles = new byte[] { 1, 8, 15 };
+            byte[] dibits = new byte[] { 3, 1, 2, 3, 1, 3, 3, 3 };
+
+            Debug.Log(bools.ConvertAllBoolsToBytes().ConvertBytesToBools().ToFormattedString());
+            Debug.Log(nibbles.ConvertAllNibblesToBytes().ConvertBytesToNibbles().ToFormattedString());
+            Debug.Log(dibits.ConvertAllDibitsToBytes().ConvertBytesToDibits().ToFormattedString());
+        }
         //   Debug.Log(128.ToBytes().ToFormattedString());
         //    Debug.Log(new BitArray(128.ToBytes()).ToDisplayString());
 
@@ -144,6 +184,7 @@ Debug.Log(default(SystemColor).value);*/
 
 // FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");
     }
+
 /*  public static string GetPath(string rawPath, File workingDirectory)
   {
 

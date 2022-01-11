@@ -118,10 +118,25 @@ namespace Libraries.system
                 pointer += (sizeof(Int32));
                 bytes.SetByteValue(height.ToBytes(), pointer);
                 pointer += (sizeof(Int32));
+                //todo 0 better array check
+                if (array == null)
+                {
+                    return bytes;
+                }
+
                 if (sizeOfTInBits == 1)
                 {
-                    byte[] output = (array as bool[]).ConvertAllBoolsToBytes();
-                    Array.Copy(output, 0, bytes, pointer, output.Length);
+                    if (array is not bool[] && array is byte[] bytess)
+                    {
+                        //convert to bool[]
+                        byte[] output = Array.ConvertAll<byte, bool>(bytess, x => x != 0).ConvertAllBoolsToBytes();
+                        Array.Copy(output, 0, bytes, pointer, output.Length);
+                    }
+                    else
+                    {
+                        byte[] output = (array as bool[]).ConvertAllBoolsToBytes();
+                        Array.Copy(output, 0, bytes, pointer, output.Length);
+                    }
                 }
                 else if (sizeOfTInBits <= 2)
                 {
@@ -169,21 +184,21 @@ namespace Libraries.system
                 if (sizeOfTInBits == 1)
                 {
                     byte[] output = Array.ConvertAll(data.ConvertBytesToBools(), x => (byte)(x ? 1 : 0));
-                    Array.Copy(output, 0, structure.array, pointer, output.Length);
+                    Array.Copy(output, 0, structure.array, 0, structure.array.Length);
                 }
                 else if (sizeOfTInBits <= 2)
                 {
                     byte[] output = data.ConvertBytesToDibits();
-                    Array.Copy(output, 0, structure.array, pointer, output.Length);
+                    Array.Copy(output, 0, structure.array, 0, structure.array.Length);
                 }
                 else if (sizeOfTInBits <= 4)
                 {
                     byte[] output = data.ConvertBytesToNibbles();
-                    Array.Copy(output, 0, structure.array, pointer, output.Length);
+                    Array.Copy(output, 0, structure.array, 0, structure.array.Length);
                 }
                 else if (converter == null)
                 {
-                    Array.Copy(data, 0, structure.array, pointer, data.Length);
+                    Array.Copy(data, 0, structure.array, 0, data.Length);
                 }
                 else
                 {

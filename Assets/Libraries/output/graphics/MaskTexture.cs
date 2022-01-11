@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Libraries.system.output.graphics.screen_buffer32;
+using Libraries.system.output.graphics.system_colorspace;
 
 namespace Libraries.system.output.graphics
 {
@@ -11,72 +13,68 @@ namespace Libraries.system.output.graphics
         using UnityEngine;
 
         [Serializable]
-        public class MaskTexture : RectArray<bool> //todo 0 convert to palette texture with "static" palette
+        public class MaskTexture : PaletteTexture
         {
             private static readonly int HEADER_SIZE = 1;
-            public byte transparencyFlag = 0xff;
 
-            public MaskTexture(int width, int height) : base(width, height)
+            private static readonly new color32.Color32[] palette = new color32.Color32[]
+                { ColorConstants.Black32, ColorConstants.White32 };
+
+            public MaskTexture(int width, int height) : base(width, height, palette)
             {
             }
 
-            public MaskTexture(RectArray<bool> array) : base(array)
+            public MaskTexture(RectArray<bool> array)
             {
+                this.array = Array.ConvertAll<bool, byte>(array.array, x => (byte)(x ? 1 : 0));
+            }
+
+            public MaskTexture(PaletteTexture paletteTexture)
+
+            {
+                array = (byte[])paletteTexture.array.Clone();
+                transparencyFlag = paletteTexture.transparencyFlag;
+                SetPalette(palette);
             }
 
             public MaskTexture()
             {
             }
 
-            public bool UseTransparency()
+            public new void SetPalette(Libraries.system.output.graphics.color32.Color32[] palette)
             {
-                return transparencyFlag == 0xff;
+                Debug.Log("You can't change palette of mask texture!");
+                //todo 4 think baout this, maybe you could make it like 1 color palette per sprite optional?
+                return;
             }
 
-            public byte[] ToData()
+
+            public new byte[] ToData()
             {
                 byte[] header = new byte[HEADER_SIZE];
-
                 header[0] = transparencyFlag;
 
-                return header.Concat(base.ToData(sizeOfTInBits, Converter)).ToArray();
-            }
-
-            static byte sizeOfTInBits = 1;
-            byte[] buffer = new byte[1];
-
-            byte counter;
-            BitArray ba = new BitArray(8, false);
-            int index = 0;
-
-            public byte[] Converter(bool x)
-            {
-                ba.Set(index++, x);
-                if (index >= 8)
-                {
-                    ba.CopyTo(buffer, 0);
-                    index = 0;
-                    return buffer;
-                }
-
-                return Array.Empty<byte>();
+                return header.Concat(base.ToData(sizeOfInBits)).ToArray();
             }
 
             public static MaskTexture FromData(byte[] data)
             {
-                MaskTexture texture = new MaskTexture(RectArray<bool>.FromData(data.Skip(HEADER_SIZE).ToArray(),
-                    sizeOfTInBits, x =>
-                    {
-                        bool[] bs = new bool[8];
-                        BitArray ba = new BitArray(x);
-                        ba.CopyTo(bs, 0);
-                        return bs;
-                    }));
-                byte[] header = data.Take(HEADER_SIZE).ToArray();
+                MaskTexture pt = new MaskTexture();
+                Span<byte> wholeData = new Span<byte>(data);
 
-                texture.transparencyFlag = header[0];
+                Span<byte> header = wholeData.Slice(0, HEADER_SIZE).ToArray();
 
-                return texture;
+                pt.transparencyFlag = header[0];
+
+
+                RectArray<byte> rectArray = RectArray<byte>.FromData(
+                    data.Skip(header.Length).ToArray(), 1
+                );
+
+                pt.width = rectArray.width;
+                pt.height = rectArray.height;
+                pt.array = rectArray.array;
+                return pt;
             }
         }
     }

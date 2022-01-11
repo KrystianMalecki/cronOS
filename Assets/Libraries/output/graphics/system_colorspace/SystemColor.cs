@@ -156,6 +156,11 @@ namespace Libraries.system.output.graphics
                 return val.value;
             }
 
+            public static implicit operator byte(SystemColor val)
+            {
+                return (byte)val.value;
+            }
+
             public static SystemColor operator ++(SystemColor sc)
             {
                 sc.Add(1);
