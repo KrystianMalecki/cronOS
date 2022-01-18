@@ -28,6 +28,19 @@ namespace Libraries.system.output.graphics
                 return new Texture32(RectArray<Color32>.FromData(data, Color32.sizeOfInBits,
                     x => new Color32[] { new Color32(x[0], x[1], x[2], x[3]) }));
             }
+
+            public void TintAll(Color32 color, bool addAlpha = true)
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    array[i].Add(color, addAlpha);
+                }
+            }
+
+            public bool UseTransparency()
+            {
+                return true;
+            }
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Libraries.system.output.graphics
                 color = new UnityEngine.Color32(r, g, b, 255);
             }
 
-            public Color32(UnityEngine.Color32 unityColor)
+            internal Color32(UnityEngine.Color32 unityColor)
             {
                 color = unityColor;
             }
@@ -71,6 +71,16 @@ namespace Libraries.system.output.graphics
             public static implicit operator UnityEngine.Color32(Color32 col)
             {
                 return col.color;
+            }
+
+            internal UnityEngine.Color32 asUnityColor()
+            {
+                return color;
+            }
+
+            internal Color32 toColor(UnityEngine.Color32 col)
+            {
+                return new Color32(col);
             }
 
             public static Color32 Lerp(Color32 a, Color32 b, float t)
@@ -154,6 +164,29 @@ namespace Libraries.system.output.graphics
                 }
 
                 return nearestID;
+            }
+
+            public static Color32 operator +(Color32 a, Color32 b)
+            {
+                Color32 c32 = new Color32(a);
+                c32.Add(b);
+                return c32;
+            }
+
+            public void Add(Color32 other, bool addAlpha = true)
+            {
+                r += other.r;
+                g += other.g;
+                b += other.b;
+                if (addAlpha)
+                {
+                    a += other.a;
+                }
+            }
+
+            public static Color32 operator -(Color32 a, Color32 b)
+            {
+                return new Color32((byte)(a.r - b.r), (byte)(a.g - b.g), (byte)(a.b - b.b), (byte)(a.a - b.a));
             }
         }
     }

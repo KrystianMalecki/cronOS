@@ -4,34 +4,37 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-[CustomPropertyDrawer(typeof(Drive))]
 
+[CustomPropertyDrawer(typeof(DriveSO))]
 public class DrivePD : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-
-        return 0;//idk why
+        return 0; //idk why
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
         EditorGUILayout.PropertyField(property, GUIContent.none);
+        DriveSO mainObject = ((DriveSO)property.GetTargetObjectOfProperty());
+        if (mainObject == null)
+        {
+            GUILayout.Box("DriveSO is null");
+            return;
+        }
+
         if (GUILayout.Button("Open Editor"))
         {
-            ((Drive)property.GetTargetObjectOfProperty()).GenerateCacheData();
-
-            ((Drive)property.GetTargetObjectOfProperty()).OpenEditor();
+            mainObject.GenerateCacheData();
+            mainObject.OpenEditor();
         }
+
         if (GUILayout.Button("Generate parent links"))
         {
-            ((Drive)property.GetTargetObjectOfProperty()).GenerateCacheData();
-
-
+            mainObject.GenerateCacheData();
         }
-        EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.EndHorizontal();
     }
 }

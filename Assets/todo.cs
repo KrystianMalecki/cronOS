@@ -1,16 +1,12 @@
-//last thing:fixed exceptions when pressing keys on high fps, fixed lag, made screen rendering kinda parallel,   Fixed mouse,thinking how to implement Hardware class correctly, singleton purge,   Making better workflow, Trying to make booting work, Texture tinting, Mask texturing done, BW texture, compressing files/textures, keyboard input 
-//todo -0                                                           ^still idk
 //todo 0 add todos here
-/*idea:
- -make palette texture laod data to bitArray and then compress to bytes
- -make it load bytes to bitArray and then decompress to values
- -dogshiot idea
-*/
-//last did: ICompressable i zmiana na stałą jednostkę sizeOFInBits
 //todo 91 go back to sounds
 
 //todo 99 add lolcat command and CT
+//todo 1? flags in hardware as list of strings?. You want to make RectArray(and etc.) ignore some errors BUT you also want it toggleable
 
+//todo 1? you also wanted to run stuff from shell because it would be easier to reuse ScreenBuffer.
+//BUT this would also make it non-window-compatible? You can just pass ScreenBuffer from shell and if you want to use it in window, you can just pass new buffer from window object.
+//think about this^
 
 //future
 

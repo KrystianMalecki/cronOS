@@ -124,30 +124,7 @@ public static class StaticHelper
         return new byte[] { variable };
     }
 
-    public static byte[] ToBytes(this string variable)
-    {
-        if (string.IsNullOrEmpty(variable))
-        {
-            return Array.Empty<byte>();
-        }
 
-        return HardwareInternal.mainEncoding.GetBytes(variable);
-    }
-
-    public static string ToEncodedString(this byte[] variable)
-    {
-        if (variable == null)
-        {
-            return "";
-        }
-
-        return HardwareInternal.mainEncoding.GetString(variable);
-    }
-
-    /*  public static byte[] GetRange(this byte[] variable, int start, int length)
-      {
-          return variable;
-      }*/
     public static string GetRangeBetweenFirstLast(this string input, string key, int offset = 0,
         bool includeKeys = true)
     {

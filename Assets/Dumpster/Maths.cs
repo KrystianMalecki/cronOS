@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Configuration;
 
 
 namespace Libraries.system
 {
     namespace mathematics
     {
-        public static class Maths //todo 3 change name
+        public static class Maths //todo-future change name
         {
-           //todo 5, think if using span would be better
-
             #region bool->byte
 
             public static byte Convert8BoolsToByte(this bool[] array)

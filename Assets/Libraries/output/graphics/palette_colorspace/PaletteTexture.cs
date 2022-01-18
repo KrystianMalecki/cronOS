@@ -19,7 +19,7 @@ namespace Libraries.system.output.graphics
             public int sizeOfInBits;
             protected Color32[] palette;
 
-//todo 0 check if palette is bigger than 256
+
             public PaletteTexture(int width, int height, Color32[] palette) : base(width, height)
             {
                 SetPalette(palette);
@@ -37,7 +37,7 @@ namespace Libraries.system.output.graphics
             public void SetPalette(Color32[] palette)
             {
                 this.palette = palette;
-
+//todo 0 check if palette is bigger than 256
 
                 sizeOfInBits = ColorCountToSOIB(this.palette.Length);
             }
@@ -62,14 +62,18 @@ namespace Libraries.system.output.graphics
                 }
             }
 
-            //todo 0 fix this everywhere 
             public bool UseTransparency()
             {
-                return transparencyFlag == 0xff;
+                return transparencyFlag != 0xff;
             }
 
-            public SystemColor GetTextureTransparencyColor()
+            public byte GetTransparencyColor()
             {
+                if (!UseTransparency())
+                {
+                    //todo 0 throw exception
+                }
+
                 return transparencyFlag;
             }
 
@@ -89,7 +93,7 @@ namespace Libraries.system.output.graphics
                     {
                         // Debug.Log(4 + i * 4 + j);
                         header[4 + i * 4 + j] = palette[i][j];
-                        Debug.Log($"i{i} j{j} sum{4 + i * 4 + j} val{palette[i][j]}");
+                        // Debug.Log($"i{i} j{j} sum{4 + i * 4 + j} val{palette[i][j]}");
                     }
                 }
 

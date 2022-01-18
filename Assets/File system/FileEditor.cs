@@ -3,6 +3,7 @@ using Libraries.system.file_system;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Libraries.system;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class FileEditor : EditorWindow
     public SerializedProperty currentFileSP = null;
     public SerializedObject currentFileSO = null;
     public Drive drive = null;
+    public DriveSO driveSO = null;
+
     public string driveAssetPath = null;
 
     public Path bufferedPathObject = null;
@@ -22,6 +25,8 @@ public class FileEditor : EditorWindow
 
     int size = 32;
     int page = 0;
+    SerializedProperty driveSP;
+
     SerializedProperty permissionsSP;
     SerializedProperty dataSP;
 
@@ -124,9 +129,9 @@ public class FileEditor : EditorWindow
         {
             UpdateDrive();
         }
-        else
+        else if (driveSO != null)
         {
-            driveAssetPath = AssetDatabase.GetAssetPath(drive);
+            driveAssetPath = AssetDatabase.GetAssetPath(driveSO);
             EditorPrefs.SetString("drivePath", driveAssetPath);
         }
     }
@@ -165,7 +170,8 @@ public class FileEditor : EditorWindow
             driveAssetPath = EditorPrefs.GetString("drivePath", null);
             if (string.IsNullOrEmpty(driveAssetPath))
             {
-                drive = AssetDatabase.LoadAssetAtPath<Drive>(driveAssetPath);
+                driveSO = AssetDatabase.LoadAssetAtPath<DriveSO>(driveAssetPath);
+                drive = driveSO?.drive;
                 drive.GenerateCacheData();
             }
             else
@@ -186,6 +192,7 @@ public class FileEditor : EditorWindow
     {
         TryFixEditorValues(refresh);
 
+
         permissionsSP = currentFileSP.FindPropertyRelative("permissions");
         dataSP = currentFileSP.FindPropertyRelative("data");
         sizeBuffer = currentFile.GetByteSize();
@@ -195,9 +202,9 @@ public class FileEditor : EditorWindow
     SerializedProperty FindPropertyOfFile(File f)
     {
         SerializedProperty buffer;
-        if (currentFileSO.targetObject.GetType() == typeof(Drive))
+        if (currentFileSO.targetObject.GetType() == typeof(DriveSO))
         {
-            buffer = currentFileSO.FindProperty($"files.items.Array.data[{f.FileID}]");
+            buffer = currentFileSO.FindProperty($"drive.files.items.Array.data[{f.FileID}]");
         }
         else
         {
@@ -724,7 +731,7 @@ public class FileEditor : EditorWindow
         GUILayout.Label("As Text Input:", GUILayout.Width(90));
         if ( /*string.IsNullOrEmpty(dataAsString)*/dataAsString == null)
         {
-            dataAsString = currentFile.data.ToEncodedString();
+            dataAsString = Runtime.BytesToEncodedString(currentFile.data);
         }
 
         textScrollPos = EditorGUILayout.BeginScrollView(textScrollPos, GUILayout.ExpandHeight(true));
@@ -737,8 +744,8 @@ public class FileEditor : EditorWindow
 
         if (GUILayout.Button("Replace Data", GUILayout.ExpandWidth(true)))
         {
-            Debug.Log($"str{dataAsString}byt{dataAsString.ToBytes().ToFormattedString()}");
-            currentFile.data = dataAsString.ToBytes();
+            Debug.Log($"str{dataAsString}byt{Runtime.StringToEncodedBytes(dataAsString).ToFormattedString()}");
+            currentFile.data = Runtime.StringToEncodedBytes(dataAsString);
             currentFileSO.Update();
             UpdateWindow();
         }

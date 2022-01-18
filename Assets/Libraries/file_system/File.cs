@@ -15,7 +15,7 @@ namespace Libraries.system
     namespace file_system
     {
         [System.Serializable]
-        public unsafe class File
+        public  class File
         {
             public File()
             {

@@ -37,25 +37,6 @@ public class HardwareBox
 //HardwareBox.hardware = hardware;
 public class C
 {
-    public void add()
-    {
-        hardware.number++;
-        say();
-    }
-
-    public void say()
-    {
-        Console.Debug(hardware.number);
-    }
-
-    public void run()
-    {
-        while (true)
-        {
-            add();
-            hardware.runtime.Wait(100);
-        }
-    }
 }
 
 /*C c = new C();
@@ -88,8 +69,7 @@ public class NativeTest : MonoBehaviour
             Debug.Log(rect2.ToData(sizeof(long) * 8, BitConverter.GetBytes).ToFormattedString());
         }
 
-        Debug.Log("===========================");
-        if (true)
+        if (false)
         {
             PaletteTexture pt = new PaletteTexture(2, 2,
                 new Color32[]
@@ -104,8 +84,7 @@ public class NativeTest : MonoBehaviour
             Debug.Log(pt2.ToData().ToFormattedString());
         }
 
-        Debug.Log("===========================");
-        if (true)
+        if (false)
         {
             SystemTexture pt = new SystemTexture(2, 2);
             pt.SetPalette(new[]
@@ -121,7 +100,6 @@ public class NativeTest : MonoBehaviour
             Debug.Log(pt2.ToData().ToFormattedString());
         }
 
-        Debug.Log("===========================");
         if (false)
         {
             bool[] bools = new bool[] { true, true, true, true, true, true, true, false, true };

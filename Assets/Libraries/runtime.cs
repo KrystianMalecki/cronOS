@@ -74,5 +74,25 @@ namespace Libraries.system
         {
             return value.ToString("X" + (makeIt2 ? 2 : 1));
         }
+
+        public static byte[] StringToEncodedBytes(string variable)
+        {
+            if (string.IsNullOrEmpty(variable))
+            {
+                return Array.Empty<byte>();
+            }
+
+            return HardwareInternal.mainEncoding.GetBytes(variable);
+        }
+
+        public static string BytesToEncodedString(byte[] variable)
+        {
+            if (variable == null)
+            {
+                return "";
+            }
+
+            return HardwareInternal.mainEncoding.GetString(variable);
+        }
     }
 }

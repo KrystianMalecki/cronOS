@@ -605,7 +605,7 @@ PlayerSettings:
     PS4: UNITY_POST_PROCESSING_STACK_V2
     PS5: UNITY_POST_PROCESSING_STACK_V2
     Stadia: UNITY_POST_PROCESSING_STACK_V2
-    Standalone: UNITY_POST_PROCESSING_STACK_V2;ODIN_INSPECTOR;ODIN_INSPECTOR_3
+    Standalone: UNITY_POST_PROCESSING_STACK_V2
     WebGL: UNITY_POST_PROCESSING_STACK_V2
     Windows Store Apps: UNITY_POST_PROCESSING_STACK_V2
     XboxOne: UNITY_POST_PROCESSING_STACK_V2
@@ -627,7 +627,7 @@ PlayerSettings:
   assemblyVersionValidation: 1
   gcWBarrierValidation: 0
   apiCompatibilityLevelPerPlatform:
-    Standalone: 3
+    Standalone: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Template_3D

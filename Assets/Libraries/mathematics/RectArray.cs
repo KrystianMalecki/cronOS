@@ -64,7 +64,7 @@ namespace Libraries.system
                 Array.Copy(array, 0, this.array, 0, array.Length);
             }
 
-            bool ignoreSomeErrors = true; //todo 9 remove
+            bool ignoreSomeErrors = true; //todo 9 remove, flag system?
 
             public void SetAt(int x, int y, T value)
             {
@@ -105,8 +105,6 @@ namespace Libraries.system
             public void FillAll(T value)
             {
                 Fill(0, 0, width, height, value);
-                //  Func<int, int> f = null;
-                // Func<int,out int,out int> ff = null;
             }
 
             public byte[] ToData(int sizeOfTInBits, Converter<T, byte[]> converter = null)

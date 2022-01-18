@@ -7,38 +7,16 @@ using UnityEditor;
 using System;
 using System.Collections.Concurrent;
 
-[CreateAssetMenu(fileName = "Drive", menuName = "ScriptableObjects/Drive")]
+
 [Serializable]
-public class Drive : ScriptableObject
+public class Drive
 {
-    /*[Button]
-    void Say()
-    {
-        for (int i = 0; i < files.Count; i++)
-        {
-            Debug.Log($"id{files[i].FileID} parentID{files[i].ParentID}");
-
-        }
-    }*/
-
+    [NonSerialized] public File root = null;
     [NonSerialized] public bool cached = false;
 
-    [NonSerialized] public File root = null;
-
-    // [Header("DO NOT USE +")]
     [SerializeField] public ThreadSafeList<File> files = new ThreadSafeList<File>();
     [SerializeField] public ThreadSafeList<int> freeSpaces = new ThreadSafeList<int>();
 
-    [NaughtyAttributes.Button]
-    public void OpenEditor()
-    {
-        GenerateCacheData();
-#if UNITY_EDITOR
-        SerializedObject so = new SerializedObject(this, this);
-
-        FileEditor.DisplayCurrentFile(GetRoot(), null, null, so);
-#endif
-    }
 
     public File GetRoot()
     {
@@ -47,7 +25,7 @@ public class Drive : ScriptableObject
         return root;
     }
 
-    [Button]
+
     public void GenerateCacheData()
     {
         cached = true;
@@ -104,27 +82,6 @@ public class Drive : ScriptableObject
             return null;
         }
     }
-    /*  [Button]
-
-      public void Test()
-      {
-          GenerateCacheData();
-          for (int i = 0; i < files.Count; i++)
-          {
-              File file = files[i];
-              File file2 = files[i];
-
-              List<File> path = new List<File>();
-              path.Add(file);
-              while (file.parent != null)
-              {
-                  file = file.parent;
-                  path.Add(file);
-              }
-              path.Reverse();
-              Debug.Log($"{file2} path: {string.Join("/", path)}");
-          }
-      }*/
 
     public File GetFileByPath(string rawPath, File parent = null)
     {

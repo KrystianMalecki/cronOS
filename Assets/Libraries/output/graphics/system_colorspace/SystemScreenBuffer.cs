@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Libraries.system.output.graphics
 {
     namespace system_screen_buffer
@@ -21,15 +23,20 @@ namespace Libraries.system.output.graphics
                 return height;
             }
 
+            Color32 IGenericScreenBuffer.GetUnityColorAt(int x, int y)
+            {
+                return ((SystemColor)GetAt(x, y)).ToColor32();
+            }
+
             public int GetWidth()
             {
                 return width;
             }
 
-            public UnityEngine.Color32 GetUnityColorAt(int x, int y)
+           /* internal UnityEngine.Color32 GetUnityColorAt(int x, int y)
             {
                 return ((SystemColor)GetAt(x, y)).ToColor32();
-            }
+            }*/
 
             bool ignoreSomeErrors = true; //todo 9 remove
 

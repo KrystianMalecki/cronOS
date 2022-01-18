@@ -15,11 +15,6 @@ using Libraries.system.input;
 [Serializable]
 public class Hardware
 {
-    //todo 0 add shell
-    //  public static SimpleShell
-    //todo rename to 
-    public int number = 0;
-    public dynamic shell;
     public Runtime runtime = new Runtime();
     public FileSystem fileSystem = new FileSystem();
     public KeyHandler keyHandler = new KeyHandler();

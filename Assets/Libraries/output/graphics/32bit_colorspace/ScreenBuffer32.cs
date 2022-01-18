@@ -17,21 +17,23 @@ namespace Libraries.system.output.graphics
             {
             }
 
-            public UnityEngine.Color32 GetUnityColorAt(int x, int y)
-            {
-                return GetAt(x, y);
-            }
 
             public int GetHeight()
             {
                 return height;
             }
 
+            UnityEngine.Color32 IGenericScreenBuffer.GetUnityColorAt(int x, int y)
+            {
+                return GetAt(x, y);
+            }
+
             public int GetWidth()
             {
                 return width;
             }
-            bool ignoreSomeErrors = true;//todo 9 remove
+
+            bool ignoreSomeErrors = true; //todo 9 remove
 
             public void SetTexture(int x, int y, Texture32 texture, bool drawPartialy = true)
             {
@@ -83,12 +85,14 @@ namespace Libraries.system.output.graphics
                     i = i + 1;
                 }
             }
+
             public void DrawLine(Vector2Int start, Vector2Int end, Color32 color)
             {
                 if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
                 {
                     return;
                 }
+
                 DrawLine(start.x, start.y, end.x, end.y, color);
             }
         }

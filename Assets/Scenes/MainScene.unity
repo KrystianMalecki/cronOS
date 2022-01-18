@@ -220,6 +220,60 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366580919}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &377409527
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 377409528}
+  - component: {fileID: 377409529}
+  m_Layer: 0
+  m_Name: file CT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &377409528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377409527}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &377409529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377409527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: 'File f = fileSystem.GetFileByPath("/sys");
+
+    f.AddChild(Drive.MakeFile("txt"));
+
+    File
+    txt = fileSystem.GetFileByPath("/sys/txt");
+
+    txt.data = "saved text.".ToBytes();'
 --- !u!1 &434435441
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,7 +485,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 632187780}
-  - {fileID: 1446994156}
   - {fileID: 512668658}
   - {fileID: 922628692}
   m_Father: {fileID: 0}
@@ -570,7 +623,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 448482745}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -785,9 +838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bufferTexture: {fileID: 0}
-  localTransform: {fileID: 0}
   mat: {fileID: 2100000, guid: 939261eee5055804ba08c4faf3f750b0, type: 2}
-  rawImage: {fileID: 1446994157}
   mesh: {fileID: 544366080}
 --- !u!1 &605339139
 GameObject:
@@ -1180,15 +1231,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hardware:
-    number: 0
     currentlySelected: 1
     hardwareInternal:
-      mainDrive: {fileID: 11400000, guid: a96cb9c30cd782444998606b6ccbcd40, type: 2}
+      mainDrive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 60
-      WaitRefreshRate: 16
+      FPSCap: 15
+      WaitRefreshRate: 66
       TasksPerCPULoop: -1
       scriptsRunning: []
   references:
@@ -1811,7 +1861,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 448482745}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1929,6 +1979,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922628691}
   m_CullTransparentMesh: 1
+--- !u!1 &973355179
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 973355180}
+  - component: {fileID: 973355181}
+  m_Layer: 0
+  m_Name: paintCT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &973355180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973355179}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &973355181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973355179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: "string filePath = \"/sys\"\nstring fileName = \"output\"\n\nMaskTexture
+    image = new MaskTexture(2,2);\nVector2Int mousePos = new Vector2Int(0, 0);\r\n\n\nSystemScreenBuffer
+    buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n           
+    screen.InitScreenBuffer(buffer);\r\n\n void Draw()\r\n            {\r\n               
+    \n                buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);\r\n              
+    \n            }\r\n\n\n while (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
+    Draw();\r\n                ProcessInput();\r\n                runtime.Wait();\r\n\r\n           
+    }\n\n\n\n\n\nbyte[] data = image.ToData();\nFile parent = fileSystem.GetFileByPath(filePath);\nFile
+    imageFile=Drive.MakeFile(\"output\",data);\nf.AddChild(imageFile);\n"
 --- !u!1 &1081877136
 GameObject:
   m_ObjectHideFlags: 0
@@ -2211,6 +2316,8 @@ Transform:
   - {fileID: 1640294208}
   - {fileID: 1247786007}
   - {fileID: 1985360662}
+  - {fileID: 377409528}
+  - {fileID: 973355180}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2269,7 +2376,7 @@ MonoBehaviour:
     Vector2Int mousePos = new Vector2Int(0, 0);\r\n\r\n            string position
     = \"\";\r\n            string text = \"\";\r\n            int speed = 1;\r\n           
     KeySequence ks = null;\r\n            bool flasher = false;\r\n\tSystemColor
-    bckCol = SystemColor.red;\n\r\n            void CheckMovement(KeySequence ks)\r\n           
+    bckCol = SystemColor.black;\n\r\n            void CheckMovement(KeySequence ks)\r\n           
     {\r\n                if (ks.ReadKey(Key.UpArrow))\r\n                {\r\n                   
     orbPos.y -= speed;\r\n                }\r\n                if (ks.ReadKey(Key.DownArrow))\r\n               
     {\r\n                    orbPos.y += speed;\r\n                }\r\n               
@@ -2304,94 +2411,6 @@ MonoBehaviour:
     while (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
     Draw();\r\n                ProcessInput();\r\n                runtime.Wait();\r\n\r\n           
     }"
---- !u!1 &1446994155
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1446994156}
-  - component: {fileID: 1446994158}
-  - component: {fileID: 1446994157}
-  - component: {fileID: 1446994159}
-  m_Layer: 5
-  m_Name: Screen
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1446994156
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446994155}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 448482745}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 640, y: 480}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1446994157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446994155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 939261eee5055804ba08c4faf3f750b0, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 645b2801e9250854a9b7e6c11a37622b, type: 3}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
---- !u!222 &1446994158
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446994155}
-  m_CullTransparentMesh: 1
---- !u!114 &1446994159
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1446994155}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AspectMode: 2
-  m_AspectRatio: 1
 --- !u!1 &1640294207
 GameObject:
   m_ObjectHideFlags: 0

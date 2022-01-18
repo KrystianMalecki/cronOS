@@ -40,7 +40,7 @@ const string fontPath = "/sys/defFontAtlas";
     {
         if (systemScreenBuffer == null)
         {
-            //todo-future add error
+            
             return;
         }
 

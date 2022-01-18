@@ -5,7 +5,7 @@ namespace Libraries.system.output.graphics
 {
     public interface IGenericScreenBuffer
     {
-        public UnityEngine.Color32 GetUnityColorAt(int x, int y);
+        internal UnityEngine.Color32 GetUnityColorAt(int x, int y);
         public int GetWidth();
         public int GetHeight();
     }

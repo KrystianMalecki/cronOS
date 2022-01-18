@@ -64,10 +64,7 @@ namespace Libraries.system.output.graphics
                     this._value = value;
                 }
             }
-
-            //todo 0 optimize
-
-
+            
             public const bool loop = true;
 
             public void FixRange(ref byte value)

@@ -12,11 +12,10 @@ using System.Threading.Tasks;
 public class ScreenManager : MonoBehaviour
 {
     [NaughtyAttributes.ReadOnly] public Texture2D bufferTexture;
-    public Transform localTransform;
     public Material mat;
-    public RawImage rawImage;
     private int pixelWidth;
     private int pixelHeight;
+    private Camera mainCamera;
 
     public static readonly string asciiMap =
         " ☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼ !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀ɑϐᴦᴨ∑ơµᴛɸϴΩẟ∞∅∈∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
@@ -26,6 +25,11 @@ public class ScreenManager : MonoBehaviour
     public MeshFilter mesh;
     private libs.mathematics.RectArray<Color32> array;
 
+    public void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
     public void InitScreenBuffer(libs.output.graphics.IGenericScreenBuffer screenBuffer)
     {
         bufferTexture = new Texture2D(screenBuffer.GetWidth(), screenBuffer.GetHeight());
@@ -33,7 +37,7 @@ public class ScreenManager : MonoBehaviour
         pixelHeight = screenBuffer.GetHeight();
         bufferTexture.filterMode = FilterMode.Point;
         //  rawImage.texture = bufferTexture;
-        mat.SetTexture("_MainTex", bufferTexture);
+        mat.SetTexture(MainTex, bufferTexture);
         array = new libs.mathematics.RectArray<Color32>(screenBuffer.GetWidth(), screenBuffer.GetHeight());
     }
 
@@ -77,11 +81,12 @@ public class ScreenManager : MonoBehaviour
     }
 
     public System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
-    public libs.mathematics.Vector2Int GetMousePostion()
+    public libs.mathematics.Vector2Int GetMousePosition()
     {
         libs.mathematics.Vector2 v2out = libs.mathematics.Vector2.incorrectVector;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit info, 20, layerMask))
         {
             v2out.x = info.point.x;
@@ -114,21 +119,6 @@ public class ScreenManager : MonoBehaviour
 
     public libs.mathematics.Vector2Int GetMousePos()
     {
-        return GetMousePostion();
-        Vector2 v2out;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition.ToVector2(),
-            Camera.main, out v2out);
-
-        v2out.x /= rawImage.rectTransform.rect.width;
-        v2out.y /= rawImage.rectTransform.rect.height;
-        v2out.x += 0.5f;
-        v2out.y += 0.5f;
-        v2out.y = 1 - v2out.y;
-        v2out.y = Mathf.Clamp(v2out.y, 0f, 1f);
-        v2out.x = Mathf.Clamp(v2out.x, 0f, 1f);
-        libs.mathematics.Vector2Int intOut =
-            new libs.mathematics.Vector2Int((int)(v2out.x * pixelWidth), (int)(v2out.y * pixelHeight));
-
-        return intOut;
+        return GetMousePosition();
     }
 }

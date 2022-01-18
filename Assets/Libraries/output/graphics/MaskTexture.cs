@@ -44,7 +44,6 @@ namespace Libraries.system.output.graphics
             public new void SetPalette(Libraries.system.output.graphics.color32.Color32[] palette)
             {
                 Debug.Log("You can't change palette of mask texture!");
-                //todo 4 think baout this, maybe you could make it like 1 color palette per sprite optional?
                 return;
             }
 

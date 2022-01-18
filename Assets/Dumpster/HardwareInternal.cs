@@ -18,7 +18,7 @@ public class HardwareInternal
     [NonSerialized] internal Hardware hardware;
 
 
-    [SerializeField] internal Drive mainDrive;
+    [SerializeField] internal DriveSO mainDrive;
     [SerializeField] internal InputManager inputManager;
     [SerializeField] internal ScreenManager screenManager;
     [SerializeField] internal StackExecutor stackExecutor;
@@ -34,7 +34,6 @@ public class HardwareInternal
     public int WaitRefreshRate = 100;
 
     [SerializeField] internal int TasksPerCPULoop = -1;
-    internal bool ignoreSomeErrors = true; //todo 86 remove
     internal static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
 
     private void UpdateWRR()
@@ -98,8 +97,8 @@ public class HardwareInternal
         typeof(System.Collections.Generic.Dictionary<int, int>),
 
 
-        typeof(System.Linq.Enumerable),
-        typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)
+        typeof(System.Linq.Enumerable) /*,
+        typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)*/
     };
 
     public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => x.ToLibraryData());
@@ -320,7 +319,7 @@ static Screen screen = null;screen=ownPointer.screen;
                     if (!importedLibraries.Contains(between))
                     {
                         importedLibraries.Add(between);
-                        File f = mainDrive.GetFileByPath(between);
+                        File f = mainDrive.drive.GetFileByPath(between);
                         if (f == null)
                         {
                             /*if (null.Contains( between))
@@ -332,7 +331,8 @@ static Screen screen = null;screen=ownPointer.screen;
                             continue;
                         }
 
-                        List<string> importedLines = new List<string>(f.data.ToEncodedString().SplitNewLine());
+                        List<string> importedLines =
+                            new List<string>(Runtime.BytesToEncodedString(f.data).SplitNewLine());
                         buffer = "//imported: " + between;
 
                         lines[index] = buffer;

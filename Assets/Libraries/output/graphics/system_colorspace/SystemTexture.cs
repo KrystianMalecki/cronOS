@@ -56,8 +56,6 @@ namespace Libraries.system.output.graphics
 
             public void TintAll(SystemColor color, bool preserveTransparency = true)
             {
-                //  Console.Debug($"{transparencyFlag } && {preserveTransparency}");
-
                 for (int i = 0; i < array.Length; i++)
                 {
                     if (transparencyFlag == array[i] && preserveTransparency)
@@ -66,10 +64,13 @@ namespace Libraries.system.output.graphics
                         continue;
                     }
 
-                    //  Console.Debug(array[i]);
                     array[i] += color;
-                    //   Console.Debug(array[i]);
                 }
+            }
+
+            public new SystemColor GetTransparencyColor()
+            {
+                return base.GetTransparencyColor();
             }
 
             public static SystemTexture FromData(byte[] data)
