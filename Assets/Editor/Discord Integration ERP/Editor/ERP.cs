@@ -35,16 +35,19 @@ namespace ERP
         public static bool Errored = false;
 
         public static bool Failed;
+
         static ERP()
         {
             ERPSettings.GetSettings();
             DelayStart();
         }
+
         public static async void DelayStart(int delay = 1000)
         {
             await Task.Delay(delay);
             Init();
         }
+
         public static void Init()
         {
             if (Errored && lastSessionID == EditorAnalyticsSessionInfo.id)
@@ -106,8 +109,8 @@ namespace ERP
         {
             if (discord != null)
                 discord.RunCallbacks();
-
         }
+
         public static void UpdateActivity()
         {
             Log("Updating Activity");
@@ -146,6 +149,7 @@ namespace ERP
 
             ERPSettings.SaveSettings();
         }
+
         public static long GetTimestamp()
         {
             if (!resetOnSceneChange)
@@ -155,20 +159,24 @@ namespace ERP
                 Log("Got time stamp: " + timestamp);
                 return timestamp;
             }
+
             long unixTimestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             Log("Got time stamp: " + unixTimestamp);
             return unixTimestamp;
         }
+
         public static void Log(object message)
         {
             if (debugMode)
                 Debug.Log(prefix + ": " + message);
         }
+
         public static void LogWarning(object message)
         {
             if (debugMode)
                 Debug.LogWarning(prefix + ": " + message);
         }
+
         public static void LogError(object message)
         {
             Debug.LogError(prefix + ": " + message);
@@ -195,9 +203,9 @@ namespace ERP
                     Log($"({i}/{processes.Length - 1})Found Process {processes[i].ProcessName}");
                 }
             }
+
             return processes.Length != 0;
         }
-
     }
 }
 #endif

@@ -13,79 +13,86 @@
             return ((byte)(samplesPerPixel * bitDepthCorrected), samplesPerPixel);
         }
 
-        public static byte[] Decode(byte[] decompressedData, ImageHeader header, byte bytesPerPixel, byte samplesPerPixel)
+        public static byte[] Decode(byte[] decompressedData, ImageHeader header, byte bytesPerPixel,
+            byte samplesPerPixel)
         {
             switch (header.InterlaceMethod)
             {
                 case InterlaceMethod.None:
+                {
+                    var bytesPerScanline = BytesPerScanline(header, samplesPerPixel);
+
+                    var currentRowStartByteAbsolute = 1;
+                    for (var rowIndex = 0; rowIndex < header.Height; rowIndex++)
                     {
-                        var bytesPerScanline = BytesPerScanline(header, samplesPerPixel);
+                        var filterType = (FilterType)decompressedData[currentRowStartByteAbsolute - 1];
 
-                        var currentRowStartByteAbsolute = 1;
-                        for (var rowIndex = 0; rowIndex < header.Height; rowIndex++)
+                        var previousRowStartByteAbsolute = (rowIndex) + (bytesPerScanline * (rowIndex - 1));
+
+                        var end = currentRowStartByteAbsolute + bytesPerScanline;
+                        for (var currentByteAbsolute = currentRowStartByteAbsolute;
+                             currentByteAbsolute < end;
+                             currentByteAbsolute++)
                         {
-                            var filterType = (FilterType)decompressedData[currentRowStartByteAbsolute - 1];
-
-                            var previousRowStartByteAbsolute = (rowIndex) + (bytesPerScanline * (rowIndex - 1));
-
-                            var end = currentRowStartByteAbsolute + bytesPerScanline;
-                            for (var currentByteAbsolute = currentRowStartByteAbsolute; currentByteAbsolute < end; currentByteAbsolute++)
-                            {
-                                ReverseFilter(decompressedData, filterType, previousRowStartByteAbsolute, currentRowStartByteAbsolute, currentByteAbsolute, currentByteAbsolute - currentRowStartByteAbsolute, bytesPerPixel);
-                            }
-
-                            currentRowStartByteAbsolute += bytesPerScanline + 1;
+                            ReverseFilter(decompressedData, filterType, previousRowStartByteAbsolute,
+                                currentRowStartByteAbsolute, currentByteAbsolute,
+                                currentByteAbsolute - currentRowStartByteAbsolute, bytesPerPixel);
                         }
 
-                        return decompressedData;
+                        currentRowStartByteAbsolute += bytesPerScanline + 1;
                     }
+
+                    return decompressedData;
+                }
                 case InterlaceMethod.Adam7:
+                {
+                    var pixelsPerRow = header.Width * bytesPerPixel;
+                    var newBytes = new byte[header.Height * pixelsPerRow];
+                    var i = 0;
+                    var previousStartRowByteAbsolute = -1;
+                    // 7 passes
+                    for (var pass = 0; pass < 7; pass++)
                     {
-                        var pixelsPerRow = header.Width * bytesPerPixel;
-                        var newBytes = new byte[header.Height * pixelsPerRow];
-                        var i = 0;
-                        var previousStartRowByteAbsolute = -1;
-                        // 7 passes
-                        for (var pass = 0; pass < 7; pass++)
+                        var numberOfScanlines = Adam7.GetNumberOfScanlinesInPass(header, pass);
+                        var numberOfPixelsPerScanline = Adam7.GetPixelsPerScanlineInPass(header, pass);
+
+                        if (numberOfScanlines <= 0 || numberOfPixelsPerScanline <= 0)
                         {
-                            var numberOfScanlines = Adam7.GetNumberOfScanlinesInPass(header, pass);
-                            var numberOfPixelsPerScanline = Adam7.GetPixelsPerScanlineInPass(header, pass);
+                            continue;
+                        }
 
-                            if (numberOfScanlines <= 0 || numberOfPixelsPerScanline <= 0)
+                        for (var scanlineIndex = 0; scanlineIndex < numberOfScanlines; scanlineIndex++)
+                        {
+                            var filterType = (FilterType)decompressedData[i++];
+                            var rowStartByte = i;
+
+                            for (var j = 0; j < numberOfPixelsPerScanline; j++)
                             {
-                                continue;
-                            }
-
-                            for (var scanlineIndex = 0; scanlineIndex < numberOfScanlines; scanlineIndex++)
-                            {
-                                var filterType = (FilterType)decompressedData[i++];
-                                var rowStartByte = i;
-
-                                for (var j = 0; j < numberOfPixelsPerScanline; j++)
+                                var pixelIndex = Adam7.GetPixelIndexForScanlineInPass(header, pass, scanlineIndex, j);
+                                for (var k = 0; k < bytesPerPixel; k++)
                                 {
-                                    var pixelIndex = Adam7.GetPixelIndexForScanlineInPass(header, pass, scanlineIndex, j);
-                                    for (var k = 0; k < bytesPerPixel; k++)
-                                    {
-                                        var byteLineNumber = (j * bytesPerPixel) + k;
-                                        ReverseFilter(decompressedData, filterType, previousStartRowByteAbsolute, rowStartByte, i, byteLineNumber, bytesPerPixel);
-                                        i++;
-                                    }
-
-                                    var start = pixelsPerRow * pixelIndex.y + pixelIndex.x * bytesPerPixel;
-                                    Array.ConstrainedCopy(decompressedData, rowStartByte + j * bytesPerPixel, newBytes, start, bytesPerPixel);
+                                    var byteLineNumber = (j * bytesPerPixel) + k;
+                                    ReverseFilter(decompressedData, filterType, previousStartRowByteAbsolute,
+                                        rowStartByte, i, byteLineNumber, bytesPerPixel);
+                                    i++;
                                 }
 
-                                previousStartRowByteAbsolute = rowStartByte;
+                                var start = pixelsPerRow * pixelIndex.y + pixelIndex.x * bytesPerPixel;
+                                Array.ConstrainedCopy(decompressedData, rowStartByte + j * bytesPerPixel, newBytes,
+                                    start, bytesPerPixel);
                             }
-                        }
 
-                        return newBytes;
+                            previousStartRowByteAbsolute = rowStartByte;
+                        }
                     }
+
+                    return newBytes;
+                }
                 default:
                     throw new ArgumentOutOfRangeException($"Invalid interlace method: {header.InterlaceMethod}.");
             }
         }
-        
+
         private static byte SamplesPerPixel(ImageHeader header)
         {
             switch (header.ColorType)
@@ -125,7 +132,8 @@
             }
         }
 
-        private static void ReverseFilter(byte[] data, FilterType type, int previousRowStartByteAbsolute, int rowStartByteAbsolute, int byteAbsolute, int rowByteIndex, int bytesPerPixel)
+        private static void ReverseFilter(byte[] data, FilterType type, int previousRowStartByteAbsolute,
+            int rowStartByteAbsolute, int byteAbsolute, int rowByteIndex, int bytesPerPixel)
         {
             byte GetLeftByteValue()
             {
@@ -158,7 +166,7 @@
                 data[byteAbsolute] += data[above];
                 return;
             }
-            
+
             if (type == FilterType.Sub)
             {
                 var leftIndex = rowByteIndex - bytesPerPixel;

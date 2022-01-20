@@ -15,6 +15,7 @@ namespace ERP.Discord
             {
                 members.Add(GetMemberUser(lobbyID, GetMemberUserId(lobbyID, i)));
             }
+
             return members;
         }
 

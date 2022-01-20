@@ -32,7 +32,7 @@
             this.data = data ?? throw new ArgumentNullException(nameof(data));
             this.bytesPerPixel = bytesPerPixel;
             this.palette = palette;
-            
+
             width = imageHeader.Width;
             colorType = imageHeader.ColorType;
             rowOffset = imageHeader.InterlaceMethod == InterlaceMethod.Adam7 ? 0 : 1;
@@ -82,7 +82,6 @@
                             byte second = data[pixelStartIndex + 1];
                             var value = ToSingleByte(first, second);
                             return new Pixel(value, value, value, 255, true);
-
                         }
                         default:
                             return new Pixel(first, first, first, data[pixelStartIndex + 1], true);
@@ -103,12 +102,14 @@
                             return new Pixel(gray, gray, gray, alpha, true);
                         }
                         default:
-                            return new Pixel(first, data[pixelStartIndex + 1], data[pixelStartIndex + 2], data[pixelStartIndex + 3], false);
+                            return new Pixel(first, data[pixelStartIndex + 1], data[pixelStartIndex + 2],
+                                data[pixelStartIndex + 3], false);
                     }
                 case 6:
                     return new Pixel(first, data[pixelStartIndex + 2], data[pixelStartIndex + 4], 255, false);
                 case 8:
-                    return new Pixel(first, data[pixelStartIndex + 2], data[pixelStartIndex + 4], data[pixelStartIndex + 6], false);
+                    return new Pixel(first, data[pixelStartIndex + 2], data[pixelStartIndex + 4],
+                        data[pixelStartIndex + 6], false);
                 default:
                     throw new InvalidOperationException($"Unreconized number of bytes per pixel: {bytesPerPixel}.");
             }

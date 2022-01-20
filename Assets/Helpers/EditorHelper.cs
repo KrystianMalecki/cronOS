@@ -21,7 +21,8 @@ public static class EditorHelper
             if (element.Contains("["))
             {
                 var elementName = element.Substring(0, element.IndexOf("["));
-                var index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
+                var index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "")
+                    .Replace("]", ""));
                 obj = GetValue_Imp(obj, elementName, index);
             }
             else
@@ -29,6 +30,7 @@ public static class EditorHelper
                 obj = GetValue_Imp(obj, element);
             }
         }
+
         return obj;
     }
 
@@ -44,12 +46,14 @@ public static class EditorHelper
             if (f != null)
                 return f.GetValue(source);
 
-            var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var p = type.GetProperty(name,
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (p != null)
                 return p.GetValue(source, null);
 
             type = type.BaseType;
         }
+
         return null;
     }
 
@@ -66,8 +70,8 @@ public static class EditorHelper
         {
             if (!enm.MoveNext()) return null;
         }
+
         return enm.Current;
     }
-
 }
 #endif

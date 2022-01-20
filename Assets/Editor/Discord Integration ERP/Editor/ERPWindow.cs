@@ -16,6 +16,7 @@ namespace ERP
             _window = (ERPWindow)GetWindow(typeof(ERPWindow), false, "Editor Rich Presence");
             _window.Show();
         }
+
         private void OnGUI()
         {
             if (ERP.discord == null && !ERP.Failed)
@@ -30,8 +31,10 @@ namespace ERP
                     ERP.Failed = false;
                     ERP.Init();
                 }
+
                 return;
             }
+
             GUILayout.Label("Editor Rich Presence", EditorStyles.boldLabel);
 
             GUILayout.Label("Current Project: " + ERP.projectName);
@@ -46,32 +49,39 @@ namespace ERP
                 ERP.UpdateActivity();
                 ERPSettings.SaveSettings();
             }
+
             if (ToggleButton("Hide Project name", "Show Project name", ref ERP.showProjectName))
             {
                 ERP.UpdateActivity();
                 ERPSettings.SaveSettings();
             }
-            if (ToggleButton("Don't reset timestap on scene change", "Reset timestap on scene change", ref ERP.resetOnSceneChange))
+
+            if (ToggleButton("Don't reset timestap on scene change", "Reset timestap on scene change",
+                    ref ERP.resetOnSceneChange))
             {
                 ERP.UpdateActivity();
                 ERPSettings.SaveSettings();
             }
+
             if (ToggleButton("Disable Debug Mode", "Enable Debug Mode", ref ERP.debugMode))
             {
                 ERPSettings.SaveSettings();
             }
+
             GUILayout.Label(string.Empty);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("GitHub Repository"))
             {
                 Application.OpenURL("https://github.com/MarshMello0/Editor-Rich-Presence");
             }
+
             if (GUILayout.Button("Asset Store Page"))
             {
-                Application.OpenURL("https://assetstore.unity.com/packages/tools/utilities/editor-rich-presence-178736");
+                Application.OpenURL(
+                    "https://assetstore.unity.com/packages/tools/utilities/editor-rich-presence-178736");
             }
-            GUILayout.EndHorizontal();
 
+            GUILayout.EndHorizontal();
         }
 
         private bool ToggleButton(string trueText, string falseText, ref bool value)
@@ -86,6 +96,7 @@ namespace ERP
                 value = true;
                 return true;
             }
+
             return false;
         }
     }

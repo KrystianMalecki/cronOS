@@ -2,7 +2,8 @@
 {
     internal readonly struct HeaderValidationResult
     {
-        public static readonly byte[] ExpectedHeader = {
+        public static readonly byte[] ExpectedHeader =
+        {
             137,
             80,
             78,
@@ -31,7 +32,8 @@
 
         public bool IsValid { get; }
 
-        public HeaderValidationResult(int byte1, int byte2, int byte3, int byte4, int byte5, int byte6, int byte7, int byte8)
+        public HeaderValidationResult(int byte1, int byte2, int byte3, int byte4, int byte5, int byte6, int byte7,
+            int byte8)
         {
             Byte1 = byte1;
             Byte2 = byte2;

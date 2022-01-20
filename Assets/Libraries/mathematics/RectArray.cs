@@ -76,6 +76,11 @@ namespace Libraries.system
                 array[y * width + x] = value;
             }
 
+            public void SetAt(Vector2Int point, T value)
+            {
+                SetAt(point.x, point.y, value);
+            }
+
             public void Fill(int x, int y, int width, int height, T value)
             {
                 if (!IsBoxInRange(x, y, width, height) && ignoreSomeErrors)
@@ -83,11 +88,11 @@ namespace Libraries.system
                     return;
                 }
 
-                for (int iterY = y; iterY < height; iterY++)
+                for (int iterY = 0; iterY < height; iterY++)
                 {
-                    for (int iterX = x; iterX < width; iterX++)
+                    for (int iterX = 0; iterX < width; iterX++)
                     {
-                        SetAt(iterX, iterY, value);
+                        SetAt(x + iterX, y + iterY, value);
                     }
                 }
             }
@@ -100,6 +105,11 @@ namespace Libraries.system
                 }
 
                 return array[y * width + x];
+            }
+
+            public T GetAt(Vector2Int point)
+            {
+                return GetAt(point.x, point.y);
             }
 
             public void FillAll(T value)
@@ -219,9 +229,14 @@ namespace Libraries.system
                 return x >= 0 && x < width && y >= 0 && y < height;
             }
 
+            public bool IsPointInRange(Vector2Int v2)
+            {
+                return IsPointInRange(v2.x, v2.y);
+            }
+
             public bool IsBoxInRange(int x, int y, int width, int height)
             {
-                return x >= 0 && x + width <= this.width && y >= 0 && y + height <= this.height;
+                return x >= 0 && x + width < this.width && y >= 0 && y + height < this.height;
             }
 
             public RectArray<T> GetRect(int x, int y, int width, int height)

@@ -105,9 +105,9 @@ Material:
     - _Intensity: 0
     - _LineDistributionPow: 10
     - _LineDistributionPow2: 4
-    - _LineScale: 1
-    - _LineScale2: 0.04
-    - _LineWeight: 0.779
+    - _LineScale: 150
+    - _LineScale2: 5
+    - _LineWeight: 0.799
     - _LineWeight2: 1
     - _LineWeightMax: 0.5
     - _LineWeightMax2: 0.7

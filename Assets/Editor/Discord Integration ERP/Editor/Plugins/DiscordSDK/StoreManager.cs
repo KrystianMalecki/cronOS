@@ -15,6 +15,7 @@ namespace ERP.Discord
             {
                 entitlements.Add(GetEntitlementAt(i));
             }
+
             return entitlements;
         }
 
@@ -26,6 +27,7 @@ namespace ERP.Discord
             {
                 skus.Add(GetSkuAt(i));
             }
+
             return skus;
         }
     }

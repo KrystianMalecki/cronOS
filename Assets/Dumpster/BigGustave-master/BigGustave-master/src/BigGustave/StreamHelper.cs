@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    internal static class        StreamHelper                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    internal static class StreamHelper
     {
         public static int ReadBigEndianInt32(Stream stream)
         {
@@ -34,7 +34,7 @@
                 throw new InvalidOperationException($"Unexpected end of stream at {stream.Position}.");
             }
 
-            return (byte) b;
+            return (byte)b;
         }
 
         public static bool TryReadHeaderBytes(Stream stream, out byte[] bytes)

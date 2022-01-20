@@ -45,7 +45,8 @@
         {
             if (length < 0)
             {
-                throw new ArgumentException($"Length less than zero ({length}) encountered when reading chunk at position {position}.");
+                throw new ArgumentException(
+                    $"Length less than zero ({length}) encountered when reading chunk at position {position}.");
             }
 
             Position = position;

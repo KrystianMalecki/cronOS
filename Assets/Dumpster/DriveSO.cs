@@ -11,7 +11,6 @@ using System.Collections.Concurrent;
 [Serializable]
 public class DriveSO : ScriptableObject
 {
-    
     public Drive drive;
 
     [NaughtyAttributes.Button]

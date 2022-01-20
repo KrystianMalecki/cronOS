@@ -63,17 +63,17 @@ namespace Libraries.system.output.graphics
             }
 
             //todo-cleanup move Unity Dependant stuff.Move to extension methods?
-            public static implicit operator Color32(UnityEngine.Color32 col)
-            {
-                return new Color32(col);
-            }
+            /* public static implicit operator Color32(UnityEngine.Color32 col)
+             {
+                 return new Color32(col);
+             }
+ 
+             public static implicit operator UnityEngine.Color32(Color32 col)
+             {
+                 return col.color;
+             }*/
 
-            public static implicit operator UnityEngine.Color32(Color32 col)
-            {
-                return col.color;
-            }
-
-            internal UnityEngine.Color32 asUnityColor()
+            internal UnityEngine.Color32 ToUnityColor()
             {
                 return color;
             }
@@ -168,7 +168,7 @@ namespace Libraries.system.output.graphics
 
             public static Color32 operator +(Color32 a, Color32 b)
             {
-                Color32 c32 = new Color32(a);
+                Color32 c32 = new Color32(a.color);
                 c32.Add(b);
                 return c32;
             }

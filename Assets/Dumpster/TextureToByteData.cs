@@ -1,11 +1,9 @@
-
 using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
-
 using UnityEngine.TextCore;
 using Libraries.system.output.graphics.system_texture;
 using Libraries.system.output.graphics.system_colorspace;
@@ -18,7 +16,9 @@ public class TextureToByteData : MonoBehaviour
     public Color32 color;
     public Texture2D character;
     public Color[] colors;
+
     public string l;
+
     /*  [Button]
       public void s()
       {
@@ -51,13 +51,13 @@ public class TextureToByteData : MonoBehaviour
     [Button]
     public void text()
     {
-        Debug.Log(Libraries.system.output.graphics.color32.Color32.FindNearest(ColorConstants.SystemColors, color.ToCronosColor()));
+        Debug.Log(Libraries.system.output.graphics.color32.Color32.FindNearest(ColorConstants.SystemColors,
+            color.ToCronosColor()));
     }
+
     [Button]
     public void ConvertToData()
     {
-
-
         systemTexture = new SystemTexture(texture.width, texture.height);
 
         /*   bufferTexture.SetPixels32(
@@ -68,18 +68,18 @@ public class TextureToByteData : MonoBehaviour
         {
             for (int x = 0; x < systemTexture.width; x++)
             {
-                byte b = (byte)Libraries.system.output.graphics.color32.Color32.FindNearestID(ColorConstants.SystemColors, colors[y * systemTexture.width + x].ToCronosColor());
+                byte b = (byte)Libraries.system.output.graphics.color32.Color32.FindNearestID(
+                    ColorConstants.SystemColors, colors[y * systemTexture.width + x].ToCronosColor());
                 systemTexture.SetAt(x, systemTexture.height - y - 1, b);
             }
         }
-      ;
+
+        ;
         /*   systemTexture.array = Array.ConvertAll(texture.GetPixels32(), x =>
            {
                byte b = (byte)ColorConstants.FindNearestID(ColorConstants.SystemColors, x.ToCronosColor());
                return new SystemColor(b);
            });*/
         data = systemTexture.ToData();
-
-
     }
 }

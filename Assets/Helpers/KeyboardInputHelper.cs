@@ -48,6 +48,7 @@ public static class KeyboardInputHelper
                     yield return _keyCodes[i];
         }
     }
+
     public static IEnumerable<Libraries.system.input.Key> GetCurrentKeysWrapped()
     {
         if (Input.anyKey)
@@ -56,16 +57,15 @@ public static class KeyboardInputHelper
                 if (Input.GetKey(_keyCodes[i]))
                     yield return Libraries.system.input.KeyExtension.ToWrapper(_keyCodes[i]);
         }
-
     }
+
     public static IEnumerable<Libraries.system.input.Key> GetCurrentKeysUpWrapped()
     {
-
         for (int i = 0; i < _keyCodes.Length; i++)
             if (Input.GetKeyUp(_keyCodes[i]))
                 yield return Libraries.system.input.KeyExtension.ToWrapper(_keyCodes[i]);
-
     }
+
     public static List<KeyCode> GetCurrentKeyss()
     {
         List<KeyCode> list = new List<KeyCode>();
@@ -76,6 +76,7 @@ public static class KeyboardInputHelper
                 list.Add(_keyCodes[i]);
             }
         }
+
         return list;
     }
 

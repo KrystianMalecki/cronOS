@@ -12,6 +12,7 @@ using System.Reflection;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
+
 [CustomPropertyDrawer(typeof(EnumMaskAttribute))]
 public class EnumMaskPropertyDrawer : PropertyDrawer
 {
@@ -33,6 +34,7 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
                 openFoldouts[property.propertyPath] = false;
             }
         }
+
         if (foldoutOpen)
         {
             var layout = ((EnumMaskAttribute)attribute).layout;
@@ -44,15 +46,13 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
         else
             return EditorGUIUtility.singleLineHeight;
     }
+
     public string MakeLabel()
     {
         int index = 0;
-        return String.Join(" | ", Enum.GetNames(fieldInfo.FieldType).Where(x =>
-      {
-          return IsSet(index++);
-      }));
-
+        return String.Join(" | ", Enum.GetNames(fieldInfo.FieldType).Where(x => { return IsSet(index++); }));
     }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         object targetObject;
@@ -84,7 +84,8 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
 
         if (alwaysFoldOut)
         {
-            EditorGUI.LabelField(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), label);
+            EditorGUI.LabelField(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight),
+                label);
         }
         else
         {
@@ -94,7 +95,9 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
             }
 
             EditorGUI.BeginChangeCheck();
-            foldoutOpen = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), foldoutOpen, label);
+            foldoutOpen =
+                EditorGUI.Foldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight),
+                    foldoutOpen, label);
 
             if (EditorGUI.EndChangeCheck())
                 openFoldouts[property.propertyPath] = foldoutOpen;
@@ -103,13 +106,17 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
         if (foldoutOpen)
         {
             //Draw the All button
-            if (GUI.Button(new Rect(position.x + (15f * EditorGUI.indentLevel), position.y + EditorGUIUtility.singleLineHeight * 1, 30, 15), "All"))
+            if (GUI.Button(
+                    new Rect(position.x + (15f * EditorGUI.indentLevel),
+                        position.y + EditorGUIUtility.singleLineHeight * 1, 30, 15), "All"))
             {
                 theEnum = DoNotOperator(Convert.ChangeType(0, enumUnderlyingType), enumUnderlyingType);
             }
 
             //Draw the None button
-            if (GUI.Button(new Rect(position.x + 32 + (15f * EditorGUI.indentLevel), position.y + EditorGUIUtility.singleLineHeight * 1, 50, 15), "None"))
+            if (GUI.Button(
+                    new Rect(position.x + 32 + (15f * EditorGUI.indentLevel),
+                        position.y + EditorGUIUtility.singleLineHeight * 1, 50, 15), "None"))
             {
                 theEnum = Convert.ChangeType(0, enumUnderlyingType);
             }
@@ -121,7 +128,10 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
                 //Draw the list vertically
                 for (int i = 0; i < Enum.GetNames(fieldInfo.FieldType).Length; i++)
                 {
-                    if (EditorGUI.Toggle(new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight * (2 + i), position.width, EditorGUIUtility.singleLineHeight), Enum.GetNames(fieldInfo.FieldType)[i], IsSet(i)))
+                    if (EditorGUI.Toggle(
+                            new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight * (2 + i),
+                                position.width, EditorGUIUtility.singleLineHeight),
+                            Enum.GetNames(fieldInfo.FieldType)[i], IsSet(i)))
                     {
                         ToggleIndex(i, true);
                     }
@@ -148,7 +158,9 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
                 var toggleWidth = labelWidth + 20;
 
                 var oldLabelWidth = EditorGUIUtility.labelWidth;
-                var oldIndentLevel = EditorGUI.indentLevel; // Toggles kinda are broken at non-zero indent levels, as the indentation eats a part of the clickable rect.
+                var oldIndentLevel =
+                    EditorGUI
+                        .indentLevel; // Toggles kinda are broken at non-zero indent levels, as the indentation eats a part of the clickable rect.
 
                 EditorGUIUtility.labelWidth = labelWidth;
                 EditorGUI.indentLevel = 0;
@@ -215,7 +227,6 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
             //enum = enum & ~val
             theEnum = DoAndOperator(theEnum, notVal, enumUnderlyingType);
         }
-
     }
 
     /// <summary>
@@ -387,7 +398,6 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
         }
         else if (_type == typeof(ushort))
         {
-
             //ushort and short don't have bitwise operators, it is automatically converted to an int, so we convert it back
             return unchecked((ushort)~(ushort)_lhs);
         }
@@ -470,7 +480,8 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
             if (f != null)
                 return f.GetValue(source);
 
-            var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var p = type.GetProperty(name,
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (p != null)
                 return p.GetValue(source, null);
 
@@ -517,7 +528,6 @@ public class EnumMaskPropertyDrawer : PropertyDrawer
         return parentProp;
     }
 }
-
 
 
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]

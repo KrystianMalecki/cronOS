@@ -1207,8 +1207,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624103653}
-  m_LocalRotation: {x: -0, y: -0.22194056, z: -0, w: 0.9750602}
-  m_LocalPosition: {x: -2.7289643, y: 0.79, z: -1.0879827}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.01, z: -7.1}
   m_LocalScale: {x: 3.5, y: 2.5, z: 2.18}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1217,7 +1217,7 @@ Transform:
   - {fileID: 1081877137}
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: -25.646, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &624103658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1237,8 +1237,8 @@ MonoBehaviour:
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 15
-      WaitRefreshRate: 66
+      FPSCap: 120
+      WaitRefreshRate: 8
       TasksPerCPULoop: -1
       scriptsRunning: []
   references:
@@ -2023,14 +2023,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 0
-  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
-  code: "string filePath = \"/sys\"\nstring fileName = \"output\"\n\nMaskTexture
-    image = new MaskTexture(2,2);\nVector2Int mousePos = new Vector2Int(0, 0);\r\n\n\nSystemScreenBuffer
-    buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n           
-    screen.InitScreenBuffer(buffer);\r\n\n void Draw()\r\n            {\r\n               
-    \n                buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);\r\n              
-    \n            }\r\n\n\n while (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
+  runOnStart: 1
+  codeFile: {fileID: 11500000, guid: a579e6a972f727f4299b1d2613e6f847, type: 3}
+  code: "string filePath = \"/sys\"\nstring fileName = \"output\"\n\nSystemTexture
+    image = new SystemTexture(20,20);\nVector2Int mousePos = new Vector2Int(0, 0);\r\nSystemColor
+    mainColor =SystemColor.white;\n\nSystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth,
+    Screen.screenHeight);\r\n            screen.InitScreenBuffer(buffer);\r\n\n void
+    Draw()\r\n            {\r\n                \n                buffer.DrawTexture(0,0,image);\n              
+    \n            }\r\nvoid ProcessInput(){\ni if (ks.ReadKey(Key.Mouse0))\r\n               
+    {\r\nmousePos = mouseHandler.GetMousePos();\nif(image.IsPointInRange(mousePos)){\nimage.SetAt(mousePos,mainColor);\n}\n}}\n\nwhile
+    (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
     Draw();\r\n                ProcessInput();\r\n                runtime.Wait();\r\n\r\n           
     }\n\n\n\n\n\nbyte[] data = image.ToData();\nFile parent = fileSystem.GetFileByPath(filePath);\nFile
     imageFile=Drive.MakeFile(\"output\",data);\nf.AddChild(imageFile);\n"

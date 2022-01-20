@@ -84,7 +84,8 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                     {
                         bool last = i + 1 == file.children.Count;
                         File child = file.children[i];
-                        str += GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
+                        str +=
+ GetChildren(child, indent + (onlyNames ? 0 : 1), $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize, onlyNames, fullPaths);
 
                     }
                 }
@@ -517,7 +518,8 @@ public class SimpleShell : UnityEngine.MonoBehaviour
                 for (int i = 0; i < file.children.Count; i++)
                 {
                     File child = file.children[i];
-                    str += GetChildren(indent + " ", child, $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))} ", recursive);
+                    str +=
+ GetChildren(indent + " ", child, $"{((i + 1) == file.children.Count ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))} ", recursive);
 
                 }
             }

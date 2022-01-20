@@ -22,9 +22,12 @@ namespace ERP
         public long LastSessionID;
         public bool Errored;
 
-        public ERPSettings() { }
+        public ERPSettings()
+        {
+        }
 
-        public ERPSettings(bool showSceneName, bool showProjectName, bool resetOnSceneChange, bool debugMode, bool editorClosed, long lastTimestamp, long lastSessionID, bool errored)
+        public ERPSettings(bool showSceneName, bool showProjectName, bool resetOnSceneChange, bool debugMode,
+            bool editorClosed, long lastTimestamp, long lastSessionID, bool errored)
         {
             this.showSceneName = showSceneName;
             this.showProjectName = showProjectName;
@@ -63,7 +66,8 @@ namespace ERP
 
         public static void SaveSettings()
         {
-            ERPSettings settings = new ERPSettings(ERP.showSceneName, ERP.showProjectName, ERP.resetOnSceneChange, ERP.debugMode, ERP.EditorClosed, ERP.lastTimestamp, ERP.lastSessionID, ERP.Errored);
+            ERPSettings settings = new ERPSettings(ERP.showSceneName, ERP.showProjectName, ERP.resetOnSceneChange,
+                ERP.debugMode, ERP.EditorClosed, ERP.lastTimestamp, ERP.lastSessionID, ERP.Errored);
 
             XmlSerializer serializer = new XmlSerializer(typeof(ERPSettings));
             var stream = new FileStream(path, FileMode.Create);
@@ -72,6 +76,5 @@ namespace ERP
             ERP.Log("Saved Settings");
         }
     }
-
 }
 #endif

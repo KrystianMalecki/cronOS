@@ -53,5 +53,14 @@ namespace Libraries.system.file_system
         {
             return hardware.hardwareInternal.mainDrive.drive.RemoveFile(path);
         }
+
+        public bool HasFile(string path)
+        {
+            return hardware.hardwareInternal.mainDrive.drive.HasFile(path);
+        }
+        public bool TryGetFile(string path, out File file)
+        {
+            return hardware.hardwareInternal.mainDrive.drive.TryGetFile(path, out file);
+        }
     }
 }

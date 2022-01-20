@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 //[CustomEditor(typeof(Drive))]
 [CanEditMultipleObjects]
 public class DriveEditor : Editor
@@ -10,6 +11,7 @@ public class DriveEditor : Editor
     SerializedProperty fakeListProperty;
     public List<int> fakeList;
     SerializedObject editorSO;
+
     void OnEnable()
     {
         editorSO = new SerializedObject(this, serializedObject.targetObject);
@@ -19,13 +21,14 @@ public class DriveEditor : Editor
 
         Debug.Log($"{editorSO}-{freeSpaces}-{fakeList}-{fakeListProperty}-{fakeListProperty.editable}");
     }
+
     private void Awake()
     {
         OnEnable();
     }
+
     public override void OnInspectorGUI()
     {
-
         //  serializedObject.Update();
         GUI.enabled = true;
         EditorGUILayout.PropertyField(fakeListProperty);

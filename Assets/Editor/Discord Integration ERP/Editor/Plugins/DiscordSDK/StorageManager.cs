@@ -14,6 +14,7 @@ namespace ERP.Discord
             {
                 files.Add(StatAt(i));
             }
+
             return files;
         }
     }

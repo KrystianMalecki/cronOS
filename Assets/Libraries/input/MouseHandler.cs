@@ -20,7 +20,7 @@ namespace Libraries.system
                 }
 
 
-                Vector2Int pos =  hardware.hardwareInternal.stackExecutor.AddDelegateToStack(func);
+                Vector2Int pos = hardware.hardwareInternal.stackExecutor.AddDelegateToStack(func);
 
 
                 if (pos == Vector2Int.incorrectVector)

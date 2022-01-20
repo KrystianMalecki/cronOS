@@ -16,24 +16,27 @@ public class InputManager : MonoBehaviour
 
     public void Update()
     {
-        if (hardware.currentlySelected && Input.anyKey)
+        if (hardware.currentlySelected)
         {
-            AddKeys();
-            if (!string.IsNullOrEmpty(Input.inputString))
+            if (Input.anyKey)
+            {
+                AddKeys();
+                if (!string.IsNullOrEmpty(Input.inputString))
+                {
+                    lock (lockObj)
+                    {
+                        inputBuffer.Append(Input.inputString);
+                    }
+                }
+            }
+            else
             {
                 lock (lockObj)
                 {
-                    inputBuffer.Append(Input.inputString);
-                }
-            }
-        }
-        else
-        {
-            lock (lockObj)
-            {
-                if (currentlyPressedKeys.Count != 0)
-                {
-                    currentlyPressedKeys.Clear();
+                    if (currentlyPressedKeys.Count != 0)
+                    {
+                        currentlyPressedKeys.Clear();
+                    }
                 }
             }
         }

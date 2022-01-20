@@ -21,14 +21,16 @@
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException($"The provided stream of type {stream.GetType().FullName} was not readable.");
+                throw new ArgumentException(
+                    $"The provided stream of type {stream.GetType().FullName} was not readable.");
             }
 
             var validHeader = HasValidHeader(stream);
 
             if (!validHeader.IsValid)
             {
-                throw new ArgumentException($"The provided stream did not start with the PNG header. Got {validHeader}.");
+                throw new ArgumentException(
+                    $"The provided stream did not start with the PNG header. Got {validHeader}.");
             }
 
             var crc = new byte[4];
@@ -48,7 +50,8 @@
                         {
                             if (settings?.DisallowTrailingData == true)
                             {
-                                throw new InvalidOperationException($"Found another chunk {header} after already reading the IEND chunk.");
+                                throw new InvalidOperationException(
+                                    $"Found another chunk {header} after already reading the IEND chunk.");
                             }
 
                             break;
@@ -58,7 +61,8 @@
                         var read = stream.Read(bytes, 0, bytes.Length);
                         if (read != bytes.Length)
                         {
-                            throw new InvalidOperationException($"Did not read {header.Length} bytes for the {header} header, only found: {read}.");
+                            throw new InvalidOperationException(
+                                $"Did not read {header.Length} bytes for the {header} header, only found: {read}.");
                         }
 
                         if (header.IsCritical)
@@ -68,11 +72,13 @@
                                 case "PLTE":
                                     if (header.Length % 3 != 0)
                                     {
-                                        throw new InvalidOperationException($"Palette data must be multiple of 3, got {header.Length}.");
+                                        throw new InvalidOperationException(
+                                            $"Palette data must be multiple of 3, got {header.Length}.");
                                     }
 
                                     // Ignore palette data unless the header.ColorType indicates that the image is paletted.
-                                    if (imageHeader.ColorType.HasFlag(ColorType.PaletteUsed)) {
+                                    if (imageHeader.ColorType.HasFlag(ColorType.PaletteUsed))
+                                    {
                                         palette = new Palette(bytes);
                                     }
 
@@ -84,7 +90,8 @@
                                     hasEncounteredImageEnd = true;
                                     break;
                                 default:
-                                    throw new NotSupportedException($"Encountered critical header {header} which was not recognised.");
+                                    throw new NotSupportedException(
+                                        $"Encountered critical header {header} which was not recognised.");
                             }
                         }
                         else
@@ -97,6 +104,7 @@
                                     {
                                         palette.SetAlphaValues(bytes);
                                     }
+
                                     break;
                             }
                         }
@@ -104,7 +112,8 @@
                         read = stream.Read(crc, 0, crc.Length);
                         if (read != 4)
                         {
-                            throw new InvalidOperationException($"Did not read 4 bytes for the CRC, only found: {read}.");
+                            throw new InvalidOperationException(
+                                $"Did not read 4 bytes for the CRC, only found: {read}.");
                         }
 
                         var result = (int)Crc32.Calculate(Encoding.ASCII.GetBytes(header.Name), bytes);
@@ -112,7 +121,8 @@
 
                         if (result != crcActual)
                         {
-                            throw new InvalidOperationException($"CRC calculated {result} did not match file {crcActual} for chunk: {header.Name}.");
+                            throw new InvalidOperationException(
+                                $"CRC calculated {result} did not match file {crcActual} for chunk: {header.Name}.");
                         }
 
                         settings?.ChunkVisitor?.Visit(stream, imageHeader, header, bytes, crc);
@@ -134,13 +144,15 @@
 
                 bytesOut = Decoder.Decode(bytesOut, imageHeader, bytesPerPixel, samplesPerPixel);
 
-                return new Png(imageHeader, new RawPngData(bytesOut, bytesPerPixel, palette, imageHeader), palette?.HasAlphaValues ?? false);
+                return new Png(imageHeader, new RawPngData(bytesOut, bytesPerPixel, palette, imageHeader),
+                    palette?.HasAlphaValues ?? false);
             }
         }
 
         private static HeaderValidationResult HasValidHeader(Stream stream)
         {
-            return new HeaderValidationResult(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte(),
+            return new HeaderValidationResult(stream.ReadByte(), stream.ReadByte(), stream.ReadByte(),
+                stream.ReadByte(),
                 stream.ReadByte(), stream.ReadByte(), stream.ReadByte(), stream.ReadByte());
         }
 
@@ -202,7 +214,8 @@
             var filterMethod = ihdrBytes[11];
             var interlaceMethod = ihdrBytes[12];
 
-            return new ImageHeader(width, height, bitDepth, (ColorType)colorType, (CompressionMethod)compressionMethod, (FilterMethod)filterMethod,
+            return new ImageHeader(width, height, bitDepth, (ColorType)colorType, (CompressionMethod)compressionMethod,
+                (FilterMethod)filterMethod,
                 (InterlaceMethod)interlaceMethod);
         }
     }

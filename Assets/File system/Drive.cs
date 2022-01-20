@@ -25,6 +25,11 @@ public class Drive
         return root;
     }
 
+    public bool TryGetFile(string rawPath, out File file)
+    {
+        file = GetFileByPath(rawPath);
+        return file != null;
+    }
 
     public void GenerateCacheData()
     {
@@ -88,15 +93,20 @@ public class Drive
         return GetPath(rawPath, parent).GetFile();
     }
 
+    public bool HasFile(string rawPath, File parent = null)
+    {
+        return GetPath(rawPath, parent).GetFile() != null;
+    }
+
     public Path GetPath(string rawPath, File parent = null)
     {
         return new Path(rawPath, GetRoot(), parent);
     }
 
-    public bool RemoveFile(string path)
+    public bool RemoveFile(string path, File parent = null)
     {
         //todo-future add errors
-        File file = GetFileByPath(path);
+        File file = GetFileByPath(path, parent);
 
         return RemoveFile(file);
     }

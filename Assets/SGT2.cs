@@ -60,6 +60,7 @@ public class SGT2 : MonoBehaviour
         {
             writer.WriteLine(data[i]);
         }
+
         writer.Close();
     }
 

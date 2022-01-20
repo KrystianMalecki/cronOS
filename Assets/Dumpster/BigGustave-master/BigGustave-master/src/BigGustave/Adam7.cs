@@ -9,24 +9,24 @@
         /// </summary>
         private static readonly IReadOnlyDictionary<int, int[]> PassToScanlineGridIndex = new Dictionary<int, int[]>
         {
-            { 1, new []{ 0 } },
-            { 2, new []{ 0 } },
-            { 3, new []{ 4 } },
-            { 4, new []{ 0, 4 } },
-            { 5, new []{ 2, 6 } },
+            { 1, new[] { 0 } },
+            { 2, new[] { 0 } },
+            { 3, new[] { 4 } },
+            { 4, new[] { 0, 4 } },
+            { 5, new[] { 2, 6 } },
             { 6, new[] { 0, 2, 4, 6 } },
             { 7, new[] { 1, 3, 5, 7 } }
         };
 
         private static readonly IReadOnlyDictionary<int, int[]> PassToScanlineColumnIndex = new Dictionary<int, int[]>
         {
-            { 1, new []{ 0 } },
-            { 2, new []{ 4 } },
-            { 3, new []{ 0, 4 } },
-            { 4, new []{ 2, 6 } },
-            { 5, new []{ 0, 2, 4, 6 } },
-            { 6, new []{ 1, 3, 5, 7 } },
-            { 7, new []{ 0, 1, 2, 3, 4, 5, 6, 7 } }
+            { 1, new[] { 0 } },
+            { 2, new[] { 4 } },
+            { 3, new[] { 0, 4 } },
+            { 4, new[] { 2, 6 } },
+            { 5, new[] { 0, 2, 4, 6 } },
+            { 6, new[] { 1, 3, 5, 7 } },
+            { 7, new[] { 0, 1, 2, 3, 4, 5, 6, 7 } }
         };
 
         /*
@@ -98,7 +98,8 @@
             return (indices.Length * (header.Width / 8)) + additionalColumns;
         }
 
-        public static (int x, int y) GetPixelIndexForScanlineInPass(ImageHeader header, int pass, int scanlineIndex, int indexInScanline)
+        public static (int x, int y) GetPixelIndexForScanlineInPass(ImageHeader header, int pass, int scanlineIndex,
+            int indexInScanline)
         {
             var columnIndices = PassToScanlineColumnIndex[pass + 1];
             var rows = PassToScanlineGridIndex[pass + 1];

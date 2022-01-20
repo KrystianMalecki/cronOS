@@ -5,7 +5,6 @@ using UnityEditorInternal;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(ThreadSafeList<>))]
-
 public class ThreadSafeListPropertyDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -15,8 +14,7 @@ public class ThreadSafeListPropertyDrawer : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-         EditorGUI.PropertyField(position, property.FindPropertyRelative("items"), label, true);
-      //  EditorGUI.LabelField(position, "s");
+        EditorGUI.PropertyField(position, property.FindPropertyRelative("items"), label, true);
+        //  EditorGUI.LabelField(position, "s");
     }
-
 }

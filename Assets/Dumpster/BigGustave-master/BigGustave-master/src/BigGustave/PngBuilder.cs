@@ -111,7 +111,8 @@
 
                     if (read != 4)
                     {
-                        throw new InvalidOperationException($"Unexpected end of stream, expected to read 4 bytes at offset {data.Position - read} for (x: {x}, y: {y}), instead got {read}.");
+                        throw new InvalidOperationException(
+                            $"Unexpected end of stream, expected to read 4 bytes at offset {data.Position - read} for (x: {x}, y: {y}), instead got {read}.");
                     }
 
                     if (useAlphaChannel)
@@ -140,7 +141,7 @@
 
             colorCounts = new Dictionary<int, int>()
             {
-                { backgroundColorInt, (width * height)}
+                { backgroundColorInt, (width * height) }
             };
         }
 
@@ -226,7 +227,8 @@
 
             if (keyword.Length > 79)
             {
-                throw new ArgumentException($"Keyword must be between 1 - 79 characters, provided keyword '{keyword}' has length of {keyword.Length} characters.",
+                throw new ArgumentException(
+                    $"Keyword must be between 1 - 79 characters, provided keyword '{keyword}' has length of {keyword.Length} characters.",
                     nameof(keyword));
             }
 
@@ -236,8 +238,10 @@
                 var isValid = (c >= 32 && c <= 126) || (c >= 161 && c <= 255);
                 if (!isValid)
                 {
-                    throw new ArgumentException("The keyword can only contain printable Latin 1 characters and spaces in the ranges 32 - 126 or 161 -255. " +
-                                                $"The provided keyword '{keyword}' contained an invalid character ({c}) at index {i}.", nameof(keyword));
+                    throw new ArgumentException(
+                        "The keyword can only contain printable Latin 1 characters and spaces in the ranges 32 - 126 or 161 -255. " +
+                        $"The provided keyword '{keyword}' contained an invalid character ({c}) at index {i}.",
+                        nameof(keyword));
                 }
 
                 // TODO: trailing, leading and consecutive whitespaces are also prohibited.
@@ -251,8 +255,9 @@
 
                 if (b == 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(text), "The provided text contained a null (0) byte when converted to UTF-8. Null bytes are not permitted. " +
-                                                                        $"Text was: '{text}'");
+                    throw new ArgumentOutOfRangeException(nameof(text),
+                        "The provided text contained a null (0) byte when converted to UTF-8. Null bytes are not permitted. " +
+                        $"Text was: '{text}'");
                 }
             }
 
@@ -340,7 +345,6 @@
                         {
                             rawData[rawDataIndex++] = value;
                         }
-
                     }
                 }
 
@@ -408,7 +412,7 @@
                 stream.WriteChunkLength(length);
                 stream.WriteChunkHeader(Encoding.ASCII.GetBytes("iTXt"));
                 stream.Write(keyword, 0, keyword.Length);
-                
+
                 stream.WriteByte(0); // Null separator
                 stream.WriteByte(0); // Compression flag (0 for uncompressed)
                 stream.WriteByte(0); // Compression method (0, ignored since flag is zero)
@@ -429,7 +433,9 @@
             const int headerLength = 2;
             const int checksumLength = 4;
 
-            var compressionLevel = options?.AttemptCompression == true ? CompressionLevel.Optimal : CompressionLevel.Fastest;
+            var compressionLevel = options?.AttemptCompression == true
+                ? CompressionLevel.Optimal
+                : CompressionLevel.Fastest;
 
             using (var compressStream = new MemoryStream())
             using (var compressor = new DeflateStream(compressStream, compressionLevel, true))
@@ -498,7 +504,6 @@
                 var leftFilterSum = 0;
                 for (int i = 0; i < scanData.Length; i++)
                 {
-
                 }
                 /* 
                  * A heuristic approach is to use adaptive filtering as follows: 
@@ -508,12 +513,14 @@
         }
 
         private static int PixelToColorInt(Pixel p) => PixelToColorInt(p.R, p.G, p.B, p.A);
+
         private static int PixelToColorInt(byte r, byte g, byte b, byte a = 255)
         {
             return (a << 24) + (r << 16) + (g << 8) + b;
         }
 
-        private static (byte r, byte g, byte b, byte a) ColorIntToPixel(int i) => ((byte)(i >> 16), (byte)(i >> 8), (byte)i, (byte)(i >> 24));
+        private static (byte r, byte g, byte b, byte a) ColorIntToPixel(int i) =>
+            ((byte)(i >> 16), (byte)(i >> 8), (byte)i, (byte)(i >> 24));
 
         /// <summary>
         /// Options for configuring generation of PNGs from a <see cref="PngBuilder"/>.

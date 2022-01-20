@@ -1,10 +1,11 @@
-#if false//changeToTrue
+#if false //changeToTrue
 File fontFile = FileSystem.GetFileByPath("/System/defaultFontMask");
 MaskTexture fontTexture = MaskTexture.FromData(fontFile.data);
 
 //todo-link 1
 Regex colorTagRegex = new Regex(@"^(\s*?((color)|(c)|(col))\s*?=\s*?.+?)|(\s*?\/((color)|(c)|(col)))");
-Regex backgroundColorTagRegex = new Regex(@"^(((\s*?)|(\/))((backgroundcolor)|(bgc)|(bgcol)|(bc))\s*?=.+?)|(\s*?\/((backgroundcolor)|(bgc)|(bgcol)|(bc)))");
+Regex backgroundColorTagRegex =
+ new Regex(@"^(((\s*?)|(\/))((backgroundcolor)|(bgc)|(bgcol)|(bc))\s*?=.+?)|(\s*?\/((backgroundcolor)|(bgc)|(bgcol)|(bc)))");
 Regex nonParseTagRegex = new Regex(@"^(\s*?\/?((raw)|(no-parsing)|(np)))");
 
 

@@ -25,7 +25,7 @@ namespace Libraries.system.output.graphics
 
             UnityEngine.Color32 IGenericScreenBuffer.GetUnityColorAt(int x, int y)
             {
-                return GetAt(x, y);
+                return GetAt(x, y).ToUnityColor();
             }
 
             public int GetWidth()

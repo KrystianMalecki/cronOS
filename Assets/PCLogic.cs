@@ -15,15 +15,17 @@ public class PCLogic : MonoBehaviour
         {
             defaultInstance.hardware.currentlySelected = false;
         }
+
         defaultInstance = logic;
         defaultInstance.hardware.currentlySelected = true;
     }
+
     [Button]
     void SetThisDefault()
     {
         SetDefault(this);
-
     }
+
     public void Awake()
     {
         hardware.Init();
@@ -34,12 +36,14 @@ public class PCLogic : MonoBehaviour
             SetThisDefault();
         }
     }
+
     private void OnMouseEnter()
     {
         SetThisDefault();
     }
+
     private void OnMouseExit()
     {
-      //  SetDefault(null);
+        //  SetDefault(null);
     }
 }

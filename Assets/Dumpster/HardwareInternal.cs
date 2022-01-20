@@ -181,11 +181,12 @@ static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
 static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
 static Screen screen = null;screen=ownPointer.screen;
 " + codeObject.code;
-        List<string> lines = new List<string>(codeObject.code.SplitNewLine());
+        List<string> lines =
+            new List<string>(codeObject.code.Replace("#if false //changeToTrue", "#if true").SplitNewLine());
 
         List<string> importedLibraries = new List<string>();
         Dictionary<string, string> currentRedefines = new Dictionary<string, string>();
-
+        currentRedefines.Add("false//changeToTrue", "true");
         int positionToExpectNextInlcude = 0;
         bool checkIncludes = true;
         bool checkRedefines = true;

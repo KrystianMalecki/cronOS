@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 namespace Libraries.system
 {
     namespace shell
@@ -14,8 +15,8 @@ namespace Libraries.system
             public string GetName();
             public string Run(params string[] args);
             public string Run(string arg);
-
         }
+
         public class ExtendedShellProgram : IShellProgram
         {
             protected virtual List<AcceptedArgument> argumentTypes => null;
@@ -29,9 +30,9 @@ namespace Libraries.system
             {
                 return Run(arg.SplitSpaceQ().ToArray());
             }
+
             public virtual string Run(params string[] args)
             {
-
                 Dictionary<string, string> argPairs = new Dictionary<string, string>();
                 for (int i = 0; i < args.Length; i++)
                 {
@@ -53,12 +54,15 @@ namespace Libraries.system
                         }
                     }
                 }
+
                 return InternalRun(argPairs);
             }
+
             protected virtual string InternalRun(Dictionary<string, string> argPairs)
             {
                 return "";
             }
+
             public class AcceptedArgument
             {
                 public string name;
@@ -73,6 +77,5 @@ namespace Libraries.system
                 }
             }
         }
-
     }
 }

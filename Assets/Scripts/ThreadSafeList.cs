@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +7,7 @@ using UnityEngine;
 [Serializable]
 public class ThreadSafeList<T> : IList<T>, IList
 {
-    [SerializeField]
-    List<T> items;
+    [SerializeField] List<T> items;
     object sync;
 
     public ThreadSafeList()
@@ -54,7 +52,13 @@ public class ThreadSafeList<T> : IList<T>, IList
 
     public int Count
     {
-        get { lock (this.sync) { return this.items.Count; } }
+        get
+        {
+            lock (this.sync)
+            {
+                return this.items.Count;
+            }
+        }
     }
 
     protected List<T> Items
@@ -96,6 +100,7 @@ public class ThreadSafeList<T> : IList<T>, IList
             this.InsertItem(index, item);
         }
     }
+
     public void Add(IEnumerable<T> items)
     {
         lock (this.sync)
@@ -105,7 +110,6 @@ public class ThreadSafeList<T> : IList<T>, IList
             {
                 this.InsertItem(index, item);
             }
-
         }
     }
 
@@ -125,13 +129,15 @@ public class ThreadSafeList<T> : IList<T>, IList
             this.items.CopyTo(array, index);
         }
     }
+
     public List<T> ReturnCopy()
     {
         lock (this.sync)
         {
-          return new List<T>(items);
+            return new List<T>(items);
         }
     }
+
     public bool Contains(T item)
     {
         lock (this.sync)
@@ -178,6 +184,7 @@ public class ThreadSafeList<T> : IList<T>, IList
                 return i;
             }
         }
+
         return -1;
     }
 
@@ -193,24 +200,24 @@ public class ThreadSafeList<T> : IList<T>, IList
             return true;
         }
     }
+
     public bool Remove(IEnumerable<T> items)
     {
         lock (this.sync)
         {
             foreach (var item in items)
             {
-
-
                 int index = this.InternalIndexOf(item);
                 if (index < 0)
                     return false;
 
                 this.RemoveItem(index);
-
             }
+
             return true;
         }
     }
+
     public void RemoveAt(int index)
     {
         lock (this.sync)
@@ -273,10 +280,7 @@ public class ThreadSafeList<T> : IList<T>, IList
 
     object IList.this[int index]
     {
-        get
-        {
-            return this[index];
-        }
+        get { return this[index]; }
         set
         {
             VerifyValueType(value);
@@ -343,6 +347,7 @@ public class ThreadSafeList<T> : IList<T>, IList
             throw new ArgumentException(value.GetType().FullName);
         }
     }
+
     public T Find(Func<T, bool> func)
     {
         lock (this.sync)
@@ -355,6 +360,7 @@ public class ThreadSafeList<T> : IList<T>, IList
                 }
             }
         }
+
         return default(T);
     }
 
@@ -370,8 +376,10 @@ public class ThreadSafeList<T> : IList<T>, IList
                 }
             }
         }
+
         return -1;
     }
+
     public static implicit operator List<T>(ThreadSafeList<T> tsl)
     {
         return new List<T>(tsl.GetEnumerator().Iterate());

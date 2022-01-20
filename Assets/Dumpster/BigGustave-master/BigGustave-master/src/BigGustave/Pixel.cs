@@ -24,7 +24,7 @@
         /// The alpha transparency value for the pixel.
         /// </summary>
         public byte A { get; }
-        
+
         /// <summary>
         /// Whether the pixel is grayscale (if <see langword="true"/> <see cref="R"/>, <see cref="G"/> and <see cref="B"/> will all have the same value).
         /// </summary>

@@ -66,7 +66,7 @@ namespace BigGustave.Timing
                 result = (int)Math.Round(average * 100);
             }
 
-            if (args.Length>0)
+            if (args.Length > 0)
             {
                 Console.WriteLine("Complete, press any key to exit.");
                 Console.ReadKey();
@@ -84,7 +84,7 @@ namespace BigGustave.Timing
 
             var primes = new List<long> { 2 };
 
-            for (long i = 3; i <= Math.Sqrt(value); i+=2)
+            for (long i = 3; i <= Math.Sqrt(value); i += 2)
             {
                 if (value % i == 0)
                 {

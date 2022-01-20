@@ -9,6 +9,7 @@ public class BaseLibrary
     public bool sync = false;
 
     protected Hardware hardware;
+
     public virtual void Init(Hardware hardware)
     {
         this.hardware = hardware;

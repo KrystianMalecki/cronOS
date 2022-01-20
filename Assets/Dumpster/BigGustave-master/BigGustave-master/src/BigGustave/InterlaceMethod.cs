@@ -9,6 +9,7 @@
         /// No interlace.
         /// </summary>
         None = 0,
+
         /// <summary>
         /// Adam7 interlace.
         /// </summary>

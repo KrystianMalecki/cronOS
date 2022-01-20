@@ -8,18 +8,20 @@
     /// </summary>
     public readonly struct ImageHeader
     {
-        internal static readonly byte[] HeaderBytes = {
+        internal static readonly byte[] HeaderBytes =
+        {
             73, 72, 68, 82
         };
 
-        private static readonly IReadOnlyDictionary<ColorType, HashSet<byte>> PermittedBitDepths = new Dictionary<ColorType, HashSet<byte>>
-        {
-            {ColorType.None, new HashSet<byte> {1, 2, 4, 8, 16}},
-            {ColorType.ColorUsed, new HashSet<byte> {8, 16}},
-            {ColorType.PaletteUsed | ColorType.ColorUsed, new HashSet<byte> {1, 2, 4, 8}},
-            {ColorType.AlphaChannelUsed, new HashSet<byte> {8, 16}},
-            {ColorType.AlphaChannelUsed | ColorType.ColorUsed, new HashSet<byte> {8, 16}},
-        };
+        private static readonly IReadOnlyDictionary<ColorType, HashSet<byte>> PermittedBitDepths =
+            new Dictionary<ColorType, HashSet<byte>>
+            {
+                { ColorType.None, new HashSet<byte> { 1, 2, 4, 8, 16 } },
+                { ColorType.ColorUsed, new HashSet<byte> { 8, 16 } },
+                { ColorType.PaletteUsed | ColorType.ColorUsed, new HashSet<byte> { 1, 2, 4, 8 } },
+                { ColorType.AlphaChannelUsed, new HashSet<byte> { 8, 16 } },
+                { ColorType.AlphaChannelUsed | ColorType.ColorUsed, new HashSet<byte> { 8, 16 } },
+            };
 
         /// <summary>
         /// The width of the image in pixels.
@@ -59,7 +61,8 @@
         /// <summary>
         /// Create a new <see cref="ImageHeader"/>.
         /// </summary>
-        public ImageHeader(int width, int height, byte bitDepth, ColorType colorType, CompressionMethod compressionMethod, FilterMethod filterMethod, InterlaceMethod interlaceMethod)
+        public ImageHeader(int width, int height, byte bitDepth, ColorType colorType,
+            CompressionMethod compressionMethod, FilterMethod filterMethod, InterlaceMethod interlaceMethod)
         {
             if (width == 0)
             {

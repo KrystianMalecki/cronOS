@@ -60,8 +60,10 @@ namespace Libraries.system
             {
                 return new Vector2Int((int)v2.x, (int)v2.y);
             }
+
             public static Vector2 zero = new Vector2(0, 0);
             public static Vector2 incorrectVector = new Vector2(float.MaxValue, float.MinValue);
+
             public override string ToString()
             {
                 return v2.ToString();
@@ -107,16 +109,20 @@ namespace Libraries.system
             {
                 return new Vector2Int() { v2 = vector2 };
             }
+
             public static readonly Vector2Int zero = new Vector2Int(0, 0);
             public static readonly Vector2Int incorrectVector = new Vector2Int(int.MaxValue, int.MinValue);
+
             public static bool operator ==(Vector2Int v1, Vector2Int v2)
             {
                 return v1.x == v2.x && v1.y == v2.y;
             }
+
             public static bool operator !=(Vector2Int v1, Vector2Int v2)
             {
                 return !(v1 == v2);
             }
+
             public override string ToString()
             {
                 return v2.ToString();

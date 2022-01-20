@@ -18,36 +18,6 @@ namespace Libraries.system
             // public static MainThreadDelegate<bool>.MTDFunction justCheckKeysDelegate = null;
             public object locker = new();
 
-            public override void Init(Hardware hardware)
-            {
-                base.Init(hardware);
-                //  waitForcheckKeysDelegate = WaitForCheckKeysChange;
-                //  justCheckKeysDelegate = JustCheckKeys;
-            }
-
-            /* private bool CheckKeys()
-             {
-                 if (!hardware.currentlySelected)
-                 {
-                     return false;
-                 }
- 
-                 try
-                 {
-                     IEnumerable<Key> pressedNow = KeyboardInputHelper.GetCurrentKeysWrapped();
-                     cooldownKeys.IntersectWith(pressedNow);
-                     pressedDownKeys.Clear();
-                     pressedDownKeys.UnionWith(pressedNow.Except(cooldownKeys));
-                     return true;
-                 }
-                 catch (Exception e)
-                 {
-                     Debug.Log(" error" + e);
-                     return false;
-                 }
- 
-                 return true;
-             }*/
 
             private void AddKeys(ConcurrentHashSet<Key> pressedNow)
             {
@@ -76,20 +46,6 @@ namespace Libraries.system
                 }
             }
 
-            /*  private void WaitForCheckKeysChange(ref bool done, ref bool result)
-              {
-                  done = false;
-                  if (CheckKeys())
-                  {
-                      done = true;
-                  }
-              }
-  
-              private void JustCheckKeys(ref bool done, ref bool result)
-              {
-                  CheckKeys();
-                  done = true;
-              }*/
 
             public bool GetKeyDown(Key key)
             {
@@ -98,18 +54,6 @@ namespace Libraries.system
                     return false;
                 }
 
-                //test.instance.count5++;
-                /*  if (pressedDownKeys.Contains(key))
-                  {
-
-                      pressedDownKeys.Remove(key);
-                      cooldownKeys.Add(key);
-                      ScriptManager.AddDelegateToStack(RecalculatePressedKeys, true);
-                      return true;
-                  }
-
-                  return false;*/
-                // hardware.hardwareInternal.stackExecutor.AddDelegateToStack(justCheckKeysDelegate, true);
                 AddKeysFromInput();
                 if (pressedDownKeys.Contains(key))
                 {
@@ -130,7 +74,7 @@ namespace Libraries.system
                     AddKeysFromInput();
                 } while (pressedDownKeys.Count <= 0);
 
-                return new KeySequence(pressedDownKeys);
+                return new KeySequence(pressedDownKeys, this);
             }
 
             public KeySequence WaitForInputDown()
@@ -142,7 +86,7 @@ namespace Libraries.system
                 } while (pressedDownKeys.Count <= 0);
 
                 cooldownKeys.UnionWith(pressedDownKeys);
-                return new KeySequence(pressedDownKeys);
+                return new KeySequence(pressedDownKeys, this);
             }
 
             public string GetInputAsString()
@@ -221,6 +165,7 @@ namespace Libraries.system
         public class KeySequence
         {
             public List<Key> keys;
+            private KeyHandler keyHandler;
 
             public bool ReadKey(Key key, bool remove = true)
             {
@@ -233,19 +178,34 @@ namespace Libraries.system
                 return b;
             }
 
-            public KeySequence(List<Key> keys)
+            public bool ReadAndCooldownKey(Key key, bool remove = true)
             {
-                this.keys = new List<Key>(keys);
+                bool b = keys.Contains(key);
+                if (remove)
+                {
+                    keys.Remove(key);
+                }
+
+                keyHandler.cooldownKeys.Add(key);
+                return b;
             }
 
-            public KeySequence(IEnumerable<Key> keys)
+            public KeySequence(List<Key> keys, KeyHandler keyHandler)
             {
                 this.keys = new List<Key>(keys);
+                this.keyHandler = keyHandler;
             }
 
-            public KeySequence(ThreadSafeList<Key> keys)
+            public KeySequence(IEnumerable<Key> keys, KeyHandler keyHandler)
             {
                 this.keys = new List<Key>(keys);
+                this.keyHandler = keyHandler;
+            }
+
+            public KeySequence(ThreadSafeList<Key> keys, KeyHandler keyHandler)
+            {
+                this.keys = new List<Key>(keys);
+                this.keyHandler = keyHandler;
             }
 
             public override string ToString()
