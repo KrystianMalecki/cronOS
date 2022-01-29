@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Console = Libraries.system.output.Console;
 
 namespace Libraries.system
 {
     namespace input
     {
+        //todo 2 add start listening to keys and stop listening to keys functions 
         public class KeyHandler : BaseLibrary
         {
             public ConcurrentHashSet<Key> pressedDownKeys = new ConcurrentHashSet<Key>();
@@ -66,23 +68,56 @@ namespace Libraries.system
                 return false;
             }
 
-            public KeySequence WaitForInput()
+//todo-future move timeout in extenstion method
+            public KeySequence WaitForInput(long timeoutInMS = 0)
             {
+                long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
                 do
                 {
                     hardware.runtime.Wait();
                     AddKeysFromInput();
+                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)
+                    {
+                        break;
+                    }
                 } while (pressedDownKeys.Count <= 0);
 
+                //  Console.Debug("after WaitForInput");
                 return new KeySequence(pressedDownKeys, this);
             }
 
-            public KeySequence WaitForInputDown()
+            public KeySequence WaitForInputBuffer(long timeoutInMS = 0)
             {
+                long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
+                do
+                {
+                    hardware.runtime.Wait();
+
+                    AddKeys(hardware.hardwareInternal.inputManager.GetBuffered());
+
+
+                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)
+                    {
+                        break;
+                    }
+                } while (pressedDownKeys.Count <= 0);
+
+                //  Console.Debug("after WaitForInput");
+                return new KeySequence(pressedDownKeys, this);
+            }
+
+            public KeySequence WaitForInputDown(long timeoutInMS = 0)
+            {
+                long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
+
                 do
                 {
                     hardware.runtime.Wait();
                     AddKeysFromInput();
+                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)
+                    {
+                        break;
+                    }
                 } while (pressedDownKeys.Count <= 0);
 
                 cooldownKeys.UnionWith(pressedDownKeys);

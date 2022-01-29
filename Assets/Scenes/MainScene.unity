@@ -250,7 +250,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &377409529
 MonoBehaviour:
@@ -1208,7 +1208,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624103653}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.01, z: -7.1}
+  m_LocalPosition: {x: -2.09, y: 1.01, z: -1.93}
   m_LocalScale: {x: 3.5, y: 2.5, z: 2.18}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1237,8 +1237,8 @@ MonoBehaviour:
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 120
-      WaitRefreshRate: 8
+      FPSCap: 166.66667
+      WaitRefreshRate: 6
       TasksPerCPULoop: -1
       scriptsRunning: []
   references:
@@ -2009,7 +2009,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &973355181
 MonoBehaviour:
@@ -2023,7 +2023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 1
+  runOnStart: 0
   codeFile: {fileID: 11500000, guid: a579e6a972f727f4299b1d2613e6f847, type: 3}
   code: "string filePath = \"/sys\"\nstring fileName = \"output\"\n\nSystemTexture
     image = new SystemTexture(20,20);\nVector2Int mousePos = new Vector2Int(0, 0);\r\nSystemColor
@@ -2317,7 +2317,6 @@ Transform:
   - {fileID: 1343489310}
   - {fileID: 1640294208}
   - {fileID: 1247786007}
-  - {fileID: 1985360662}
   - {fileID: 377409528}
   - {fileID: 973355180}
   m_Father: {fileID: 0}
@@ -2580,60 +2579,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1985360661
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1985360662}
-  - component: {fileID: 1985360663}
-  m_Layer: 0
-  m_Name: color CT (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1985360662
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985360661}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1296099128}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1985360663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985360661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runOnStart: 0
-  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
-  code: "#include \"/sys/libs/fontLib.ll\"\n   \n        SystemScreenBuffer buffer
-    = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);\r\n       
-    screen.InitScreenBuffer(buffer);\r\n   \rstring tzt =\"\"+Runtime.ByteToChar(176)+Runtime.ByteToChar(177)+Runtime.ByteToChar(178);\n       
-    for (byte i = 0; i < 16; i++)\r\n        {\r\n            string combine = \"\";\r\n           
-    for (byte j = 0; j < 16; j++)\r\n            {\r\n                combine +=\r\n$\"<color={Runtime.ByteToHex(i,
-    false)}><backgroundcolor={Runtime.ByteToHex(j, false)}>{tzt}\";\r\n\r\n           
-    }\r\n            DrawColoredStringAt(buffer, 0, i * 8,combine,\r\n               
-    SystemColor.white, SystemColor.black);\r\n        }\r\n\r\n        screen.SetScreenBuffer(buffer);\r\n  "
 --- !u!1 &2108374104
 GameObject:
   m_ObjectHideFlags: 0
@@ -2663,13 +2608,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runOnStart: 0
+  runOnStart: 1
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "#include \"/sys/libs/binsLib.ll\"\r\n#include \"/sys/libs/fontLib.ll\"\r\n#top
-    using static Shell;\r\npublic class Shell\r\n{\r\n    File currentFile = fileSystem.GetFileByPath(\"/sys\");\r\n\r\n   
-    SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n    KeySequence
-    bufferKeySequence = null;\r\n\r\n\r\n    string prefix = \"\";\r\n    string
-    inputText = \"\";\r\n    string bufferInput = \"\";\r\n    string consoleText
+    using static Shell;\r\npublic class Shell\r\n{\r\npublic static object lockMain
+    = new object();\n    File currentFile = fileSystem.GetFileByPath(\"/sys\");\r\n\r\n 
+    public static   SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n   
+    KeySequence bufferKeySequence = null;\r\n\r\n\r\n    string prefix = \"\";\r\n   
+    string inputText = \"\";\r\n    string bufferInput = \"\";\r\n    string consoleText
     = \"\";\r\n\r\n\r\n    int historyPointer = 0;\r\n    List<string> history =
     new List<string>();\r\n\r\n\r\n    void UpdatePrefix()\r\n    {\r\n        prefix
     = currentFile.GetFullPath() + \">\";\r\n    }\r\n\r\n    void Draw()\r\n    {\r\n       
@@ -2714,8 +2660,8 @@ MonoBehaviour:
     + \" -wd \" + currentFile.GetFullPath());\r\n        }\r\n\r\n        return
     $\"Couldn't find command `{parts[0]}`.\";\r\n    }\r\n\r\n    public void Run()\r\n   
     {\r\n        screen.InitScreenBuffer(screenBuffer);\r\n        UpdatePrefix();\r\n       
-    while (true)\r\n        {\r\n            screenBuffer.FillAll(SystemColor.black);\r\n           
-    Draw();\r\n            ProcessInput();\r\n            runtime.Wait();\r\n       
+    while (true)\r\n        {\r\nlock(lockMain){\n            screenBuffer.FillAll(SystemColor.black);\r\n           
+    Draw();\r\n            ProcessInput();\r\n            runtime.Wait();\r\n}       
     }\r\n    }\r\n}\r\n\r\nstatic Shell shell = null;\nshell=new Shell();\r\nshell.Run();"
 --- !u!4 &2108374107
 Transform:

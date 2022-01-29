@@ -1,4 +1,8 @@
 //todo 0 add todos here
+
+//idea: special function in some text inputs to be replaced by values
+//todo 0 warn or throw error when saving file with the same name
+
 //todo 91 go back to sounds
 
 //todo 99 add lolcat command and CT

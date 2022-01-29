@@ -22,7 +22,7 @@ public class HardwareInternal
     [SerializeField] internal InputManager inputManager;
     [SerializeField] internal ScreenManager screenManager;
     [SerializeField] internal StackExecutor stackExecutor;
-
+    public  long CurrentMilliseconds => DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
     #region Processor
 
     //  [SerializeField]

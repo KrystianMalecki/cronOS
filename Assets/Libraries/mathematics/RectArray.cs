@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Console = Libraries.system.output.Console;
 
 namespace Libraries.system
 {
@@ -83,7 +84,7 @@ namespace Libraries.system
 
             public void Fill(int x, int y, int width, int height, T value)
             {
-                if (!IsBoxInRange(x, y, width, height) && ignoreSomeErrors)
+                if (!IsBoxInRange(x, y, width - 1, height - 1) && ignoreSomeErrors)
                 {
                     return;
                 }
@@ -236,7 +237,7 @@ namespace Libraries.system
 
             public bool IsBoxInRange(int x, int y, int width, int height)
             {
-                return x >= 0 && x + width < this.width && y >= 0 && y + height < this.height;
+                return x >= 0 && x + width <= this.width && y >= 0 && y + height <= this.height;
             }
 
             public RectArray<T> GetRect(int x, int y, int width, int height)
@@ -266,6 +267,164 @@ namespace Libraries.system
                   }*/
 
                 return newArray;
+            }
+
+            //todo 1 think if you want to rename draw
+            public void DrawLine(int startX, int startY, int endX, int endY, T value)
+            {
+                float x;
+                float y;
+                float dx, dy, step;
+                int i;
+
+                dx = (endX - startX);
+                dy = (endY - startY);
+                if (Math.Abs(dx) >= Math.Abs(dy))
+                    step = Math.Abs(dx);
+                else
+                    step = Math.Abs(dy);
+                dx = dx / step;
+                dy = dy / step;
+                x = startX;
+                y = startY;
+                i = 1;
+                while (i <= step)
+                {
+                    SetAt(Math.Round(x), Math.Round(y), value);
+                    x = x + dx;
+                    y = y + dy;
+                    i = i + 1;
+                }
+            }
+
+            public void DrawLine(Vector2Int start, Vector2Int end, T value)
+            {
+                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
+                {
+                    return;
+                }
+
+                DrawLine(start.x, start.y, end.x, end.y, value);
+            }
+
+            public virtual void DrawRectangle(int startX, int startY, int endX, int endY, T value, bool fill = false)
+            {
+                DrawLine(startX, startY, endX, startY, value);
+                DrawLine(startX, startY, startX, endY, value);
+                DrawLine(endX, startY, endX, endY + 1, value);
+                DrawLine(startX, endY, endX, endY, value);
+            }
+
+            public void DrawRectangle(Vector2Int start, Vector2Int end, T value, bool fill = false)
+            {
+                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
+                {
+                    return;
+                }
+
+                DrawRectangle(start.x, start.y, end.x, end.y, value, fill);
+            }
+
+            public void DrawEllipseInRect(Vector2Int start, Vector2Int end, T value, bool fill = false)
+            {
+                Console.Debug($"{start} {end}");
+
+                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
+                {
+                    return;
+                }
+
+                int minX = Math.Min(start.x, end.x);
+                int maxX = Math.Max(start.x, end.x);
+                int minY = Math.Min(start.y, end.y);
+                int maxY = Math.Max(start.y, end.y);
+
+
+                DrawEllipseInRect(minX, minY, maxX, maxY, value, fill);
+            }
+
+            public void DrawEllipseInRect(
+                int startX, int startY, int endX, int endY, T value, bool fill = false)
+            {
+                //todo 0 check if some value is 0
+                Console.Debug($"{startX} {startY} {endX} {endY}");
+                Console.Debug(
+                    $"{(startX + endX) / 2} {(startY + endY) / 2} {(endX - startX) / 2} {(endY - startY) / 2}");
+
+                DrawEllipseFromCenter((startX + endX) / 2, (startY + endY) / 2, (endX - startX) / 2,
+                    (endY - startY) / 2, value, fill);
+            }
+
+            public void DrawEllipseFromCenter(Vector2Int center, Vector2Int radius, T value, bool fill = false)
+            {
+                if (center == Vector2Int.incorrectVector || radius == Vector2Int.incorrectVector)
+                {
+                    return;
+                }
+
+                DrawEllipseFromCenter(center.x, center.y, radius.x, radius.y, value, fill);
+            }
+
+            public void DrawEllipseFromCenter(
+                int centerX, int centerY, int radiusX, int radiusY, T value, bool fill = false)
+            {
+                int dx, dy, d1, d2, x, y;
+                x = 0;
+                y = radiusY;
+
+                d1 = Math.Round((radiusY * radiusY) - (radiusX * radiusX * radiusY) +
+                                (0.25f * radiusX * radiusX));
+                dx = 2 * radiusY * radiusY * x;
+                dy = 2 * radiusX * radiusX * y;
+
+                while (dx < dy)
+                {
+                    SetAt(x + centerX, y + centerY, value);
+                    SetAt(-x + centerX, y + centerY, value);
+                    SetAt(x + centerX, -y + centerY, value);
+                    SetAt(-x + centerX, -y + centerY, value);
+
+                    if (d1 < 0)
+                    {
+                        x++;
+                        dx = dx + (2 * radiusY * radiusY);
+                        d1 = d1 + dx + (radiusY * radiusY);
+                    }
+                    else
+                    {
+                        x++;
+                        y--;
+                        dx = dx + (2 * radiusY * radiusY);
+                        dy = dy - (2 * radiusX * radiusX);
+                        d1 = d1 + dx - dy + (radiusY * radiusY);
+                    }
+                }
+
+                d2 = Math.Round(((radiusY * radiusY) * ((x + 0.5f) * (x + 0.5f)))
+                                + ((radiusX * radiusX) * ((y - 1) * (y - 1)))
+                                - (radiusX * radiusX * radiusY * radiusY));
+
+                while (y >= 0)
+                {
+                    SetAt(x + centerX, y + centerY, value);
+                    SetAt(-x + centerX, y + centerY, value);
+                    SetAt(x + centerX, -y + centerY, value);
+                    SetAt(-x + centerX, -y + centerY, value);
+                    if (d2 > 0)
+                    {
+                        y--;
+                        dy = dy - (2 * radiusX * radiusX);
+                        d2 = d2 + (radiusX * radiusX) - dy;
+                    }
+                    else
+                    {
+                        y--;
+                        x++;
+                        dx = dx + (2 * radiusY * radiusY);
+                        dy = dy - (2 * radiusX * radiusX);
+                        d2 = d2 + dx - dy + (radiusX * radiusX);
+                    }
+                }
             }
         }
     }

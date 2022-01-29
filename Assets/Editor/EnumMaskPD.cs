@@ -503,6 +503,7 @@ public class EnumMaskPD : PropertyDrawer
                 return null;
         }
 
+
         return enm.Current;
     }
 

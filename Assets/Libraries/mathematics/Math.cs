@@ -14,6 +14,7 @@ namespace Libraries.system
     {
         public class Math
         {
+            //todo 0 check why?
             public static decimal Abs(decimal number)
             {
                 return System.Math.Abs(number);
@@ -47,6 +48,16 @@ namespace Libraries.system
             public static int Round(float number)
             {
                 return (int)(number);
+            }
+
+            public static int Min(int a, int b)
+            {
+                return System.Math.Min(a, b);
+            }
+
+            public static int Max(int a, int b)
+            {
+                return System.Math.Max(a, b);
             }
         }
     }

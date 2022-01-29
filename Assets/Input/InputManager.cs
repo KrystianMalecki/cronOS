@@ -13,6 +13,8 @@ public class InputManager : MonoBehaviour
     public StringBuilder inputBuffer = new StringBuilder();
 
     public ConcurrentHashSet<Key> currentlyPressedKeys = new();
+    public ConcurrentHashSet<Key> currentlyPressedKeyBuffered = new();
+    public ConcurrentHashSet<Key> _currentlyPressedKeyBuffered2 = new();
 
     public void Update()
     {
@@ -42,12 +44,25 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    //todo 1 change name
+    public ConcurrentHashSet<Key> GetBuffered()
+    {
+        lock (lockObj)
+        {
+            _currentlyPressedKeyBuffered2.Clear();
+            _currentlyPressedKeyBuffered2.UnionWith(currentlyPressedKeyBuffered);
+            currentlyPressedKeyBuffered.Clear();
+            return _currentlyPressedKeyBuffered2;
+        }
+    }
+
     public void AddKeys()
     {
         lock (lockObj)
         {
             currentlyPressedKeys.Clear();
             currentlyPressedKeys.UnionWith(KeyboardInputHelper.GetCurrentKeysWrapped());
+            currentlyPressedKeyBuffered.UnionWith(KeyboardInputHelper.GetCurrentKeysWrapped());
         }
     }
 
