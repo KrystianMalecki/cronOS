@@ -516,7 +516,7 @@ public class FileEditor : EditorWindow
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
             if (GUILayout.Button("Add Child"))
             {
-                File f = currentFile.AddChild(Drive.MakeFile($"new File "));
+                File f = currentFile.SetChild(Drive.MakeFile($"new File "));
                 SetupChildren(true);
 
                 f.name += f.FileID;
@@ -928,7 +928,7 @@ public class FileEditor : EditorWindow
             GUI.enabled = true;
             if (GUILayout.Button("+", GUILayout.Width(EditorGUIUtility.singleLineHeight)))
             {
-                File f = file.AddChild(Drive.MakeFile($"new File ("));
+                File f = file.SetChild(Drive.MakeFile($"new File ("));
                 SetupChildren(true);
 
                 f.name += f.FileID + ")";

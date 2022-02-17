@@ -10,31 +10,39 @@ public class DrivePD : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return 0; //idk why
+        return EditorGUIUtility.singleLineHeight;
     }
+
+    Rect rect;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-        EditorGUILayout.PropertyField(property, GUIContent.none);
+        position.width /= 3;
+        EditorGUI.PropertyField(position, property, GUIContent.none);
+
+
         DriveSO mainObject = ((DriveSO)property.GetTargetObjectOfProperty());
-        if (mainObject == null)
+        if (mainObject != null)
         {
-            GUILayout.Box("DriveSO is null");
-            return;
-        }
+            position.x += position.width;
+            if (GUI.Button(position, "Open Editor"))
+            {
+                mainObject.GenerateCacheData();
+                mainObject.OpenEditor();
+            }
 
-        if (GUILayout.Button("Open Editor"))
+            position.x += position.width;
+
+            if (GUI.Button(position, "Generate parent links"))
+            {
+                mainObject.GenerateCacheData();
+            }
+        }
+        else
         {
-            mainObject.GenerateCacheData();
-            mainObject.OpenEditor();
+            position.x += position.width;
+            GUI.Box(position, "DriveSO is null");
+            Debug.Log("DriveSO is null");
         }
-
-        if (GUILayout.Button("Generate parent links"))
-        {
-            mainObject.GenerateCacheData();
-        }
-
-        EditorGUILayout.EndHorizontal();
     }
 }

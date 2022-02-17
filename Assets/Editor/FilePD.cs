@@ -86,7 +86,7 @@ public class FilePD : PropertyDrawer
                 if (GUI.Button(addChildButtonRect, "Add child"))
                 {
                     File file = property.GetTargetObjectOfProperty() as File;
-                    file.AddChild(new File());
+                    file.SetChild(new File());
                     property.serializedObject.Update();
                 }
             }

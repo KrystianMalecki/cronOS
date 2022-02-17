@@ -76,15 +76,22 @@ namespace Libraries.system
                 this.drive = drive;
             }
 
-            public File AddChild(File file)
+            //todo change name to setChild
+            public File SetChild(File file)
             {
-                if (children == null)
+                children ??= new ThreadSafeList<File>();
+
+                int index = children.FindIndex(x => x.name == file.name);
+                if (index != -1)
                 {
-                    children = new ThreadSafeList<File>();
+                    children[index] = file;
+                }
+                else
+                {
+                    children.Add(file);
                 }
 
-                children.Add(file);
-                if (file.fileID == -1 || file.fileID == 0)
+                if (file.fileID is -1 or 0)
                 {
                     drive.AddFileToDrive(file);
                 }
@@ -93,6 +100,11 @@ namespace Libraries.system
                 return file;
             }
 
+            public bool HasChild(string name)
+            {
+                return children.FindIndex(x => x.name == name) != -1;
+
+            }
             public void RemoveChild(File file)
             {
                 children?.Remove(file);
@@ -121,10 +133,10 @@ namespace Libraries.system
                 return new Path(GetFullPath(), root == null ? drive?.GetRoot() : root);
             }
 
-            public void MoveFileTo(File desitination)
+            public void MoveFileTo(File destination)
             {
                 Parent.RemoveChild(this);
-                desitination.AddChild(this);
+                destination.SetChild(this);
             }
 
             public string ReturnDataAsString()

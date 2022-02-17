@@ -25,7 +25,7 @@ namespace Libraries.system
                 [CallerLineNumber] int lineNumber = 0,
                 [CallerMemberName] string caller = null)
             {
-                UnityEngine.Debug.Log($"{caller} at {lineNumber}. Logs: '{obj}'");
+                UnityEngine.Debug.Log($"{caller} at {lineNumber + 1}. Logs: '{obj}'");//todo 99 warning, +1 is here because on top is "#if false added".
             }
 
             public static void Line([CallerLineNumber] int line = 0)

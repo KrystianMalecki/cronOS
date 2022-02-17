@@ -8,11 +8,11 @@ namespace Libraries.system
     {
         public class MouseHandler : BaseLibrary
         {
-            public Vector2Int lastPosition = Vector2Int.incorrectVector;
+            public Vector2Int? lastPosition = null;
             public static System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-            public static MainThreadDelegate<Vector2Int>.MTDFunction func = null;
+            public static MainThreadDelegate<Vector2Int?>.MTDFunction func = null;
 
-            public Vector2Int GetScreenPosition()
+            public Vector2Int? GetScreenPosition()
             {
                 if (!hardware.currentlySelected)
                 {
@@ -20,10 +20,10 @@ namespace Libraries.system
                 }
 
 
-                Vector2Int pos = hardware.hardwareInternal.stackExecutor.AddDelegateToStack(func);
+                Vector2Int? pos = hardware.hardwareInternal.stackExecutor.AddDelegateToStack(func);
 
 
-                if (pos == Vector2Int.incorrectVector)
+                if (!pos.HasValue)
                 {
                     return lastPosition;
                 }
@@ -38,7 +38,7 @@ namespace Libraries.system
                 func = GetMousePos;
             }
 
-            private void GetMousePos(ref bool done, ref Vector2Int returnValue)
+            private void GetMousePos(ref bool done, ref Vector2Int? returnValue)
             {
                 returnValue = hardware.hardwareInternal.screenManager.GetMousePos();
             }

@@ -45,6 +45,9 @@ public class NativeTest : MonoBehaviour
 {
     public void Start()
     {
+        SystemTexture image = new SystemTexture();
+        image.DrawLine(0, 0, 0, 0, 9);
+        
         /* Color32[] palette =
          {
              new Color32(0, 0, 0, 255),

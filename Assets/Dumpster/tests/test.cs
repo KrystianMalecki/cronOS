@@ -1,595 +1,379 @@
-﻿#if false
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 using Libraries.system;
-using native_system = System;
-using native_ue = UnityEngine;
-using static UnityEngine.KeyCode;
-using Libraries.system.mathematics;
-using Libraries.system.input;
-using Libraries.system.output.graphics.system_screen_buffer;
-using Libraries.system.output.graphics;
 using Libraries.system.file_system;
-using Libraries.system.output.graphics.system_texture;
-using Libraries.system.output.graphics.system_colorspace;
+using Libraries.system.input;
+using Libraries.system.mathematics;
 using Libraries.system.output;
-using Libraries.system.output.graphics.color32;
-using Libraries.system.output.graphics.mask_texture;
+using Libraries.system.output.graphics.system_colorspace;
+using Libraries.system.output.graphics.system_texture;
+using Libraries.system.shell;
+using Libraries.system.shell;
 
-public class test : native_ue.MonoBehaviour
+#if false
+enum DrawingState
 {
-    private void MainCodeTest()
+    Drawing,
+    DrawingLine,
+    DrawingRectangle,
+    DrawingElipse,
+}
+
+public class paint : ExtendedShellProgram
+{
+    private string filePath;
+    bool waitingForStartPosition = false;
+    SystemTexture image = null;
+    SystemTexture overlay = null;
+    File imageFile = null;
+    int scale = 4;
+
+    Vector2Int? mousePos = null;
+    SystemColor mainColor = SystemColor.white;
+    SystemColor UIColor = SystemColor.dark_gray;
+    SystemColor secondaryColor = SystemColor.black;
+    bool editingMainColor = true;
+    DrawingState drawingState = DrawingState.Drawing;
+    Vector2Int? startPos = null; //Vector2Int.incorrectVector;
+    Vector2Int? lastPos = null; //Vector2Int.incorrectVector;
+
+    KeySequence ks = null;
+    bool running = true;
+
+    public override string GetName()
     {
-        const string help = "Press mouse to move to mouse\n"
-                            + "Arrows to move\n"
-                            + "Keypad +/- to change speed\n"
-                            + "Type to type☻";
-        SystemScreenBuffer buffer = new SystemScreenBuffer();
-        Screen.InitScreenBuffer(buffer);
+        return "paint";
+    }
+
+    protected override string InternalRun(Dictionary<AcceptedArgument, string> argPairs)
+    {
+        Console.Debug(argPairs.ToFormattedString2());
+        string workingPath = argPairs.GetValueOrNull("-wd")?.Value ?? "/";
+        string name = argPairs.GetValueOrNull("-n")?.Value ?? "image.img";
+
+        int height = int.Parse(argPairs.GetValueOrNull("-h")?.Value ?? "10");
+        int width = int.Parse(argPairs.GetValueOrNull("-w")?.Value ?? "10");
+
+        filePath = argPairs.GetValueOrNull("-f")?.Value ?? workingPath;
 
 
-        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
-        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
-
-        void DrawCharAt(int x, int y, char character)
+        if (fileSystem.TryGetFile(filePath + "/" + name, out File file))
         {
-            int index = 0; // Screen.GetCharacterIndex(character);
-            int posx = index % 16;
-            int posy = index / 16;
-            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
+            image = SystemTexture.FromData(file.data);
+            imageFile = file;
+        }
+        else
+        {
+//todo 1 fix: -nf doesn't make new file when file exists
+            if (argPairs.ContainsKey("-nf"))
+            {
+                image = new SystemTexture(width, height);
+            }
+            else
+            {
+                //todo 4 error
+                return "error";
+            }
         }
 
-        void DrawStringAt(int x, int y, string text)
+        overlay = new SystemTexture(image.width, image.height);
+        lock (lockMain)
         {
-            //  Console.Debug(x + " " + y);
-            int posX = x;
-            int posY = y;
-            for (int i = 0; i < text.Length; i++)
+            keyHandler.DumpInputBuffer();
+            keyHandler.DumpStringInputBuffer();
+//todo 2 rework work loop: paint mode, menu. In paint you draw in menu you can open and save file.
+            while (running)
             {
-                char c = text.ToCharArray()[i];
-                //Console.Debug(c,(int)c,(int)'\n');
-                if (c == '\n' || c == '\r')
+                Console.Debug("paint loop");
+                Draw();
+                ProcessInput();
+                runtime.Wait();
+            }
+
+            imageFile ??= Drive.MakeFile(name, new byte[0]);
+
+            byte[] data = image.ToData();
+            imageFile.data = data;
+            File parent = fileSystem.GetFileByPath(filePath);
+            parent.SetChild(imageFile);
+        }
+
+        Console.Debug("paint lock off");
+        keyHandler.DumpInputBuffer();
+        keyHandler.DumpStringInputBuffer();
+        return "paint finished work.";
+    }
+
+    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument>
+    {
+        new AcceptedArgument("working directory", true, "-wd"),
+        new AcceptedArgument("current file", true, "-f"),
+        new AcceptedArgument("new file", false, "-nf"),
+        new AcceptedArgument("name", true, "-n"),
+        new AcceptedArgument("width", true, "-w"),
+        new AcceptedArgument("height", true, "-h"),
+        new AcceptedArgument("color palette", true, "-cp")
+    };
+
+
+    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
+
+
+    void Draw()
+    {
+        screenBuffer.FillAll(SystemColor.black);
+        overlay.FillAll(SystemColor.black);
+        if (waitingForStartPosition)
+        {
+        }
+        else
+        {
+            if (startPos.HasValue && mousePos.HasValue)
+            {
+                switch (drawingState)
                 {
-                    posX = x;
-                    posY += 8;
-                    continue;
+                    case DrawingState.DrawingLine:
+                        overlay.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        break;
+                    case DrawingState.DrawingRectangle:
+                        overlay.DrawRectangle(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        break;
+                    case DrawingState.DrawingElipse:
+                        overlay.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        break;
+                    default:
+                        overlay.SetAt(mousePos.Value.x + 1, mousePos.Value.y, UIColor);
+                        overlay.SetAt(mousePos.Value.x - 1, mousePos.Value.y, UIColor);
+                        overlay.SetAt(mousePos.Value.x, mousePos.Value.y + 1, UIColor);
+                        overlay.SetAt(mousePos.Value.x, mousePos.Value.y - 1, UIColor);
+                        break;
                 }
-
-                DrawCharAt(posX, posY, c);
-                posX += 8;
             }
         }
 
-        File playerTextureFile = FileSystem.GetFileByPath("C:/System/dupa");
-        SystemTexture playerTexture = SystemTexture.FromData(playerTextureFile.data);
-
-        Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);
-        Vector2Int mousePos = new Vector2Int(0, 0);
-
-        string position = "";
-        string text = "";
-        int speed = 1;
-        KeyHandler kh = new KeyHandler();
-        KeySequence ks = null;
-        bool flasher = false;
-
-        void CheckMovement(KeySequence ks)
+        for (int iterY = 0; iterY < image.height; iterY++)
         {
-            if (ks.ReadKey(Key.UpArrow))
+            for (int iterX = 0; iterX < image.width; iterX++)
             {
-                orbPos.y -= speed;
-            }
-
-            if (ks.ReadKey(Key.DownArrow))
-            {
-                orbPos.y += speed;
-            }
-
-            if (ks.ReadKey(Key.LeftArrow))
-            {
-                orbPos.x -= speed;
-            }
-
-            if (ks.ReadKey(Key.RightArrow))
-            {
-                orbPos.x += speed;
-            }
-
-            if (ks.ReadKey(Key.KeypadPlus))
-            {
-                speed++;
-            }
-
-            if (ks.ReadKey(Key.KeypadMinus))
-            {
-                speed--;
-            }
-        }
-
-
-        void ClampPositionToFrame()
-        {
-            if (orbPos.x > buffer.width - playerTexture.width)
-            {
-                orbPos.x = buffer.width - playerTexture.width;
-            }
-
-            if (orbPos.x < 0)
-            {
-                orbPos.x = 0;
-            }
-
-            if (orbPos.y > buffer.height - playerTexture.height)
-            {
-                orbPos.y = buffer.height - playerTexture.height;
-            }
-
-            if (orbPos.y < 0)
-            {
-                orbPos.y = 0;
-            }
-        }
-
-        void Draw()
-        {
-            DrawStringAt(8, 0, help);
-
-            position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
-
-            DrawStringAt(0, 4 * 8, position);
-            buffer.DrawLine(mousePos.x, mousePos.y, orbPos.x, orbPos.y, SystemColor.white);
-            buffer.DrawTexture(orbPos.x, orbPos.y, playerTexture);
-            DrawStringAt(0, 5 * 8, text);
-            buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
-            flasher = !flasher;
-            AsyncScreen.SetScreenBuffer(buffer);
-        }
-
-        void ProcessInput()
-        {
-            ks = kh.WaitForInput();
-            string input = KeyHandler.GetInputAsString();
-            if (input != "")
-            {
-                text = text.AddInput(input);
-            }
-
-            CheckMovement(ks);
-            if (ks.ReadKey(Key.Mouse0))
-            {
-                mousePos = MouseHander.GetScreenPosition();
-            }
-
-            ClampPositionToFrame();
-        }
-
-        while (true)
-        {
-            buffer.FillAll(SystemColor.black);
-
-            Draw();
-            ProcessInput();
-
-            Runtime.Wait(1);
-        }
-    }
-
-    private void drawTextOnScreen()
-    {
-        SystemScreenBuffer buffer = new SystemScreenBuffer();
-        Screen.InitScreenBuffer(buffer);
-        string str = "Hello, world!";
-        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
-        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
-
-        void DrawCharAt(int x, int y, char character)
-        {
-            int index = 0; // Screen.GetCharacterIndex(character);
-            int posx = index % 16;
-            int posy = index / 16;
-            buffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8));
-        }
-
-        buffer.FillAll(SystemColor.black);
-        for (int i = 0; i < str.Length; i++)
-        {
-            DrawCharAt(i * 8, 0, str.ToCharArray()[i]);
-        }
-
-        Screen.SetScreenBuffer(buffer);
-    }
-
-    private void MainCodeTest2()
-    {
-        /*
-          using native_system = System;
-          using native_ue = UnityEngine;
-        */
-        Random r = new Random();
-        r.NextInt();
-
-        SystemScreenBuffer buffer = new SystemScreenBuffer();
-        Screen.InitScreenBuffer(buffer);
-
-        KeyHandler kh = new KeyHandler();
-        int orbX = buffer.width / 2;
-        int orbY = buffer.height / 2;
-        ;
-
-        SystemColor b = 0;
-        KeySequence ks = null;
-
-        while (true)
-        {
-            buffer.FillAll(SystemColor.black);
-            buffer.SetAt(orbX, orbY, b);
-            b++;
-
-
-            AsyncScreen.SetScreenBuffer(buffer);
-
-            ks = kh.WaitForInput();
-            //  ks.keys
-            if (ks.ReadKey(Key.W))
-            {
-                orbY++;
-            }
-
-            if (ks.ReadKey(Key.S))
-            {
-                orbY--;
-            }
-
-            if (ks.ReadKey(Key.A))
-            {
-                orbX--;
-            }
-
-            if (ks.ReadKey(Key.D))
-            {
-                orbX++;
-            }
-
-            if (orbX > buffer.width - 1)
-            {
-                orbX = 0;
-            }
-
-            if (orbX < 0)
-            {
-                orbX = buffer.width - 1;
-            }
-
-            if (orbY > buffer.height - 1)
-            {
-                orbY = 0;
-            }
-
-            if (orbY < 0)
-            {
-                orbY = buffer.height - 1;
-            }
-
-            Console.Debug("frame" + kh);
-            Runtime.Wait(1);
-        }
-    }
-
-    private void c()
-    {
-        int a = 0;
-        while (true)
-        {
-            a++;
-            Runtime.Wait(1);
-        }
-    }
-    private void all()
-    {
-        #region fontLibrary.ll
-        File fontFile = FileSystem.GetFileByPath("/System/defaultFontMask");
-         MaskTexture fontTexture = MaskTexture.FromData(fontFile.data);
-
-        
-         Regex colorTagRegex = new Regex(@"^(\s*?((color)|(c)|(col))\s*?=\s*?.+?)|(\s*?\/((color)|(c)|(col)))");
-         Regex backgroundColorTagRegex =
- new Regex(@"^(((\s*?)|(\/))((backgroundcolor)|(bgc)|(bgcol)|(bc))\s*?=.+?)|(\s*?\/((backgroundcolor)|(bgc)|(bgcol)|(bc)))");
-         Regex nonParseTagRegex = new Regex(@"^(\s*?\/?((raw)|(no-parsing)|(np)))");
-
-
-
-         void DrawColoredCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character,
-            SystemColor foreground, SystemColor background )
-        {
-            if (systemScreenBuffer == null)
-            {
-                
-                return;
-
-            }
-
-            int index = Runtime.CharToByte(character);
-            int posx = index % 16;
-            int posy = index / 16;
-
-            systemScreenBuffer.DrawTexture(x, y, fontTexture.GetRect(posx * 8, (posy) * 8, 8, 8).Convert<SystemColor>
-                    (o => (o ? foreground : background)),
-                fontTexture.transparencyFlag);
-        }
-
-         void DrawColoredStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text,
-            SystemColor foreground, SystemColor background, bool enableTags = true)
-        {
-            SystemColor currentForeground = foreground, currentBackground = background;
-            int posX = x;
-            int posY = y;
-            char[] charText = text.ToCharArray();
-            bool parseTags = true;
-            for (int i = 0; i < text.Length; i++)
-            {
-                char character = charText[i];
-                if (character == '\r')
+                for (int iterYScale = 0; iterYScale < scale; iterYScale++)
                 {
-                    posX = x;
-                    continue;
-                }
-                else if (character == '\n')
-                {
-                    posX = x;
-                    posY += 8;
-                    continue;
-                }
-                else if (enableTags) //tags enabled
-                {
-                    if (character == '<') //found tag
+                    for (int iterXScale = 0; iterXScale < scale; iterXScale++)
                     {
-                        if (i < 1 || charText[i - 1] != '\\') //not escaped
+                        screenBuffer.SetAt(iterX * scale + iterXScale, iterY * scale + iterYScale,
+                            image.GetAt(iterX, iterY));
+                        if (overlay.GetAt(iterX, iterY) != SystemColor.black)
                         {
-                            int endTagIndex = text.IndexOf('>', i);
-                            if (endTagIndex != -1)
-                            {
-                                string tagText = text.Substring(i + 1, endTagIndex - i - 1).Trim();
-                                if (nonParseTagRegex.IsMatch(tagText))
-                                {
-                                    parseTags = (tagText.StartsWith("/"));
-                                    i = endTagIndex;
-                                    continue;
-                                }
-
-                                if (parseTags)
-                                {
-                                    if (colorTagRegex.IsMatch(tagText))
-                                    {
-                                        if (tagText.StartsWith("/"))
-                                        {
-                                            currentForeground = foreground;
-                                        }
-                                        else
-                                        {
-                                            int equalsIndex = tagText.IndexOf('=');
-                                            string color = tagText.Substring(equalsIndex + 1);
-                                            Console.Debug(
-                                                $"match c! trimmed'{tagText}' equalsIndex'{equalsIndex}' color'{color}'.");
-                                            if (color.Length == 1)
-                                            {
-                                                currentForeground = Runtime.HexToByte(color);
-                                            }
-                                        }
-                                    }
-
-                                    if (backgroundColorTagRegex.IsMatch(tagText))
-                                    {
-                                        if (tagText.StartsWith("/"))
-                                        {
-                                            currentBackground = background;
-                                        }
-                                        else
-                                        {
-                                            int equalsIndex = tagText.IndexOf('=');
-                                            string color = tagText.Substring(equalsIndex + 1);
-                                            Console.Debug(
-                                                $"match bckc! trimmed'{tagText}' equalsIndex'{equalsIndex}' color'{color}'.");
-                                            if (color.Length == 1)
-                                            {
-                                                currentBackground = Runtime.HexToByte(color);
-                                            }
-                                        }
-                                    }
-
-
-
-
-                                    i = endTagIndex;
-
-                                    continue;
-                                }
-                            }
+                            screenBuffer.SetAt(iterX * scale + iterXScale, iterY * scale + iterYScale,
+                                overlay.GetAt(iterX, iterY));
                         }
                     }
                 }
-                else if (character == '\\')
-                {
-                    continue;
-                }
-
-                DrawColoredCharAt(systemScreenBuffer, posX, posY, character, currentForeground, currentBackground);
-                posX += 8;
             }
         }
 
-         void DrawCharAt(SystemScreenBuffer systemScreenBuffer, int x, int y, char character)
-        {
-            DrawColoredCharAt(systemScreenBuffer, x, y, character, SystemColor.white, SystemColor.black);
-        }
+        screenBuffer.DrawLine(image.width * scale, 0, image.width * scale, image.height * scale, SystemColor.white);
+        screenBuffer.DrawLine(0, image.height * scale, image.width * scale, image.height * scale, SystemColor.white);
+        screenBuffer.Fill(image.width * scale + 2, 2, 20, 20, editingMainColor ? SystemColor.blue : SystemColor.white);
+        screenBuffer.Fill(image.width * scale + 2, 22, 20, 20, editingMainColor ? SystemColor.white : SystemColor.blue);
 
-         void DrawStringAt(SystemScreenBuffer systemScreenBuffer, int x, int y, string text, bool enableTags = true)
-        {
-            DrawColoredStringAt(systemScreenBuffer, x, y, text, SystemColor.white, SystemColor.black, enableTags);
-        }
+        screenBuffer.Fill(image.width * scale + 4, 4, 16, 16, mainColor);
+        screenBuffer.Fill(image.width * scale + 4, 24, 16, 16, secondaryColor);
 
-         string GetColorTag(SystemColor color)
-        {
-            return $"<color={Runtime.ByteToHex(color, false)}>";
-        }
-         string GetBackgroundColorTag(SystemColor color)
-        {
-            return $"<color={Runtime.ByteToHex(color, false)}>";
-        }
-        
-        #endregion
-
-        #region advanced CT
-        //# include "/System/libraries/fontLibrary.ll"
-
-
-        const string help = "Press mouse to move to mouse\n"
-                       + "Arrows to move\n"
-                       + "Keypad +/- to change speed\n"
-                       + "Type to type☻";
-            SystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth, Screen.screenHeight);
-            Screen.InitScreenBuffer(buffer);
-
-
-
-
-            Vector2Int orbPos = new Vector2Int(buffer.width / 2, buffer.height / 2);
-            Vector2Int mousePos = new Vector2Int(0, 0);
-
-            string position = "";
-            string text = "";
-            int speed = 1;
-            KeyHandler kh = new KeyHandler();
-            KeySequence ks = null;
-            bool flasher = false;
-
-            void CheckMovement(KeySequence ks)
-            {
-                if (ks.ReadKey(Key.UpArrow))
-                {
-                    orbPos.y -= speed;
-                }
-                if (ks.ReadKey(Key.DownArrow))
-                {
-                    orbPos.y += speed;
-                }
-                if (ks.ReadKey(Key.LeftArrow))
-                {
-                    orbPos.x -= speed;
-                }
-                if (ks.ReadKey(Key.RightArrow))
-                {
-                    orbPos.x += speed;
-                }
-                if (ks.ReadKey(Key.KeypadPlus))
-                {
-                    speed++;
-                }
-                if (ks.ReadKey(Key.KeypadMinus))
-                {
-                    speed--;
-                }
-            }
-
-
-            void ClampPositionToFrame()
-            {
-                if (orbPos.x > buffer.width - 1)
-                {
-                    orbPos.x = buffer.width - 1;
-                }
-                if (orbPos.x < 0)
-                {
-                    orbPos.x = 0;
-                }
-                if (orbPos.y > buffer.height - 1)
-                {
-                    orbPos.y = buffer.height - 1;
-                }
-                if (orbPos.y < 0)
-                {
-                    orbPos.y = 0;
-                }
-            }
-            void Draw()
-            {
-                DrawStringAt(buffer, 8, 0, help);
-
-                position = $"X:{orbPos.x},Y:{orbPos.y},Speed:{speed}";
-
-                DrawStringAt(buffer, 0, 4 * 8, position);
-                buffer.DrawLine(mousePos.x, mousePos.y, orbPos.x, orbPos.y, SystemColor.white);
-                buffer.SetAt(orbPos.x, orbPos.y, SystemColor.yellow);
-                DrawStringAt(buffer, 0, 5 * 8, text);
-                buffer.Fill(0, 0, 8, 8, flasher ? SystemColor.red : SystemColor.blue);
-                flasher = !flasher;
-                AsyncScreen.SetScreenBuffer(buffer);
-            }
-            void ProcessInput()
-            {
-                ks = kh.WaitForInput();
-                string input = KeyHandler.GetInputAsString();
-                text += kh.TryGetCombinedSymbol(ref ks);
-                text = text.AddInputSpecial(input, ks);
-
-                Console.Debug(ks);
-                CheckMovement(ks);
-                if (ks.ReadKey(Key.Mouse0))
-                {
-                    mousePos = MouseHander.GetScreenPosition();
-                }
-                ClampPositionToFrame();
-            }
-            while (true)
-            {
-                buffer.FillAll(SystemColor.black);
-
-                Draw();
-                ProcessInput();
-
-                Runtime.Wait(1);
-            }
-        #endregion
+        screen.SetScreenBuffer(screenBuffer);
     }
 
-    void e()
+    void ChangeColor(ref SystemColor selectedColor)
     {
-        File fontAtlas = FileSystem.GetFileByPath("/System/defaultFontAtlas");
-        SystemTexture fontTexture = SystemTexture.FromData(fontAtlas.data);
-        MaskTexture mask = new MaskTexture(fontTexture.width, fontTexture.height);
-        //copy all the data from the font texture to the mask texture
-        for (int y = 0; y < fontTexture.height; y++)
+        int num = ks.ReadDigit(out Key key);
+        if (key != Key.None && num != -1)
         {
-            for (int x = 0; x < fontTexture.width; x++)
+            selectedColor = num;
+        }
+
+        if (ks.ReadKey(Key.Q))
+        {
+            selectedColor = 10;
+        }
+
+        if (ks.ReadKey(Key.W))
+        {
+            selectedColor = 11;
+        }
+
+        if (ks.ReadKey(Key.E))
+        {
+            selectedColor = 12;
+        }
+
+        if (ks.ReadKey(Key.R))
+        {
+            selectedColor = 13;
+        }
+
+        if (ks.ReadKey(Key.T))
+        {
+            selectedColor = 14;
+        }
+
+        if (ks.ReadKey(Key.Y))
+        {
+            selectedColor = 15;
+        }
+    }
+
+    void ProcessInput()
+    {
+        ks = keyHandler.WaitForInputBuffer(true ? 20 : 0);
+
+        if (ks.ReadKey(Key.Escape))
+        {
+            running = false;
+            return;
+        }
+
+        if (ks.ReadKey(Key.Plus) || ks.ReadKey(Key.KeypadPlus))
+        {
+            scale++;
+            if (scale > 40)
             {
-                mask.SetAt(x, y, fontTexture.GetAt(x, y) == SystemColor.white);
+                scale = 40;
             }
         }
 
-        File maskFile = FileSystem.MakeFile("/System/defaultFontMask");
-        maskFile.data = mask.ToData();
-    }
-
-    void ee()
-    {
-        Regex r = new Regex("<.+?=.+?>");
-
-        string RemoveTags(string input)
+        if (ks.ReadKey(Key.Minus) || ks.ReadKey(Key.KeypadMinus))
         {
-            //regex to remove all text between <> but keep then <> are escaped by \
-            return r.Replace(input, "");
+            scale--;
+            if (scale < 1)
+            {
+                scale = 1;
+            }
         }
 
-        string input = "<color=F>text</color=F>";
-        Console.Debug(input, RemoveTags(input));
+        if (ks.ReadKey(Key.A))
+        {
+            drawingState = DrawingState.Drawing;
+            waitingForStartPosition = false;
+        }
 
-        Console.Debug(input, RemoveTags(input));
+        if (ks.ReadKey(Key.S))
+        {
+            drawingState = DrawingState.DrawingLine;
+            waitingForStartPosition = true;
+            // return;
+        }
+
+        if (ks.ReadKey(Key.D))
+        {
+            drawingState = DrawingState.DrawingRectangle;
+            waitingForStartPosition = true;
+            // return;
+        }
+
+        if (ks.ReadKey(Key.F))
+        {
+            drawingState = DrawingState.DrawingElipse;
+            waitingForStartPosition = true;
+            // return;
+        }
+
+        Console.Debug(drawingState);
+        if (ks.ReadKey(Key.U))
+
+        {
+            editingMainColor = !editingMainColor;
+        }
+
+        if (editingMainColor)
+        {
+            ChangeColor(ref mainColor);
+        }
+        else
+        {
+            ChangeColor(ref secondaryColor);
+        }
+
+        lastPos = mousePos;
+        mousePos = mouseHandler.GetScreenPosition();
+        if (mousePos.HasValue)
+        {
+            Console.Debug(mousePos);
+            mousePos = new Vector2Int(mousePos.Value.x / scale, mousePos.Value.y / scale);
+            Console.Debug(mousePos);
+        }
+
+        if (ks.ReadKey(Key.Mouse0, false) || ks.ReadKey(Key.Mouse1, false))
+        {
+            if (waitingForStartPosition)
+            {
+                startPos = mousePos;
+                waitingForStartPosition = false;
+                ks.ReadAndCooldownKey(Key.Mouse1);
+                ks.ReadAndCooldownKey(Key.Mouse0);
+            }
+            else
+            {
+                switch (drawingState)
+                {
+                    case DrawingState.DrawingLine:
+                    {
+                        if (!startPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        image.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1),
+                            ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
+                        drawingState = DrawingState.Drawing;
+                        ks.ReadAndCooldownKey(Key.Mouse1);
+
+                        break;
+                    }
+                    case DrawingState.DrawingRectangle:
+                    {
+                        if (!startPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        image.DrawRectangle(startPos.Value, mousePos.Value,
+                            ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
+                        drawingState = DrawingState.Drawing;
+                        ks.ReadAndCooldownKey(Key.Mouse1);
+
+                        break;
+                    }
+                    case DrawingState.DrawingElipse:
+                    {
+                        if (!startPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        image.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1),
+                            ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
+                        drawingState = DrawingState.Drawing;
+
+                        ks.ReadAndCooldownKey(Key.Mouse1);
+
+                        break;
+                    }
+                    case DrawingState.Drawing:
+                    {
+                        if (!lastPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        //image.SetAt(mousePos, ks.ReadKey(Key.Mouse0) ? mainColor : secondaryColor);
+                        image.DrawLine(lastPos.Value, mousePos.Value,
+                            ks.ReadKey(Key.Mouse0) ? mainColor : secondaryColor);
+
+                        break;
+                    }
+                }
+            }
+        }
     }
-
-    /*regexes
-     ^(\s*?((color)|(c)|(col))\s*?=\s*?.+?)|(\s*?\/((color)|(c)|(col)))  get color
-     ^(((\s*?)|(\/))((backgroundcolor)|(bgc)|(bgcol)|(bc))\s*?=.+?)|(\s*?\/((backgroundcolor)|(bgc)|(bgcol)|(bc))) get background color
-
-     */
-    //using System.Text.RegularExpressions;
-
 }
+
+
 #endif

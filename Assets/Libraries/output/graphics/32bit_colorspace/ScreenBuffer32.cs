@@ -56,45 +56,6 @@ namespace Libraries.system.output.graphics
                     }
                 }
             }
-
-            public void DrawLine(int startX, int startY, int endX, int endY, Color32 color)
-            {
-                int x;
-                int y;
-                float dx, dy, step;
-                int i;
-
-                dx = (endX - startX);
-                dy = (endY - startY);
-                if (Math.Abs(dx) >= Math.Abs(dy))
-                    step = Math.Abs(dx);
-                else
-                    step = Math.Abs(dy);
-                dx = dx / step;
-                dy = dy / step;
-                x = startX;
-                y = startY;
-                i = 1;
-                while (i <= step)
-                {
-                    Console.Debug(x + ", " + y);
-
-                    SetAt(x, y, color);
-                    x = x + Math.Round(dx);
-                    y = y + Math.Round(dy);
-                    i = i + 1;
-                }
-            }
-
-            public void DrawLine(Vector2Int start, Vector2Int end, Color32 color)
-            {
-                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
-                {
-                    return;
-                }
-
-                DrawLine(start.x, start.y, end.x, end.y, color);
-            }
         }
     }
 }

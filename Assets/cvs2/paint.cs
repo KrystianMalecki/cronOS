@@ -1,21 +1,184 @@
 #if false //changeToTrue
-//todo 1 add reading of args, add to the list of programs
 //todo 3 square/circle pen
 //todo 4 eraser? 
-using System;
+
+#if true
 using System.Collections.Generic;
 using Libraries.system;
 using Libraries.system.file_system;
 using Libraries.system.input;
 using Libraries.system.mathematics;
+using Libraries.system.output;
 using Libraries.system.output.graphics;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.system_screen_buffer;
 using Libraries.system.output.graphics.system_texture;
 using Libraries.system.shell;
+using static Shell;
+
+public class Shell
+{
+    public static Runtime runtime = new Runtime();
+    public static FileSystem fileSystem = new FileSystem();
+    public static KeyHandler keyHandler = new KeyHandler();
+    public static MouseHandler mouseHandler = new MouseHandler();
+    public static Screen screen = new Screen();
+    public static object lockMain = new object();
+    File currentFile = fileSystem.GetFileByPath("/sys");
+
+    public static SystemScreenBuffer screenBuffer = new SystemScreenBuffer();
+    KeySequence bufferKeySequence = null;
 
 
-*/
+    string prefix = "";
+    string inputText = "";
+    string bufferInput = "";
+    string consoleText = "";
+
+
+    int historyPointer = 0;
+    List<string> history = new List<string>();
+
+
+    void UpdatePrefix()
+    {
+        prefix = currentFile.GetFullPath() + ">";
+    }
+
+    void Draw()
+    {
+        DrawStringAt(screenBuffer, 0, 0, consoleText);
+        int consoleY = consoleText.CountEncounters('\n') + 1;
+        DrawStringAt(screenBuffer, 0, consoleY * 8, prefix);
+        DrawStringAt(screenBuffer, prefix.Length * 8, consoleY * 8, inputText);
+        screen.SetScreenBuffer(screenBuffer);
+    }
+
+    void ProcessInput()
+    {
+        bufferKeySequence = keyHandler.WaitForInput();
+        string input = keyHandler.GetInputAsString();
+        bool shift = bufferKeySequence.ReadAnyShift();
+        foreach (char c in input)
+        {
+            if (c == '\b') // has backspace/delete been pressed?
+            {
+                if (inputText.Length != 0)
+                {
+                    inputText = inputText.Substring(0, inputText.Length - 1);
+                    bufferInput = inputText;
+                }
+            }
+            else if ((c == '\n') || (c == '\r')) // enter/return
+            {
+                consoleText += '\n' + prefix + inputText;
+                string output = PraseCommand(inputText);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    consoleText += '\n' + output;
+                }
+
+                inputText = "";
+                bufferInput = "";
+            }
+            else
+            {
+                inputText += (shift ? ((c + "").ToUpperInvariant()) : c);
+                bufferInput = inputText;
+            }
+        }
+
+        if (bufferKeySequence.ReadKey(Key.UpArrow))
+        {
+            historyPointer--;
+            if (historyPointer < 0)
+            {
+                historyPointer = 0;
+            }
+
+            if (historyPointer > history.Count)
+            {
+                historyPointer = history.Count;
+            }
+
+            if (historyPointer == history.Count)
+            {
+                inputText = bufferInput;
+            }
+            else
+            {
+                inputText = history[historyPointer];
+            }
+        }
+        else if (bufferKeySequence.ReadKey(Key.DownArrow))
+        {
+            historyPointer++;
+            if (historyPointer < 0)
+            {
+                historyPointer = 0;
+            }
+
+            if (historyPointer > history.Count)
+            {
+                historyPointer = history.Count;
+            }
+
+            if (historyPointer == history.Count)
+            {
+                inputText = bufferInput;
+            }
+            else
+            {
+                inputText = history[historyPointer];
+            }
+        }
+    }
+
+    string PraseCommand(string input)
+    {
+        history.Add(input);
+        historyPointer++;
+        string[] parts = input.Split(' ');
+        if (parts[0] == "cd")
+        {
+            File f = fileSystem.GetFileByPath(parts[1], currentFile);
+            if (f == null)
+            {
+                return $"Couldn't find file {parts[1]}!";
+            }
+
+            currentFile = f;
+            UpdatePrefix();
+            return "";
+        }
+        else
+        {
+            return FindAndExecuteCommand(input + " -wd " + currentFile.GetFullPath());
+        }
+
+        return $"Couldn't find command `{parts[0]}`.";
+    }
+
+    public void Run()
+    {
+        screen.InitScreenBuffer(screenBuffer);
+        UpdatePrefix();
+        while (true)
+        {
+            lock (lockMain)
+            {
+                Console.Debug("shell loop");
+                screenBuffer.FillAll(SystemColor.black);
+                Draw();
+                ProcessInput();
+                runtime.Wait();
+            }
+        }
+    }
+}
+
+#endif
+//*/
 
 enum DrawingState
 {
@@ -27,22 +190,21 @@ enum DrawingState
 
 public class paint : ExtendedShellProgram
 {
-    string filePath = "/sys";
-    string fileName = "output";
+    private string filePath;
     bool waitingForStartPosition = false;
     SystemTexture image = null;
     SystemTexture overlay = null;
     File imageFile = null;
     int scale = 4;
 
-    Vector2Int mousePos = new Vector2Int(0, 0);
+    Vector2Int? mousePos = null;
     SystemColor mainColor = SystemColor.white;
     SystemColor UIColor = SystemColor.dark_gray;
     SystemColor secondaryColor = SystemColor.black;
     bool editingMainColor = true;
     DrawingState drawingState = DrawingState.Drawing;
-    Vector2Int startPos = Vector2Int.zero; //Vector2Int.incorrectVector;
-    Vector2Int lastPos = Vector2Int.zero; //Vector2Int.incorrectVector;
+    Vector2Int? startPos = null; //Vector2Int.incorrectVector;
+    Vector2Int? lastPos = null; //Vector2Int.incorrectVector;
 
     KeySequence ks = null;
     bool running = true;
@@ -54,30 +216,74 @@ public class paint : ExtendedShellProgram
 
     protected override string InternalRun(Dictionary<string, string> argPairs)
     {
-        lock (lockMain)
+        Console.Debug(argPairs.ToFormattedString2());
+        if (argPairs.TryGetValue("-wd", out string workingPath))
         {
-            if (fileSystem.TryGetFile(filePath + "/" + fileName, out File file))
-            {
-                image = SystemTexture.FromData(file.data);
-                imageFile = file;
-            }
+        }
 
+        if (argPairs.TryGetValue("-n", out string name))
+        {
+        }
+        else
+        {
+            name = "image.img";
+        }
+
+        int height = 10;
+        if (argPairs.TryGetValue("-h", out string heightText))
+        {
+            height = int.Parse(heightText);
+        }
+
+        int width = 10;
+        if (argPairs.TryGetValue("-w", out string widthText))
+        {
+            width = int.Parse(widthText);
+        }
+
+
+        if (argPairs.TryGetValue("-f", out filePath))
+        {
+        }
+        else
+        {
+            filePath = workingPath;
+        }
+
+        if (fileSystem.TryGetFile(filePath + "/" + name, out File file))
+        {
+            image = SystemTexture.FromData(file.data);
+            imageFile = file;
+        }
+        else
+        {
+//todo 1 fix: -nf doesn't make new file when file exists
+            if (argPairs.ContainsKey("-nf"))
+            {
+                image = new SystemTexture(width, height);
+            }
             else
             {
-                image = new SystemTexture(100, 100);
-                imageFile = Drive.MakeFile("output", new byte[0]);
+                //todo 4 error
+                return "error";
             }
+        }
 
-            overlay = new SystemTexture(image.width, image.height);
-
-
+        overlay = new SystemTexture(image.width, image.height);
+        lock (lockMain)
+        {
+            keyHandler.DumpInputBuffer();
+            keyHandler.DumpStringInputBuffer();
+//todo 2 rework work loop: paint mode, menu. In paint you draw in menu you can open and save file.
             while (running)
             {
+                Console.Debug("paint loop");
                 Draw();
                 ProcessInput();
                 runtime.Wait();
             }
 
+            imageFile ??= Drive.MakeFile(name, new byte[0]);
 
             byte[] data = image.ToData();
             imageFile.data = data;
@@ -85,12 +291,21 @@ public class paint : ExtendedShellProgram
             parent.AddChild(imageFile);
         }
 
+        Console.Debug("paint lock off");
+        keyHandler.DumpInputBuffer();
+        keyHandler.DumpStringInputBuffer();
         return "paint finished work.";
     }
 
     private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument>
     {
-        new AcceptedArgument("-wd", "working directory", true)
+        new AcceptedArgument("-wd", "working directory", true),
+        new AcceptedArgument("-f", "current file", true),
+        new AcceptedArgument("-nf", "new file", false),
+        new AcceptedArgument("-n", "name", true),
+        new AcceptedArgument("-w", "width", true),
+        new AcceptedArgument("-h", "height", true),
+        new AcceptedArgument("-cp", "color palette", true),
     };
 
 
@@ -106,23 +321,26 @@ public class paint : ExtendedShellProgram
         }
         else
         {
-            switch (drawingState)
+            if (startPos.HasValue && mousePos.HasValue)
             {
-                case DrawingState.DrawingLine:
-                    overlay.DrawLine(startPos, mousePos + new Vector2Int(1, 1), UIColor);
-                    break;
-                case DrawingState.DrawingRectangle:
-                    overlay.DrawRectangle(startPos, mousePos + new Vector2Int(1, 1), UIColor);
-                    break;
-                case DrawingState.DrawingElipse:
-                    overlay.DrawEllipseInRect(startPos, mousePos + new Vector2Int(1, 1), UIColor);
-                    break;
-                default:
-                    overlay.SetAt(mousePos.x + 1, mousePos.y, UIColor);
-                    overlay.SetAt(mousePos.x - 1, mousePos.y, UIColor);
-                    overlay.SetAt(mousePos.x, mousePos.y + 1, UIColor);
-                    overlay.SetAt(mousePos.x, mousePos.y - 1, UIColor);
-                    break;
+                switch (drawingState)
+                {
+                    case DrawingState.DrawingLine:
+                        overlay.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        break;
+                    case DrawingState.DrawingRectangle:
+                        overlay.DrawRectangle(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        break;
+                    case DrawingState.DrawingElipse:
+                        overlay.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        break;
+                    default:
+                        overlay.SetAt(mousePos.Value.x + 1, mousePos.Value.y, UIColor);
+                        overlay.SetAt(mousePos.Value.x - 1, mousePos.Value.y, UIColor);
+                        overlay.SetAt(mousePos.Value.x, mousePos.Value.y + 1, UIColor);
+                        overlay.SetAt(mousePos.Value.x, mousePos.Value.y - 1, UIColor);
+                        break;
+                }
             }
         }
 
@@ -269,8 +487,11 @@ public class paint : ExtendedShellProgram
 
         lastPos = mousePos;
         mousePos = mouseHandler.GetScreenPosition();
-        mousePos.x = mousePos.x / scale;
-        mousePos.y = mousePos.y / scale;
+        if (mousePos.HasValue)
+        {
+            mousePos = new Vector2Int(mousePos.Value.x / scale , mousePos.Value.y / scale);
+        }
+
         if (ks.ReadKey(Key.Mouse0, false) || ks.ReadKey(Key.Mouse1, false))
         {
             if (waitingForStartPosition)
@@ -286,7 +507,12 @@ public class paint : ExtendedShellProgram
                 {
                     case DrawingState.DrawingLine:
                     {
-                        image.DrawLine(startPos, mousePos + new Vector2Int(1, 1),
+                        if (!startPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        image.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1),
                             ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
                         drawingState = DrawingState.Drawing;
                         ks.ReadAndCooldownKey(Key.Mouse1);
@@ -295,7 +521,12 @@ public class paint : ExtendedShellProgram
                     }
                     case DrawingState.DrawingRectangle:
                     {
-                        image.DrawRectangle(startPos, mousePos,
+                        if (!startPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        image.DrawRectangle(startPos.Value, mousePos.Value,
                             ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
                         drawingState = DrawingState.Drawing;
                         ks.ReadAndCooldownKey(Key.Mouse1);
@@ -304,7 +535,12 @@ public class paint : ExtendedShellProgram
                     }
                     case DrawingState.DrawingElipse:
                     {
-                        image.DrawEllipseInRect(startPos, mousePos + new Vector2Int(1, 1),
+                        if (!startPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
+                        image.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1),
                             ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
                         drawingState = DrawingState.Drawing;
 
@@ -314,8 +550,13 @@ public class paint : ExtendedShellProgram
                     }
                     case DrawingState.Drawing:
                     {
+                        if (!lastPos.HasValue || !mousePos.HasValue)
+                        {
+                            break;
+                        }
+
                         //image.SetAt(mousePos, ks.ReadKey(Key.Mouse0) ? mainColor : secondaryColor);
-                        image.DrawLine(lastPos, mousePos,
+                        image.DrawLine(lastPos.Value, mousePos.Value,
                             ks.ReadKey(Key.Mouse0) ? mainColor : secondaryColor);
 
                         break;
@@ -325,4 +566,5 @@ public class paint : ExtendedShellProgram
         }
     }
 }
+
 #endif

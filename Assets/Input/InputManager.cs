@@ -43,9 +43,16 @@ public class InputManager : MonoBehaviour
             }
         }
     }
-
+    public void ClearInputBuffer()
+    {
+        GetnputBuffer();
+    }
+    public void ClearStringInputBuffer()
+    {
+        inputBuffer.Clear();
+    }
     //todo 1 change name
-    public ConcurrentHashSet<Key> GetBuffered()
+    public ConcurrentHashSet<Key> GetnputBuffer()
     {
         lock (lockObj)
         {

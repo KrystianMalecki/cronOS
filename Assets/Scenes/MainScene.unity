@@ -123,6 +123,54 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &356598404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 356598405}
+  - component: {fileID: 356598406}
+  m_Layer: 0
+  m_Name: KERNAL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &356598405
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356598404}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &356598406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356598404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: "#top using static Kernel;\r\npublic class Kernel\r\n{\r\n\tpublic static
+    object mainLock = new object();\n}"
 --- !u!1 &366580919
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +298,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &377409529
 MonoBehaviour:
@@ -900,7 +948,6 @@ GameObject:
   - component: {fileID: 609799500}
   - component: {fileID: 609799499}
   - component: {fileID: 609799501}
-  - component: {fileID: 609799502}
   m_Layer: 0
   m_Name: audio tests
   m_TagString: Untagged
@@ -1011,13 +1058,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 609799498}
-  m_LocalRotation: {x: 0.0097951675, y: 0, z: 0, w: 0.9999521}
+  m_LocalRotation: {x: 0.0097951675, y: -0, z: -0, w: 0.9999521}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1296099128}
-  m_RootOrder: 1
+  m_Father: {fileID: 1360458235}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 1.122462, y: 0, z: 0}
 --- !u!114 &609799501
 MonoBehaviour:
@@ -1065,71 +1112,6 @@ MonoBehaviour:
   note: 3
   octave: 4
   outPut: 19.445436
---- !u!114 &609799502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 609799498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4102e74f640efc643a30a55ebf4f130e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  notes:
-  - note: C
-    octave: 4
-    instrument: 0
-    length: 0.5
-  - note: C#
-    octave: 4
-    instrument: 0
-    length: 0.5
-  - note: D
-    octave: 4
-    instrument: 0
-    length: 0.5
-  - note: D#
-    octave: 4
-    instrument: 0
-    length: 0.5
-  - note: E
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: F
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: F#
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: G
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: G#
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: A
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: A#
-    octave: 4
-    instrument: 0
-    length: 1
-  - note: B
-    octave: 4
-    instrument: 0
-    length: 1
-  octave: 4
-  lsamplerate: 44100
-  audioClip: {fileID: 8300000, guid: eb7be9e2a7bdc674a8e548137e396215, type: 3}
-  textAsset: {fileID: 4900000, guid: c95d989cfcc32954daaea3f878e71fda, type: 3}
 --- !u!1 &624103653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,8 +1197,9 @@ Transform:
   - {fileID: 544366081}
   - {fileID: 1255072401}
   - {fileID: 1081877137}
+  - {fileID: 971688695}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &624103658
 MonoBehaviour:
@@ -1237,8 +1220,9 @@ MonoBehaviour:
       inputManager: {fileID: 1081877138}
       screenManager: {fileID: 544366083}
       stackExecutor: {fileID: 1255072402}
-      FPSCap: 166.66667
-      WaitRefreshRate: 6
+      audioManager: {fileID: 971688697}
+      FPSCap: 100
+      WaitRefreshRate: 10
       TasksPerCPULoop: -1
       scriptsRunning: []
   references:
@@ -1422,7 +1406,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &723768625
 MonoBehaviour:
@@ -1523,13 +1507,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774406597}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1296099128}
-  m_RootOrder: 0
+  m_Father: {fileID: 1360458235}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &774406600
 MonoBehaviour:
@@ -1730,7 +1714,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &862908942
 GameObject:
@@ -1979,6 +1963,127 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922628691}
   m_CullTransparentMesh: 1
+--- !u!1 &971688694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 971688695}
+  - component: {fileID: 971688696}
+  - component: {fileID: 971688697}
+  m_Layer: 0
+  m_Name: Speakers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &971688695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971688694}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7648199560253135839}
+  - {fileID: 1164618309927506637}
+  m_Father: {fileID: 624103657}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &971688696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971688694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4102e74f640efc643a30a55ebf4f130e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notes:
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 0.5
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  - note: 0
+    octave: 4
+    instrument: 0
+    length: 1
+  octave: 4
+  lsamplerate: 44100
+  audioClip: {fileID: 8300000, guid: eb7be9e2a7bdc674a8e548137e396215, type: 3}
+  textAsset: {fileID: 4900000, guid: c95d989cfcc32954daaea3f878e71fda, type: 3}
+  audioSources:
+  - {fileID: 7916602240253156413}
+  - {fileID: 1717904592338097455}
+  audioSourcesIndex: 0
+--- !u!114 &971688697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971688694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a5f10278c4b7d84ca1e989b906d645d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lsamplerate: 44100
+  audioSources:
+  - {fileID: 7916602240253156413}
+  - {fileID: 1717904592338097455}
+  audioSourcesIndex: 0
 --- !u!1 &973355179
 GameObject:
   m_ObjectHideFlags: 0
@@ -2009,7 +2114,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &973355181
 MonoBehaviour:
@@ -2024,18 +2129,154 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runOnStart: 0
-  codeFile: {fileID: 11500000, guid: a579e6a972f727f4299b1d2613e6f847, type: 3}
-  code: "string filePath = \"/sys\"\nstring fileName = \"output\"\n\nSystemTexture
-    image = new SystemTexture(20,20);\nVector2Int mousePos = new Vector2Int(0, 0);\r\nSystemColor
-    mainColor =SystemColor.white;\n\nSystemScreenBuffer buffer = new SystemScreenBuffer(Screen.screenWidth,
-    Screen.screenHeight);\r\n            screen.InitScreenBuffer(buffer);\r\n\n void
-    Draw()\r\n            {\r\n                \n                buffer.DrawTexture(0,0,image);\n              
-    \n            }\r\nvoid ProcessInput(){\ni if (ks.ReadKey(Key.Mouse0))\r\n               
-    {\r\nmousePos = mouseHandler.GetMousePos();\nif(image.IsPointInRange(mousePos)){\nimage.SetAt(mousePos,mainColor);\n}\n}}\n\nwhile
-    (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
-    Draw();\r\n                ProcessInput();\r\n                runtime.Wait();\r\n\r\n           
-    }\n\n\n\n\n\nbyte[] data = image.ToData();\nFile parent = fileSystem.GetFileByPath(filePath);\nFile
-    imageFile=Drive.MakeFile(\"output\",data);\nf.AddChild(imageFile);\n"
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: "enum DrawingState\r\n{\r\n    Drawing,\r\n    DrawingLine,\r\n    DrawingRectangle,\r\n   
+    DrawingElipse,\r\n}\r\n\r\npublic class paint : ExtendedShellProgram\r\n{\r\n   
+    private string filePath;\r\n    bool waitingForStartPosition = false;\r\n   
+    SystemTexture image = null;\r\n    SystemTexture overlay = null;\r\n    File
+    imageFile = null;\r\n    int scale = 4;\r\n\r\n    Vector2Int? mousePos = null;\r\n   
+    SystemColor mainColor = SystemColor.white;\r\n    SystemColor UIColor = SystemColor.dark_gray;\r\n   
+    SystemColor secondaryColor = SystemColor.black;\r\n    bool editingMainColor
+    = true;\r\n    DrawingState drawingState = DrawingState.Drawing;\r\n    Vector2Int?
+    startPos = null; //Vector2Int.incorrectVector;\r\n    Vector2Int? lastPos = null;
+    //Vector2Int.incorrectVector;\r\n\r\n    KeySequence ks = null;\r\n    bool running
+    = true;\r\n\r\n    public override string GetName()\r\n    {\r\n        return
+    \"paint\";\r\n    }\r\n\r\n    protected override string InternalRun(Dictionary<string,
+    string> argPairs)\r\n    {\r\n        Console.Debug(argPairs.ToFormattedString2());\r\n       
+    if (argPairs.TryGetValue(\"-wd\", out string workingPath))\r\n        {\r\n       
+    }\r\n\r\n        if (argPairs.TryGetValue(\"-n\", out string name))\r\n       
+    {\r\n        }\r\n        else\r\n        {\r\n            name = \"image.img\";\r\n       
+    }\r\n\r\n        int height = 10;\r\n        if (argPairs.TryGetValue(\"-h\",
+    out string heightText))\r\n        {\r\n            height = int.Parse(heightText);\r\n       
+    }\r\n\r\n        int width = 10;\r\n        if (argPairs.TryGetValue(\"-w\",
+    out string widthText))\r\n        {\r\n            width = int.Parse(widthText);\r\n       
+    }\r\n\r\n\r\n        if (argPairs.TryGetValue(\"-f\", out filePath))\r\n       
+    {\r\n        }\r\n        else\r\n        {\r\n            filePath = workingPath;\r\n       
+    }\r\n\r\n        if (fileSystem.TryGetFile(filePath + \"/\" + name, out File
+    file))\r\n        {\r\n            image = SystemTexture.FromData(file.data);\r\n           
+    imageFile = file;\r\n        }\r\n        else\r\n        {\r\n//todo 1 fix:
+    -nf doesn't make new file when file exists\r\n            if (argPairs.ContainsKey(\"-nf\"))\r\n           
+    {\r\n                image = new SystemTexture(width, height);\r\n           
+    }\r\n            else\r\n            {\r\n                //todo 4 error\r\n               
+    return \"error\";\r\n            }\r\n        }\r\n\r\n        overlay = new
+    SystemTexture(image.width, image.height);\r\n        lock (lockMain)\r\n       
+    {\r\n            keyHandler.DumpInputBuffer();\r\n            keyHandler.DumpStringInputBuffer();\r\n//todo
+    2 rework work loop: paint mode, menu. In paint you draw in menu you can open
+    and save file.\r\n            while (running)\r\n            {\r\n               
+    Console.Debug(\"paint loop\");\r\n                Draw();\r\n               
+    ProcessInput();\r\n                runtime.Wait();\r\n            }\r\n\r\n           
+    imageFile ??= Drive.MakeFile(name, new byte[0]);\r\n\r\n            byte[] data
+    = image.ToData();\r\n            imageFile.data = data;\r\n            File parent
+    = fileSystem.GetFileByPath(filePath);\r\n            parent.AddChild(imageFile);\r\n       
+    }\r\n\r\n        Console.Debug(\"paint lock off\");\r\n        keyHandler.DumpInputBuffer();\r\n       
+    keyHandler.DumpStringInputBuffer();\r\n        return \"paint finished work.\";\r\n   
+    }\r\n\r\n    private static readonly List<AcceptedArgument> _argumentTypes =
+    new List<AcceptedArgument>\r\n    {\r\n        new AcceptedArgument(\"-wd\",
+    \"working directory\", true),\r\n        new AcceptedArgument(\"-f\", \"current
+    file\", true),\r\n        new AcceptedArgument(\"-nf\", \"new file\", false),\r\n       
+    new AcceptedArgument(\"-n\", \"name\", true),\r\n        new AcceptedArgument(\"-w\",
+    \"width\", true),\r\n        new AcceptedArgument(\"-h\", \"height\", true),\r\n       
+    new AcceptedArgument(\"-cp\", \"color palette\", true),\r\n    };\r\n\r\n\r\n   
+    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;\r\n\r\n\r\n   
+    void Draw()\r\n    {\r\n        screenBuffer.FillAll(SystemColor.black);\r\n       
+    overlay.FillAll(SystemColor.black);\r\n        if (waitingForStartPosition)\r\n       
+    {\r\n        }\r\n        else\r\n        {\r\n            if (mousePos.HasValue)\r\n           
+    {\r\n                switch (drawingState)\r\n                {\r\n                   
+    case DrawingState.DrawingLine:\r\n\t\tif(!startPos.HasValue){break;}\n                       
+    overlay.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);\r\n                       
+    break;\r\n                    case DrawingState.DrawingRectangle:\r\n\t\tif(!startPos.HasValue){break;}\n                       
+    overlay.DrawRectangle(startPos.Value, mousePos.Value + new Vector2Int(1, 1),
+    UIColor);\r\n                        break;\r\n                    case DrawingState.DrawingElipse:\r\n\t\tif(!startPos.HasValue){break;}\n                       
+    overlay.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1,
+    1), UIColor);\r\n                        break;\r\n                    default:\r\n                       
+    overlay.SetAt(mousePos.Value.x + 1, mousePos.Value.y, UIColor);\r\n                       
+    overlay.SetAt(mousePos.Value.x - 1, mousePos.Value.y, UIColor);\r\n                       
+    overlay.SetAt(mousePos.Value.x, mousePos.Value.y + 1, UIColor);\r\n                       
+    overlay.SetAt(mousePos.Value.x, mousePos.Value.y - 1, UIColor);\r\n                       
+    break;\r\n                }\r\n            }\r\n        }\r\n\r\n        for
+    (int iterY = 0; iterY < image.height; iterY++)\r\n        {\r\n            for
+    (int iterX = 0; iterX < image.width; iterX++)\r\n            {\r\n               
+    for (int iterYScale = 0; iterYScale < scale; iterYScale++)\r\n               
+    {\r\n                    for (int iterXScale = 0; iterXScale < scale; iterXScale++)\r\n                   
+    {\r\n                        screenBuffer.SetAt(iterX * scale + iterXScale, iterY
+    * scale + iterYScale,\r\n                            image.GetAt(iterX, iterY));\r\n                       
+    if (overlay.GetAt(iterX, iterY) != SystemColor.black)\r\n                       
+    {\r\n                            screenBuffer.SetAt(iterX * scale + iterXScale,
+    iterY * scale + iterYScale,\r\n                                overlay.GetAt(iterX,
+    iterY));\r\n                        }\r\n                    }\r\n               
+    }\r\n            }\r\n        }\r\n\r\n        screenBuffer.DrawLine(image.width
+    * scale, 0, image.width * scale, image.height * scale, SystemColor.white);\r\n       
+    screenBuffer.DrawLine(0, image.height * scale, image.width * scale, image.height
+    * scale, SystemColor.white);\r\n        screenBuffer.Fill(image.width * scale
+    + 2, 2, 20, 20, editingMainColor ? SystemColor.blue : SystemColor.white);\r\n       
+    screenBuffer.Fill(image.width * scale + 2, 22, 20, 20, editingMainColor ? SystemColor.white
+    : SystemColor.blue);\r\n\r\n        screenBuffer.Fill(image.width * scale + 4,
+    4, 16, 16, mainColor);\r\n        screenBuffer.Fill(image.width * scale + 4,
+    24, 16, 16, secondaryColor);\r\n\r\n        screen.SetScreenBuffer(screenBuffer);\r\n   
+    }\r\n\r\n    void ChangeColor(ref SystemColor selectedColor)\r\n    {\r\n       
+    int num = ks.ReadDigit(out Key key);\r\n        if (key != Key.None && num !=
+    -1)\r\n        {\r\n            selectedColor = num;\r\n        }\r\n\r\n       
+    if (ks.ReadKey(Key.Q))\r\n        {\r\n            selectedColor = 10;\r\n       
+    }\r\n\r\n        if (ks.ReadKey(Key.W))\r\n        {\r\n            selectedColor
+    = 11;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.E))\r\n        {\r\n           
+    selectedColor = 12;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.R))\r\n       
+    {\r\n            selectedColor = 13;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.T))\r\n       
+    {\r\n            selectedColor = 14;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.Y))\r\n       
+    {\r\n            selectedColor = 15;\r\n        }\r\n    }\r\n\r\n    void ProcessInput()\r\n   
+    {\r\n        ks = keyHandler.WaitForInputBuffer(true ? 20 : 0);\r\n\r\n       
+    if (ks.ReadKey(Key.Escape))\r\n        {\r\n            running = false;\r\n           
+    return;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.Plus) || ks.ReadKey(Key.KeypadPlus))\r\n       
+    {\r\n            scale++;\r\n            if (scale > 40)\r\n            {\r\n               
+    scale = 40;\r\n            }\r\n        }\r\n\r\n        if (ks.ReadKey(Key.Minus)
+    || ks.ReadKey(Key.KeypadMinus))\r\n        {\r\n            scale--;\r\n           
+    if (scale < 1)\r\n            {\r\n                scale = 1;\r\n           
+    }\r\n        }\r\n\r\n        if (ks.ReadKey(Key.A))\r\n        {\r\n           
+    drawingState = DrawingState.Drawing;\r\n            waitingForStartPosition =
+    false;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.S))\r\n        {\r\n           
+    drawingState = DrawingState.DrawingLine;\r\n            waitingForStartPosition
+    = true;\r\n            // return;\r\n        }\r\n\r\n        if (ks.ReadKey(Key.D))\r\n       
+    {\r\n            drawingState = DrawingState.DrawingRectangle;\r\n           
+    waitingForStartPosition = true;\r\n            // return;\r\n        }\r\n\r\n       
+    if (ks.ReadKey(Key.F))\r\n        {\r\n            drawingState = DrawingState.DrawingElipse;\r\n           
+    waitingForStartPosition = true;\r\n            // return;\r\n        }\r\n\r\n       
+    Console.Debug(drawingState);\r\n        if (ks.ReadKey(Key.U))\r\n\r\n       
+    {\r\n            editingMainColor = !editingMainColor;\r\n        }\r\n\r\n       
+    if (editingMainColor)\r\n        {\r\n            ChangeColor(ref mainColor);\r\n       
+    }\r\n        else\r\n        {\r\n            ChangeColor(ref secondaryColor);\r\n       
+    }\r\n\r\n        lastPos = mousePos;\r\n        mousePos = mouseHandler.GetScreenPosition();\r\n       
+    if (mousePos.HasValue)\r\n        {\r\n            mousePos.Value.SetX(mousePos.Value.x
+    / scale);\r\n            mousePos.Value.SetY(mousePos.Value.y / scale);\r\n       
+    }\r\n        if (ks.ReadKey(Key.Mouse0, false) || ks.ReadKey(Key.Mouse1, false))\r\n       
+    {\r\n            if (waitingForStartPosition)\r\n            {\r\n               
+    startPos = mousePos;\r\n                waitingForStartPosition = false;\r\n               
+    ks.ReadAndCooldownKey(Key.Mouse1);\r\n                ks.ReadAndCooldownKey(Key.Mouse0);\r\n           
+    }\r\n            else\r\n            {\r\n                switch (drawingState)\r\n               
+    {\r\n                    case DrawingState.DrawingLine:\r\n                   
+    {\r\n                        if (!startPos.HasValue || !mousePos.HasValue)\r\n                       
+    {\r\n                            break;\r\n                        }\r\n\r\n                       
+    image.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1),\r\n                           
+    ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);\r\n                       
+    drawingState = DrawingState.Drawing;\r\n                        ks.ReadAndCooldownKey(Key.Mouse1);\r\n\r\n                       
+    break;\r\n                    }\r\n                    case DrawingState.DrawingRectangle:\r\n                   
+    {\r\n                        if (!startPos.HasValue || !mousePos.HasValue)\r\n                       
+    {\r\n                            break;\r\n                        }\r\n\r\n                       
+    image.DrawRectangle(startPos.Value, mousePos.Value,\r\n                           
+    ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);\r\n                       
+    drawingState = DrawingState.Drawing;\r\n                        ks.ReadAndCooldownKey(Key.Mouse1);\r\n\r\n                       
+    break;\r\n                    }\r\n                    case DrawingState.DrawingElipse:\r\n                   
+    {\r\n                        if (!startPos.HasValue || !mousePos.HasValue)\r\n                       
+    {\r\n                            break;\r\n                        }\r\n\r\n                       
+    image.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1),\r\n                           
+    ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);\r\n                       
+    drawingState = DrawingState.Drawing;\r\n\r\n                        ks.ReadAndCooldownKey(Key.Mouse1);\r\n\r\n                       
+    break;\r\n                    }\r\n                    case DrawingState.Drawing:\r\n                   
+    {\r\n                        if (!lastPos.HasValue || !mousePos.HasValue)\r\n                       
+    {\r\n                            break;\r\n                        }\r\n\r\n                       
+    //image.SetAt(mousePos, ks.ReadKey(Key.Mouse0) ? mainColor : secondaryColor);\r\n                       
+    image.DrawLine(lastPos.Value, mousePos.Value,\r\n                           
+    ks.ReadKey(Key.Mouse0) ? mainColor : secondaryColor);\r\n\r\n                       
+    break;\r\n                    }\r\n                }\r\n            }\r\n       
+    }\r\n    }\r\n}"
 --- !u!1 &1081877136
 GameObject:
   m_ObjectHideFlags: 0
@@ -2214,7 +2455,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1247786008
 MonoBehaviour:
@@ -2292,7 +2533,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1296099128}
   m_Layer: 0
-  m_Name: Debugging
+  m_Name: Cts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2305,13 +2546,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296099127}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 774406599}
-  - {fileID: 609799500}
   - {fileID: 723768624}
   - {fileID: 2108374107}
   - {fileID: 1343489310}
@@ -2319,8 +2558,10 @@ Transform:
   - {fileID: 1247786007}
   - {fileID: 377409528}
   - {fileID: 973355180}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  - {fileID: 1609796903}
+  - {fileID: 356598405}
+  m_Father: {fileID: 1360458235}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1343489309
 GameObject:
@@ -2352,7 +2593,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1343489311
 MonoBehaviour:
@@ -2412,6 +2653,122 @@ MonoBehaviour:
     while (true)\r\n            {\r\n                buffer.FillAll(bckCol);\r\n               
     Draw();\r\n                ProcessInput();\r\n                runtime.Wait();\r\n\r\n           
     }"
+--- !u!1 &1360458233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1360458235}
+  - component: {fileID: 1360458236}
+  - component: {fileID: 1360458234}
+  m_Layer: 0
+  m_Name: Super Debugger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1360458234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360458233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9cf63770442df54291c8805fe118482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  asset: {fileID: 11500000, guid: 9efcea19f4b53e74e9065b75cc80da29, type: 3}
+--- !u!4 &1360458235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360458233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1296099128}
+  - {fileID: 774406599}
+  - {fileID: 609799500}
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1360458236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360458233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 050207dad258f1742a3eaec6b9e9923f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
+  links:
+  - path: /sys/new
+    asset: {fileID: 4900000, guid: 049642c82f050054798deb76f9dce6d6, type: 3}
+    drive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
+--- !u!1 &1609796902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1609796903}
+  - component: {fileID: 1609796904}
+  m_Layer: 0
+  m_Name: MK CT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1609796903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609796902}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296099128}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1609796904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609796902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67b77668256bbf408657bb1d51331aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runOnStart: 0
+  codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
+  code: '#include "/sys/libs/binsLib.ll"
+
+    FindAndExecuteCommand("mkf -wd / -p
+    ./ -n \"new file\" -fp 0b11111111");'
 --- !u!1 &1640294207
 GameObject:
   m_ObjectHideFlags: 0
@@ -2442,7 +2799,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1640294209
 MonoBehaviour:
@@ -2577,7 +2934,7 @@ Transform:
   - {fileID: 366580920}
   - {fileID: 498076987}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2108374104
 GameObject:
@@ -2611,8 +2968,7 @@ MonoBehaviour:
   runOnStart: 1
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "#include \"/sys/libs/binsLib.ll\"\r\n#include \"/sys/libs/fontLib.ll\"\r\n#top
-    using static Shell;\r\npublic class Shell\r\n{\r\npublic static object lockMain
-    = new object();\n    File currentFile = fileSystem.GetFileByPath(\"/sys\");\r\n\r\n 
+    using static Shell;\r\npublic class Shell\r\n{\r\n\n    File currentFile = fileSystem.GetFileByPath(\"/sys\");\r\n\r\n 
     public static   SystemScreenBuffer screenBuffer = new SystemScreenBuffer();\r\n   
     KeySequence bufferKeySequence = null;\r\n\r\n\r\n    string prefix = \"\";\r\n   
     string inputText = \"\";\r\n    string bufferInput = \"\";\r\n    string consoleText
@@ -2660,9 +3016,10 @@ MonoBehaviour:
     + \" -wd \" + currentFile.GetFullPath());\r\n        }\r\n\r\n        return
     $\"Couldn't find command `{parts[0]}`.\";\r\n    }\r\n\r\n    public void Run()\r\n   
     {\r\n        screen.InitScreenBuffer(screenBuffer);\r\n        UpdatePrefix();\r\n       
-    while (true)\r\n        {\r\nlock(lockMain){\n            screenBuffer.FillAll(SystemColor.black);\r\n           
-    Draw();\r\n            ProcessInput();\r\n            runtime.Wait();\r\n}       
-    }\r\n    }\r\n}\r\n\r\nstatic Shell shell = null;\nshell=new Shell();\r\nshell.Run();"
+    while (true)\r\n        {\r\nlock(mainLock){\nConsole.Debug(\"shell loop\");\n           
+    screenBuffer.FillAll(SystemColor.black);\r\n            Draw();\r\n           
+    ProcessInput();\r\n            runtime.Wait();\r\n}       \n }\r\n    }\r\n}\r\n\r\nstatic
+    Shell shell = null;\nshell=new Shell();\r\nshell.Run();"
 --- !u!4 &2108374107
 Transform:
   m_ObjectHideFlags: 0
@@ -2676,5 +3033,261 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1296099128}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1164618309927506637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922240884926189519}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 971688695}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1717904592338097455
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922240884926189519}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &1922240884926189519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1164618309927506637}
+  - component: {fileID: 1717904592338097455}
+  m_Layer: 0
+  m_Name: Speaker (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &6964668607104599773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7648199560253135839}
+  - component: {fileID: 7916602240253156413}
+  m_Layer: 0
+  m_Name: Speaker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7648199560253135839
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964668607104599773}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 971688695}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &7916602240253156413
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6964668607104599773}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

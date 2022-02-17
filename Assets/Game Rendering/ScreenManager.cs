@@ -83,7 +83,7 @@ public class ScreenManager : MonoBehaviour
     public System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
     private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
-    public libs.mathematics.Vector2Int GetMousePosition()
+    public libs.mathematics.Vector2Int? GetMousePosition()
     {
         libs.mathematics.Vector2 v2out = libs.mathematics.Vector2.incorrectVector;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -101,7 +101,7 @@ public class ScreenManager : MonoBehaviour
         }
         else
         {
-            return libs.mathematics.Vector2Int.incorrectVector;
+            return null;
         }
 
         // return libs.mathematics.Vector2Int.incorrectVector;
@@ -117,7 +117,7 @@ public class ScreenManager : MonoBehaviour
         maxY = transform.TransformPoint(mesh.sharedMesh.vertices[3]).y;
     }
 
-    public libs.mathematics.Vector2Int GetMousePos()
+    public libs.mathematics.Vector2Int? GetMousePos()
     {
         return GetMousePosition();
     }

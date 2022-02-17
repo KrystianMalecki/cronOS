@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Libraries.system;
 using NaughtyAttributes;
+using UnityEditor;
 
 [Serializable]
 public class HardwareInternal
@@ -22,7 +23,9 @@ public class HardwareInternal
     [SerializeField] internal InputManager inputManager;
     [SerializeField] internal ScreenManager screenManager;
     [SerializeField] internal StackExecutor stackExecutor;
-    public  long CurrentMilliseconds => DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+    [SerializeField] internal AudioManager audioManager;
+    public long CurrentMilliseconds => DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
     #region Processor
 
     //  [SerializeField]
@@ -95,7 +98,7 @@ public class HardwareInternal
         typeof(System.Text.RegularExpressions.Regex),
         typeof(helper.GlobalHelper),
         typeof(System.Collections.Generic.Dictionary<int, int>),
-
+        typeof(Libraries.system.output.music.Sound),
 
         typeof(System.Linq.Enumerable) /*,
         typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)*/
@@ -110,8 +113,8 @@ public class HardwareInternal
 
     #region code Parsing
 
-    static Regex includeRegex = new Regex("^\\s*?#\\s*?include\\s*?\".*\"\\s*?");
-    static Regex includeRegex2 = new Regex("^\\s*?#\\s*?include\\s*?\".*\"\\s*;*");
+    static Regex includeRegex = new Regex("^\\s*?#\\s*?include\\s*?[\"'].*[\"']\\s*?");
+    static Regex includeRegex2 = new Regex("^\\s*?#\\s*?include\\s*?[\"'].*[\"']\\s*;*");
 
     static Regex redefineRegex = new Regex("^\\s*?#\\s*?redefine\\s*?.*\\s*.*");
 
@@ -127,6 +130,7 @@ public class HardwareInternal
         scriptsRunning.Add(codeTask);
         CodeParser(ref codeObject);
         codeTask.RunCode(codeObject);
+        GlobalDebugger.instance.WrapInIf(codeObject.code);
         Debug.Log("After running code");
     }
 
@@ -181,6 +185,7 @@ static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
 static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
 static Screen screen = null;screen=ownPointer.screen;
 " + codeObject.code;
+        codeObject.code = "\n#include \"/sys/kernel\"\n" + codeObject.code;
         List<string> lines =
             new List<string>(codeObject.code.Replace("#if false //changeToTrue", "#if true").SplitNewLine());
 
@@ -244,7 +249,7 @@ static Screen screen = null;screen=ownPointer.screen;
                 {
                     lines[index] = $"//moved '{buffer}' on top";
 
-                    lines.Insert(0, buffer.Replace("#top ", ""));
+                    lines.Insert(0, buffer.Substring(buffer.IndexOf("top") + "top".Length));
                     continue;
                 }
 
@@ -252,7 +257,7 @@ static Screen screen = null;screen=ownPointer.screen;
                 {
                     lines[index] = $"//moved '{buffer}' on bottom";
 
-                    lines.Insert(lines.Count, buffer.Replace("#bottom ", ""));
+                    lines.Insert(lines.Count, buffer.Substring(buffer.IndexOf("bottom") + "bottom".Length));
                     continue;
                 }
             }

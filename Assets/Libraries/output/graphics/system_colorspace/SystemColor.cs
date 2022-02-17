@@ -66,7 +66,6 @@ namespace Libraries.system.output.graphics
             }
 
             public const bool loop = true;
-
             public void FixRange(ref byte value)
             {
                 if (loop)
@@ -210,27 +209,27 @@ namespace Libraries.system.output.graphics
 
             public override string ToString()
             {
-                switch (value)
+                return value switch
                 {
-                    case 0: return "black";
-                    case 1: return "blue";
-                    case 2: return "green";
-                    case 3: return "cyan";
-                    case 4: return "red";
-                    case 5: return "magenta";
-                    case 6: return "brown";
-                    case 7: return "light_gray";
-                    case 8: return "dark_gray";
-                    case 9: return "light_blue";
-                    case 10: return "light_green";
-                    case 11: return "light_cyan";
-                    case 12: return "light_red";
-                    case 13: return "light_magenta";
-                    case 14: return "yellow";
-                    case 15: return "white";
-                }
+                    0 => "black",
+                    1 => "blue",
+                    2 => "green",
+                    3 => "cyan",
+                    4 => "red",
+                    5 => "magenta",
+                    6 => "brown",
+                    7 => "light_gray",
+                    8 => "dark_gray",
+                    9 => "light_blue",
+                    10 => "light_green",
+                    11 => "light_cyan",
+                    12 => "light_red",
+                    13 => "light_magenta",
+                    14 => "yellow",
+                    15 => "white",
+                    _ => "unknown"
+                };
 
-                return "unknown";
                 //return value.ToString();
             }
 

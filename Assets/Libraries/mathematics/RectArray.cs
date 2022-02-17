@@ -127,7 +127,7 @@ namespace Libraries.system
                 pointer += (sizeof(Int32));
                 bytes.SetByteValue(height.ToBytes(), pointer);
                 pointer += (sizeof(Int32));
-                //todo 0 better array check
+                //todo 90 better array check
                 if (array == null)
                 {
                     return bytes;
@@ -295,15 +295,15 @@ namespace Libraries.system
                     y = y + dy;
                     i = i + 1;
                 }
+
+                if (step == 0 && startX == endX && startY == endY)
+                {
+                    SetAt(startX, startY, value);
+                }
             }
 
             public void DrawLine(Vector2Int start, Vector2Int end, T value)
             {
-                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
-                {
-                    return;
-                }
-
                 DrawLine(start.x, start.y, end.x, end.y, value);
             }
 
@@ -317,51 +317,34 @@ namespace Libraries.system
 
             public void DrawRectangle(Vector2Int start, Vector2Int end, T value, bool fill = false)
             {
-                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
-                {
-                    return;
-                }
-
                 DrawRectangle(start.x, start.y, end.x, end.y, value, fill);
             }
 
             public void DrawEllipseInRect(Vector2Int start, Vector2Int end, T value, bool fill = false)
             {
                 Console.Debug($"{start} {end}");
-
-                if (start == Vector2Int.incorrectVector || end == Vector2Int.incorrectVector)
-                {
-                    return;
-                }
-
-                int minX = Math.Min(start.x, end.x);
-                int maxX = Math.Max(start.x, end.x);
-                int minY = Math.Min(start.y, end.y);
-                int maxY = Math.Max(start.y, end.y);
-
-
-                DrawEllipseInRect(minX, minY, maxX, maxY, value, fill);
+                DrawEllipseInRect(start.x, start.y, end.x, end.y, value, fill);
             }
 
             public void DrawEllipseInRect(
                 int startX, int startY, int endX, int endY, T value, bool fill = false)
             {
-                //todo 0 check if some value is 0
+                //todo 3 fix this \/
                 Console.Debug($"{startX} {startY} {endX} {endY}");
                 Console.Debug(
                     $"{(startX + endX) / 2} {(startY + endY) / 2} {(endX - startX) / 2} {(endY - startY) / 2}");
 
-                DrawEllipseFromCenter((startX + endX) / 2, (startY + endY) / 2, (endX - startX) / 2,
-                    (endY - startY) / 2, value, fill);
+                int minX = Math.Min(startX, endX);
+                int maxX = Math.Max(startX, endX);
+                int minY = Math.Min(startY, endY);
+                int maxY = Math.Max(startY, endY);
+
+                DrawEllipseFromCenter((minX + maxX) / 2, (minY + maxY) / 2, (maxX - minX) / 2,
+                    (maxY - minY) / 2, value, fill);
             }
 
             public void DrawEllipseFromCenter(Vector2Int center, Vector2Int radius, T value, bool fill = false)
             {
-                if (center == Vector2Int.incorrectVector || radius == Vector2Int.incorrectVector)
-                {
-                    return;
-                }
-
                 DrawEllipseFromCenter(center.x, center.y, radius.x, radius.y, value, fill);
             }
 

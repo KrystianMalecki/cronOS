@@ -41,7 +41,7 @@ public static class StaticHelper
         return string.Join(splitter, ie);
     }
 
-    public static string ToFormattedString(this IDictionary ie, string splitter = ", ")
+    public static string ToFormattedString2(this IDictionary ie, string splitter = ", ")
     {
         string s = "";
         foreach (var v in ie.Keys)

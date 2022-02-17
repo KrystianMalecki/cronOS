@@ -13,18 +13,23 @@ public class DriveSO : ScriptableObject
 {
     public Drive drive;
 
-    [NaughtyAttributes.Button]
+    // [NaughtyAttributes.Button]
     public void OpenEditor()
+    {
+        OpenEditor(drive.GetRoot());
+    }
+
+    public void OpenEditor(File file)
     {
         GenerateCacheData();
 #if UNITY_EDITOR
         SerializedObject so = new SerializedObject(this, this);
 
-        FileEditor.DisplayCurrentFile(drive.GetRoot(), null, null, so);
+        FileEditor.DisplayCurrentFile(file, null, null, so);
 #endif
     }
 
-    [Button]
+    //  [Button]
     public void GenerateCacheData()
     {
         drive.GenerateCacheData();

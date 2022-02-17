@@ -18,7 +18,7 @@ namespace Libraries.system.file_system
             File file = Drive.MakeFile(name, data);
             file.permissions = filePermission;
             File parent = hardware.hardwareInternal.mainDrive.drive.GetFileByPath(path);
-            parent.AddChild(file);
+            parent.SetChild(file);
             return file;
         }
 
@@ -45,7 +45,7 @@ namespace Libraries.system.file_system
         {
             File file = Drive.MakeFolder(name);
             File parent = hardware.hardwareInternal.mainDrive.drive.GetFileByPath(path);
-            parent.AddChild(file);
+            parent.SetChild(file);
             return file;
         }
 
@@ -58,6 +58,7 @@ namespace Libraries.system.file_system
         {
             return hardware.hardwareInternal.mainDrive.drive.HasFile(path);
         }
+
         public bool TryGetFile(string path, out File file)
         {
             return hardware.hardwareInternal.mainDrive.drive.TryGetFile(path, out file);

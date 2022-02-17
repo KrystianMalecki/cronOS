@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Libraries.system;
 using helper;
+using UnityEditor;
 
 [Serializable]
 public class CodeTask
@@ -58,7 +59,9 @@ public class CodeTask
                 , HardwareInternal.scriptOptionsBuffer
                     .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                     .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
-                    .WithFilePath("debugpath/")
+#if UNITY_EDITOR
+                    .WithFilePath(GlobalDebugger.assetPath)
+#endif
                 , hardware, hardware.GetType()
             );
         }
@@ -88,6 +91,12 @@ public class CodeTask
                 }
                 catch (Exception ex)
                 {
+                    var p1 = fieldInfoOfStackTrace;
+                    var p2 = p1.GetValue(e);
+                    var p3 = ((System.Diagnostics.StackTrace[])p2);
+                    var p4 = p3[0];
+                    var p5 = p4.GetFrame(0);
+
                     System.Diagnostics.StackFrame frame =
                         ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
                     linePos = frame.GetFileLineNumber();

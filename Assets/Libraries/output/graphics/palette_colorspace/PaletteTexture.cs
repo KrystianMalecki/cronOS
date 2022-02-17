@@ -37,8 +37,10 @@ namespace Libraries.system.output.graphics
             public void SetPalette(Color32[] palette)
             {
                 this.palette = palette;
-//todo 0 check if palette is bigger than 256
-
+                if (palette.Length > 254)
+                {
+                    //todo-future add error
+                }
                 sizeOfInBits = ColorCountToSOIB(this.palette.Length);
             }
 
@@ -71,7 +73,7 @@ namespace Libraries.system.output.graphics
             {
                 if (!UseTransparency())
                 {
-                    //todo 0 throw exception
+                    //todo-future add error
                 }
 
                 return transparencyFlag;
@@ -114,29 +116,29 @@ namespace Libraries.system.output.graphics
                 }
             }
 
-/*
-            public void FromData(byte[] data)
-            {
-                Span<byte> wholeData = new Span<byte>(data);
-                short headerSize = BitConverter.ToInt16(wholeData.Slice(0, 2).ToArray(), 0);
-                Span<byte> header = wholeData.Slice(0, headerSize).ToArray();
+            /*
+                        public void FromData(byte[] data)
+                        {
+                            Span<byte> wholeData = new Span<byte>(data);
+                            short headerSize = BitConverter.ToInt16(wholeData.Slice(0, 2).ToArray(), 0);
+                            Span<byte> header = wholeData.Slice(0, headerSize).ToArray();
 
-                transparencyFlag = header[2];
+                            transparencyFlag = header[2];
 
-                SetPalette(new Color32[header[3]]);
-                for (int i = 0; i < palette.Length; i++)
-                {
-                    palette[i] = new Color32(header.Slice(i * 4 + 4, 4).ToArray());
-                }
+                            SetPalette(new Color32[header[3]]);
+                            for (int i = 0; i < palette.Length; i++)
+                            {
+                                palette[i] = new Color32(header.Slice(i * 4 + 4, 4).ToArray());
+                            }
 
-                RectArray<byte> rectArray = RectArray<byte>.FromData(
-                    data.Skip(headerSize).ToArray(), sizeOfInBits
-                );
-                width = rectArray.width;
-                height = rectArray.height;
-                array = rectArray.array;
-            }
-*/
+                            RectArray<byte> rectArray = RectArray<byte>.FromData(
+                                data.Skip(headerSize).ToArray(), sizeOfInBits
+                            );
+                            width = rectArray.width;
+                            height = rectArray.height;
+                            array = rectArray.array;
+                        }
+            */
             public static PaletteTexture FromData(byte[] data, int sizeOfInBits)
             {
                 PaletteTexture pt = new PaletteTexture();

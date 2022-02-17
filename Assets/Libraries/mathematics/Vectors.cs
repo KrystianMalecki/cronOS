@@ -68,21 +68,25 @@ namespace Libraries.system
             {
                 return v2.ToString();
             }
+
             //oerpator +
             public static Vector2 operator +(Vector2 a, Vector2 b)
             {
                 return new Vector2(a.x + b.x, a.y + b.y);
             }
+
             //oerpator -
             public static Vector2 operator -(Vector2 a, Vector2 b)
             {
                 return new Vector2(a.x - b.x, a.y - b.y);
             }
+
             //oerpator *
             public static Vector2 operator *(Vector2 a, Vector2 b)
             {
                 return new Vector2(a.x * b.x, a.y * b.y);
             }
+
             //oerpator /
             public static Vector2 operator /(Vector2 a, Vector2 b)
             {
@@ -104,6 +108,17 @@ namespace Libraries.system
             {
                 get { return v2.y; }
                 set { v2.y = value; }
+            }
+
+            public void SetX(int value)
+            {
+                x = value;
+            }
+
+            public void SetY(int value)
+
+            {
+                y = value;
             }
 
             public Vector2Int(int x, int y)
@@ -131,7 +146,6 @@ namespace Libraries.system
             }
 
             public static readonly Vector2Int zero = new Vector2Int(0, 0);
-            public static readonly Vector2Int incorrectVector = new Vector2Int(int.MaxValue, int.MinValue);
 
             public static bool operator ==(Vector2Int v1, Vector2Int v2)
             {
@@ -142,26 +156,30 @@ namespace Libraries.system
             {
                 return !(v1 == v2);
             }
+
             public static Vector2Int operator +(Vector2Int v1, Vector2Int v2)
             {
                 return new Vector2Int(v1.x + v2.x, v1.y + v2.y);
             }
+
             //operator -
             public static Vector2Int operator -(Vector2Int v1, Vector2Int v2)
             {
                 return new Vector2Int(v1.x - v2.x, v1.y - v2.y);
             }
+
             //operator *
             public static Vector2Int operator *(Vector2Int v1, Vector2Int v2)
             {
                 return new Vector2Int(v1.x * v2.x, v1.y * v2.y);
             }
+
             //operator /
             public static Vector2Int operator /(Vector2Int v1, Vector2Int v2)
             {
                 return new Vector2Int(v1.x / v2.x, v1.y / v2.y);
             }
-                
+
             public override string ToString()
             {
                 return v2.ToString();

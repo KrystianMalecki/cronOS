@@ -48,7 +48,14 @@ namespace Libraries.system
                 }
             }
 
-
+            public void DumpInputBuffer()
+            {
+                hardware.hardwareInternal.inputManager.ClearInputBuffer();
+            }
+            public void DumpStringInputBuffer()
+            {
+                hardware.hardwareInternal.inputManager.ClearStringInputBuffer();
+            }
             public bool GetKeyDown(Key key)
             {
                 if (!hardware.currentlySelected)
@@ -68,7 +75,7 @@ namespace Libraries.system
                 return false;
             }
 
-//todo-future move timeout in extenstion method
+            //todo-future move timeout in extenstion method
             public KeySequence WaitForInput(long timeoutInMS = 0)
             {
                 long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
@@ -93,7 +100,7 @@ namespace Libraries.system
                 {
                     hardware.runtime.Wait();
 
-                    AddKeys(hardware.hardwareInternal.inputManager.GetBuffered());
+                    AddKeys(hardware.hardwareInternal.inputManager.GetnputBuffer());
 
 
                     if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)

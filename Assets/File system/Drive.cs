@@ -55,7 +55,7 @@ public class Drive
 
             File parent = GetFileByID(file.ParentID);
             file.Parent = parent;
-            parent?.AddChild(file);
+            parent?.SetChild(file);
         }
 
         root ??= GetFileByID(1);
