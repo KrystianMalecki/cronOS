@@ -1,7 +1,8 @@
 #if false
- using static Shell;
- using static FontLibrary;
  using static Kernel;
+ using static FontLibrary;
+ using static Shell;
+/*using UVector2 = UnityEngine.Vector2;*/
 //imported: /sys/kernel
 //moved '#top using static Kernel;' on top
 public class Kernel
@@ -13,7 +14,8 @@ static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
 static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
 static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
 static Screen screen = null;screen=ownPointer.screen;
-//imported: /sys/libs/binsLib.ll
+static AudioHandler audioHandler = null;audioHandler=ownPointer.audioHandler;
+//imported: /sys/libs/binsLib.lib
 //imported: /sys/bins/ls
 public class ls : ExtendedShellProgram
 {
@@ -38,7 +40,7 @@ public class ls : ExtendedShellProgram
         string path = argPairs.GetValueOrNull("-p")?.Value ?? "/";
         
         File f = fileSystem.GetFileByPath(path, workingDirectory);
-        Console.Debug($"{f} {path}");
+        Debugger.Debug($"{f} {path}");
         return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"),
             argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
     }
@@ -131,7 +133,7 @@ public class paint : ExtendedShellProgram
     }
     protected override string InternalRun(Dictionary<AcceptedArgument, string> argPairs)
     {
-        Console.Debug(argPairs.ToFormattedString2());
+        Debugger.Debug(argPairs.ToFormattedString2());
         string workingPath = argPairs.GetValueOrNull("-wd")?.Value ?? "/";
         string name = argPairs.GetValueOrNull("-n")?.Value ?? "image.img";
         int height = int.Parse(argPairs.GetValueOrNull("-h")?.Value ?? "10");
@@ -163,7 +165,7 @@ public class paint : ExtendedShellProgram
 //todo 2 rework work loop: paint mode, menu. In paint you draw in menu you can open and save file.
             while (running)
             {
-                Console.Debug("paint loop");
+                Debugger.Debug("paint loop");
                 Draw();
                 ProcessInput();
                 runtime.Wait();
@@ -174,7 +176,7 @@ public class paint : ExtendedShellProgram
             File parent = fileSystem.GetFileByPath(filePath);
             parent.SetChild(imageFile);
         }
-        Console.Debug("paint lock off");
+        Debugger.Debug("paint lock off");
         keyHandler.DumpInputBuffer();
         keyHandler.DumpStringInputBuffer();
         return "paint finished work.";
@@ -199,18 +201,27 @@ public class paint : ExtendedShellProgram
         }
         else
         {
-            if (startPos.HasValue && mousePos.HasValue)
+            if (mousePos.HasValue)
             {
                 switch (drawingState)
                 {
                     case DrawingState.DrawingLine:
-                        overlay.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        if (startPos.HasValue)
+                        {
+                            overlay.DrawLine(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        }
                         break;
                     case DrawingState.DrawingRectangle:
-                        overlay.DrawRectangle(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        if (startPos.HasValue)
+                        {
+                            overlay.DrawRectangle(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        }
                         break;
                     case DrawingState.DrawingElipse:
-                        overlay.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        if (startPos.HasValue)
+                        {
+                            overlay.DrawEllipseInRect(startPos.Value, mousePos.Value + new Vector2Int(1, 1), UIColor);
+                        }
                         break;
                     default:
                         overlay.SetAt(mousePos.Value.x + 1, mousePos.Value.y, UIColor);
@@ -327,7 +338,7 @@ public class paint : ExtendedShellProgram
             waitingForStartPosition = true;
             // return;
         }
-        Console.Debug(drawingState);
+        Debugger.Debug(drawingState);
         if (ks.ReadKey(Key.U))
         {
             editingMainColor = !editingMainColor;
@@ -344,9 +355,9 @@ public class paint : ExtendedShellProgram
         mousePos = mouseHandler.GetScreenPosition();
         if (mousePos.HasValue)
         {
-            Console.Debug(mousePos);
+            Debugger.Debug(mousePos);
             mousePos = new Vector2Int(mousePos.Value.x / scale, mousePos.Value.y / scale);
-            Console.Debug(mousePos);
+            Debugger.Debug(mousePos);
         }
         if (ks.ReadKey(Key.Mouse0, false) || ks.ReadKey(Key.Mouse1, false))
         {
@@ -371,6 +382,7 @@ public class paint : ExtendedShellProgram
                             ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
                         drawingState = DrawingState.Drawing;
                         ks.ReadAndCooldownKey(Key.Mouse1);
+                        startPos = null;
                         break;
                     }
                     case DrawingState.DrawingRectangle:
@@ -383,6 +395,7 @@ public class paint : ExtendedShellProgram
                             ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
                         drawingState = DrawingState.Drawing;
                         ks.ReadAndCooldownKey(Key.Mouse1);
+                        startPos = null;
                         break;
                     }
                     case DrawingState.DrawingElipse:
@@ -395,6 +408,7 @@ public class paint : ExtendedShellProgram
                             ks.ReadAndCooldownKey(Key.Mouse0) ? mainColor : secondaryColor);
                         drawingState = DrawingState.Drawing;
                         ks.ReadAndCooldownKey(Key.Mouse1);
+                        startPos = null;
                         break;
                     }
                     case DrawingState.Drawing:
@@ -424,22 +438,64 @@ public class play : ExtendedShellProgram
     {
         new AcceptedArgument("working directory", true, "-wd"),
         new AcceptedArgument("note", true, "-nt"),
+        new AcceptedArgument("length", true, "-l"),
+        new AcceptedArgument("octave", true, "-oc"),
     };
     protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
     protected override string InternalRun(Dictionary<AcceptedArgument, string> argPairs)
     {
-       // string wdPath = argPairs.GetValueOrNull("-wd")?.Value;
-       // File workingDirectory = fileSystem.GetFileByPath(wdPath);
-       string stringNote = argPairs.GetValueOrNull("-nt")?.Value;
-int note=13;
-	if(!int.TryParse(stringNote,out note)){
-  note = AudioHandler.StringToNote(stringNote);
-	}
-       
+        string stringNote = argPairs.GetValueOrNull("-nt")?.Value;
+        string stringLength = argPairs.GetValueOrNull("-l")?.Value ?? "1.0";
+        string stringOctave = argPairs.GetValueOrNull("-oc")?.Value ?? "4";
+        int note = 13;
+        if (!int.TryParse(stringNote, out note))
+        {
+            note = AudioHandler.StringToNote(stringNote);
+        }
+        if (!float.TryParse(stringLength, out float length))
+        {
+        }
+        Debugger.Debug($"{length} {stringLength} {stringLength == null}");
+        if (!int.TryParse(stringOctave, out int octave))
+        {
+        }
+        audioHandler.PlaySound(new Sound(note, octave, length));
         return $"Playing note {note}.";
     }
 }
-    static readonly IShellProgram[] commands = { new ls(),new mkf(),new paint(),new play() };
+//imported: /sys/bins/shout
+public class shout : ExtendedShellProgram
+{
+    public override string GetName()
+    {
+        return "shout";
+    }
+    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument>
+    {
+        new AcceptedArgument("working directory", true, "-wd"),
+        new AcceptedArgument("file path", true, "-p"),
+        new AcceptedArgument("text", true, "-txt"),
+        new AcceptedArgument("enable foramting", true, "-ef"),
+    };
+    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
+    protected override string InternalRun(Dictionary<AcceptedArgument, string> argPairs)
+    {
+   string wdPath= argPairs.GetValueOrNull("-wd")?.Value;
+    File workingDirectory = fileSystem.GetFileByPath(wdPath);
+        string stringPath = argPairs.GetValueOrNull("-p")?.Value;
+        string stringText = argPairs.GetValueOrNull("-txt")?.Value ;
+        string stringEnableFormating = argPairs.GetValueOrNull("-ef")?.Value??"true" ;
+       File f=fileSystem.GetFileByPath(stringPath,workingDirectory);
+       Debugger.Debug($"wdPath{wdPath} stringPath{stringPath} stringText{stringText} stringEnableFormating{stringEnableFormating} null{f==null}");
+       
+        if (String.IsNullOrEmpty(stringPath)|| f == null)
+        {
+            return stringText;
+        }
+        return $"File contents of {f.name}:\n{Runtime.BytesToEncodedString(f.data)}.";
+    }
+}
+    static readonly IShellProgram[] commands = { new ls(),new mkf(),new paint(),new play(),new shout() };
     public static string FindAndExecuteCommand(string rawCommand)
     {
         List<string> parts = rawCommand.SplitSpaceQ();
@@ -455,9 +511,9 @@ int note=13;
         }
         return output;
     }
-//imported: /sys/libs/fontLib.ll
-//imported: /sys/libs/util.ll
-//redefine line Console.Debug(__line__);
+//imported: /sys/libs/fontLib.lib
+//imported: /sys/libs/util.lib
+//redefine line Debugger.Debug(__line__);
 //moved '# top using static FontLibrary;' on top
 public class FontLibrary
 {
@@ -568,7 +624,7 @@ public class FontLibrary
             {
                 int equalsIndex = tagText.IndexOf('=');
                 string color = tagText.Substring(equalsIndex + 1);
-                Console.Debug(
+                Debugger.Debug(
                     $"match c! trimmed'{tagText}' equalsIndex'{equalsIndex}' color'{color}'.");
                 if (color.Length == 1)
                 {
@@ -586,7 +642,7 @@ public class FontLibrary
             {
                 int equalsIndex = tagText.IndexOf('=');
                 string color = tagText.Substring(equalsIndex + 1);
-                Console.Debug(
+                Debugger.Debug(
                     $"match bckc! trimmed'{tagText}' equalsIndex'{equalsIndex}' color'{color}'.");
                 if (color.Length == 1)
                 {
@@ -641,7 +697,7 @@ public class Shell
     }
     void ProcessInput()
     {
-        bufferKeySequence = keyHandler.WaitForInput();
+        bufferKeySequence = keyHandler.WaitForInputBuffer();
         string input = keyHandler.GetInputAsString();
         bool shift = bufferKeySequence.ReadAnyShift();
         foreach (char c in input)
@@ -671,17 +727,10 @@ public class Shell
                 bufferInput = inputText;
             }
         }
-        if (bufferKeySequence.ReadKey(Key.UpArrow))
+        if (bufferKeySequence.ReadAndCooldownKey(Key.UpArrow))
         {
             historyPointer--;
-            if (historyPointer < 0)
-            {
-                historyPointer = 0;
-            }
-            if (historyPointer > history.Count)
-            {
-                historyPointer = history.Count;
-            }
+	historyPointer=Math.Clamp(historyPointer,0,history.Count);
             if (historyPointer == history.Count)
             {
                 inputText = bufferInput;
@@ -691,17 +740,10 @@ public class Shell
                 inputText = history[historyPointer];
             }
         }
-        else if (bufferKeySequence.ReadKey(Key.DownArrow))
+        else if (bufferKeySequence.ReadAndCooldownKey(Key.DownArrow))
         {
             historyPointer++;
-            if (historyPointer < 0)
-            {
-                historyPointer = 0;
-            }
-            if (historyPointer > history.Count)
-            {
-                historyPointer = history.Count;
-            }
+            historyPointer=Math.Clamp(historyPointer,0,history.Count);
             if (historyPointer == history.Count)
             {
                 inputText = bufferInput;
@@ -727,7 +769,8 @@ public class Shell
             currentFile = f;
             UpdatePrefix();
             return "";
-        }
+        }else if(parts[0]=="balls"){
+}
         else
         {
             return FindAndExecuteCommand(input + " -wd " + currentFile.GetFullPath());
@@ -741,7 +784,7 @@ public class Shell
         while (true)
         {
 lock(mainLock){
-Console.Debug("shell loop");
+Debugger.Debug("shell loop");
             screenBuffer.FillAll(SystemColor.black);
             Draw();
             ProcessInput();

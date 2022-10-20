@@ -1,19 +1,10 @@
-//#define DLL
-
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System;
-using UnityEngine;
-using UnityEditor;
 using System.Runtime.CompilerServices;
 
 namespace Libraries.system
 {
-    namespace output
+    namespace debug
     {
-        public class Console : BaseLibrary
+        public class Debugger : BaseLibrary
         {
             public static void Debug(params object[] obj)
             {
@@ -24,13 +15,14 @@ namespace Libraries.system
                 [CallerLineNumber] int lineNumber = 0,
                 [CallerMemberName] string caller = null)
             {
-                UnityEngine.Debug.Log($"{caller} at {lineNumber + 1}. Logs: '{obj}'");//todo 99 warning, +1 is here because on top is "#if false added".
+                UnityEngine.Debug.Log(
+                    $"{caller} at {lineNumber + 1}. Logs: '{obj}'"); //todo 99 warning, +1 is here because on top is "#if false added".
             }
 
             public static void Line([CallerLineNumber] int line = 0)
             {
                 UnityEngine.Debug.Log(line);
-            }
+            }      
         }
     }
 }

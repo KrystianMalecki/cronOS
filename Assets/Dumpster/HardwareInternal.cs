@@ -64,21 +64,27 @@ public class HardwareInternal
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
 
-    public static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default.AddReferences(
-            typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly /*,
+    public static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default/*.WithReferences(
+            typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly,
+            typeof(UnityEngine.Vector2).GetTypeInfo().Assembly*/
+        /*,
+            
+
         typeof(System.Text.RegularExpressions.Regex).GetTypeInfo().Assembly,
              typeof(helper.GlobalHelper).GetTypeInfo().Assembly,
              typeof(System.Collections.Generic.Dictionary<int,int>).GetTypeInfo().Assembly
             //,typeof(System.Exception).GetTypeInfo().Assembly
 */
-        ).AddImports(
-            // "UnityEngine", "System"
-        ).WithEmitDebugInformation(true)
+        /* )*//*.WithImports(
+              "UnityEngine"
+         )*/
+
+        .WithEmitDebugInformation(true)
         .WithFileEncoding(HardwareInternal.mainEncoding);
 
     public static readonly List<Type> allLibraries = new List<Type>()
     {
-        typeof(Libraries.system.output.Console),
+        //   typeof(Libraries.system.output.Console),
         typeof(Libraries.system.Runtime),
         typeof(Libraries.system.output.graphics.Screen),
         typeof(Libraries.system.output.graphics.texture32.Texture32),
@@ -92,9 +98,15 @@ public class HardwareInternal
         typeof(Libraries.system.mathematics.Vector2),
         typeof(Libraries.system.input.KeyHandler),
         typeof(Libraries.system.input.MouseHandler),
+        typeof(Libraries.system.debug.Debugger),
+
+        typeof(System.String),
+        
+
+        //    typeof(attic.StaticValueHaver),
+
         typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
-
-
+        //typeof(System.Math),
         typeof(System.Text.RegularExpressions.Regex),
         typeof(helper.GlobalHelper),
         typeof(System.Collections.Generic.Dictionary<int, int>),
@@ -126,17 +138,29 @@ public class HardwareInternal
     internal void RunCode(CodeObject codeObject)
     {
         Debug.Log("Making new codeTask");
-        CodeTask codeTask = new CodeTask(hardware);
-        scriptsRunning.Add(codeTask);
         CodeParser(ref codeObject);
-        codeTask.RunCode(codeObject);
+        CodeTask codeTask = new CodeTask(hardware, codeObject);
+        scriptsRunning.Add(codeTask);
+        codeTask.RunCodeAsync();
         GlobalDebugger.instance.WrapInIf(codeObject.code);
         Debug.Log("After running code");
+    }
+    internal void RunCodeSync(CodeObject codeObject)
+    {
+        Debug.Log("Making new codeTask");
+        CodeParser(ref codeObject);
+        CodeTask codeTask = new CodeTask(hardware, codeObject);
+        scriptsRunning.Add(codeTask);
+        codeTask.RunCodeSync();
+        Debug.Log("After running code");
+
     }
 
     internal void RemoveCodeTask(CodeTask codeTask)
     {
+        //todo 5 this can make problems? not thread safe
         scriptsRunning.Remove(codeTask);
+
     }
 
     internal void CheckThreads()
@@ -179,20 +203,25 @@ public class HardwareInternal
  }
  HardwareBox.hardware = ownPointer;
  " + codeObject.code;*/
-        codeObject.code = @"static Runtime runtime = null;runtime=ownPointer.runtime;
+        int topCounter = 0;
+        codeObject.code = @"
+static Runtime runtime = null;runtime=ownPointer.runtime;
 static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
 static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
 static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
 static Screen screen = null;screen=ownPointer.screen;
+static AudioHandler audioHandler = null;audioHandler=ownPointer.audioHandler;
+
 " + codeObject.code;
-        codeObject.code = "\n#include \"/sys/kernel\"\n" + codeObject.code;
+        codeObject.code = "/*using UVector2 = UnityEngine.Vector2;*/\n#include \"/sys/kernel\"\n" + codeObject.code;
+        Debug.Log("codeObject.code: " + codeObject.code);
         List<string> lines =
             new List<string>(codeObject.code.Replace("#if false //changeToTrue", "#if true").SplitNewLine());
 
         List<string> importedLibraries = new List<string>();
         Dictionary<string, string> currentRedefines = new Dictionary<string, string>();
         currentRedefines.Add("false//changeToTrue", "true");
-        int positionToExpectNextInlcude = 0;
+        int positionToExpectNextInclude = 0;
         bool checkIncludes = true;
         bool checkRedefines = true;
         bool checkUndefines = true;
@@ -229,15 +258,16 @@ static Screen screen = null;screen=ownPointer.screen;
             }
 
 
-            if ((positionToExpectNextInlcude < index && !includeRegex.IsMatch(buffer)))
+            if ((positionToExpectNextInclude < index && !includeRegex.IsMatch(buffer)))
             {
                 if (string.IsNullOrEmpty(buffer) || string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith("//") ||
                     buffer.StartsWith("/*"))
                 {
-                    positionToExpectNextInlcude++;
+                    positionToExpectNextInclude++;
                 }
                 else
                 {
+                    //todo 9: this shouldn't be disabled
                     //  Debug.Log($"next:{positionToExpectNextInlcude} index:{index}");
                     //  checkIncludes = false;
                 }
@@ -249,7 +279,8 @@ static Screen screen = null;screen=ownPointer.screen;
                 {
                     lines[index] = $"//moved '{buffer}' on top";
 
-                    lines.Insert(0, buffer.Substring(buffer.IndexOf("top") + "top".Length));
+                    lines.Insert(topCounter, buffer.Substring(buffer.IndexOf("top") + "top".Length));
+                    topCounter++;
                     continue;
                 }
 
@@ -266,7 +297,7 @@ static Screen screen = null;screen=ownPointer.screen;
             {
                 if (redefineRegex.IsMatch(buffer))
                 {
-                    positionToExpectNextInlcude++;
+                    positionToExpectNextInclude++;
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
                     int definitionIndex =
                         lineParts.FindIndex(x => x != "#" && !string.IsNullOrWhiteSpace(x) && x != "redefine");
@@ -302,7 +333,7 @@ static Screen screen = null;screen=ownPointer.screen;
             {
                 if (undefineRegex.IsMatch(buffer))
                 {
-                    positionToExpectNextInlcude++;
+                    positionToExpectNextInclude++;
 
                     List<string> lineParts = buffer.SplitSpaceQArgsCustom("#"); // buffer.Split(' ', '(', ')', ',');
                     int definitionIndex =
@@ -348,7 +379,7 @@ static Screen screen = null;screen=ownPointer.screen;
                             lines.Insert(index + iL + 1, importedLine);
                         }
 
-                        positionToExpectNextInlcude += importedLines.Count + 1;
+                        positionToExpectNextInclude += importedLines.Count + 1;
 
                         index--;
                         continue;

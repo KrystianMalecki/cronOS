@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Libraries.system;
 using Libraries.system.input;
+using Libraries.system.output.music;
 
 [Serializable]
 public class Hardware
@@ -19,7 +20,9 @@ public class Hardware
     public FileSystem fileSystem = new FileSystem();
     public KeyHandler keyHandler = new KeyHandler();
     public MouseHandler mouseHandler = new MouseHandler();
+
     public Screen screen = new Screen();
+    public AudioHandler audioHandler = new AudioHandler();
 
     public Hardware ownPointer => this;
     [UnityEngine.SerializeField] internal bool currentlySelected;
@@ -32,10 +35,16 @@ public class Hardware
         hardwareInternal.hardware = this;
         hardwareInternal.stackExecutor.hardware = this;
         hardwareInternal.inputManager.hardware = this;
+        
         runtime.Init(ownPointer);
         fileSystem.Init(ownPointer);
         keyHandler.Init(ownPointer);
         mouseHandler.Init(ownPointer);
         screen.Init(ownPointer);
+        audioHandler.Init(ownPointer);
+    }
+    public void RunCode(string code)
+    {
+        hardwareInternal.RunCode(new CodeObject(code,HardwareInternal.allLibraries));
     }
 }

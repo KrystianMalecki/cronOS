@@ -39,4 +39,9 @@ public class LibraryData
         this.assembly = assembly;
         this.nameSpace = nameSpace;
     }
+    
+    public override string ToString()
+    {
+        return "as:"+assembly + ", ns:" + nameSpace;
+    }
 }

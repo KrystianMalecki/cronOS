@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Libraries.system;
 using helper;
+using Humanizer;
 using UnityEditor;
 
 [Serializable]
@@ -30,22 +31,34 @@ public class CodeTask
 
     [SerializeReference] public Hardware hardware;
 
-    public CodeTask(Hardware system)
+
+    public CodeTask(Hardware system, CodeObject codeObject)
     {
         this.hardware = system;
+        this.codeObject = codeObject;
+        Debug.Log(codeObject.code);
+
     }
 
-    public void RunCode(CodeObject codeObject)
+    public void RunCodeAsync()
     {
-        Debug.Log(codeObject.code);
-        this.codeObject = codeObject;
         thread = new Thread(RunAsync);
 
         thread.IsBackground = true;
-
-
+        // Debug.Log(codeObject.libraries.ToFormattedString());
+        /*  ScriptOptions so = HardwareInternal.scriptOptionsBuffer
+              .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
+              .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace));
+          Debug.Log(so.Imports.ToFormattedString());
+          Debug.Log(Array.ConvertAll<MetadataReference, string>(so.MetadataReferences.ToArray(), x => x.Display)
+              .ToFormattedString());*/
         thread.Start();
     }
+    public void RunCodeSync()
+    {
+        RunAsync();
+    }
+
 
     private async void RunAsync()
     {
@@ -57,8 +70,9 @@ public class CodeTask
 
             await CSharpScript.EvaluateAsync(codeObject.code
                 , HardwareInternal.scriptOptionsBuffer
-                    .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
-                    .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
+                       .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
+                       .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
+
 #if UNITY_EDITOR
                     .WithFilePath(GlobalDebugger.assetPath)
 #endif

@@ -5,11 +5,11 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Libraries.system.mathematics;
 using Libraries.system.output.music;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
-using Math = Libraries.system.mathematics.Math;
 
 public class SGT2 : MonoBehaviour
 {
@@ -109,7 +109,7 @@ public class SGT2 : MonoBehaviour
         }
 
         float[] samples = new float[lsamplerate];
-        int length = Math.Round(lsamplerate * sound.length);
+        int length = Maths.Round(lsamplerate * sound.length);
         Action<int> function = i => { };
         switch (sound.instrument)
         {

@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Libraries.system.mathematics;
 using Libraries.system.output.music;
 using UnityEngine;
-using Math = Libraries.system.mathematics.Math;
 
 
-//todo 0 copy from STG2
 public class AudioManager : MonoBehaviour
 {
     public int lsamplerate = 44100;
@@ -22,8 +21,9 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        float[] samples = new float[lsamplerate];
-        int length = Math.Round(lsamplerate * sound.length);
+        int length = Maths.Round(lsamplerate * sound.length);
+
+        float[] samples = new float[length];
         Action<int> function = i => { };
         switch (sound.instrument)
         {
@@ -65,11 +65,8 @@ public class AudioManager : MonoBehaviour
     internal void PlayClip(AudioClip ac)
     {
         audioSourcesIndex++;
-        if (audioSourcesIndex > audioSources.Count)
-        {
-            audioSourcesIndex = 0;
-        }
 
+        audioSourcesIndex %= audioSources.Count;
         AudioSource ass = audioSources[audioSourcesIndex];
 
         ass.clip = ac;

@@ -12,7 +12,7 @@ namespace Libraries.system
 {
     namespace mathematics
     {
-        public class Math
+        public class Maths
         {
             //todo 0 check why?
             public static decimal Abs(decimal number)
@@ -59,6 +59,7 @@ namespace Libraries.system
             {
                 return System.Math.Max(a, b);
             }
+           
         }
     }
 }

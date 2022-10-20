@@ -7,7 +7,7 @@ namespace Libraries.system
 {
     namespace mathematics
     {
-        public static class Maths //todo-future change name
+        public static class Converter //todo-future change name
         {
             #region bool->byte
 
@@ -27,7 +27,7 @@ namespace Libraries.system
 
             public static byte[] ConvertAllBoolsToBytes(this bool[] array)
             {
-                byte[] bytes = new byte[Math.Ceil(1f * array.Length / 8f)];
+                byte[] bytes = new byte[Maths.Ceil(1f * array.Length / 8f)];
                 for (int i = 0; i < bytes.Length; i++)
                 {
                     bytes[i] = Convert8BoolsToByte(array.Skip(i * 8).Take(8).ToArray());
@@ -86,7 +86,7 @@ namespace Libraries.system
 
             public static byte[] ConvertAllNibblesToBytes(this byte[] array)
             {
-                byte[] bytes = new byte[Math.Ceil(1f * array.Length / 2f)];
+                byte[] bytes = new byte[Maths.Ceil(1f * array.Length / 2f)];
                 for (int i = 0; i < bytes.Length; i++)
                 {
                     bytes[i] = Convert2NibblesToByte(array.Skip(i * 2).Take(2).ToArray());
@@ -144,7 +144,7 @@ namespace Libraries.system
 
             public static byte[] ConvertAllDibitsToBytes(this byte[] array)
             {
-                byte[] bytes = new byte[Math.Ceil(1f * array.Length / 4f)];
+                byte[] bytes = new byte[Maths.Ceil(1f * array.Length / 4f)];
                 for (int i = 0; i < bytes.Length; i++)
                 {
                     bytes[i] = Convert4DibitsToByte(array.Skip(i * 4).Take(4).ToArray());

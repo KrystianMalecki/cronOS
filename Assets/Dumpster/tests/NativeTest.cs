@@ -8,10 +8,12 @@ using System.Collections.Generic;*/
 using System;
 using System.Collections;
 using System.ComponentModel;
+using attic;
 using Libraries.system.mathematics;
 using Libraries.system.output.graphics.screen_buffer32;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.system_texture;
+using NaughtyAttributes;
 using UnityEngine;
 using sio = System.IO;
 /*using System.Text;
@@ -43,11 +45,44 @@ public class C
 c.run();*/
 public class NativeTest : MonoBehaviour
 {
+    public int number;
+    public string text;
+    public bool toggle;
+
+    [Button()]
+    public void Assign()
+    {
+        StaticValueHaver.number = number;
+        StaticValueHaver.text = text;
+        StaticValueHaver.toggle = toggle;
+    }
+
+
+    [Button()]
+    public void Say()
+    {
+        Debug.Log($"number={StaticValueHaver.number} test={StaticValueHaver.text} toggle={StaticValueHaver.toggle}");
+        number = StaticValueHaver.number;
+        text = StaticValueHaver.text;
+        toggle = StaticValueHaver.toggle;
+    }
+
+
     public void Start()
     {
-        SystemTexture image = new SystemTexture();
-        image.DrawLine(0, 0, 0, 0, 9);
-        
+      
+        /* screenBuffer.MakeButton(0, 0, 100, 100,Color32, text,Style);
+         
+         ////
+ 
+         screenBuffer.ItemColor = Color32;
+         screenBuffer.SetBackgroundColor(black);
+         screenBuffer.MakeButton(0, 0, 100, 100);*/
+
+
+        /*   SystemTexture image = new SystemTexture();
+           image.DrawLine(0, 0, 0, 0, 9);
+   */
         /* Color32[] palette =
          {
              new Color32(0, 0, 0, 255),

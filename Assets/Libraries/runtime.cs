@@ -31,7 +31,10 @@ namespace Libraries.system
         {
             Thread.Sleep(hardware.hardwareInternal.WaitRefreshRate);
         }
-
+        public void RunCodeSync(string code)
+        {
+            hardware.hardwareInternal.RunCodeSync(new CodeObject(code, HardwareInternal.allLibraryDatas));
+        }
         public static readonly char[] asciiMap =
         {
             ' ', '☺', '☻', '♥', '♦', '♣', '♠', '•', '◘', '○', '◙', '♂', '♀', '♪', '♫', '☼', '►', '◄', '↕', '‼', '¶',
@@ -48,7 +51,7 @@ namespace Libraries.system
             'ᴛ', 'ɸ', 'ϴ', 'Ω', 'ẟ', '∞', '∅', '∈', '∩', '≡', '±', '≥', '≤', '⌠', '⌡', '÷', '≈', '°', '∙', '·', '√',
             'ⁿ', '²', '■', ' '
         };
-
+        #region char to bytes
         public unsafe static byte CharToByte(char character)
         {
             byte b = 0;
@@ -62,6 +65,9 @@ namespace Libraries.system
             HardwareInternal.mainEncoding.GetChars(&character, 1, &b, 1);
             return b;
         }
+        #endregion
+
+        #region hex to bytes
 
         public static byte HexToByte(string value)
         {
@@ -74,6 +80,9 @@ namespace Libraries.system
         {
             return value.ToString("X" + (makeIt2 ? 2 : 1));
         }
+        #endregion
+
+        #region string to bytes
 
         public static byte[] StringToEncodedBytes(string variable)
         {
@@ -94,5 +103,6 @@ namespace Libraries.system
 
             return HardwareInternal.mainEncoding.GetString(variable);
         }
+        #endregion
     }
 }

@@ -121,7 +121,7 @@ namespace Libraries.system
             public byte[] ToData(int sizeOfTInBits, Converter<T, byte[]> converter = null)
             {
                 byte[] bytes = new byte[sizeof(Int32) + sizeof(Int32) +
-                                        mathematics.Math.Ceil(1f * (sizeOfTInBits * array.Length) / 8)];
+                                        mathematics.Maths.Ceil(1f * (sizeOfTInBits * array.Length) / 8)];
                 int pointer = 0;
                 bytes.SetByteValue(width.ToBytes(), pointer);
                 pointer += (sizeof(Int32));
@@ -181,7 +181,7 @@ namespace Libraries.system
 
             public static RectArray<T> FromData(byte[] data, int sizeOfTInBits, Func<byte[], T[]> converter = null)
             {
-                int unitSize = Math.Ceil(1f * sizeOfTInBits / 8);
+                int unitSize = Maths.Ceil(1f * sizeOfTInBits / 8);
                 int pointer = 0;
                 int width = BitConverter.ToInt32(data, pointer);
                 pointer += sizeof(Int32);
@@ -279,10 +279,10 @@ namespace Libraries.system
 
                 dx = (endX - startX);
                 dy = (endY - startY);
-                if (Math.Abs(dx) >= Math.Abs(dy))
-                    step = Math.Abs(dx);
+                if (Maths.Abs(dx) >= Maths.Abs(dy))
+                    step = Maths.Abs(dx);
                 else
-                    step = Math.Abs(dy);
+                    step = Maths.Abs(dy);
                 dx = dx / step;
                 dy = dy / step;
                 x = startX;
@@ -290,7 +290,7 @@ namespace Libraries.system
                 i = 1;
                 while (i <= step)
                 {
-                    SetAt(Math.Round(x), Math.Round(y), value);
+                    SetAt(Maths.Round(x), Maths.Round(y), value);
                     x = x + dx;
                     y = y + dy;
                     i = i + 1;
@@ -334,10 +334,10 @@ namespace Libraries.system
                 Console.Debug(
                     $"{(startX + endX) / 2} {(startY + endY) / 2} {(endX - startX) / 2} {(endY - startY) / 2}");
 
-                int minX = Math.Min(startX, endX);
-                int maxX = Math.Max(startX, endX);
-                int minY = Math.Min(startY, endY);
-                int maxY = Math.Max(startY, endY);
+                int minX = Maths.Min(startX, endX);
+                int maxX = Maths.Max(startX, endX);
+                int minY = Maths.Min(startY, endY);
+                int maxY = Maths.Max(startY, endY);
 
                 DrawEllipseFromCenter((minX + maxX) / 2, (minY + maxY) / 2, (maxX - minX) / 2,
                     (maxY - minY) / 2, value, fill);
@@ -355,7 +355,7 @@ namespace Libraries.system
                 x = 0;
                 y = radiusY;
 
-                d1 = Math.Round((radiusY * radiusY) - (radiusX * radiusX * radiusY) +
+                d1 = Maths.Round((radiusY * radiusY) - (radiusX * radiusX * radiusY) +
                                 (0.25f * radiusX * radiusX));
                 dx = 2 * radiusY * radiusY * x;
                 dy = 2 * radiusX * radiusX * y;
@@ -383,7 +383,7 @@ namespace Libraries.system
                     }
                 }
 
-                d2 = Math.Round(((radiusY * radiusY) * ((x + 0.5f) * (x + 0.5f)))
+                d2 = Maths.Round(((radiusY * radiusY) * ((x + 0.5f) * (x + 0.5f)))
                                 + ((radiusX * radiusX) * ((y - 1) * (y - 1)))
                                 - (radiusX * radiusX * radiusY * radiusY));
 
@@ -410,5 +410,7 @@ namespace Libraries.system
                 }
             }
         }
+
+        
     }
 }

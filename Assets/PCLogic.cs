@@ -9,17 +9,16 @@ using UnityEngine;
 public class PCLogic : MonoBehaviour
 {
     public Hardware hardware;
-    public static PCLogic defaultInstance;
 
     public void SetDefault(PCLogic logic)
     {
-        if (defaultInstance != null)
+        if (PlayerController.selectedPC != null)
         {
-            defaultInstance.hardware.currentlySelected = false;
+            PlayerController.selectedPC.hardware.currentlySelected = false;
         }
 
-        defaultInstance = logic;
-        defaultInstance.hardware.currentlySelected = true;
+        PlayerController.selectedPC = logic;
+        PlayerController.selectedPC.hardware.currentlySelected = true;
     }
 
     [Button]
@@ -33,15 +32,13 @@ public class PCLogic : MonoBehaviour
         hardware.Init();
 
 
-        if (hardware.currentlySelected)
-        {
-            SetThisDefault();
-        }
+
     }
 
     private void OnMouseEnter()
     {
         SetThisDefault();
+        Debug.Log("Mouse entered");
     }
 
 
