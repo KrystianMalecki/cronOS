@@ -1,5 +1,6 @@
 using Libraries.system.mathematics;
 using Libraries.system.output;
+using System;
 using ue = UnityEngine;
 
 namespace Libraries.system
@@ -8,19 +9,22 @@ namespace Libraries.system
     {
         public class MouseHandler : BaseLibrary
         {
-            public Vector2Int? lastPosition = null;
+            [ThreadStatic]
+            public static Vector2Int? lastPosition = null;
+            [ThreadStatic]
             public static System.Diagnostics.Stopwatch s = new System.Diagnostics.Stopwatch();
-            public static MainThreadDelegate<Vector2Int?>.MTDFunction func = null;
+            [ThreadStatic]
+            public static MainThreadDelegate<Vector2Int?>.MTDFunction func = GetMousePos;
 
-            public Vector2Int? GetScreenPosition()
+            public static Vector2Int? GetScreenPosition()
             {
-                if (!hardware.currentlySelected)
+                if (!Hardware.currentThreadInstance.focused)
                 {
                     return lastPosition;
                 }
 
 
-                Vector2Int? pos = hardware.hardwareInternal.stackExecutor.AddDelegateToStack(func);
+                Vector2Int? pos = Hardware.currentThreadInstance.hardwareInternal.stackExecutor.AddDelegateToStack(func);
 
 
                 if (!pos.HasValue)
@@ -32,15 +36,11 @@ namespace Libraries.system
                 return pos;
             }
 
-            public override void Init(Hardware hardware)
-            {
-                base.Init(hardware);
-                func = GetMousePos;
-            }
 
-            private void GetMousePos(ref bool done, ref Vector2Int? returnValue)
+
+            private static void GetMousePos(ref bool done, ref Vector2Int? returnValue)
             {
-                returnValue = hardware.hardwareInternal.screenManager.GetMousePos();
+                returnValue = Hardware.currentThreadInstance.hardwareInternal.screenManager.GetMousePos();
             }
         }
     }

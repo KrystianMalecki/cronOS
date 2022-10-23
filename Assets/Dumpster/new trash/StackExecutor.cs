@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class StackExecutor : MonoBehaviour
 {
-    [NonSerialized] public Hardware hardware;
+    [NonSerialized] public HardwareInternal hardwareInternal;
     public object locker = new object();
 
     public void Start()
@@ -26,9 +26,9 @@ public class StackExecutor : MonoBehaviour
 
     public void UpdateMaxTask()
     {
-        _maxTasksBuffer = hardware.hardwareInternal.TasksPerCPULoop == -1
+        _maxTasksBuffer = hardwareInternal.TasksPerCPULoop == -1
             ? 100
-            : hardware.hardwareInternal.TasksPerCPULoop;
+            : hardwareInternal.TasksPerCPULoop;
         // _maxTasksBuffer = 1;
     }
 
@@ -100,16 +100,16 @@ public class StackExecutor : MonoBehaviour
 
     internal T AddDelegateToStack<T>(MainThreadDelegate<T>.MTDFunction action, bool sync = true)
     {
-        return AddDelegateToStack(new MainThreadDelegate<T>(action, hardware.hardwareInternal.WaitRefreshRate), sync);
+        return AddDelegateToStack(new MainThreadDelegate<T>(action, hardwareInternal.WaitRefreshRate), sync);
     }
 
-    internal T AddDelegateToStack<T>(MainThreadDelegate<T> mtf, bool sync = true)
+    internal T AddDelegateToStack<T>(MainThreadDelegate<T> mtd, bool sync = true)
     {
-        actionQueue.Enqueue(mtf);
+        actionQueue.Enqueue(mtd);
 
         if (sync)
         {
-            return mtf.WaitForReturn();
+            return mtd.WaitForReturn();
         }
 
         return default(T);
@@ -123,13 +123,13 @@ public class StackExecutor : MonoBehaviour
     [Button]
     internal void CheckThreads()
     {
-        hardware.hardwareInternal.CheckThreads();
+        hardwareInternal.CheckThreads();
     }
 
     [Button]
     internal void KillAll()
     {
-        hardware.hardwareInternal.KillAll();
+        hardwareInternal.KillAll();
     }
 
     public void OnDestroy()

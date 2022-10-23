@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeReference] public Hardware hardware;
+    [SerializeReference] public HardwareInternal hardwareInternal;
     private object lockObj = new object();
 
     public StringBuilder inputBuffer = new StringBuilder();
@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
 
     public void Update()
     {
-        if (hardware.currentlySelected)
+        if (hardwareInternal.focused)
         {
             if (Input.anyKey)
             {
@@ -75,7 +75,7 @@ public class InputManager : MonoBehaviour
 
     public string GetInput()
     {
-        if (!hardware.currentlySelected)
+        if (!hardwareInternal.focused)
         {
             return string.Empty;
         }

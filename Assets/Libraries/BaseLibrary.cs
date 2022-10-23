@@ -4,14 +4,11 @@ using System.Threading;
 using UnityEngine;
 using System.Collections.Generic;
 
+//todo 0 remove
 public class BaseLibrary
 {
-    public bool sync = false;
+    [ThreadStatic]
+    public static bool sync = false;
 
-    protected Hardware hardware;
 
-    public virtual void Init(Hardware hardware)
-    {
-        this.hardware = hardware;
-    }
 }

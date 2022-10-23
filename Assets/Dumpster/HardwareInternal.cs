@@ -16,7 +16,7 @@ using UnityEditor;
 [Serializable]
 public class HardwareInternal
 {
-    [NonSerialized] internal Hardware hardware;
+    internal Hardware hardware;
 
 
     [SerializeField] internal DriveSO mainDrive;
@@ -26,6 +26,21 @@ public class HardwareInternal
     [SerializeField] internal AudioManager audioManager;
     public long CurrentMilliseconds => DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
+    //todo maybe some events for focusting and unfocusting
+    public bool focused = false;
+
+
+    internal void Init()
+    {
+        mainDrive.GenerateCacheData();
+        inputManager.hardwareInternal = this;
+        stackExecutor.hardwareInternal = this;
+
+
+        hardware = new Hardware(this);
+        hardware.Init();
+
+    }
     #region Processor
 
     //  [SerializeField]
@@ -37,7 +52,7 @@ public class HardwareInternal
     public int WaitRefreshRate = 100;
 
     [SerializeField] internal int TasksPerCPULoop = -1;
-    internal static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
+    public static readonly Encoding mainEncoding = Encoding.GetEncoding("437");
 
     private void UpdateWRR()
     {
@@ -64,7 +79,7 @@ public class HardwareInternal
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
 
-    public static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default/*.WithReferences(
+    public readonly static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default/*.WithReferences(
             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly,
             typeof(UnityEngine.Vector2).GetTypeInfo().Assembly*/
         /*,
@@ -135,9 +150,9 @@ public class HardwareInternal
     static Regex topRegex = new Regex("^\\s*?#\\s*?top\\s*?.*");
     static Regex bottomRegex = new Regex("^\\s*?#\\s*?bottom\\s*?.*");
 
-    internal void RunCode(CodeObject codeObject)
+    //todo reformat to remove debug code
+    internal void RunCodeInNewThread(CodeObject codeObject)
     {
-        Debug.Log("Making new codeTask");
         CodeParser(ref codeObject);
         CodeTask codeTask = new CodeTask(hardware, codeObject);
         scriptsRunning.Add(codeTask);
@@ -145,7 +160,9 @@ public class HardwareInternal
         GlobalDebugger.instance.WrapInIf(codeObject.code);
         Debug.Log("After running code");
     }
-    internal void RunCodeSync(CodeObject codeObject)
+    //todo reformat to remove debug code and be just better
+
+    internal void RunCode(CodeObject codeObject)
     {
         Debug.Log("Making new codeTask");
         CodeParser(ref codeObject);
@@ -204,17 +221,19 @@ public class HardwareInternal
  HardwareBox.hardware = ownPointer;
  " + codeObject.code;*/
         int topCounter = 0;
-        codeObject.code = @"
-static Runtime runtime = null;runtime=ownPointer.runtime;
-static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
-static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
-static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
-static Screen screen = null;screen=ownPointer.screen;
-static AudioHandler audioHandler = null;audioHandler=ownPointer.audioHandler;
+        /* codeObject.code = @"
+ static Runtime runtime = null;runtime=ownPointer.runtime;
+ static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
+ static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
+ static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
+ static Screen screen = null;screen=ownPointer.screen;
+ static AudioHandler audioHandler = null;audioHandler=ownPointer.audioHandler;
 
-" + codeObject.code;
-        codeObject.code = "/*using UVector2 = UnityEngine.Vector2;*/\n#include \"/sys/kernel\"\n" + codeObject.code;
-        Debug.Log("codeObject.code: " + codeObject.code);
+ " + codeObject.code;*/
+        codeObject.code = @"Hardware.currentThreadInstance = thisHardware;
+ " + codeObject.code;
+        // codeObject.code = "/*using UVector2 = UnityEngine.Vector2;*/\n#include \"/sys/kernel\"\n" + codeObject.code;
+        // Debug.Log("codeObject.code: " + codeObject.code);
         List<string> lines =
             new List<string>(codeObject.code.Replace("#if false //changeToTrue", "#if true").SplitNewLine());
 

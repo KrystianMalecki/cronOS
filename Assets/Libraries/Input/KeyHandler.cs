@@ -12,16 +12,18 @@ namespace Libraries.system
         //todo 2 add start listening to keys and stop listening to keys functions 
         public class KeyHandler : BaseLibrary
         {
-            public ConcurrentHashSet<Key> pressedDownKeys = new ConcurrentHashSet<Key>();
-
-            public ConcurrentHashSet<Key> cooldownKeys = new ConcurrentHashSet<Key>();
+            [ThreadStatic]
+            public static ConcurrentHashSet<Key> pressedDownKeys = new ConcurrentHashSet<Key>();
+            [ThreadStatic]
+            public static ConcurrentHashSet<Key> cooldownKeys = new ConcurrentHashSet<Key>();
 
             // public static MainThreadDelegate<bool>.MTDFunction waitForcheckKeysDelegate = null;
             // public static MainThreadDelegate<bool>.MTDFunction justCheckKeysDelegate = null;
-            public object locker = new();
+            [ThreadStatic]
+            public static object locker = new();
 
 
-            private void AddKeys(ConcurrentHashSet<Key> pressedNow)
+            private static void AddKeys(ConcurrentHashSet<Key> pressedNow)
             {
                 lock (locker)
                 {
@@ -40,25 +42,25 @@ namespace Libraries.system
                 }
             }
 
-            private void AddKeysFromInput()
+            private static void AddKeysFromInput()
             {
                 lock (locker)
                 {
-                    AddKeys(hardware.hardwareInternal.inputManager.currentlyPressedKeys);
+                    AddKeys(Hardware.currentThreadInstance.inputManager.currentlyPressedKeys);
                 }
             }
 
-            public void DumpInputBuffer()
+            public static void DumpInputBuffer()
             {
-                hardware.hardwareInternal.inputManager.ClearInputBuffer();
+                Hardware.currentThreadInstance.inputManager.ClearInputBuffer();
             }
-            public void DumpStringInputBuffer()
+            public static void DumpStringInputBuffer()
             {
-                hardware.hardwareInternal.inputManager.ClearStringInputBuffer();
+                Hardware.currentThreadInstance.inputManager.ClearStringInputBuffer();
             }
-            public bool GetKeyDown(Key key)
+            public static bool GetKeyDown(Key key)
             {
-                if (!hardware.currentlySelected)
+                if (!Hardware.currentThreadInstance.focused)
                 {
                     return false;
                 }
@@ -76,75 +78,75 @@ namespace Libraries.system
             }
 
             //todo-future move timeout in extenstion method
-            public KeySequence WaitForInput(long timeoutInMS = 0)
+            public static KeySequence WaitForInput(long timeoutInMS = 0)
             {
-                long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
+                long currentTime = Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds;
                 do
                 {
-                    hardware.runtime.Wait();
+                    Runtime.Wait();
                     AddKeysFromInput();
-                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)
+                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds)
                     {
                         break;
                     }
                 } while (pressedDownKeys.Count <= 0);
 
                 //  Console.Debug("after WaitForInput");
-                return new KeySequence(pressedDownKeys, this);
+                return new KeySequence(pressedDownKeys);
             }
 
-            public KeySequence WaitForInputBuffer(long timeoutInMS = 0)
+            public static KeySequence WaitForInputBuffer(long timeoutInMS = 0)
             {
-                long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
+                long currentTime = Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds;
                 do
                 {
-                    hardware.runtime.Wait();
+                    Runtime.Wait();
 
-                    AddKeys(hardware.hardwareInternal.inputManager.GetnputBuffer());
+                    AddKeys(Hardware.currentThreadInstance.hardwareInternal.inputManager.GetnputBuffer());
 
 
-                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)
+                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds)
                     {
                         break;
                     }
                 } while (pressedDownKeys.Count <= 0);
 
                 //  Console.Debug("after WaitForInput");
-                return new KeySequence(pressedDownKeys, this);
+                return new KeySequence(pressedDownKeys);
             }
 
-            public KeySequence WaitForInputDown(long timeoutInMS = 0)
+            public static KeySequence WaitForInputDown(long timeoutInMS = 0)
             {
-                long currentTime = hardware.hardwareInternal.CurrentMilliseconds;
+                long currentTime = Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds;
 
                 do
                 {
-                    hardware.runtime.Wait();
+                    Runtime.Wait();
                     AddKeysFromInput();
-                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= hardware.hardwareInternal.CurrentMilliseconds)
+                    if (timeoutInMS > 0 && currentTime + timeoutInMS <= Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds)
                     {
                         break;
                     }
                 } while (pressedDownKeys.Count <= 0);
 
                 cooldownKeys.UnionWith(pressedDownKeys);
-                return new KeySequence(pressedDownKeys, this);
+                return new KeySequence(pressedDownKeys);
             }
 
-            public string GetInputAsString()
+            public static string GetInputAsString()
             {
                 return
-                    hardware.hardwareInternal.inputManager
+                    Hardware.currentThreadInstance.hardwareInternal.inputManager
                         .GetInput();
             }
 
-            public string WaitForStringInput()
+            public static string WaitForStringInput()
             {
                 string buffer = "";
                 while (String.IsNullOrEmpty(buffer))
                 {
-                    buffer = hardware.hardwareInternal.inputManager.GetInput();
-                    hardware.runtime.Wait();
+                    buffer = Hardware.currentThreadInstance.hardwareInternal.inputManager.GetInput();
+                    Runtime.Wait();
                 }
 
                 return buffer;
@@ -164,11 +166,12 @@ namespace Libraries.system
                   }, true);*/
             }
 
+            [ThreadStatic]
+            static bool combinedCharacterMode = false;
+            [ThreadStatic]
+            public static string combinedBuffer = "";
 
-            bool combinedCharacterMode = false;
-            public string combinedBuffer = "";
-
-            public string TryGetCombinedSymbol(ref KeySequence ks)
+            public static string TryGetCombinedSymbol(ref KeySequence ks)
             {
                 combinedCharacterMode = ks.ReadAnyAlt(true);
                 if (combinedCharacterMode)
@@ -207,7 +210,6 @@ namespace Libraries.system
         public class KeySequence
         {
             public List<Key> keys;
-            private KeyHandler keyHandler;
 
             public bool ReadKey(Key key, bool remove = true)
             {
@@ -228,26 +230,23 @@ namespace Libraries.system
                     keys.Remove(key);
                 }
 
-                keyHandler.cooldownKeys.Add(key);
+                KeyHandler.cooldownKeys.Add(key);
                 return b;
             }
 
-            public KeySequence(List<Key> keys, KeyHandler keyHandler)
+            public KeySequence(List<Key> keys)
             {
                 this.keys = new List<Key>(keys);
-                this.keyHandler = keyHandler;
             }
 
-            public KeySequence(IEnumerable<Key> keys, KeyHandler keyHandler)
+            public KeySequence(IEnumerable<Key> keys)
             {
                 this.keys = new List<Key>(keys);
-                this.keyHandler = keyHandler;
             }
 
-            public KeySequence(ThreadSafeList<Key> keys, KeyHandler keyHandler)
+            public KeySequence(ThreadSafeList<Key> keys)
             {
                 this.keys = new List<Key>(keys);
-                this.keyHandler = keyHandler;
             }
 
             public override string ToString()

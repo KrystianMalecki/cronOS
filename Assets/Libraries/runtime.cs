@@ -11,29 +11,24 @@ namespace Libraries.system
 {
     public class Runtime : BaseLibrary
     {
-        public void Wait(int time)
+        public static void Wait(int time = 0)
         {
             // Task.Delay(time).Wait();
-            Thread.Sleep(System.Math.Max(time, hardware.hardwareInternal.WaitRefreshRate));
+            Thread.Sleep(System.Math.Max(time, Hardware.currentThreadInstance.hardwareInternal.WaitRefreshRate));
 
             // test.instance.count1++;
         }
 
-        public void WaitUnitl(Func<bool> action)
+        public static void WaitUnitl(Func<bool> action)
         {
             while (action.Invoke())
             {
                 Wait();
             }
         }
-
-        public void Wait()
+        public static void RunCodeSync(string code)
         {
-            Thread.Sleep(hardware.hardwareInternal.WaitRefreshRate);
-        }
-        public void RunCodeSync(string code)
-        {
-            hardware.hardwareInternal.RunCodeSync(new CodeObject(code, HardwareInternal.allLibraryDatas));
+            Hardware.currentThreadInstance.RunCode(code);
         }
         public static readonly char[] asciiMap =
         {

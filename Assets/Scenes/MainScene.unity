@@ -1319,18 +1319,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea2b378eff26c8845b7f655e174127e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hardware:
-    currentlySelected: 1
-    hardwareInternal:
-      mainDrive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
-      inputManager: {fileID: 1081877138}
-      screenManager: {fileID: 544366083}
-      stackExecutor: {fileID: 1255072402}
-      audioManager: {fileID: 971688697}
-      FPSCap: 100
-      WaitRefreshRate: 10
-      TasksPerCPULoop: -1
-      scriptsRunning: []
+  hardwareInternal:
+    mainDrive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
+    inputManager: {fileID: 1081877138}
+    screenManager: {fileID: 544366083}
+    stackExecutor: {fileID: 1255072402}
+    audioManager: {fileID: 971688697}
+    focused: 1
+    FPSCap: 100
+    WaitRefreshRate: 100
+    TasksPerCPULoop: -1
+    scriptsRunning: []
   references:
     version: 2
     RefIds: []
@@ -2430,7 +2429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3402e135161e547bc1c87fd0058cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hardware:
+  hardwareInternal:
     rid: -2
   references:
     version: 2
@@ -3168,7 +3167,7 @@ MonoBehaviour:
   codeFile: {fileID: 4900000, guid: 26a66dbf950e3044898514b1570abb8e, type: 3}
   code: "#include \"/sys/libs/binsLib.lib\"\r\n#include \"/sys/libs/fontLib.lib\"\r\n#top
     using static Shell;\r\npublic class Shell\r\n{\r\n\r\n    File currentFile =
-    fileSystem.GetFileByPath(\"/sys\");\r\n\r\n  public static   SystemScreenBuffer
+    FileSystem.GetFileByPath(\"/sys\");\r\n\r\n  public static   SystemScreenBuffer
     screenBuffer = new SystemScreenBuffer();\r\n    KeySequence bufferKeySequence
     = null;\r\n\r\n\r\n    string prefix = \"\";\r\n    string inputText = \"\";\r\n   
     string bufferInput = \"\";\r\n    string consoleText = \"\";\r\n\r\n\r\n    int
@@ -3178,9 +3177,9 @@ MonoBehaviour:
     0, 0, consoleText);\r\n        int consoleY = consoleText.CountEncounters('\\n')
     + 1;\r\n        DrawStringAt(screenBuffer, 0, consoleY * 8, prefix);\r\n       
     DrawStringAt(screenBuffer, prefix.Length * 8, consoleY * 8, inputText);\r\n       
-    screen.SetScreenBuffer(screenBuffer);\r\n    }\r\n\r\n    void ProcessInput()\r\n   
-    {\r\n        bufferKeySequence = keyHandler.WaitForInputBuffer();\r\n       
-    string input = keyHandler.GetInputAsString();\r\n        bool shift = bufferKeySequence.ReadAnyShift();\r\n       
+    Screen.SetScreenBuffer(screenBuffer);\r\n    }\r\n\r\n    void ProcessInput()\r\n   
+    {\r\n        bufferKeySequence = KeyHandler.WaitForInputBuffer();\r\n       
+    string input = KeyHandler.GetInputAsString();\r\n        bool shift = bufferKeySequence.ReadAnyShift();\r\n       
     foreach (char c in input)\r\n        {\r\n            if (c == '\\b') // has
     backspace/delete been pressed?\r\n            {\r\n                if (inputText.Length
     != 0)\r\n                {\r\n                    inputText = inputText.Substring(0,
@@ -3204,17 +3203,17 @@ MonoBehaviour:
     inputText = history[historyPointer];\r\n            }\r\n        }\r\n    }\r\n\r\n   
     string PraseCommand(string input)\r\n    {\r\n        history.Add(input);\r\n       
     historyPointer++;\r\n        string[] parts = input.Split(' ');\r\n        if
-    (parts[0] == \"cd\")\r\n        {\r\n            File f = fileSystem.GetFileByPath(parts[1],
+    (parts[0] == \"cd\")\r\n        {\r\n            File f = FileSystem.GetFileByPath(parts[1],
     currentFile);\r\n            if (f == null)\r\n            {\r\n               
     return $\"Couldn't find file {parts[1]}!\";\r\n            }\r\n\r\n           
     currentFile = f;\r\n            UpdatePrefix();\r\n            return \"\";\r\n       
     }\relse if(parts[0]==\"balls\"){\n\n}\n        else\r\n        {\r\n           
     return FindAndExecuteCommand(input + \" -wd \" + currentFile.GetFullPath());\r\n       
     }\r\n\r\n        return $\"Couldn't find command `{parts[0]}`.\";\r\n    }\r\n\r\n   
-    public void Run()\r\n    {\r\n        screen.InitScreenBuffer(screenBuffer);\r\n       
-    UpdatePrefix();\r\n        while (true)\r\n        {\r\nlock(mainLock){\r\nDebugger.Debug(\"shell
+    public void Run()\r\n    {\r\n       Screen.InitScreenBuffer(screenBuffer);\r\n       
+    UpdatePrefix();\r\n        while (true)\r\n        {\r\n\nDebugger.Debug(\"shell
     loop\");\r\n            screenBuffer.FillAll(SystemColor.black);\r\n           
-    Draw();\r\n            ProcessInput();\r\n            runtime.Wait();\r\n\n}      
+    Draw();\r\n            ProcessInput();\r\n            Runtime.Wait();\r\n\n    
     \r\n }\r\n    }\r\n}\r\n\r\nstatic Shell shell = null;\r\nshell=new Shell();\r\nshell.Run();"
 --- !u!4 &2108374107
 Transform:

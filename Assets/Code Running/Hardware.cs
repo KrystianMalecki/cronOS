@@ -14,37 +14,48 @@ using Libraries.system.input;
 using Libraries.system.output.music;
 
 [Serializable]
-public class Hardware
+public class Hardware /*API for in game usage*/
 {
-    public Runtime runtime = new Runtime();
-    public FileSystem fileSystem = new FileSystem();
-    public KeyHandler keyHandler = new KeyHandler();
-    public MouseHandler mouseHandler = new MouseHandler();
+    [NonSerialized] internal HardwareInternal hardwareInternal;
+    [ThreadStatic] public static Hardware currentThreadInstance;
+    public Hardware thisHardware => this;
+    public bool focused => hardwareInternal.focused;
+    internal DriveSO mainDrive => hardwareInternal.mainDrive;
+    internal InputManager inputManager => hardwareInternal.inputManager;
+    internal ScreenManager screenManager => hardwareInternal.screenManager;
+    internal StackExecutor stackExecutor => hardwareInternal.stackExecutor;
+    internal AudioManager audioManager => hardwareInternal.audioManager;
 
-    public Screen screen = new Screen();
-    public AudioHandler audioHandler = new AudioHandler();
-
-    public Hardware ownPointer => this;
-    [UnityEngine.SerializeField] internal bool currentlySelected;
-    [UnityEngine.SerializeField] internal HardwareInternal hardwareInternal = new HardwareInternal();
-
-    public void Init()
+    internal Hardware(HardwareInternal hardwareInternal)
     {
-        hardwareInternal.mainDrive.GenerateCacheData();
-
+        this.hardwareInternal = hardwareInternal;
         hardwareInternal.hardware = this;
-        hardwareInternal.stackExecutor.hardware = this;
-        hardwareInternal.inputManager.hardware = this;
-        
-        runtime.Init(ownPointer);
-        fileSystem.Init(ownPointer);
-        keyHandler.Init(ownPointer);
-        mouseHandler.Init(ownPointer);
-        screen.Init(ownPointer);
-        audioHandler.Init(ownPointer);
+    }
+    /**
+     <summary>
+      this does nothing right now.
+      </summary>
+    **/
+    internal void Init()
+    {
+
+        //  hardwareInternal.hardware = this;
+        // hardwareInternal.stackExecutor.hardware = this;
+        // hardwareInternal.inputManager.hardware = this;
+
+        /* runtime.Init(ownPointer);
+         fileSystem.Init(ownPointer);
+         keyHandler.Init(ownPointer);
+         mouseHandler.Init(ownPointer);
+         screen.Init(ownPointer);
+         audioHandler.Init(ownPointer);*/
+    }
+    public void RunCodeInNewThread(string code)
+    {
+        hardwareInternal.RunCodeInNewThread(new CodeObject(code, HardwareInternal.allLibraries));
     }
     public void RunCode(string code)
     {
-        hardwareInternal.RunCode(new CodeObject(code,HardwareInternal.allLibraries));
+        hardwareInternal.RunCodeInNewThread(new CodeObject(code, HardwareInternal.allLibraries));
     }
 }

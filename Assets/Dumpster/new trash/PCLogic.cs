@@ -8,17 +8,17 @@ using UnityEngine;
 
 public class PCLogic : MonoBehaviour
 {
-    public Hardware hardware;
+    public HardwareInternal hardwareInternal = new HardwareInternal();
 
     public void SetDefault(PCLogic logic)
     {
         if (PlayerController.selectedPC != null)
         {
-            PlayerController.selectedPC.hardware.currentlySelected = false;
+            PlayerController.selectedPC.hardwareInternal.focused = false;
         }
 
         PlayerController.selectedPC = logic;
-        PlayerController.selectedPC.hardware.currentlySelected = true;
+        PlayerController.selectedPC.hardwareInternal.focused = true;
     }
 
     [Button]
@@ -29,8 +29,11 @@ public class PCLogic : MonoBehaviour
 
     public void Awake()
     {
-        hardware.Init();
-
+        hardwareInternal.Init();
+        if (hardwareInternal.focused)
+        {
+            SetDefault(this);
+        }
 
 
     }
@@ -38,7 +41,6 @@ public class PCLogic : MonoBehaviour
     private void OnMouseEnter()
     {
         SetThisDefault();
-        Debug.Log("Mouse entered");
     }
 
 

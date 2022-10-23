@@ -35,20 +35,20 @@ public class DebugCodeRunner : MonoBehaviour
 
         if (runOnStart)
         {
-            RunCode();
+            DebugCode();
         }
     }
 
     [Button("Run code", EButtonEnableMode.Playmode)]
-    void RunCode()
+    void DebugCode()
     {
-        PlayerController.selectedPC.hardware.hardwareInternal.RunCode(new CodeObject(
+        PlayerController.selectedPC.hardwareInternal.RunCodeInNewThread(new CodeObject(
             noCodeFile ? code : codeFile.text.Replace("false//changeToTrue", "true"),
             HardwareInternal.allLibraryDatas));
     }
 
     void KillAll()
     {
-        PlayerController.selectedPC.hardware.hardwareInternal.KillAll();
+        PlayerController.selectedPC.hardwareInternal.KillAll();
     }
 }
