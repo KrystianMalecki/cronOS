@@ -10,7 +10,7 @@ namespace Libraries.system.output.music
         public void PlaySound(Sound sound)
         {
             Hardware.currentThreadInstance.hardwareInternal.stackExecutor.AddDelegateToStack(
-                () => { Hardware.currentThreadInstance.hardwareInternal.audioManager.PlayNote(sound); }, sync);
+                (hardware) => { hardware.hardwareInternal.audioManager.PlayNote(sound); }, sync);
         }
 
         private const float startNoteAValue = 27.5f;

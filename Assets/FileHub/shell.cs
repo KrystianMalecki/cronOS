@@ -1,8 +1,11 @@
 #if false
-
+//#include "/sys/libs/binsLib.lib"
+//#include "/sys/libs/fontLib.lib"
+//#top using static Shell;
+Debugger.Debug("shell start");
 public class Shell
 {
-    File currentFile = FileSystem.GetFileByPath("/sys");
+    public static File currentFile = FileSystem.GetFileByPath("/sys");
     public static SystemScreenBuffer screenBuffer = new SystemScreenBuffer();
     KeySequence bufferKeySequence = null;
     string prefix = "";
@@ -11,6 +14,8 @@ public class Shell
     string consoleText = "";
     int historyPointer = 0;
     List<string> history = new List<string>();
+
+    static string binariesFolder = "/sys/bins/";
     void UpdatePrefix()
     {
         prefix = currentFile.GetFullPath() + ">";
@@ -110,9 +115,19 @@ public class Shell
         }
         else
         {
-            return FindAndExecuteCommand(input + " -wd " + currentFile.GetFullPath());
+            return FindAndExecuteCommand(input);
         }
         return $"Couldn't find command `{parts[0]}`.";
+    }
+    public static string FindAndExecuteCommand(string input)
+    {
+        List<string> parts = input.SplitSpaceQ();
+
+        string command = parts[0];
+        string restOfArgs = (input.Length <= command.Length) ? "" : input.Substring(command.Length);
+        string output = $"Command '{command}' not found!";
+        Runtime.Execute(binariesFolder + parts[0], string.Join(" ", parts.Skip(1).ToArray()));
+        return "";
     }
     public void Run()
     {

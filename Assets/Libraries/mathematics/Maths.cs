@@ -14,7 +14,7 @@ namespace Libraries.system
     {
         public class Maths
         {
-            //todo 0 check why?
+            //todo 5 check why?
             public static decimal Abs(decimal number)
             {
                 return System.Math.Abs(number);

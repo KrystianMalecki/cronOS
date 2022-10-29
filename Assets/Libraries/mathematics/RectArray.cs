@@ -269,7 +269,8 @@ namespace Libraries.system
                 return newArray;
             }
 
-            //todo 1 think if you want to rename draw
+            //todo 2 think if you want to rename draw OR maybe move this to extension class?
+            
             public void DrawLine(int startX, int startY, int endX, int endY, T value)
             {
                 float x;

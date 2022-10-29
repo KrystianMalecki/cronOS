@@ -9,7 +9,7 @@ namespace Libraries.system
 {
     namespace input
     {
-        //todo 2 add start listening to keys and stop listening to keys functions 
+        //todo 4 add start listening to keys and stop listening to keys functions 
         public class KeyHandler : BaseLibrary
         {
             [ThreadStatic]
@@ -102,7 +102,7 @@ namespace Libraries.system
                 {
                     Runtime.Wait();
 
-                    AddKeys(Hardware.currentThreadInstance.hardwareInternal.inputManager.GetnputBuffer());
+                    AddKeys(Hardware.currentThreadInstance.hardwareInternal.inputManager.DumpInputBuffer());
 
 
                     if (timeoutInMS > 0 && currentTime + timeoutInMS <= Hardware.currentThreadInstance.hardwareInternal.CurrentMilliseconds)

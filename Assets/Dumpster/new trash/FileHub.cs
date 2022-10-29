@@ -11,7 +11,7 @@ public class FileHub : MonoBehaviour
 {
     public DriveSO drive;
     public List<FileLink> links = new List<FileLink>();
-    [HorizontalLine] [SerializeField] private string path;
+    [HorizontalLine][SerializeField] private string path;
     private const string folderPath = "/FileHub/";
 
     [Button]
@@ -19,13 +19,20 @@ public class FileHub : MonoBehaviour
     {
         drive.GenerateCacheData();
         File file = drive.drive.GetFileByPath(path);
-        System.IO.File.WriteAllText(Application.dataPath + folderPath + file.name + ".txt",
-            Runtime.BytesToEncodedString(file.data));
+        string rawName = Application.dataPath + folderPath + file.name;
+        string data = "#if false\n" + Runtime.BytesToEncodedString(file.data)
+            .Replace("#include", "//#include")
+            .Replace("#top", "//#top")
+            //.Replace("#include", "//#include")
+            + "\n#endif";
+
+        System.IO.File.WriteAllText(rawName + ".txt", data);
+        System.IO.File.Move(rawName + ".txt", rawName + ".cs");
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         TextAsset textAsset =
-            AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/" + folderPath + file.name + ".txt");
+            AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/" + folderPath + file.name + ".cs");
         FileLink link = new FileLink(file.GetFullPath(), textAsset, drive);
         links.Add(link);
     }
@@ -33,6 +40,10 @@ public class FileHub : MonoBehaviour
     [Button]
     public void UpdateAllData()
     {
+        foreach (FileLink link in links)
+        {
+            link.UpdateData();
+        }
     }
 
     [Button]
@@ -88,8 +99,13 @@ public class FileLink
         {
             return;
         }
-
-        f.data = Runtime.StringToEncodedBytes(asset.text);
+        string loadedText = asset.text
+            .Replace("#if true", "")
+            .Replace("#if false", "")
+            .Replace("#endif", "")
+            .Replace("//#", "#")
+            .Trim();
+        f.data = Runtime.StringToEncodedBytes(loadedText);
         Debug.Log("Updated data");
     }
 }

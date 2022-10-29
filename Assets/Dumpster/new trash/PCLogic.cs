@@ -1,16 +1,18 @@
 using System;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+
 using UnityEngine;
+using System.Threading;
+using Libraries.system.file_system;
+using Libraries.system;
 
 public class PCLogic : MonoBehaviour
 {
     public HardwareInternal hardwareInternal = new HardwareInternal();
 
-    public void SetDefault(PCLogic logic)
+
+    private void SetDefault(PCLogic logic)
     {
         if (PlayerController.selectedPC != null)
         {
@@ -26,25 +28,29 @@ public class PCLogic : MonoBehaviour
     {
         SetDefault(this);
     }
-
-    public void Awake()
+    private void Awake()
     {
-        hardwareInternal.Init();
         if (hardwareInternal.focused)
         {
             SetDefault(this);
         }
+        Init();
+    }
+    public void Init()
+    {
+        hardwareInternal.Init();    
 
-
+    }
+    //todo 3 remove
+    private void Start()
+    {
+        hardwareInternal.SystemInit();
     }
 
     private void OnMouseEnter()
     {
         SetThisDefault();
     }
-
-
-
     private void OnMouseExit()
     {
         //  SetDefault(null);

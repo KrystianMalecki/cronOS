@@ -176,6 +176,22 @@ namespace Libraries.system
                 int size = GetDataArraySize() + name.Length * 8 + 8;
                 return $"{(prefixed ? size.ChangeToPrefixedValue() : size.ToString())}B";
             }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is File file)
+                {
+                    if( file.fileID == fileID)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return file.GetFullPath() == this.GetFullPath() && file.drive == this.drive;
+                    }
+                }
+                return base.Equals(obj);
+            }
         }
     }
 }

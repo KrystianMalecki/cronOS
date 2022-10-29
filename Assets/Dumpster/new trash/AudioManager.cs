@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Libraries.system.mathematics;
 using Libraries.system.output.music;
+using UnityEditor;
+using UnityEditor.Build.Player;
 using UnityEngine;
 
 
@@ -16,6 +18,7 @@ public class AudioManager : MonoBehaviour
 
     internal void PlayNote(Sound sound)
     {
+
         if (sound.note == Note.Rest)
         {
             return;

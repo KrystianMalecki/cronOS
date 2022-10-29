@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Cinemachine;
+using Libraries.system;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class DebugCodeRunner : MonoBehaviour
     public string code;
 
     bool noCodeFile => (codeFile == null || string.IsNullOrEmpty(codeFile?.text));
+
 
     public void Start()
     {
@@ -42,9 +44,8 @@ public class DebugCodeRunner : MonoBehaviour
     [Button("Run code", EButtonEnableMode.Playmode)]
     void DebugCode()
     {
-        PlayerController.selectedPC.hardwareInternal.RunCodeInNewThread(new CodeObject(
-            noCodeFile ? code : codeFile.text.Replace("false//changeToTrue", "true"),
-            HardwareInternal.allLibraryDatas));
+        PlayerController.selectedPC.hardwareInternal.Compile(Drive.MakeFile("debugFile",
+         Runtime.StringToEncodedBytes(noCodeFile ? code : codeFile.text.Replace("false//changeToTrue", "true"))));
     }
 
     void KillAll()

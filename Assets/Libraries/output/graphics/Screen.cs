@@ -21,22 +21,19 @@ namespace Libraries.system.output.graphics
 
         public static void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            Hardware hardware = Hardware.currentThreadInstance;
-            Hardware.currentThreadInstance.stackExecutor.AddDelegateToStack(() =>
+          //  Hardware hardware = Hardware.currentThreadInstance;
+            Hardware.currentThreadInstance.stackExecutor.AddDelegateToStack((hardware) =>
             {
-                UnityEngine.Debug.Log($"{hardware == null}");
-
-                UnityEngine.Debug.Log($"{hardware.hardwareInternal == null}");
                 hardware.screenManager.InitScreenBuffer(screenBuffer);
             });
         }
 
         public static void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            Hardware hardware = Hardware.currentThreadInstance;
-
+            //Hardware hardware = Hardware.currentThreadInstance;
+        
             Hardware.currentThreadInstance.stackExecutor.AddDelegateToStack(
-                () => { hardware.screenManager.SetScreenBuffer(screenBuffer); }, sync
+                (hardware) => { hardware.screenManager.SetScreenBuffer(screenBuffer); }, sync
             );
         }
     }

@@ -1,5 +1,6 @@
 ﻿//#define DLL
 
+using Libraries.system.file_system;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,10 +27,18 @@ namespace Libraries.system
                 Wait();
             }
         }
-        public static void RunCodeSync(string code)
+
+        //todo-future move to better library
+        public static File Compile(File file)
         {
-            Hardware.currentThreadInstance.RunCode(code);
+            return Hardware.currentThreadInstance.hardwareInternal.Compile(file);
         }
+        public static void Execute(File compiledFile, string args = null)
+        {
+            Hardware.currentThreadInstance.hardwareInternal.Execute(compiledFile);
+        }
+
+        #region Just statics that can be used in any thread
         public static readonly char[] asciiMap =
         {
             ' ', '☺', '☻', '♥', '♦', '♣', '♠', '•', '◘', '○', '◙', '♂', '♀', '♪', '♫', '☼', '►', '◄', '↕', '‼', '¶',
@@ -98,6 +107,7 @@ namespace Libraries.system
 
             return HardwareInternal.mainEncoding.GetString(variable);
         }
+        #endregion
         #endregion
     }
 }

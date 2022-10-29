@@ -17,7 +17,6 @@ public class TextureToByteData : MonoBehaviour
     public Texture2D character;
     public Color[] colors;
 
-    public string l;
 
     /*  [Button]
       public void s()

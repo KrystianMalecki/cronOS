@@ -115,16 +115,16 @@ public class StackExecutor : MonoBehaviour
         return default(T);
     }
 
-    internal void AddDelegateToStack(Action action, bool sync = true)
+    internal void AddDelegateToStack(Action<Hardware> action, bool sync = true)
     {
-        AddDelegateToStack((ref bool done, ref object returnValue) => { action.Invoke(); }, sync);
+        AddDelegateToStack((ref bool done, ref object returnValue) => { action.Invoke(hardwareInternal.hardware); }, sync);
     }
 
-    [Button]
-    internal void CheckThreads()
-    {
-        hardwareInternal.CheckThreads();
-    }
+    /* [Button]
+     internal void CheckThreads()
+     {
+         hardwareInternal.CheckThreads();
+     }*/
 
     [Button]
     internal void KillAll()
