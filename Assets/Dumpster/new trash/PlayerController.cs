@@ -1,26 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
+using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
     public static PCLogic selectedPC;
     public PointOfInterest currentPOI;
-    public bool rotateHeadWSAD = true;
     public Rotation rotation = Rotation.Forward;
     [SerializeField]
     private bool showGizmo = false;
+    [Header("Toggles")]
+    public bool rotateHeadWSAD = true;
+    [SerializeField]
+    [ReadOnly]
+    private bool _enableMouseMovement = true;
+    public bool enableMouseMovement
+    {
+        set
+        {
+            ToggleMouseMovement(value);
+        }
+        get
+        {
+            return _enableMouseMovement;
+        }
+    }
+
+    [Button]
+    private void EnableMouseMovement()
+    {
+        enableMouseMovement = true;
+    }
+    [Button]
+    private void DisableMouseMovement()
+    {
+        enableMouseMovement = false;
+    }
+
+
+    public void ToggleMouseMovement(bool? state = null)
+    {
+        if (state == null)
+        {
+            ToggleMouseMovement(!_enableMouseMovement);
+        }
+        else
+        {
+            _enableMouseMovement = state.Value;
+            MouseMovementController.instance.ToggleMouseMovement(state.Value);
+
+        }
+    }
+
     private void Start()
     {
         currentPOI?.Interact(this);
     }
     private void Update()
     {
-        HandleMovement();
+        if (selectedPC == null)
+        {
+            HandleMovement();
+        }
     }
-    /*todo 0 implement rotation:
-    add movement with keys? 
-    add moevement with mouse
+    /*todo 0 implement:
     add offset?
     todo 7 add focus poi
         todo 7 add poi generator
@@ -30,80 +75,23 @@ public class PlayerController : MonoBehaviour
     */
     public void HandleMovement()
     {
-        /* if (Input.GetKeyDown(KeyCode.W))
-         {
-             currentPOI.forward?.Interact(this);
-         }
-         else if (Input.GetKeyDown(KeyCode.A))
-         {
-             if (rotateHeadWSAD)
-             {
-                 Rotate(true);
-             }
-             else
-             {
-                 currentPOI.left?.Interact(this);
-             }
-         }
-         else if (Input.GetKeyDown(KeyCode.S))
-         {
-             currentPOI.backward?.Interact(this);
-         }
-         else if (Input.GetKeyDown(KeyCode.D))
-         {
-             if (rotateHeadWSAD)
-             {
-                 Rotate(false);
-             }
-             else
-             {
-                 currentPOI.right?.Interact(this);
-             }
-         }*/
-        if (Input.GetKeyDown(KeyCode.W))
+
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            currentPOI.GetPoi(rotation)?.Interact(this);
+            GoForwards();
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (rotateHeadWSAD)
-            {
-                Rotate(Rotation.Left);
-            }
-            else
-            {
-                var poi = currentPOI.GetPoi(rotation.RotateLeft());
-                if (poi != null)
-                {
-                    rotation = rotation.RotateLeft();
-                    poi.Interact(this);
-                }
-            }
+            GoLeft();
+
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            //THE QUESTION: do you rotate twice right or left to go backwards?
-            var poi = currentPOI.GetPoi(rotation.RotateRight().RotateRight());
-            if (poi != null)
-            {
-                poi.Interact(this);
-            }
+            GoBackwards();
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (rotateHeadWSAD)
-            {
-                Rotate(Rotation.Right);
-            }
-            else
-            {
-                var poi = currentPOI.GetPoi(rotation.RotateRight());
-                if (poi != null)
-                {
-                    rotation = rotation.RotateRight();
-                    poi.Interact(this);
-                }
-            }
+            GoRight();
         }
 
 
@@ -112,6 +100,7 @@ public class PlayerController : MonoBehaviour
     {
         currentPOI = pom;
         transform.position = currentPOI.transform.position;
+        MouseMovementController.instance.ToggleAllDirectionButtons(this);
     }
     public void Rotate(Rotation rot)
     {
@@ -130,8 +119,59 @@ public class PlayerController : MonoBehaviour
                 rotation = rotation.RotateRight().RotateRight();
                 break;
         }
+        MouseMovementController.instance.ToggleAllDirectionButtons(this);
+
 
     }
+
+    public void GoForwards()
+    {
+        currentPOI.GetPoi(rotation)?.Interact(this);
+    }
+    public void GoLeft()
+    {
+        if (rotateHeadWSAD)
+        {
+            Rotate(Rotation.Left);
+        }
+        else
+        {
+            var poi = currentPOI.GetPoi(rotation.RotateLeft());
+            if (poi != null)
+            {
+                rotation = rotation.RotateLeft();
+                poi.Interact(this);
+            }
+        }
+    }
+    public void GoRight()
+    {
+        if (rotateHeadWSAD)
+        {
+            Rotate(Rotation.Right);
+        }
+        else
+        {
+            var poi = currentPOI.GetPoi(rotation.RotateRight());
+            if (poi != null)
+            {
+                rotation = rotation.RotateRight();
+                poi.Interact(this);
+            }
+        }
+    }
+    public void GoBackwards()
+    {
+        Debug.Log("Go Backwards");
+        //THE QUESTION: do you rotate twice right or left to go backwards?
+        var poi = currentPOI.GetPoi(rotation.RotateRight().RotateRight());
+        if (poi != null)
+        {
+            poi.Interact(this);
+        }
+    }
+
+
     public void OnDrawGizmos()
     {
         if (showGizmo)
@@ -139,10 +179,22 @@ public class PlayerController : MonoBehaviour
             OnDrawGizmosSelected();
         }
     }
-
     public void OnDrawGizmosSelected()
     {
         currentPOI.OnDrawGizmosSelected();
+        Handles.color = Color.white;
+
+
+
+
+        Handles.ArrowHandleCap(
+        0,
+        transform.position,
+        Quaternion.LookRotation(transform.forward, Vector3.up),
+        2,
+        EventType.Repaint
+        );
+
     }
 }
 public enum Rotation

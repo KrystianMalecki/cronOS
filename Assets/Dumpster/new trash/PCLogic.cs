@@ -38,11 +38,16 @@ public class PCLogic : MonoBehaviour
     }
     public void Init()
     {
-        hardwareInternal.Init();    
+        hardwareInternal.Init();
 
     }
     //todo 3 remove
     private void Start()
+    {
+        // StartHardware();
+    }
+    [Button]
+    public void StartHardware()
     {
         hardwareInternal.SystemInit();
     }

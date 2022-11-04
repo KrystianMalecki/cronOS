@@ -6,7 +6,19 @@ using UnityEngine;
 
 public class PointOfInterest : MonoBehaviour
 {
-    public bool special = false;
+    [NaughtyAttributes.ShowNonSerializedField]
+    private static bool special = false;
+    [Button]
+    private void ToggleOn()
+    {
+        special = true;
+    }
+    [Button]
+
+    private void ToggleOff()
+    {
+        special = false;
+    }
     [Header("W")]
     public PointOfInterest forward;
     [Header("A")]

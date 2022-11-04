@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Libraries.system;
 using Libraries.system.input;
 using Libraries.system.output.music;
+using Libraries.system.output.graphics.system_screen_buffer;
 
 [Serializable]
 public class Hardware /*API for in game usage*/
@@ -27,19 +28,16 @@ public class Hardware /*API for in game usage*/
     internal StackExecutor stackExecutor => hardwareInternal.stackExecutor;
     internal AudioManager audioManager => hardwareInternal.audioManager;
 
+    public static File currentFile = null;
+    public static SystemScreenBuffer screenBuffer = new SystemScreenBuffer();
     internal Hardware(HardwareInternal hardwareInternal)
     {
         this.hardwareInternal = hardwareInternal;
         hardwareInternal.hardware = this;
     }
-    /**
-     <summary>
-      this does nothing right now.
-      </summary>
-    **/
     internal void Init()
     {
-
+        currentFile = mainDrive.drive.GetFileByPath("/sys");
         //  hardwareInternal.hardware = this;
         // hardwareInternal.stackExecutor.hardware = this;
         // hardwareInternal.inputManager.hardware = this;

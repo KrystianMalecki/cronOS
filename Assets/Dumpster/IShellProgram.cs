@@ -19,7 +19,7 @@ namespace Libraries.system
             public string Run(params string[] args);
             public string Run(string arg);
         }
-
+        //todo -1 rework this
         public class ExtendedShellProgram : IShellProgram
         {
             protected virtual List<AcceptedArgument> argumentTypes => null;

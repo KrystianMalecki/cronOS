@@ -220,7 +220,7 @@ public class HardwareInternal
 
 
     #region Script compilation
-    private const string compilationExtension = ".cse";
+    public const string compilationExtension = ".cse";
 
     [SerializeField] internal FileCompilationDictionary compiledScripts = new FileCompilationDictionary();
 
@@ -230,6 +230,10 @@ public class HardwareInternal
 
     public Compilation GetCompilation(File file)
     {
+        if (file == null)
+        {
+            return null;
+        }
         if (compiledScripts.TryGetValue(file, out Compilation compilation))
         {
             return compilation;
@@ -248,6 +252,7 @@ public class HardwareInternal
     }
     public void ExecuteAsync(File compiledFile)
     {
+        //todo 1 test
         Compilation compilation = GetCompilation(compiledFile);
         compilation?.RunCodeAsync(hardware);
     }
@@ -275,7 +280,6 @@ public class HardwareInternal
         //todo 6 think if catching compilation errors so hard is good idea AND/OR opimized, you should be catching runtime errors in compilation ALSO
         try
         {
-
             var script = CSharpScript.Create(codeObject.code
                  , HardwareInternal.scriptOptionsBuffer
                         .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
@@ -286,6 +290,7 @@ public class HardwareInternal
 #endif
                      , hardware.GetType()
              );
+            
             return script;
 
         }

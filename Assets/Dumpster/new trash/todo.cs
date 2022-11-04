@@ -33,7 +33,6 @@ przekazywanie danych dalerj probelmem mo?e by? ale np pp domain alebo te globval
  */
 
 
-//todo -1 remove -wd hacks from shell commands
 
 
 

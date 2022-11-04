@@ -26,8 +26,7 @@ public class DebugCodeRunner : MonoBehaviour
 
     public void Start()
     {
-        Debug.Log(typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly + " == " +
-            typeof(UnityEngine.Vector2).GetTypeInfo().Assembly);
+       
         if (codeFile == null)
         {
 #if UNITY_EDITOR

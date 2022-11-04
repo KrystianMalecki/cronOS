@@ -5,8 +5,7 @@
 Debugger.Debug("shell start");
 public class Shell
 {
-    public static File currentFile = FileSystem.GetFileByPath("/sys");
-    public static SystemScreenBuffer screenBuffer = new SystemScreenBuffer();
+
     KeySequence bufferKeySequence = null;
     string prefix = "";
     string inputText = "";
@@ -113,6 +112,31 @@ public class Shell
             UpdatePrefix();
             return "";
         }
+        else if (parts[0] == "compile")
+        {
+            if (parts.Length > 1)
+            {
+                File file = FileSystem.GetFileByPath(parts[1], currentFile);
+                if (file != null)
+                {
+                    File compileFile = Runtime.Compile(file);
+                    if (compileFile != null)
+                    {
+                        compileFile = file.Parent.SetChild(compileFile);
+                        return $"Compiled '{file.GetFullPath()}' to '{compileFile.GetFullPath()}'";
+                    }
+                    else
+                    {
+                        return $"Failed to compile '{file.GetFullPath()}'";
+                    }
+                }
+                else
+                {
+                    return $"File '{parts[1]}' not found";
+                }
+            }
+
+        }
         else
         {
             return FindAndExecuteCommand(input);
@@ -126,7 +150,13 @@ public class Shell
         string command = parts[0];
         string restOfArgs = (input.Length <= command.Length) ? "" : input.Substring(command.Length);
         string output = $"Command '{command}' not found!";
-        Runtime.Execute(binariesFolder + parts[0], string.Join(" ", parts.Skip(1).ToArray()));
+        File binaryFile = FileSystem.GetFileByPath(binariesFolder + parts[0] + HardwareInternal.compilationExtension);
+        if (binaryFile == null)
+        {
+            binaryFile = FileSystem.GetFileByPath(binariesFolder + parts[0]);
+
+        }
+        Runtime.Execute(binaryFile, string.Join(" ", parts.Skip(1).ToArray()));
         return "";
     }
     public void Run()
