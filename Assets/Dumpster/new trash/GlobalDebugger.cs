@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using NaughtyAttributes;
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -22,15 +22,27 @@ public class GlobalDebugger : MonoBehaviour
         }
         assetPath = AssetDatabase.GetAssetPath(asset);
     }
-    internal void WriteToAsset(string text)
+    internal void WriteToDebugFile(string text)
     {
 #if UNITY_EDITOR
         File.WriteAllText(assetPath, text);
         EditorUtility.SetDirty(asset);
 #endif
     }
-    internal void WrapInIf(string text)
+    internal void WriteToDebugFileWrapedInIf(string text)
     {
-        WriteToAsset($"#if false\n{text}\n#endif");
+        WriteToDebugFile($"#if false\n{text}\n#endif");
+    }
+    [Button]
+    public static void DisplayLoadedAssembliesNumber()
+    {
+        Debug.Log($"Loaded assemblies:{AppDomain.CurrentDomain.GetAssemblies().Length}");
+
+    }
+    [Button]
+    public static void DisplayLoadedAssemblies()
+    {
+        Debug.Log($"Loaded assemblies:{AppDomain.CurrentDomain.GetAssemblies().ToConvertedString(",\n", x => x.FullName)}");
+
     }
 }

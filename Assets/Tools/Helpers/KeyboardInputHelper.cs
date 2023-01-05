@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public static class KeyboardInputHelper
 {
-    static readonly KeyCode[] _keyCodes =
+    public static readonly KeyCode[] _keyCodes =
         System.Enum.GetValues(typeof(KeyCode))
             .Cast<KeyCode>()
             .Where(k => k <= KeyCode.Mouse6)

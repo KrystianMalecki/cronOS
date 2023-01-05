@@ -13,7 +13,7 @@ namespace Libraries.system.output.music
         public float length;
 
         public Sound(string note, int octave = 4, float length = 1, Instrument instrument = Instrument.Sine) : this(
-            AudioHandler.NoteToEnum(AudioHandler.notesToNumbers[note]), octave, length,instrument)
+            AudioHandler.NoteToEnum(AudioHandler.notesToNumbers[note]), octave, length, instrument)
         {
         }
 
@@ -28,7 +28,7 @@ namespace Libraries.system.output.music
             SetFrequency();
         }
 
-        public Sound(int note, int octave = 4, float length = 1, Instrument instrument = Instrument.Sine) : this(AudioHandler.NoteToEnum(note), octave, length,instrument)
+        public Sound(int note, int octave = 4, float length = 1, Instrument instrument = Instrument.Sine) : this(AudioHandler.NoteToEnum(note), octave, length, instrument)
         {
         }
 

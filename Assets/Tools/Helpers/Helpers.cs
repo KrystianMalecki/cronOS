@@ -1,9 +1,6 @@
-using Libraries.system.output.graphics.system_colorspace;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,9 +9,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public class Helpers
-{
-}
+
 
 public static class StaticHelper
 {
@@ -78,13 +73,9 @@ public static class StaticHelper
             return string.Join(splitter, ie);
         }
 
-        return string.Join(splitter, Array.ConvertAll(ie, x => x.ToString()));
+        return string.Join(splitter, Array.ConvertAll(ie, x => converter(x)));
     }
 
-    public static LibraryData ToLibraryData(this Type type)
-    {
-        return new LibraryData(type.GetTypeInfo().Assembly.GetName().FullName.ToString(), type.GetTypeInfo().Namespace);
-    }
 
     public static char ToChar(this byte onebyte)
     {
@@ -286,7 +277,7 @@ public static class StaticHelper
        };
 }
 
-
+/*
 [Serializable]
 //  [MainClass]
 public struct SystemTextureFile
@@ -300,39 +291,7 @@ public struct SystemTextureFile
         get { return width * height; }
     }
 
-    /*
-      public byte[] ToData()
-    {
-        //  return this.UnsafeSerialize();
-        //                      field1              field2      arrayfield3 + paste argument1
-        byte[] bytes = new byte[sizeof(short) + sizeof(short) + (sizeof(byte) * arrayLength)];
-        int counter = 0;
-        //loop and add      field    stationary counter     increment counter
-        bytes.SetByteValue(width.ToBytes(), counter); counter += sizeof(short);
-        bytes.SetByteValue(height.ToBytes(), counter); counter += sizeof(short);
-        //                                      another argument or just space to paste OR ToBytes method OR getByte per item
-        bytes.SetByteValue(Array.ConvertAll(colors, x => x.value), counter);
-        return bytes;
-    }
-    public static SystemTextureFile FromData(byte[] data)
-    {
-        // return data.UnsafeDeserialize<SystemTextureFile>();
-        //      class field
-        SystemTextureFile stf = new SystemTextureFile();
-        int counter = 0;
-        //needs to be mapped
-        stf.width = BitConverter.ToInt16(data, counter); counter += sizeof(short);
-        stf.height = BitConverter.ToInt16(data, counter); counter += sizeof(short);
-        //                      arrayfield3     argument1 with prefix
-        byte[] bytes = new byte[sizeof(byte) * stf.arrayLength];
-        //stationary
-        Array.Copy(data, counter, bytes, 0, bytes.Length);
-        //                                      another argument or just space to paste OR ToBytes method OR getByte per item
-        stf.colors = Array.ConvertAll(bytes, x => new SystemColor(x));
 
-        return stf;
-    }
-     */
     public byte[] ToData()
     {
         byte[] bytes = new byte[sizeof(short) + sizeof(short) + (sizeof(byte) * arrayLength)];
@@ -362,4 +321,4 @@ public struct SystemTextureFile
 
         return stf;
     }
-}
+}*/

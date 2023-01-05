@@ -1,13 +1,16 @@
 #if false
-//todo -1 compile this and as binary
-public class ls : ExtendedShellProgram
-{
-    public override string GetName()
-    {
-        return "ls";
-    }
+//#include "/sys/libs/commands.lib"
 
-    private static readonly List<AcceptedArgument> _argumentTypes = new List<AcceptedArgument>
+
+
+
+
+
+public class ls
+{
+    private const string shortFormat = "{2} ";
+    private const string longFormat = "{1}{2}:{3}\n";
+    private static readonly List<AcceptedArgument> argumentTypes = new List<AcceptedArgument>
     {
         new AcceptedArgument("working directory", true, "-wd"),
         new AcceptedArgument("path", true, "-p"),
@@ -17,44 +20,83 @@ public class ls : ExtendedShellProgram
         new AcceptedArgument("full paths instead of names", false, "-fp"),
     };
 
-    protected override List<AcceptedArgument> argumentTypes => _argumentTypes;
-    public static void Main(string[] args)
-    {
-        
-    }
-    protected override string InternalRun(Dictionary<AcceptedArgument, string> argPairs)
-    {
+    public static void Main(params string[] args)
+    { 
+    try
+        {
+        Dictionary<AcceptedArgument, string> argPairs = SplitArgumentsToDictionary(argumentTypes, args);
         string wdPath = argPairs.GetValueOrNull("-wd")?.Value ?? currentFile.GetFullPath();
-
+        Debugger.Debug("p1"+argPairs.ToFormattedString());
+                Debugger.Debug("p2"+argPairs.GetValueOrNull("-wd"));
+                                Debugger.Debug("p3"+argPairs.GetValueOrNull("-wd")?.Value);
 
         File workingDirectory = FileSystem.GetFileByPath(wdPath);
-        string path = argPairs.GetValueOrNull("-p")?.Value ?? "";
+        string path = argPairs.GetValueOrNull("-p")?.Value ?? "./";
 
 
         File f = FileSystem.GetFileByPath(path, workingDirectory);
-        Debugger.Debug($"{f} {path}");
-        return GetChildren(f, 0, "", argPairs.ContainsKey("-r"), argPairs.ContainsKey("-sz"),
-            argPairs.ContainsKey("-jn"), argPairs.ContainsKey("-fp"));
-    }
+        Debugger.Debug("p4"+workingDirectory);
+        Debugger.Debug($"0{f} {path}");
+        Debugger.Debug($"r {argPairs.ContainsAlias("-r")} sz {argPairs.ContainsAlias("-sz")} jn{argPairs.ContainsAlias("-jn")} fp {argPairs.ContainsAlias("-fp")}");
 
-    string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool onlyNames,
-        bool fullPaths)
+        string output = GetChildren(
+            f,
+            0,
+            "",
+           recursive: argPairs.ContainsAlias("-r"),
+           showSize: argPairs.ContainsAlias("-sz"),
+           justNames: argPairs.ContainsAlias("-jn"),
+           fullPaths: argPairs.ContainsAlias("-fp"));
+        Debugger.Debug("1" + output);
+        //  Debugger.Debug(Hardware);
+       
+            Debugger.Debug("2" + Hardware.Statics.Shell.balls);
+            Debugger.Debug("3" + Hardware.Statics.Shell.thisShell);
+            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(Hardware.Statics.Shell))
+            {
+                string name = descriptor.Name;
+                object value = descriptor.GetValue(Hardware.Statics.Shell);
+                Debugger.Debug($"{name}={value}");
+            }
+            Debugger.Debug("4" + Hardware.Statics);
+            Debugger.Debug("5" + Hardware.Statics.Shell.GetType());
+            Hardware.Statics.Shell.WriteToConsole(output);
+            Debugger.Debug("6" + output);
+        }
+        catch (Exception e)
+        {
+            Debugger.Debug(e);
+        }
+    }
+    static string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool justNames,
+         bool fullPaths)
     {
         string str = string.Format(
-            onlyNames ? "{2}" : "{0," + indent + "}{1}{2}:{3}\n"
-            , "", prefix, fullPaths ? file.GetFullPath() : file.name, file.GetByteSize());
+            justNames ?
+            shortFormat :
+            "{0," + indent + "}" + longFormat,
+                "",
+                prefix,
+                fullPaths ? file.GetFullPath() : file.name,
+                file.GetByteSize()
+            );
         if (recursive)
         {
             if (file.children != null || true)
             {
                 for (int i = 0; i < file.children?.Count; i++)
                 {
-                    bool last = i + 1 == file.children.Count;
+                    char prefixCharacter = (((i + 1) == file.children?.Count) ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195));
                     File child = file.children[i];
                     str +=
-                        GetChildren(child, indent + (onlyNames ? 0 : 1),
-                            $"{(last ? Runtime.ByteToChar(192) : Runtime.ByteToChar(195))}", recursive, showSize,
-                            onlyNames, fullPaths);
+                        GetChildren(
+                            child,
+                            indent + (justNames ? 0 : 1),
+                            prefixCharacter.ToString(),
+                            recursive,
+                            showSize,
+                            justNames,
+                            fullPaths);
                 }
             }
         }
@@ -62,7 +104,5 @@ public class ls : ExtendedShellProgram
         return str;
     }
 }
-public class ls2 
-{
-}
+
 #endif

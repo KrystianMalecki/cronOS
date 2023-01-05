@@ -1,19 +1,20 @@
-using UnityEngine;
-using Libraries.system.file_system;
-using System.Text;
-using System;
-using Microsoft.CodeAnalysis.Scripting;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using helper;
-using System.Linq;
-using System.Text.RegularExpressions;
+using Helpers;
 using Libraries.system;
-using NaughtyAttributes;
-using UnityEditor;
+using Libraries.system.file_system;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Scripting;
+using NaughtyAttributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
+using UnityEngine;
 
 [Serializable]
 public class FileCompilationDictionary : SerializableDictionary<File, Compilation> { }
@@ -31,20 +32,31 @@ public class HardwareInternal
     [SerializeField] internal AudioManager audioManager;
     public long CurrentMilliseconds => DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
+
     //todo maybe some events for focusting and unfocusting
     public bool focused = false;
 
 
     internal void Init()
     {
+
         mainDrive.GenerateCacheData();
         inputManager.hardwareInternal = this;
         stackExecutor.hardwareInternal = this;
-
+        //  scriptAppDomain = AppDomain.CreateDomain("ScriptDomain");
 
         hardware = new Hardware(this);
         hardware.Init();
 
+    }
+    public void LoadAsseblies()
+    {
+
+        HashSet<String> assemblies = allLibraries.ConvertAll(x => x.GetTypeInfo().Assembly.GetName().FullName.ToString()).ToHashSet();
+        foreach (var assembly in assemblies)
+        {
+            scriptAppDomain.Load(assembly);
+        }
     }
     #region Processor
 
@@ -83,7 +95,8 @@ public class HardwareInternal
     {
 
         mainPCThread = new Thread(StartUp);
-        mainPCThread.IsBackground = true;
+        // runningThreads.Add(mainPCThread);
+        mainPCThread.IsBackground = false;
 
         mainPCThread.Start();
 
@@ -96,7 +109,7 @@ public class HardwareInternal
      */
     private async void StartUp()
     {
-        Hardware.currentThreadInstance = hardware;
+        hardware.SetCurrentHardwareInstance();
 
         File boot = mainDrive.drive.GetFileByPath("/sys/boot.ini");
         var data = StaticHelper.ParseTextAsObjectKeyValue(Runtime.BytesToEncodedString(boot.data));
@@ -126,7 +139,7 @@ public class HardwareInternal
 
     private const bool ONLY_UPPERCASE_REDEFINE = false;
 
-    public readonly static ScriptOptions scriptOptionsBuffer = ScriptOptions.Default/*.WithReferences(
+    public readonly ScriptOptions scriptOptionsBuffer = ScriptOptions.Default/*.WithReferences(
             typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly,
             typeof(UnityEngine.Vector2).GetTypeInfo().Assembly*/
         /*,
@@ -156,13 +169,13 @@ public class HardwareInternal
         typeof(Libraries.system.output.graphics.screen_buffer32.ScreenBuffer32),
         typeof(Libraries.system.output.graphics.system_screen_buffer.SystemScreenBuffer),
         typeof(Libraries.system.file_system.File),
-        typeof(Libraries.system.shell.IShellProgram),
         typeof(Libraries.system.mathematics.Vector2),
         typeof(Libraries.system.input.KeyHandler),
         typeof(Libraries.system.input.MouseHandler),
         typeof(Libraries.system.debug.Debugger),
-
+        typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo),
         typeof(System.String),
+        typeof(System.ComponentModel.AddingNewEventArgs),
         
 
         //    typeof(attic.StaticValueHaver),
@@ -170,15 +183,15 @@ public class HardwareInternal
         typeof(Libraries.system.output.graphics.mask_texture.MaskTexture),
         //typeof(System.Math),
         typeof(System.Text.RegularExpressions.Regex),
-        typeof(helper.GlobalHelper),
+        typeof(Helpers.GlobalHelper),
         typeof(System.Collections.Generic.Dictionary<int, int>),
         typeof(Libraries.system.output.music.Sound),
-
-        typeof(System.Linq.Enumerable) /*,
+        typeof(System.Linq.Enumerable),
+                /*,
         typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo)*/
     };
 
-    public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => x.ToLibraryData());
+    public static readonly List<LibraryData> allLibraryDatas = allLibraries.ConvertAll(x => new LibraryData(x));
 
     #endregion
 
@@ -186,7 +199,9 @@ public class HardwareInternal
 
     #region Script running
 
+    public AppDomain scriptAppDomain = null;
 
+    //  private ThreadSafeList<Thread> runningThreads = new ThreadSafeList<Thread>();
 
 
 
@@ -196,20 +211,22 @@ public class HardwareInternal
     internal void KillAll()
     {
 
+        Debug.Log("killing all!");
+        mainPCThread?.Interrupt();
         mainPCThread?.Abort();
-        mainPCThread = null;
-
-
-
+        compiledScripts?.Clear();
+        compiledScripts = null;
+        // AppDomain.Unload(scriptAppDomain);
         //todo 2 null all other important data
 
 
-        compiledScripts?.Clear();
-        compiledScripts = null;
+        /*  compiledScripts?.Clear();
+          compiledScripts = null;*/
         //  mainPCThread.Abort();
 
         //  scriptOptionsBuffer = null;
-
+        GC.Collect(); // collects all unused memory
+        GC.WaitForPendingFinalizers(); // wait until GC has finished its work
         GC.Collect();
     }
 
@@ -244,17 +261,17 @@ public class HardwareInternal
             return null;
         }
     }
-    public void Execute(File compiledFile)
+    public void Execute(File compiledFile, string[] args = default)
     {
         Compilation compilation = GetCompilation(compiledFile);
-        compilation?.RunCode(hardware);
+        compilation?.RunCode(hardware, args);
 
     }
-    public void ExecuteAsync(File compiledFile)
+    public void ExecuteAsync(File compiledFile, string[] args = default)
     {
         //todo 1 test
         Compilation compilation = GetCompilation(compiledFile);
-        compilation?.RunCodeAsync(hardware);
+        compilation?.RunCodeAsync(hardware, args);
     }
 
     internal File Compile(File file)
@@ -268,9 +285,51 @@ public class HardwareInternal
             return null;
             //todo 9 throw error
         }
+        //todo 2 check if this is required
+
+        script.Compile();
+        var comp = script.GetCompilation();
+        ClassDeclarationSyntax mainClass = null;
+        string mainClassName = null;
+        bool mainFunctionHasArgsRun = false;
+
+        var classes = comp.SyntaxTrees.SelectMany(t => t.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>());
+        foreach (var clazz in classes)
+        {
+            if (mainClass != null)
+            {
+                break;
+            }
+            foreach (var members in clazz.Members)
+            {
+                if (members is MethodDeclarationSyntax method)
+                {
+                    if (method.Identifier.Text == "Main" && method.Modifiers.Any(x => x.Text == "static"))
+                    {
+                        if (method.ParameterList.Parameters.Count == 0)
+                        {
+                            mainClass = clazz;
+                            mainClassName = clazz.Identifier.Text + ".Main";
+                            mainFunctionHasArgsRun = false;
+                            break;
+                        }
+                        else if (method.ParameterList.Parameters.Count == 1 &&
+                          method.ParameterList.Parameters[0].Type.ToString() == "string[]")
+                        {
+                            mainClass = clazz;
+                            mainClassName = clazz.Identifier.Text + ".Main";
+                            mainFunctionHasArgsRun = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
 
         File compiledFile = Drive.MakeFile(file.name + compilationExtension, Runtime.StringToEncodedBytes("*compiled code here*"));
-        compiledScripts.Add(compiledFile, new Compilation(script));
+
+        compiledScripts.Add(compiledFile, new Compilation(script, mainClassName, mainFunctionHasArgsRun));
         return compiledFile;
     }
 
@@ -281,7 +340,7 @@ public class HardwareInternal
         try
         {
             var script = CSharpScript.Create(codeObject.code
-                 , HardwareInternal.scriptOptionsBuffer
+                 , scriptOptionsBuffer
                         .WithReferences(codeObject.libraries.ConvertAll(x => Assembly.Load(x.assembly)))
                         .WithImports(codeObject.libraries.ConvertAll(x => x.nameSpace))
 
@@ -290,7 +349,7 @@ public class HardwareInternal
 #endif
                      , hardware.GetType()
              );
-            
+
             return script;
 
         }
@@ -298,8 +357,9 @@ public class HardwareInternal
         {
             Debug.LogWarning("Aborted thread running code.\nData: " + tae.Message);
         }
-        catch (Exception e)
+        catch (Exception cSharpScriptCallException)
         {
+            Debug.Log("cSharpScriptCallException" + cSharpScriptCallException);
             try
             {
                 string line = "";
@@ -307,31 +367,32 @@ public class HardwareInternal
                 int linePos = 0;
                 int columnPos = 0;
 
-                object field = fieldInfoOfStackTrace.GetValue(e);
+                object field = fieldInfoOfStackTrace.GetValue(cSharpScriptCallException);
                 string reason = "";
                 try
                 {
-                    string s = e.StackTrace;
-                    (linePos, columnPos) = GetLineAndColumnFromExceptionMessage(e.Message);
-                    reason = e.Message;
-                    file = e.Source;
+                    string s = cSharpScriptCallException.StackTrace;
+                    (linePos, columnPos) = GetLineAndColumnFromExceptionMessage(cSharpScriptCallException.Message);
+                    reason = cSharpScriptCallException.Message;
+                    file = cSharpScriptCallException.Source;
 
                     Debug.Log("NormalException");
                 }
-                catch (Exception ex)
+                catch (Exception getLineAndColumnFromExceptionMessageCallException)
                 {
+                    Debug.Log("getLineAndColumnFromExceptionMessageCallException" + getLineAndColumnFromExceptionMessageCallException);
                     var p1 = fieldInfoOfStackTrace;
-                    var p2 = p1.GetValue(e);
+                    var p2 = p1.GetValue(cSharpScriptCallException);
                     var p3 = ((System.Diagnostics.StackTrace[])p2);
                     var p4 = p3[0];
                     var p5 = p4.GetFrame(0);
 
                     System.Diagnostics.StackFrame frame =
-                        ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(e))[0].GetFrame(0);
+                        ((System.Diagnostics.StackTrace[])fieldInfoOfStackTrace.GetValue(cSharpScriptCallException))[0].GetFrame(0);
                     linePos = frame.GetFileLineNumber();
                     columnPos = frame.GetFileColumnNumber();
                     file = frame.GetFileName();
-                    reason = e.Message;
+                    reason = cSharpScriptCallException.Message;
                     Debug.Log("CheatedException");
                 }
 
@@ -342,16 +403,18 @@ public class HardwareInternal
                     line = lines[linePos - 1] + "\n" + lines[linePos] + "\n" + lines[linePos + 1] + "\n" +
                            lines[linePos + 2];
                 }
-                catch (Exception ex)
+                catch (Exception arrayException)
                 {
+                    Debug.Log("arrayException" + arrayException);
+
                 }
 
                 Debug.Log(
-                    $"{e.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");
+                    $"{cSharpScriptCallException.GetType()}\n{file}\n line:{linePos} column:{columnPos}\nline: {line} \n reason:{reason}");
             }
-            catch (Exception ee)
+            catch (Exception globalException)
             {
-                Debug.LogException(ee);
+                Debug.LogException(globalException);
             }
         }
 
@@ -393,24 +456,24 @@ public class HardwareInternal
     internal void CodeParser(ref CodeObject codeObject)
     {
         /* codeObject.code = @"using static HardwareBox;
- public class HardwareBox
- {
+    public class HardwareBox
+    {
      public static Hardware hardware;
- }
- HardwareBox.hardware = ownPointer;
- " + codeObject.code;*/
+    }
+    HardwareBox.hardware = ownPointer;
+    " + codeObject.code;*/
         int topCounter = 0;
         /* codeObject.code = @"
- static Runtime runtime = null;runtime=ownPointer.runtime;
- static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
- static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
- static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
- static Screen screen = null;screen=ownPointer.screen;
- static AudioHandler audioHandler = null;audioHandler=ownPointer.audioHandler;
+    static Runtime runtime = null;runtime=ownPointer.runtime;
+    static FileSystem fileSystem = null;fileSystem=ownPointer.fileSystem;
+    static KeyHandler keyHandler = null;keyHandler=ownPointer.keyHandler;
+    static MouseHandler mouseHandler = null;mouseHandler=ownPointer.mouseHandler;
+    static Screen screen = null;screen=ownPointer.screen;
+    static AudioHandler audioHandler = null;audioHandler=ownPointer.audioHandler;
 
- " + codeObject.code;*/
+    " + codeObject.code;*/
         /* codeObject.code = @"Hardware.currentThreadInstance = thisHardware;
-  " + codeObject.code;*/
+    " + codeObject.code;*/
         // codeObject.code = "/*using UVector2 = UnityEngine.Vector2;*/\n#include \"/sys/kernel\"\n" + codeObject.code;
         // Debug.Log("codeObject.code: " + codeObject.code);
         List<string> lines =

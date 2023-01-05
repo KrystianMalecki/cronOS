@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Libraries.system.file_system
 {
     public class FileSystem : BaseLibrary
@@ -10,7 +6,7 @@ namespace Libraries.system.file_system
 
         public static File GetFileByPath(string path, File parent = null)
         {
-          //  Debug.Log($"{Hardware.currentThreadInstance}-{Hardware.currentThreadInstance.hardwareInternal}-{Hardware.currentThreadInstance.hardwareInternal.mainDrive}-{Hardware.currentThreadInstance.hardwareInternal.mainDrive.drive}");
+            //  Debug.Log($"{Hardware.currentThreadInstance}-{Hardware.currentThreadInstance.hardwareInternal}-{Hardware.currentThreadInstance.hardwareInternal.mainDrive}-{Hardware.currentThreadInstance.hardwareInternal.mainDrive.drive}");
             return Hardware.currentThreadInstance.hardwareInternal.mainDrive.drive.GetFileByPath(path, parent);
         }
 

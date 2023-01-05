@@ -1,11 +1,7 @@
-using System;
 
 using NaughtyAttributes;
 
 using UnityEngine;
-using System.Threading;
-using Libraries.system.file_system;
-using Libraries.system;
 
 public class PCLogic : MonoBehaviour
 {
@@ -40,6 +36,7 @@ public class PCLogic : MonoBehaviour
     {
         hardwareInternal.Init();
 
+
     }
     //todo 3 remove
     private void Start()
@@ -52,9 +49,13 @@ public class PCLogic : MonoBehaviour
         hardwareInternal.SystemInit();
     }
 
+
     private void OnMouseEnter()
     {
         SetThisDefault();
+
+        
+        
     }
     private void OnMouseExit()
     {

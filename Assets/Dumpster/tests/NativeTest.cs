@@ -5,17 +5,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;*/
 
-using System;
-using System.Collections;
-using System.ComponentModel;
 using attic;
 using Libraries.system.mathematics;
 using Libraries.system.output.graphics.screen_buffer32;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.system_texture;
 using NaughtyAttributes;
+using System;
 using UnityEngine;
-using sio = System.IO;
 /*using System.Text;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -27,9 +24,7 @@ using helper;
 using Libraries.system.output.graphics.system_colorspace;
 using Libraries.system.output.graphics.mask_texture;
 using Cinemachine.Utility;*/
-using static HardwareBox;
 using Color32 = Libraries.system.output.graphics.color32.Color32;
-using Console = Libraries.system.output.Console;
 
 public class HardwareBox
 {
@@ -70,7 +65,7 @@ public class NativeTest : MonoBehaviour
 
     public void Start()
     {
-      
+
         /* screenBuffer.MakeButton(0, 0, 100, 100,Color32, text,Style);
          
          ////
@@ -152,57 +147,57 @@ public class NativeTest : MonoBehaviour
         //    Debug.Log(new BitArray(128.ToBytes()).ToDisplayString());
 
 
-// SystemColor sc = 9;
-/* Console.Debug(sc);
+        // SystemColor sc = 9;
+        /* Console.Debug(sc);
 
- Console.Debug(sc - 5);
- Console.Debug(sc + 5);
- Console.Debug(sc * 5);
- Console.Debug(sc / 5);
+         Console.Debug(sc - 5);
+         Console.Debug(sc + 5);
+         Console.Debug(sc * 5);
+         Console.Debug(sc / 5);
 
- Console.Debug(sc - 11);
- Console.Debug(sc + 11);
- SystemColor sc2 = SystemColor.blue;
- Console.Debug(sc2);
- Console.Debug(sc2.Darken());
- Console.Debug(sc2.Lighten());
- Console.Debug(sc2.Lighten());*/
-/*  Debug.Log(ProcessorManager.mainEncoding.GetType().Assembly.Location);
-  Debug.Log("  # define   lol(x,y)   Cosnole.Log($\"lol {x} {y}\")".SplitSpaceQ().ToFormatedString("-"));
-  Debug.Log(new Path("./..", FileSystem.GetFileByPath("/")));
-
-
-  Debug.Log(new Path("/System/"));
-  Debug.Log(new Path("/System/programs"));
-  Debug.Log(new Path("./ls", FileSystem.GetFileByPath("/System/programs")));
-  Debug.Log(new Path("./..", FileSystem.GetFileByPath("/System/programs")));
-  Debug.Log(new Path("./../programs", FileSystem.GetFileByPath("/System/programs")));
-  Debug.Log(new Path("./../can'tfind", FileSystem.GetFileByPath("/System/programs")));
-  Debug.Log(new Path("./../../programs", FileSystem.GetFileByPath("/System/programs/ls")));
-  Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
-*/
-/* Debug.Log(SystemColor.sizeOf);
- MaskTexture st = new MaskTexture(2, 2);
- st.SetAt(0, 0, true);
- st.SetAt(0, 1, false);
- st.SetAt(1, 0, true);
- st.SetAt(1, 1, false);
- Debug.Log(st.array.ToFormatedString());
-
- byte[] data = st.ToData();
- Debug.Log(data.ToFormatedString());
- MaskTexture st2 = MaskTexture.FromData(data);
- Debug.Log(st2.array.ToFormatedString());
- byte[] data2 = st2.ToData();
- Debug.Log(data2.ToFormatedString());
-Debug.Log(default(SystemColor).value);*/
+         Console.Debug(sc - 11);
+         Console.Debug(sc + 11);
+         SystemColor sc2 = SystemColor.blue;
+         Console.Debug(sc2);
+         Console.Debug(sc2.Darken());
+         Console.Debug(sc2.Lighten());
+         Console.Debug(sc2.Lighten());*/
+        /*  Debug.Log(ProcessorManager.mainEncoding.GetType().Assembly.Location);
+          Debug.Log("  # define   lol(x,y)   Cosnole.Log($\"lol {x} {y}\")".SplitSpaceQ().ToFormatedString("-"));
+          Debug.Log(new Path("./..", FileSystem.GetFileByPath("/")));
 
 
-// FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");
+          Debug.Log(new Path("/System/"));
+          Debug.Log(new Path("/System/programs"));
+          Debug.Log(new Path("./ls", FileSystem.GetFileByPath("/System/programs")));
+          Debug.Log(new Path("./..", FileSystem.GetFileByPath("/System/programs")));
+          Debug.Log(new Path("./../programs", FileSystem.GetFileByPath("/System/programs")));
+          Debug.Log(new Path("./../can'tfind", FileSystem.GetFileByPath("/System/programs")));
+          Debug.Log(new Path("./../../programs", FileSystem.GetFileByPath("/System/programs/ls")));
+          Debug.Log(new Path("./../../programs/ls", FileSystem.GetFileByPath("/System/programs/ls")));
+        */
+        /* Debug.Log(SystemColor.sizeOf);
+         MaskTexture st = new MaskTexture(2, 2);
+         st.SetAt(0, 0, true);
+         st.SetAt(0, 1, false);
+         st.SetAt(1, 0, true);
+         st.SetAt(1, 1, false);
+         Debug.Log(st.array.ToFormatedString());
+
+         byte[] data = st.ToData();
+         Debug.Log(data.ToFormatedString());
+         MaskTexture st2 = MaskTexture.FromData(data);
+         Debug.Log(st2.array.ToFormatedString());
+         byte[] data2 = st2.ToData();
+         Debug.Log(data2.ToFormatedString());
+        Debug.Log(default(SystemColor).value);*/
+
+
+        // FileSystem.MakeFile("/a/b/c/d/e.e/f.f/hh/gj");
     }
 
-/*  public static string GetPath(string rawPath, File workingDirectory)
-  {
+    /*  public static string GetPath(string rawPath, File workingDirectory)
+      {
 
-  }*/
+      }*/
 }

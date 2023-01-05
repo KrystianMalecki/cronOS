@@ -1,13 +1,8 @@
-using helper;
+
+using Helpers;
 using NaughtyAttributes;
+
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text;
 using UnityEngine;
 
 namespace Libraries.system
@@ -31,10 +26,10 @@ namespace Libraries.system
             [SerializeField] public string name;
 
 
-            [SerializeField] [EnumFlags] public FilePermission permissions = (FilePermission)0b0111;
+            [SerializeField][EnumFlags] public FilePermission permissions = (FilePermission)0b0111;
 
 
-            [HideInInspector] [SerializeField] public byte[] data;
+            [HideInInspector][SerializeField] public byte[] data;
 
             [NonSerialized] public ThreadSafeList<File> children;
 
@@ -181,7 +176,7 @@ namespace Libraries.system
             {
                 if (obj is File file)
                 {
-                    if( file.fileID == fileID)
+                    if (file.fileID == fileID)
                     {
                         return true;
                     }

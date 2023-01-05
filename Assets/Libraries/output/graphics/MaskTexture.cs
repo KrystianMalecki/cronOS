@@ -1,15 +1,13 @@
-using System;
-using System.Linq;
 using Libraries.system.output.graphics.screen_buffer32;
 using Libraries.system.output.graphics.system_colorspace;
+using System;
+using System.Linq;
 
 namespace Libraries.system.output.graphics
 {
     namespace mask_texture
     {
         using Libraries.system.mathematics;
-        using System.Collections;
-        using System.ComponentModel;
         using UnityEngine;
 
         [Serializable]

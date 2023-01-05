@@ -2,10 +2,8 @@ namespace Libraries.system.output.graphics
 {
     namespace screen_buffer32
     {
-        using Libraries.system.output.graphics.texture32;
-        using Libraries.system.output.graphics.color32;
-        using Libraries.system.mathematics;
         using Libraries.system.output.graphics;
+        using Libraries.system.output.graphics.texture32;
 
         public class ScreenBuffer32 : Texture32, IGenericScreenBuffer
         {

@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using NaughtyAttributes;
 using UnityEditor;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {

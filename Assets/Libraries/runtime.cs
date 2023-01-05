@@ -1,13 +1,11 @@
 ﻿//#define DLL
 
+using Helpers;
 using Libraries.system.file_system;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
-
+using UnityEngine;
+using System.Linq;
 namespace Libraries.system
 {
     public class Runtime : BaseLibrary
@@ -33,9 +31,15 @@ namespace Libraries.system
         {
             return Hardware.currentThreadInstance.hardwareInternal.Compile(file);
         }
-        public static void Execute(File compiledFile, string args = null)
+        public static void Execute(File compiledFile, string[] args = default)
         {
-            Hardware.currentThreadInstance.hardwareInternal.Execute(compiledFile);
+            Debug.Log($"trying to run {compiledFile.name} with args:{args.ToFormattedString()}");
+
+            Hardware.currentThreadInstance.hardwareInternal.Execute(compiledFile, args.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
+        }
+        public static void Execute(File compiledFile, string arg)
+        {
+            Runtime.Execute(compiledFile, arg.SplitSpaceQArgs().ToArray());
         }
 
         #region Just statics that can be used in any thread

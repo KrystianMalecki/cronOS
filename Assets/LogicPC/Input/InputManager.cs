@@ -1,9 +1,7 @@
-using System.Collections;
+using Libraries.system.input;
 using System.Collections.Generic;
 using System.Text;
-using Libraries.system.input;
 using UnityEngine;
-using System.Collections.Concurrent;
 
 public class InputManager : MonoBehaviour
 {
@@ -87,4 +85,5 @@ public class InputManager : MonoBehaviour
             return s;
         }
     }
+   
 }

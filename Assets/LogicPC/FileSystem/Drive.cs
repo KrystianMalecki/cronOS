@@ -1,11 +1,6 @@
 using Libraries.system.file_system;
-using NaughtyAttributes;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System;
-using System.Collections.Concurrent;
+using UnityEngine;
 
 
 [Serializable]

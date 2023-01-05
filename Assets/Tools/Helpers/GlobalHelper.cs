@@ -1,17 +1,10 @@
-using Libraries.system.output.graphics.system_colorspace;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace helper
+namespace Helpers
 {
     public static class GlobalHelper
     {

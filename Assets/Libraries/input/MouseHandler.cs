@@ -1,7 +1,5 @@
 using Libraries.system.mathematics;
-using Libraries.system.output;
 using System;
-using ue = UnityEngine;
 
 namespace Libraries.system
 {
@@ -34,6 +32,7 @@ namespace Libraries.system
 
                 lastPosition = pos;
                 return pos;
+
             }
 
 

@@ -1,10 +1,8 @@
 #if UNITY_EDITOR
+using Libraries.system;
 using Libraries.system.file_system;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Libraries.system;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using UnityEditor;
 using UnityEngine;
 

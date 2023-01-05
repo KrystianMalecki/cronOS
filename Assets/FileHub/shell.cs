@@ -1,25 +1,30 @@
 #if false
-//#include "/sys/libs/binsLib.lib"
+//#top using static Hardware;
+/*#include "/sys/libs/binsLib.lib"*/
 //#include "/sys/libs/fontLib.lib"
-//#top using static Shell;
-Debugger.Debug("shell start");
 public class Shell
 {
-
-    KeySequence bufferKeySequence = null;
-    string prefix = "";
-    string inputText = "";
-    string bufferInput = "";
-    string consoleText = "";
-    int historyPointer = 0;
-    List<string> history = new List<string>();
+    public Shell thisShell;
+    public string balls;
+    static KeySequence bufferKeySequence = null;
+    static string prefix = "";
+    static string inputText = "";
+    static string bufferInput = "";
+    static string consoleText = "";
+    static int historyPointer = 0;
+    static List<string> history = new List<string>();
 
     static string binariesFolder = "/sys/bins/";
-    void UpdatePrefix()
+    static void UpdatePrefix()
     {
+    Debugger.Debug(currentFile);
         prefix = currentFile.GetFullPath() + ">";
     }
-    void Draw()
+    public void WriteToConsole(string line){
+        Debugger.Debug("WriteToConsole");
+        consoleText += '\n' + line;
+    }    
+   static void  Draw()
     {
         DrawStringAt(screenBuffer, 0, 0, consoleText);
         int consoleY = consoleText.CountEncounters('\n') + 1;
@@ -27,7 +32,7 @@ public class Shell
         DrawStringAt(screenBuffer, prefix.Length * 8, consoleY * 8, inputText);
         Screen.SetScreenBuffer(screenBuffer);
     }
-    void ProcessInput()
+    static void ProcessInput()
     {
         bufferKeySequence = KeyHandler.WaitForInputBuffer();
         string input = KeyHandler.GetInputAsString();
@@ -86,7 +91,7 @@ public class Shell
             }
         }
     }
-    string PraseCommand(string input)
+    static string PraseCommand(string input)
     {
         history.Add(input);
         historyPointer++;
@@ -150,17 +155,23 @@ public class Shell
         string command = parts[0];
         string restOfArgs = (input.Length <= command.Length) ? "" : input.Substring(command.Length);
         string output = $"Command '{command}' not found!";
-        File binaryFile = FileSystem.GetFileByPath(binariesFolder + parts[0] + HardwareInternal.compilationExtension);
+        File binaryFile = FileSystem.GetFileByPath(binariesFolder + command + HardwareInternal.compilationExtension);
         if (binaryFile == null)
         {
-            binaryFile = FileSystem.GetFileByPath(binariesFolder + parts[0]);
+            binaryFile = FileSystem.GetFileByPath(binariesFolder + command);
 
         }
-        Runtime.Execute(binaryFile, string.Join(" ", parts.Skip(1).ToArray()));
+        Runtime.Execute(binaryFile, parts.Skip(1).ToArray());
         return "";
     }
-    public void Run()
+    public static void Main()
     {
+    Debugger.Debug("shell start");
+Debugger.DisplayLoadedAssembliesNumber();
+        Shell s = new Shell();
+     s.thisShell = s;
+        s.balls = "balls";
+        Hardware.AddStatic(s);
         Screen.InitScreenBuffer(screenBuffer);
         UpdatePrefix();
         while (true)
@@ -171,10 +182,9 @@ public class Shell
             ProcessInput();
             Runtime.Wait();
 
+
         }
     }
 }
-static Shell shell = null;
-shell = new Shell();
-shell.Run();
+
 #endif

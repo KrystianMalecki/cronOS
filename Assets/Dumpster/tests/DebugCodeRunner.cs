@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Cinemachine;
+﻿using Cinemachine;
 using Libraries.system;
 using NaughtyAttributes;
 using UnityEditor;
@@ -26,7 +21,7 @@ public class DebugCodeRunner : MonoBehaviour
 
     public void Start()
     {
-       
+
         if (codeFile == null)
         {
 #if UNITY_EDITOR
@@ -51,4 +46,5 @@ public class DebugCodeRunner : MonoBehaviour
     {
         PlayerController.selectedPC.hardwareInternal.KillAll();
     }
+
 }

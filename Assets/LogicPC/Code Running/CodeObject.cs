@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using NaughtyAttributes;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
 /*
  <summary>
 this is made from file.
@@ -23,7 +23,7 @@ public class CodeObject
     public CodeObject(string code, List<Type> libraryTypes)
     {
         this.code = code;
-        this.libraries = libraryTypes.ConvertAll(x => x.ToLibraryData());
+        this.libraries = libraryTypes.ConvertAll(x => new LibraryData(x));
     }
 
     public void DisplayLibraries()
@@ -47,5 +47,8 @@ public class LibraryData
     public override string ToString()
     {
         return "as:" + assembly + ", ns:" + nameSpace;
+    }
+    public LibraryData(Type type) : this(type.GetTypeInfo().Assembly.GetName().FullName.ToString(), type.GetTypeInfo().Namespace)
+    {
     }
 }
