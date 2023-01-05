@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Cinemachine;
+﻿using Cinemachine;
+using Libraries.system;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
@@ -22,10 +18,10 @@ public class DebugCodeRunner : MonoBehaviour
 
     bool noCodeFile => (codeFile == null || string.IsNullOrEmpty(codeFile?.text));
 
+
     public void Start()
     {
-        Debug.Log(typeof(UnityEngine.MonoBehaviour).GetTypeInfo().Assembly + " == " +
-            typeof(UnityEngine.Vector2).GetTypeInfo().Assembly);
+
         if (codeFile == null)
         {
 #if UNITY_EDITOR
@@ -35,20 +31,20 @@ public class DebugCodeRunner : MonoBehaviour
 
         if (runOnStart)
         {
-            RunCode();
+            DebugCode();
         }
     }
 
     [Button("Run code", EButtonEnableMode.Playmode)]
-    void RunCode()
+    void DebugCode()
     {
-        PlayerController.selectedPC.hardware.hardwareInternal.RunCode(new CodeObject(
-            noCodeFile ? code : codeFile.text.Replace("false//changeToTrue", "true"),
-            HardwareInternal.allLibraryDatas));
+        PlayerController.selectedPC.hardwareInternal.Compile(Drive.MakeFile("debugFile",
+         Runtime.StringToEncodedBytes(noCodeFile ? code : codeFile.text.Replace("false//changeToTrue", "true"))));
     }
 
     void KillAll()
     {
-        PlayerController.selectedPC.hardware.hardwareInternal.KillAll();
+        PlayerController.selectedPC.hardwareInternal.KillAll();
     }
+
 }

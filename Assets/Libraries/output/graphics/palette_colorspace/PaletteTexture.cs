@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Linq;
-using Libraries.system.output.graphics.system_texture;
-using UnityEngine;
 
 namespace Libraries.system.output.graphics
 {
     namespace screen_buffer32
     {
-        using Libraries.system.mathematics;
-        using Libraries.system.output.graphics.system_colorspace;
         using color32;
+        using Libraries.system.mathematics;
 
         [Serializable]
         public class PaletteTexture : RectArray<byte>

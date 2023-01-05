@@ -22,7 +22,15 @@ namespace Libraries.system
             public static void Line([CallerLineNumber] int line = 0)
             {
                 UnityEngine.Debug.Log(line);
-            }      
+            }
+            public static void DisplayLoadedAssembliesNumber()
+            {
+                GlobalDebugger.DisplayLoadedAssembliesNumber();
+            }
+            public static void DisplayLoadedAssemblies()
+            {
+                GlobalDebugger.DisplayLoadedAssemblies();
+            }
         }
     }
 }

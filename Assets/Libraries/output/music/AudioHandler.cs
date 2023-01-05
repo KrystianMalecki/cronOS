@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +8,8 @@ namespace Libraries.system.output.music
     {
         public void PlaySound(Sound sound)
         {
-            hardware.hardwareInternal.stackExecutor.AddDelegateToStack(
-                () => { hardware.hardwareInternal.audioManager.PlayNote(sound); }, sync);
+            Hardware.currentThreadInstance.hardwareInternal.stackExecutor.AddDelegateToStack(
+                (hardware) => { hardware.hardwareInternal.audioManager.PlayNote(sound); }, sync);
         }
 
         private const float startNoteAValue = 27.5f;

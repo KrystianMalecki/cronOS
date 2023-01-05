@@ -1,6 +1,6 @@
+using Libraries.system.output.graphics.screen_buffer32;
 using System;
 using System.Linq;
-using Libraries.system.output.graphics.screen_buffer32;
 
 namespace Libraries.system.output.graphics
 {
@@ -47,7 +47,7 @@ namespace Libraries.system.output.graphics
             {
             }
 
-           
+
 
             public new void SetPalette(Libraries.system.output.graphics.color32.Color32[] palette)
             {

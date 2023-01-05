@@ -1,5 +1,4 @@
-﻿using Libraries.system.mathematics;
-using System.Linq;
+﻿using UnityEngine;
 
 namespace Libraries.system.output.graphics
 {
@@ -19,18 +18,24 @@ namespace Libraries.system.output.graphics
         public static int screenWidth = 640;
         public static int screenHeight = 480;
 
-        public void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
+        public static void InitScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            hardware.hardwareInternal.stackExecutor.AddDelegateToStack(() =>
+            //  Hardware hardware = Hardware.currentThreadInstance;
+            Hardware.currentThreadInstance.stackExecutor.AddDelegateToStack((hardware) =>
             {
-                hardware.hardwareInternal.screenManager.InitScreenBuffer(screenBuffer);
+                Debug.Log(screenBuffer);
+                hardware.screenManager.InitScreenBuffer(screenBuffer);
             });
         }
 
-        public void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
+        public static void SetScreenBuffer(IGenericScreenBuffer screenBuffer)
         {
-            hardware.hardwareInternal.stackExecutor.AddDelegateToStack(
-                () => { hardware.hardwareInternal.screenManager.SetScreenBuffer(screenBuffer); }, sync
+            //Hardware hardware = Hardware.currentThreadInstance;
+
+            Hardware.currentThreadInstance.stackExecutor.AddDelegateToStack(
+                (hardware) => {
+                    Debug.Log(screenBuffer);
+                    hardware.screenManager.SetScreenBuffer(screenBuffer); }, sync
             );
         }
     }

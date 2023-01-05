@@ -1,25 +1,24 @@
 ﻿//#define DLL
 
+using Helpers;
+using Libraries.system.file_system;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
-
+using UnityEngine;
+using System.Linq;
 namespace Libraries.system
 {
     public class Runtime : BaseLibrary
     {
-        public void Wait(int time)
+        public static void Wait(int time = 0)
         {
             // Task.Delay(time).Wait();
-            Thread.Sleep(System.Math.Max(time, hardware.hardwareInternal.WaitRefreshRate));
+            Thread.Sleep(System.Math.Max(time, Hardware.currentThreadInstance.hardwareInternal.WaitRefreshRate));
 
             // test.instance.count1++;
         }
 
-        public void WaitUnitl(Func<bool> action)
+        public static void WaitUnitl(Func<bool> action)
         {
             while (action.Invoke())
             {
@@ -27,14 +26,23 @@ namespace Libraries.system
             }
         }
 
-        public void Wait()
+        //todo-future move to better library
+        public static File Compile(File file)
         {
-            Thread.Sleep(hardware.hardwareInternal.WaitRefreshRate);
+            return Hardware.currentThreadInstance.hardwareInternal.Compile(file);
         }
-        public void RunCodeSync(string code)
+        public static void Execute(File compiledFile, string[] args = default)
         {
-            hardware.hardwareInternal.RunCodeSync(new CodeObject(code, HardwareInternal.allLibraryDatas));
+            Debug.Log($"trying to run {compiledFile.name} with args:{args.ToFormattedString()}");
+
+            Hardware.currentThreadInstance.hardwareInternal.Execute(compiledFile, args.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
         }
+        public static void Execute(File compiledFile, string arg)
+        {
+            Runtime.Execute(compiledFile, arg.SplitSpaceQArgs().ToArray());
+        }
+
+        #region Just statics that can be used in any thread
         public static readonly char[] asciiMap =
         {
             ' ', '☺', '☻', '♥', '♦', '♣', '♠', '•', '◘', '○', '◙', '♂', '♀', '♪', '♫', '☼', '►', '◄', '↕', '‼', '¶',
@@ -103,6 +111,7 @@ namespace Libraries.system
 
             return HardwareInternal.mainEncoding.GetString(variable);
         }
+        #endregion
         #endregion
     }
 }

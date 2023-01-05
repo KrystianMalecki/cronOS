@@ -1,12 +1,9 @@
-using NaughtyAttributes;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
-using UnityEngine;
-using UnityEngine.TextCore;
-using Libraries.system.output.graphics.system_texture;
 using Libraries.system.output.graphics.system_colorspace;
+using Libraries.system.output.graphics.system_texture;
+using NaughtyAttributes;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class TextureToByteData : MonoBehaviour
 {
@@ -17,7 +14,6 @@ public class TextureToByteData : MonoBehaviour
     public Texture2D character;
     public Color[] colors;
 
-    public string l;
 
     /*  [Button]
       public void s()
@@ -53,6 +49,11 @@ public class TextureToByteData : MonoBehaviour
     {
         Debug.Log(Libraries.system.output.graphics.color32.Color32.FindNearest(ColorConstants.SystemColors,
             color.ToCronosColor()));
+        ThreadSafeList<object> tsl = null;
+
+
+        new List<object>(tsl.GetEnumerator().Iterate());
+
     }
 
     [Button]

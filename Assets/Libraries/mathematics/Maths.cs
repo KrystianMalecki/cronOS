@@ -1,20 +1,12 @@
 //#define DLL
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
-
-
 namespace Libraries.system
 {
     namespace mathematics
     {
         public class Maths
         {
-            //todo 0 check why?
+            //todo 5 check why?
             public static decimal Abs(decimal number)
             {
                 return System.Math.Abs(number);
@@ -59,7 +51,7 @@ namespace Libraries.system
             {
                 return System.Math.Max(a, b);
             }
-           
+
         }
     }
 }

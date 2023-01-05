@@ -1,14 +1,9 @@
 //#define DLL
 
 using NaughtyAttributes;
-using SQLitePCL;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using Console = Libraries.system.output.Console;
 
@@ -21,10 +16,12 @@ namespace Libraries.system
         {
             [SerializeField] public T[] array;
 
-            [SerializeField] [AllowNesting, ReadOnly]
+            [SerializeField]
+            [AllowNesting, ReadOnly]
             public int width;
 
-            [SerializeField] [AllowNesting, ReadOnly]
+            [SerializeField]
+            [AllowNesting, ReadOnly]
             public int height;
 
             public int size
@@ -269,7 +266,8 @@ namespace Libraries.system
                 return newArray;
             }
 
-            //todo 1 think if you want to rename draw
+            //todo 2 think if you want to rename draw OR maybe move this to extension class?
+
             public void DrawLine(int startX, int startY, int endX, int endY, T value)
             {
                 float x;
@@ -411,6 +409,6 @@ namespace Libraries.system
             }
         }
 
-        
+
     }
 }
