@@ -6,7 +6,7 @@ namespace Libraries.system
 {
     namespace output
     {
-        public class Console : BaseLibrary
+        public class Console 
         {
             public static void Debug(params object[] obj)
             {

@@ -4,7 +4,7 @@ namespace Libraries.system
 {
     namespace debug
     {
-        public class Debugger : BaseLibrary
+        public class Debugger
         {
             public static void Debug(params object[] obj)
             {

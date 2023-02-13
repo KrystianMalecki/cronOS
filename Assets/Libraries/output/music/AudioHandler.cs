@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Libraries.system.output.music
 {
-    public class AudioHandler : BaseLibrary
+    public class AudioHandler
     {
-        public void PlaySound(Sound sound)
+        public void PlaySound(Sound sound, bool sync = true)
         {
             Hardware.currentThreadInstance.hardwareInternal.stackExecutor.AddDelegateToStack(
                 (hardware) => { hardware.hardwareInternal.audioManager.PlayNote(sound); }, sync);

@@ -6,17 +6,17 @@ using UnityEngine;
 public class PCLogic : MonoBehaviour
 {
     public HardwareInternal hardwareInternal = new HardwareInternal();
-
+    public static PCLogic selectedPC;
 
     private void SetDefault(PCLogic logic)
     {
-        if (PlayerController.selectedPC != null)
+        if (selectedPC != null)
         {
-            PlayerController.selectedPC.hardwareInternal.focused = false;
+            selectedPC.hardwareInternal.focused = false;
         }
 
-        PlayerController.selectedPC = logic;
-        PlayerController.selectedPC.hardwareInternal.focused = true;
+        selectedPC = logic;
+        selectedPC.hardwareInternal.focused = true;
     }
 
     [Button]

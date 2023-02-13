@@ -5,7 +5,7 @@ namespace Libraries.system
 {
     namespace input
     {
-        public class MouseHandler : BaseLibrary
+        public class MouseHandler 
         {
             [ThreadStatic]
             public static Vector2Int? lastPosition = null;

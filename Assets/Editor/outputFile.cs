@@ -69,6 +69,7 @@ public struct AcceptedArgument
         }
    /* }
 }*/
+
 public class ls
 {
     private const string shortFormat = "{2} ";
@@ -83,17 +84,15 @@ public class ls
         new AcceptedArgument("full paths instead of names", false, "-fp"),
     };
     public static void Main(params string[] args)
-    { 
-    try
-        {
+    {
         Dictionary<AcceptedArgument, string> argPairs = SplitArgumentsToDictionary(argumentTypes, args);
         string wdPath = argPairs.GetValueOrNull("-wd")?.Value ?? currentFile.GetFullPath();
-        Debugger.Debug(argPairs.ToFormattedString())
+        
         File workingDirectory = FileSystem.GetFileByPath(wdPath);
-        string path = argPairs.GetValueOrNull("-p")?.Value ?? "./";
+        string path = argPairs.GetValueOrNull("-p")?.Value ?? "";
         File f = FileSystem.GetFileByPath(path, workingDirectory);
         Debugger.Debug($"{f} {path}");
-        Debugger.Debug($"r {argPairs.ContainsAlias("-r")} sz {argPairs.ContainsAlias("-sz")} jn{argPairs.ContainsAlias("-jn")} fp {argPairs.ContainsAlias("-fp")}");
+                   Debugger.Debug($"r {argPairs.ContainsAlias("-r")} sz {argPairs.ContainsAlias("-sz")} jn{argPairs.ContainsAlias("-jn")} fp {argPairs.ContainsAlias("-fp")}");
         string output = GetChildren(
             f,
             0,
@@ -102,26 +101,19 @@ public class ls
            showSize: argPairs.ContainsAlias("-sz"),
            justNames: argPairs.ContainsAlias("-jn"),
            fullPaths: argPairs.ContainsAlias("-fp"));
-        Debugger.Debug("1" + output);
-        //  Debugger.Debug(Hardware);
-       
-            Debugger.Debug("2" + Hardware.Statics.Shell.balls);
-            Debugger.Debug("3" + Hardware.Statics.Shell.thisShell);
-            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(Hardware.Statics.Shell))
-            {
-                string name = descriptor.Name;
-                object value = descriptor.GetValue(Hardware.Statics.Shell);
-                Debugger.Debug($"{name}={value}");
-            }
-            Debugger.Debug("4" + Hardware.Statics);
-            Debugger.Debug("5" + Hardware.Statics.Shell.GetType());
-            Hardware.Statics.Shell.WriteToConsole(output);
-            Debugger.Debug("6" + output);
-        }
-        catch (Exception e)
+           Debugger.Debug(output);
+                    //  Debugger.Debug(Hardware);
+                                            
+        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(Hardware.Statics.Shell))
         {
-            Debugger.Debug(e);
+            string name = descriptor.Name;
+            object value = descriptor.GetValue(Hardware.Statics.Shell);
+            Debugger.Debug("{0}={1}", name, value);
         }
+        Debugger.Debug(Hardware.Statics);
+                      Debugger.Debug(Hardware.Statics.Shell);
+        Hardware.Statics.Shell.WriteToConsole(output);
+          Debugger.Debug(output);
     }
     static string GetChildren(File file, int indent, string prefix, bool recursive, bool showSize, bool justNames,
          bool fullPaths)

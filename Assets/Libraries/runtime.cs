@@ -8,7 +8,7 @@ using UnityEngine;
 using System.Linq;
 namespace Libraries.system
 {
-    public class Runtime : BaseLibrary
+    public class Runtime 
     {
         public static void Wait(int time = 0)
         {

@@ -1,7 +1,18 @@
-#if false
+
 //#top using static Hardware;
 /*#include "/sys/libs/binsLib.lib"*/
 //#include "/sys/libs/fontLib.lib"
+using Helpers;
+using Libraries.system;
+using Libraries.system.debug;
+using Libraries.system.file_system;
+using Libraries.system.input;
+using Libraries.system.output.graphics;
+using Libraries.system.output.graphics.system_colorspace;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static Hardware;
 public class Shell
 {
     public Shell thisShell;
@@ -17,8 +28,7 @@ public class Shell
     static string binariesFolder = "/sys/bins/";
     static void UpdatePrefix()
     {
-    Debugger.Debug(currentFile);
-        prefix = currentFile.GetFullPath() + ">";
+        prefix =currentFile.GetFullPath() + ">";
     }
     public void WriteToConsole(string line){
         Debugger.Debug("WriteToConsole");
@@ -167,12 +177,7 @@ public class Shell
     public static void Main()
     {
     Debugger.Debug("shell start");
-Debugger.DisplayLoadedAssembliesNumber();
-        Shell s = new Shell();
-     s.thisShell = s;
-        s.balls = "balls";
-        Hardware.AddStatic(s);
-        Screen.InitScreenBuffer(screenBuffer);
+
         UpdatePrefix();
         while (true)
         {
@@ -186,5 +191,3 @@ Debugger.DisplayLoadedAssembliesNumber();
         }
     }
 }
-
-#endif

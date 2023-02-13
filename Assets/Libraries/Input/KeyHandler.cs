@@ -7,7 +7,7 @@ namespace Libraries.system
     namespace input
     {
         //todo 4 add start listening to keys and stop listening to keys functions 
-        public class KeyHandler : BaseLibrary
+        public class KeyHandler 
         {
             [ThreadStatic]
             public static ConcurrentHashSet<Key> pressedDownKeys = new ConcurrentHashSet<Key>();

@@ -1,6 +1,6 @@
 namespace Libraries.system.file_system
 {
-    public class FileSystem : BaseLibrary
+    public class FileSystem
     {
         public const char catalogSymbol = '/';
 
