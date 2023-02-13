@@ -31,15 +31,15 @@ namespace Libraries.system
         {
             return Hardware.currentThreadInstance.hardwareInternal.Compile(file);
         }
-        public static void Execute(File compiledFile, string[] args = default)
+        public static bool Execute(File compiledFile, string[] args = default)
         {
             Debug.Log($"trying to run {compiledFile.name} with args:{args.ToFormattedString()}");
 
-            Hardware.currentThreadInstance.hardwareInternal.Execute(compiledFile, args.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
+          return  Hardware.currentThreadInstance.hardwareInternal.Execute(compiledFile, args.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray());
         }
-        public static void Execute(File compiledFile, string arg)
+        public static bool Execute(File compiledFile, string arg)
         {
-            Runtime.Execute(compiledFile, arg.SplitSpaceQArgs().ToArray());
+           return Runtime.Execute(compiledFile, arg.SplitSpaceQArgs().ToArray());
         }
 
         #region Just statics that can be used in any thread

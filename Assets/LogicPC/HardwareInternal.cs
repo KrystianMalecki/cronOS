@@ -261,10 +261,14 @@ public class HardwareInternal
             return null;
         }
     }
-    public void Execute(File compiledFile, string[] args = default)
+    public bool Execute(File compiledFile, string[] args = default)
     {
         Compilation compilation = GetCompilation(compiledFile);
-        compilation?.RunCode(hardware, args);
+        if (compilation == null)
+        {
+            return false;
+        }
+        return compilation.RunCode(hardware, args);
 
     }
     public void ExecuteAsync(File compiledFile, string[] args = default)

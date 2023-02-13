@@ -15,8 +15,11 @@ public class Hardware /*API for in game usage*/
         get
         {
             return _currentThreadInstance;
-        }    
+        }
     }
+
+    [ThreadStatic] public static Shell shell;
+
     [ThreadStatic] public static dynamic Statics;
     public static void AddStatic(object value)
     {
@@ -57,7 +60,7 @@ public class Hardware /*API for in game usage*/
     }
     internal void Init()
     {
-      //  currentFile = mainDrive.drive.GetFileByPath("/sys");
+        //  currentFile = mainDrive.drive.GetFileByPath("/sys");
         //  hardwareInternal.hardware = this;
         // hardwareInternal.stackExecutor.hardware = this;
         // hardwareInternal.inputManager.hardware = this;

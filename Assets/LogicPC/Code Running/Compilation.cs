@@ -16,7 +16,7 @@ public class Compilation
     public bool mainFunctionHasArgsRun;
     public Task<ScriptState<object>> task;
     //todo 5 reimplement some returns
-    public object RunCode(Hardware hardware, string[] args)
+    public bool RunCode(Hardware hardware, string[] args)
     {
         Debug.Log("start code");
         // ScriptState<object> scriptState = null;
@@ -38,7 +38,7 @@ public class Compilation
         }
         task.Dispose();
         Debug.Log("end code");
-        return null;// scriptState?.ReturnValue;
+        return true;// scriptState?.ReturnValue;
 
     }
     public string ArgsToMainLine(string[] args)

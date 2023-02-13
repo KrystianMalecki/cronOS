@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace Libraries.system.output.graphics
 {
@@ -38,5 +39,10 @@ namespace Libraries.system.output.graphics
                     hardware.screenManager.SetScreenBuffer(screenBuffer); }, sync
             );
         }
+        //write regex to match spaces between words BUT NOT IN QUOTES
+
+      //  public static Regex  
+        
     }
+
 }

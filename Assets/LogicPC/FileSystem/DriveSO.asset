@@ -225,5 +225,10 @@ MonoBehaviour:
         name: ls.cse
         permissions: 7
         data: 2a636f6d70696c656420636f646520686572652a
+      - fileID: 42
+        parentID: 3
+        name: compile
+        permissions: 7
+        data: 
     freeSpaces:
       items: 
