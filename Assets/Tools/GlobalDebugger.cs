@@ -1,6 +1,8 @@
+using Helpers;
 using NaughtyAttributes;
 using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,6 +23,19 @@ public class GlobalDebugger : MonoBehaviour
             Destroy(gameObject);
         }
         assetPath = AssetDatabase.GetAssetPath(asset);
+
+
+
+
+
+
+
+
+
+      //  "^([^\/\\]\".+[^\/\\]\")|\S+"
+
+
+       
     }
     internal void WriteToDebugFile(string text)
     {
@@ -45,4 +60,7 @@ public class GlobalDebugger : MonoBehaviour
         Debug.Log($"Loaded assemblies:{AppDomain.CurrentDomain.GetAssemblies().ToConvertedString(",\n", x => x.FullName)}");
 
     }
+    //make regex what matches spaces but not between quotes
+    
+    
 }

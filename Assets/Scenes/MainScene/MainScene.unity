@@ -193,7 +193,10 @@ MonoBehaviour:
   - path: /sys/libs/commands.lib
     asset: {fileID: 11500000, guid: b02a5792019446d48a2264f451aff26f, type: 3}
     drive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
-  path: /sys/libs/commands.lib
+  - path: /sys/bins/compile
+    asset: {fileID: 11500000, guid: aeedafe6f581ad446a3ac12cbfd4c36a, type: 3}
+    drive: {fileID: 11400000, guid: d4c07b0e4aa7b0b489c073bd2df3a9cf, type: 2}
+  path: /sys/bins/compile
 --- !u!1 &356598404
 GameObject:
   m_ObjectHideFlags: 0
